@@ -59,39 +59,31 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       // $('#spCommandBar').attr('style', 'display: none !important');
       // $('#CommentsWrapper').attr('style', 'display: none !important');
       // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
         commentsWrapper.style.setProperty('display', 'none', 'important');
       }
-
       // Hide all div elements with the attribute data-automation-id="pageHeader"
       const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
       pageHeaders.forEach((element: any) => {
         element.style.setProperty('display', 'none', 'important');
       });
-
       // Show the element with ID "ceoMessageReadMore"
       const ceoMessageReadMore = document.getElementById('ceoMessageReadMore');
       if (ceoMessageReadMore) {
         ceoMessageReadMore.style.display = 'block';
       }
-
       const spCommandBar = document.getElementById('spCommandBar');
       if (spCommandBar) {
         spCommandBar.style.setProperty('display', 'none', 'important');
       }
     }, 2000);
-
     var reactHandler = this;
     const url: any = new URL(window.location.href);
     ItemID = url.searchParams.get("ItemID");
-
     reactHandler.getCurrentUser().then(() => {
       reactHandler.GetBirthday(ItemID);
     });
-
-
   }
 
   // public async GetCurrentUser() {
@@ -125,10 +117,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       Designation = "NA";
     }
     console.log(this.state.Title);
-
     try {
-
-
     } catch (error) {
       console.error('Error adding data:', error);
     }
@@ -154,13 +143,11 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       ID = items[0].ID;
       var tdaydate = moment().format('MM/DD');
       var bday = moment(items[0].DOB).format('MM/DD');
-
       if (tdaydate == bday) {
         bdaydate = "Today"
       } else {
         bdaydate = "" + moment(items[0].DOB).format('MMM DD') + "";
       }
-
       reactHandler.setState({
         Items: items,
         Title: items[0].Title
@@ -168,7 +155,6 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         // Call LandingPageAnalytics after state is updated
         reactHandler.LandingPageAnalytics();
       })
-
       if (items[0].EnableLikes == true) {
         reactHandler.setState({
           IsLikeEnabled: true
@@ -179,14 +165,10 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
           IsCommentEnabled: true
         })
       } else {
-        // $(".all-commets").remove();
-        // $("#commentedpost").remove();
-
         const allCommentsElements = document.querySelectorAll(".all-comments");
         allCommentsElements.forEach(element => {
           element.remove();
         });
-
         // Remove the element with ID "commentedpost"
         const commentedPostElement = document.getElementById("commentedpost");
         if (commentedPostElement) {
@@ -222,7 +204,6 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
   public async checkUserAlreadyCommented() {
     await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq '${ID}' and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => { // //orderby is false -> decending          
       if (items.length != 0) {
-
         this.setState({
           IsUserAlreadyCommented: true
         });
@@ -230,7 +211,6 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         document.querySelectorAll('.reply-tothe-post').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
-
       }
     });
   }
