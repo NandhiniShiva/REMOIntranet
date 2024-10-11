@@ -5,7 +5,7 @@ import { ServiceProvider } from '../components/services/ServiceProvider';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import "@pnp/sp/folders";
 import * as moment from 'moment';
 
@@ -74,7 +74,11 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
 
       let totalCalculatedHeight = totalHeightLeft - totalHeightRight + 25;
 
-      $("#dynamic-height-recentsfiles").css("height", `${totalCalculatedHeight}px`);
+      // $("#dynamic-height-recentsfiles").css("height", `${totalCalculatedHeight}px`);
+      const dynamicHeightElement = document.getElementById("dynamic-height-recentsfiles");
+      if (dynamicHeightElement) {
+        dynamicHeightElement.style.height = `${totalCalculatedHeight}px`;
+      }
     };
 
     setTimeout(calculateHeight, 1500);
