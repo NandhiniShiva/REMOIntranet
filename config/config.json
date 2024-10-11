@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "remo-home-page-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/remoHomePage/RemoHomePageWebPart.js",
+          "manifest": "./src/webparts/remoHomePage/RemoHomePageWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "RemoHomePageWebPartStrings": "lib/webparts/remoHomePage/loc/{locale}.js"
+  }
+}

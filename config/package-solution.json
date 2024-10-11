@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "remo-intranet-single-page-client-side-solution",
+    "id": "18023aff-dcce-4072-9519-9da91c9efe8b",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "remo-intranet-single-page description"
+      },
+      "longDescription": {
+        "default": "remo-intranet-single-page description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "remo-intranet-single-page Feature",
+        "description": "The feature that activates elements of the remo-intranet-single-page solution.",
+        "id": "0a089bbc-2438-4e55-a767-b03fe523c93b",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/remo-intranet-single-page.sppkg"
+  }
+}

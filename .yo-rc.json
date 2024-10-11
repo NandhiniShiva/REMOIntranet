@@ -1,0 +1,21 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "18.19.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.12.0"
+    },
+    "version": "1.18.0",
+    "libraryName": "remo-intranet-single-page",
+    "libraryId": "18023aff-dcce-4072-9519-9da91c9efe8b",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "remo-intranet-single-page",
+    "solutionShortDescription": "remo-intranet-single-page description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
