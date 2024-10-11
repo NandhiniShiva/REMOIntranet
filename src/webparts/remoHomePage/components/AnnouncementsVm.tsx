@@ -49,15 +49,23 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
 
   public async componentDidMount() {
     // Hide elements after 2 seconds (adjust as needed)
-    setTimeout(() => {
-      $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      $('#spCommandBar').attr('style', 'display: none !important');
-      $('#CommentsWrapper').attr('style', 'display: none !important');
-    }, 2000);
+    this.hideElements();
+    // setTimeout(() => {
+    //   $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+    //   $('#spCommandBar').attr('style', 'display: none !important');
+    //   $('#CommentsWrapper').attr('style', 'display: none !important');
+    // }, 2000);
 
     await this.getCurrentUser();
     this.GetAllAnnouncements();
     this.LandingPageAnalytics();
+  }
+
+  private hideElements() {
+    const elements: any = document.querySelectorAll('#spCommandBar, div[data-automation-id="pageHeader"], #CommentsWrapper');
+    elements.forEach((element: { style: { display: string; }; }) => {
+      element.style.display = 'none';
+    });
   }
 
   private async getCurrentUser() {
