@@ -12,7 +12,7 @@ import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import Footer from '../../remoHomePage/components/Footer/Footer'
 import pnp from 'sp-pnp-js';
 
@@ -84,7 +84,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
 
   private hideElements() {
     const elements: any = document.querySelectorAll('#spCommandBar, div[data-automation-id="pageHeader"], #CommentsWrapper');
-
     elements.forEach((element: { style: { display: string; }; }) => {
       element.style.display = 'none';
     });
@@ -169,8 +168,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     const items = await sp.web.lists.getByTitle(Announcementlist).items.select("*").filter(`IsActive eq '1' and ID eq '${itemID}'`).getAll();
     if (items && items.length > 0) {
       const title = items[0].Title;
-      console.log(title);
-
       ID = items[0].ID;
       this.setState({ Items: items, ItemID: items[0].Id, Title: title });
       if (items[0].EnableLikes) {
@@ -179,7 +176,11 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       if (items[0].EnableComments) {
         this.setState({ IsCommentEnabled: true });
       } else {
-        $(".all-commets, #commentedpost").remove();
+        // $(".all-commets, #commentedpost").remove();
+        document.querySelectorAll(".all-commets, #commentedpost").forEach(function(element) {
+          element.remove();
+        });
+        
       }
       this.addViews();
       this.checkUserAlreadyLiked();
@@ -208,16 +209,13 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
       .top(5000)
       .get();
-
     if (items.length !== 0) {
       document.querySelectorAll('.like-selected').forEach(element => {
         (element as HTMLElement).style.display = 'block';
       });
-
       document.querySelectorAll('.like-default').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
-
       this.setState({ IsUserAlreadyLiked: true });
     }
   }
