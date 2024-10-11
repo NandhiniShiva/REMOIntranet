@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
 import * as moment from 'moment';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import { ServiceProvider } from '../components/ServiceProvider/Service';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
@@ -127,9 +127,20 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                         let textContent: any = document.getElementById('dt-current');
                         textContent.textContent = ' My Meetings';
 
+                        // setTimeout(function () {
+                        //     let textField = $(".ms-TextField-field");
+                        //     textField.val(moment().format("D/M/YYYY"));
+                        // }, 1500);
                         setTimeout(function () {
-                            let textField = $(".ms-TextField-field");
-                            textField.val(moment().format("D/M/YYYY"));
+                            // Select the text fields with the class 'ms-TextField-field'
+                            let textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
+                            // Get the formatted date
+                            let formattedDate = moment().format("D/M/YYYY");
+                            // Update the value of each text field
+                            textFields.forEach(function (field) {
+                                // Cast the field to HTMLInputElement to access the 'value' property
+                                (field as HTMLInputElement).value = formattedDate;
+                            });
                         }, 1500);
                     }
                 }
