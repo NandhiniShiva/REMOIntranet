@@ -10,7 +10,7 @@ import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import { Markup } from 'interweave';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import pnp, { Web } from 'sp-pnp-js';
@@ -69,9 +69,10 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   }
 
   private hideElements() {
-    setTimeout(() => {
-      $('#spCommandBar, #CommentsWrapper, div[data-automation-id="pageHeader"]').hide();
-    }, 2000);
+    const elements: any = document.querySelectorAll('#spCommandBar, div[data-automation-id="pageHeader"], #CommentsWrapper');
+    elements.forEach((element: { style: { display: string; }; }) => {
+      element.style.display = 'none';
+    });
   }
 
   // private async getCurrentUser() {
