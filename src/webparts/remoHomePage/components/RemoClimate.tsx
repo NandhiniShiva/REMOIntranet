@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IWeatherCurrencyProps } from './IRemoHomePageProps';
 import * as moment from 'moment';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import Select from 'react-select';
 import { sp } from '@pnp/sp';
 import { listNames } from '../Configuration';
@@ -110,29 +110,83 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
 
         setTimeout(function () {
           if (PrayerDetails["Fajr"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Fajr"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Fajr"]);
+            // $("#prayer-type").html(`Fajr <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Fajr"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Fajr"]);
-            $("#prayer-type").html(`Fajr <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Fajr"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Fajr <span>in</span> ${RemainingTime} Hrs`;
+            }
           } else if (PrayerDetails["Sunrise"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Sunrise"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Sunrise"]);
+            // $("#prayer-type").html(`Sunrise <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Sunrise"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Sunrise"]);
-            $("#prayer-type").html(`Sunrise <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Sunrise"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Sunrise <span>in</span> ${RemainingTime} Hrs`;
+            }
           } else if (PrayerDetails["Dhuhr"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Dhuhr"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Dhuhr"]);
+            // $("#prayer-type").html(`Dhuhr <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Dhuhr"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Dhuhr"]);
-            $("#prayer-type").html(`Dhuhr <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Dhuhr"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Dhuhr <span>in</span> ${RemainingTime} Hrs`;
+            }
           } else if (PrayerDetails["Asr"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Asr"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Asr"]);
+            // $("#prayer-type").html(`Asr <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Asr"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Asr"]);
-            $("#prayer-type").html(`Asr <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Asr"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Asr <span>in</span> ${RemainingTime} Hrs`;
+            }
           } else if (PrayerDetails["Maghrib"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Maghrib"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Maghrib"]);
+            // $("#prayer-type").html(`Maghrib <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Maghrib"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Maghrib"]);
-            $("#prayer-type").html(`Maghrib <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Maghrib"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Maghrib <span>in</span> ${RemainingTime} Hrs`;
+            }
           } else if (PrayerDetails["Isha"] > CurrentTime) {
+            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Isha"], CurrentTime);
+            // $("#prayer-time").html(PrayerDetails["Isha"]);
+            // $("#prayer-type").html(`Isha <span>in</span> ${RemainingTime} Hrs`);
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Isha"], CurrentTime);
-            $("#prayer-time").html(PrayerDetails["Isha"]);
-            $("#prayer-type").html(`Isha <span>in</span> ${RemainingTime} Hrs`);
+            const prayerTimeElement = document.querySelector("#prayer-time");
+            if (prayerTimeElement) {
+              prayerTimeElement.innerHTML = PrayerDetails["Isha"];
+            }
+            const prayerTypeElement = document.querySelector("#prayer-type");
+            if (prayerTypeElement) {
+              prayerTypeElement.innerHTML = `Isha <span>in</span> ${RemainingTime} Hrs`;
+            }
           }
         }, 1000);
       });
