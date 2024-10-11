@@ -4,7 +4,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-import * as $ from 'jquery'
+// import * as $ from 'jquery';
 import { Markup } from 'interweave';
 import { IWeb, Web } from "@pnp/sp/presets/all";
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
@@ -144,11 +144,16 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
           const itemId = items[0].Id;
           NewWeb.lists.getByTitle(NotificationList).items.getById(itemId).delete().then(() => {
             if (items[0].Catagory == Currentcatagory && items[0].AssignedToId == User && items[0].ItemId == id) {
-              $('.notification_part ul li').each(function () {
-                if ($(this).attr('id') === id) {
-                  $(this).remove();
+              document.querySelectorAll('.notification_part ul li').forEach(function (element) {
+                if (element.getAttribute('id') === id) {
+                  element.remove();
                 }
-              })
+              });
+              // $('.notification_part ul li').each(function () {
+              //   if ($(this).attr('id') === id) {
+              //     $(this).remove();
+              //   }
+              // })
             }
           }).then(() => {
             this.getNotication(id, Currentcatagory);
@@ -194,8 +199,16 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
         totalcount = "99+";
       }
       if (response.length != 0) {
-        $(".notification_banner a span").html(totalcount);
-        $(".noti_header p").html(totalcount + " Unread");
+        const bannerElement = document.querySelector(".notification_banner a span");
+        if (bannerElement) {
+          bannerElement.innerHTML = totalcount;
+        }
+        const headerElement = document.querySelector(".noti_header p");
+        if (headerElement) {
+          headerElement.innerHTML = totalcount + " Unread";
+        }
+        // document.querySelector(".notification_banner a span").innerHTML = totalcount;
+        // document.querySelector(".noti_header p").innerHTML = totalcount + " Unread";        
       }
     })
   }
