@@ -5,7 +5,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-import * as $ from 'jquery';
+// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import Slider from "react-slick";
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
@@ -280,7 +280,17 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
 
           for (var i = 0; i < items.length;) {
             // $("#" + CustomID + "").append(`<li><a href="${items[i].DetailsPageUrl}?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
-            $("#" + CustomID + "").append(`<li><a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
+            // $("#" + CustomID + "").append(`<li><a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
+            const element = document.getElementById(CustomID);
+            if (element) {
+              element.insertAdjacentHTML('beforeend', `
+                    <li>
+                                    <a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off">
+        <p>${items[i].Title}</p>
+      </a>
+    </li>
+  `);
+            }
 
             i++;
           }
