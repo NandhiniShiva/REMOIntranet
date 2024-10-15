@@ -161,31 +161,63 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, {}
     }, 2000);
   }
 
+  // public async getCurrentUser() {
+  //   const url: any = new URL(window.location.href);
+  //   console.log(url);
+
+
+  //   var reacthandler = this;
+  //   User = reacthandler.props.userid;
+  //   const profile = await pnp.sp.profiles.myProperties.get();
+  //   UserEmail = profile.Email;
+  //   var Name = profile.DisplayName;
+  //   console.log(Name);
+  //   Designation = profile.Title;
+
+  //   // Check if the UserProfileProperties collection exists and has the Department property
+  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //     // Find the Department property in the profile
+  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     const DesignationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
+  //     console.log(departmentProperty, DesignationProperty);
+  //     if (departmentProperty) {
+  //       Department = departmentProperty.Value;
+  //     }
+  //   }
+  // }
+
+  // Updated code 
+
   public async getCurrentUser() {
-    const url: any = new URL(window.location.href);
-    console.log(url);
+    try {
+      const url: URL = new URL(window.location.href);
+      console.log(url);
+
+      const reactHandler = this;
+      User = reactHandler.props.userid;
+
+      const profile = await pnp.sp.profiles.myProperties.get();
+      UserEmail = profile.Email;
+      const Name = profile.DisplayName;
+      console.log(Name);
+      Designation = profile.Title;
+
+      // Check if the UserProfileProperties collection exists and has the Department and Designation properties
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
+        console.log(departmentProperty, designationProperty);
+
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
 
 
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    const profile = await pnp.sp.profiles.myProperties.get();
-    UserEmail = profile.Email;
-    var Name = profile.DisplayName;
-    console.log(Name);
-    Designation = profile.Title;
-
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      const DesignationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
-      console.log(departmentProperty, DesignationProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
       }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
     }
   }
-
 
   // Function to create lists and columns in SharePoint
   public async createSharePointLists() {

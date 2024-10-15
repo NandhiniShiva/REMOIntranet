@@ -94,82 +94,93 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
 
     public getNotication() {
         var totalcount: any;
+        try {
+            newweb.lists.getByTitle(NotificationList).items.select("*").filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`).orderBy('Created', false).top(8000).get().then((response: any) => {
+                totalcount = response.length;
 
-        newweb.lists.getByTitle(NotificationList).items.select("*").filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`).orderBy('Created', false).top(8000).get().then((response: any) => {
-            totalcount = response.length;
+
+                console.log(response);
+                if (response.length != 0) {
 
 
-            console.log(response);
-            if (response.length != 0) {
-
+                    this.setState({
+                        NotificationItems: response,
+                    })
+                }
+                if (totalcount < 10) {
+                    totalcount = response.length;
+                }
+                else if (10 > totalcount && totalcount < 20) {
+                    totalcount = "10+";
+                }
+                else if (20 > totalcount && totalcount < 30) {
+                    totalcount = "20+";
+                }
+                else if (30 > totalcount && totalcount < 40) {
+                    totalcount = "30+";
+                }
+                else if (40 > totalcount && totalcount < 50) {
+                    totalcount = "40+";
+                }
+                else if (50 > totalcount && totalcount < 60) {
+                    totalcount = "50+";
+                }
+                else if (60 > totalcount && totalcount < 70) {
+                    totalcount = "60+";
+                }
+                else if (70 > totalcount && totalcount < 80) {
+                    totalcount = "70+";
+                }
+                else if (80 > totalcount && totalcount < 90) {
+                    totalcount = "80+";
+                }
+                else if (90 > totalcount && totalcount < 100) {
+                    totalcount = "90+";
+                }
+                else {
+                    totalcount = "99+";
+                }
 
                 this.setState({
-                    NotificationItems: response,
+                    Noficationcount: totalcount
                 })
-            }
-            if (totalcount < 10) {
-                totalcount = response.length;
-            }
-            else if (10 > totalcount && totalcount < 20) {
-                totalcount = "10+";
-            }
-            else if (20 > totalcount && totalcount < 30) {
-                totalcount = "20+";
-            }
-            else if (30 > totalcount && totalcount < 40) {
-                totalcount = "30+";
-            }
-            else if (40 > totalcount && totalcount < 50) {
-                totalcount = "40+";
-            }
-            else if (50 > totalcount && totalcount < 60) {
-                totalcount = "50+";
-            }
-            else if (60 > totalcount && totalcount < 70) {
-                totalcount = "60+";
-            }
-            else if (70 > totalcount && totalcount < 80) {
-                totalcount = "70+";
-            }
-            else if (80 > totalcount && totalcount < 90) {
-                totalcount = "80+";
-            }
-            else if (90 > totalcount && totalcount < 100) {
-                totalcount = "90+";
-            }
-            else {
-                totalcount = "99+";
-            }
 
-            this.setState({
-                Noficationcount: totalcount
             })
+        } catch (error) {
+            console.log("Error in getNotication", error);
 
-        })
+        }
     }
 
 
     public IsItemSeen(id: any, Currentcatagory: any, Listname: any, guID: any) {
-        newweb.lists.getByTitle(NotificationList).items.filter(`ItemId eq '${id}'and AuthorId eq ${User} and GUID eq '${guID}'`).getAll().then(async (items: any) => { // //orderby is false -> decending
-            if (items.length > 0) {
-                const itemId = items[0].Id;
-                // newweb.lists.getByTitle(NotificationList).items.getById(itemId).update({
-                //     SeenOn: currentdate,
-                //     IsSeen: "true"
-                // }).then(() => {
-                //     this.getNotication();
-                // })
-                // alert(itemId)
-                await newweb.lists.getByTitle(NotificationList).items.getById(itemId).delete()
-                    .then(async () => {
-                        await this.getNotication();
+        try {
 
-                    })
-            }
-        }).then(() => {
-            // var href: string = `${this.props.siteurl}/SitePages/ECAVoice_RM.aspx?ItemID=${id}&List=${Listname}&Catagory=${Currentcatagory}`
-            // window.open(href, ' ')
-        })
+
+            newweb.lists.getByTitle(NotificationList).items.filter(`ItemId eq '${id}'and AuthorId eq ${User} and GUID eq '${guID}'`).getAll().then(async (items: any) => { // //orderby is false -> decending
+                if (items.length > 0) {
+                    const itemId = items[0].Id;
+                    // newweb.lists.getByTitle(NotificationList).items.getById(itemId).update({
+                    //     SeenOn: currentdate,
+                    //     IsSeen: "true"
+                    // }).then(() => {
+                    //     this.getNotication();
+                    // })
+                    // alert(itemId)
+                    await newweb.lists.getByTitle(NotificationList).items.getById(itemId).delete()
+                        .then(async () => {
+                            await this.getNotication();
+
+                        })
+                }
+            }).then(() => {
+                // var href: string = `${this.props.siteurl}/SitePages/ECAVoice_RM.aspx?ItemID=${id}&List=${Listname}&Catagory=${Currentcatagory}`
+                // window.open(href, ' ')
+            })
+        } catch (error) {
+            console.log("Error in IsItemSeen", error);
+
+        }
     }
     public render(): React.ReactElement<IRemoHomePageProps> {
         var reactHandler = this;

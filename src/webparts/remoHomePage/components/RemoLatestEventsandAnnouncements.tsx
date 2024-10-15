@@ -47,62 +47,130 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
   }
 
 
-  private async GetAnnouncements() {
-    var reactHandler = this;
-    try {
-      await sp.web.lists.getByTitle(Announcementlist).items.select("Title", "Description", "Created", "ID").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending          
+  // private async GetAnnouncements() {
+  //   var reactHandler = this;
+  //   try {
+  //     await sp.web.lists.getByTitle(Announcementlist).items.select("Title", "Description", "Created", "ID").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending          
 
-        if (items.length != 0) {
-          // $("#if-annc-present").show();
-          document.querySelectorAll('#if-annc-present').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
-          reactHandler.setState({
-            Items: items
-          });
-        } else {
-          // $("#if-no-annc-present").show();
-          document.querySelectorAll('#if-no-annc-present').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
-        }
-      });
-    } catch (err) {
-      console.log("Events : " + err);
+  //       if (items.length != 0) {
+  //         // $("#if-annc-present").show();
+  //         document.querySelectorAll('#if-annc-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //         reactHandler.setState({
+  //           Items: items
+  //         });
+  //       } else {
+  //         // $("#if-no-annc-present").show();
+  //         document.querySelectorAll('#if-no-annc-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.log("Events : " + err);
+  //   }
+  // }
+
+  // Updated code 
+
+  private async GetAnnouncements() {
+    try {
+      const items = await sp.web.lists
+        .getByTitle(Announcementlist)
+        .items.select("Title", "Description", "Created", "ID")
+        .filter(`IsActive eq '1'`)
+        .orderBy("Created", false)
+        .top(1)
+        .get();
+
+      if (items.length !== 0) {
+        // Show the announcement section
+        document.querySelectorAll('#if-annc-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'block';
+        });
+
+        // Update the state with fetched items
+        this.setState({ Items: items });
+      } else {
+        // Show the "no announcement" section
+        document.querySelectorAll('#if-no-annc-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'block';
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching announcements:", error);
     }
   }
+  // private async GetEvents() {
+  //   var reactHandler = this;
+  //   const tdaydate = moment().format('MM-DD-YYYY');
+  //   try {
+  //     await sp.web.lists.getByTitle(Eventslist).items.select("Title", "Description", "EventDate", "EndDate", "ID").filter(`EndDate ge '${tdaydate}'`).orderBy("Created", false).top(3).get().then((items) => { // //orderby is false -> decending          
 
+  //       if (items.length != 0) {
+  //         // $("#if-events-present").show();
+  //         // $("#if-no-events-present").hide();
+
+  //         document.querySelectorAll('#if-events-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         }); document.querySelectorAll('#if-no-events-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'none';
+  //         });
+  //         reactHandler.setState({
+  //           Events: items
+  //         });
+  //       } else {
+  //         // $("#if-events-present").hide();
+  //         // $("#if-no-events-present").show();
+
+  //         document.querySelectorAll('#if-events-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'none';
+  //         }); document.querySelectorAll('#if-no-events-present').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.log("Events : " + err);
+  //   }
+  // }
+
+  // Updated code 
   private async GetEvents() {
-    var reactHandler = this;
     const tdaydate = moment().format('MM-DD-YYYY');
+
     try {
-      await sp.web.lists.getByTitle(Eventslist).items.select("Title", "Description", "EventDate", "EndDate", "ID").filter(`EndDate ge '${tdaydate}'`).orderBy("Created", false).top(3).get().then((items) => { // //orderby is false -> decending          
+      const items = await sp.web.lists
+        .getByTitle(Eventslist)
+        .items.select("Title", "Description", "EventDate", "EndDate", "ID")
+        .filter(`EndDate ge '${tdaydate}'`)
+        .orderBy("Created", false)
+        .top(3)
+        .get();
 
-        if (items.length != 0) {
-          // $("#if-events-present").show();
-          // $("#if-no-events-present").hide();
+      if (items.length !== 0) {
+        // Show the events section and hide the "no events" section
+        document.querySelectorAll('#if-events-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'block';
+        });
+        document.querySelectorAll('#if-no-events-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'none';
+        });
 
-          document.querySelectorAll('#if-events-present').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          }); document.querySelectorAll('#if-no-events-present').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          });
-          reactHandler.setState({
-            Events: items
-          });
-        } else {
-          // $("#if-events-present").hide();
-          // $("#if-no-events-present").show();
-
-          document.querySelectorAll('#if-events-present').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          }); document.querySelectorAll('#if-no-events-present').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
-        }
-      });
-    } catch (err) {
-      console.log("Events : " + err);
+        // Update state with fetched events
+        this.setState({ Events: items });
+      } else {
+        // Hide the events section and show the "no events" section
+        document.querySelectorAll('#if-events-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        document.querySelectorAll('#if-no-events-present').forEach((element) => {
+          (element as HTMLElement).style.display = 'block';
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
     }
   }
 

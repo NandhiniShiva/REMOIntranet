@@ -40,40 +40,81 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
     reactHandler.GetNews();
 
   }
+  // private async GetNews() {
+  //   var reactHandler = this;
+  //   await sp.web.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "*").filter("IsActive eq 1").orderBy("Created", false).expand("Dept", "SitePageID").get().then((items) => {
+  //     if (items.length == 0) {
+  //       // $("#if-news-present").hide();
+  //       // $("#if-no-news-present").show();
+
+  //       document.querySelectorAll('#if-news-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('#if-no-news-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     } else {
+  //       // $("#if-news-present").show();
+  //       // $("#if-no-news-present").hide();
+
+  //       document.querySelectorAll('#if-news-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('#if-no-news-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //     }
+  //     if (items.length <= 1) {
+  //       reactHandler.setState({ ItemCount: 1 });
+  //     } else {
+  //       reactHandler.setState({ ItemCount: 2 });
+  //     }
+  //     reactHandler.setState({
+  //       Items: items
+  //     });
+  //   });
+  // }
+
+  // updated code 
   private async GetNews() {
-    var reactHandler = this;
-    await sp.web.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "*").filter("IsActive eq 1").orderBy("Created", false).expand("Dept", "SitePageID").get().then((items) => {
-      if (items.length == 0) {
-        // $("#if-news-present").hide();
-        // $("#if-no-news-present").show();
+    try {
+      const reactHandler = this;
+      const items = await sp.web.lists
+        .getByTitle(Newslist)
+        .items.select(
+          "ID",
+          "Title",
+          "Description",
+          "Created",
+          "Dept/Title",
+          "Image",
+          "Tag",
+          "DetailsPageUrl",
+          "SitePageID/Id",
+          "*"
+        )
+        .filter("IsActive eq 1")
+        .orderBy("Created", false)
+        .expand("Dept", "SitePageID")
+        .get();
 
-        document.querySelectorAll('#if-news-present').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        document.querySelectorAll('#if-no-news-present').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-      } else {
-        // $("#if-news-present").show();
-        // $("#if-no-news-present").hide();
+      const showNewsPresent = items.length > 0;
 
-        document.querySelectorAll('#if-news-present').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        document.querySelectorAll('#if-no-news-present').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-      }
-      if (items.length <= 1) {
-        reactHandler.setState({ ItemCount: 1 });
-      } else {
-        reactHandler.setState({ ItemCount: 2 });
-      }
+      document.querySelectorAll('#if-news-present').forEach(element => {
+        (element as HTMLElement).style.display = showNewsPresent ? 'block' : 'none';
+      });
+      document.querySelectorAll('#if-no-news-present').forEach(element => {
+        (element as HTMLElement).style.display = showNewsPresent ? 'none' : 'block';
+      });
+
       reactHandler.setState({
         Items: items
       });
-    });
+    } catch (error) {
+      console.error("Error fetching news items: ", error);
+    }
   }
+
 
   next() {
     this.slider.slickNext();

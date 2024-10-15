@@ -79,164 +79,329 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  async GetMainNavItems() {
-    const items = await sp.web.lists.getByTitle(Navigationslist).items
-      .select("*", "Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon")
-      .filter("IsActive eq 1")
-      .orderBy("Order0", true)
-      .top(7)
-      .expand("LinkMasterID")
-      .get();
+  // async GetMainNavItems() {
+  //   const items = await sp.web.lists.getByTitle(Navigationslist).items
+  //     .select("*", "Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon")
+  //     .filter("IsActive eq 1")
+  //     .orderBy("Order0", true)
+  //     .top(7)
+  //     .expand("LinkMasterID")
+  //     .get();
 
-    this.setState({ MainNavItems: items });
-    // $('#root-nav-links ul li').on('click', function () {
-    //   $(this).siblings().removeClass('active');
-    //   $(this).addClass('active');
-    // });
+  //   this.setState({ MainNavItems: items });
+  //   // $('#root-nav-links ul li').on('click', function () {
+  //   //   $(this).siblings().removeClass('active');
+  //   //   $(this).addClass('active');
+  //   // });
 
-    const navLinks = document.querySelectorAll('#root-nav-links ul li');
+  //   const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
-    navLinks.forEach(function (link) {
-      link.addEventListener('click', function () {
-        // Remove "active" class from all siblings
-        navLinks.forEach(function (sibling) {
-          sibling.classList.remove('active');
-        });
+  //   navLinks.forEach(function (link) {
+  //     link.addEventListener('click', function () {
+  //       // Remove "active" class from all siblings
+  //       navLinks.forEach(function (sibling) {
+  //         sibling.classList.remove('active');
+  //       });
 
-        // Add "active" class to the clicked item
-        link.classList.add('active');
-      });
-    });
+  //       // Add "active" class to the clicked item
+  //       link.classList.add('active');
+  //     });
+  //   });
 
-  }
+  // }
 
-  async GetMyLinks() {
+  // Updated code 
+
+  private async GetMainNavItems() {
     try {
-      const items = await sp.web.lists.getByTitle(QuickLinkslist).items
-        .select("*", "Title", "Image", "ImageHover", "OpenInNewTab", "Order", "URL")
-        .filter(`IsActive eq 1`)
+      const items = await sp.web.lists
+        .getByTitle(Navigationslist)
+        .items.select(
+          "*",
+          "Title",
+          "URL",
+          "OpenInNewTab",
+          "LinkMasterID/Title",
+          "LinkMasterID/Id",
+          "HoverOnIcon",
+          "HoverOffIcon"
+        )
+        .filter("IsActive eq 1")
         .orderBy("Order0", true)
-        .top(5)
+        .top(7)
+        .expand("LinkMasterID")
         .get();
 
-      this.setState({ MyLinks: items });
-      // $('#root-nav-links ul li').on('click', function () {
-      //   $(this).siblings().removeClass('active');
-      //   $(this).addClass('active');
-      // });
+      this.setState({ MainNavItems: items });
 
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
-      navLinks.forEach(function (link) {
-        link.addEventListener('click', function () {
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
           // Remove "active" class from all siblings
-          navLinks.forEach(function (sibling) {
-            sibling.classList.remove('active');
-          });
-
+          navLinks.forEach((sibling) => sibling.classList.remove('active'));
           // Add "active" class to the clicked item
           link.classList.add('active');
         });
       });
 
-    } catch (err) {
-      console.log("Navigation Main Nav : " + err);
+    } catch (error) {
+      console.error("Error fetching navigation items: ", error);
     }
   }
-  public GetDepartments() {
-    // $('.clears-subnav').show();
-    // $('.floating-content-editor-home').addClass('active')
-    // $('.breadcrum-block').addClass('open');
-    // $(".breadcrum-block").show();
+  // async GetMyLinks() {
+  //   try {
+  //     const items = await sp.web.lists.getByTitle(QuickLinkslist).items
+  //       .select("*", "Title", "Image", "ImageHover", "OpenInNewTab", "Order", "URL")
+  //       .filter(`IsActive eq 1`)
+  //       .orderBy("Order0", true)
+  //       .top(5)
+  //       .get();
 
-    document.querySelectorAll('.floating-content-editor-home').forEach(function (element) {
-      element.classList.add('active');
-    });
+  //     this.setState({ MyLinks: items });
+  //     // $('#root-nav-links ul li').on('click', function () {
+  //     //   $(this).siblings().removeClass('active');
+  //     //   $(this).addClass('active');
+  //     // });
 
-    document.querySelectorAll('.clears-subnav').forEach(element => {
-      (element as HTMLElement).style.display = 'block';
-    });
+  //     const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
-    document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-      element.classList.add('open');
-    });
+  //     navLinks.forEach(function (link) {
+  //       link.addEventListener('click', function () {
+  //         // Remove "active" class from all siblings
+  //         navLinks.forEach(function (sibling) {
+  //           sibling.classList.remove('active');
+  //         });
 
-    document.querySelectorAll('.breadcrum-block').forEach(element => {
-      (element as HTMLElement).style.display = 'block';
-    });
-    var reactHandler = this;
-    reactHandler.displayData = [];
-    BreadCrumb = [];
-    // $(".main-mavigation").siblings().removeClass("submenu");
-    // $(".main-mavigation").addClass("submenu");
-    // $('#meetingroom').off('click');
+  //         // Add "active" class to the clicked item
+  //         link.classList.add('active');
+  //       });
+  //     });
 
-    const mainNavigationElements: any = document.querySelectorAll('.main-mavigation');
-    mainNavigationElements.forEach(function (element: any) {
+  //   } catch (err) {
+  //     console.log("Navigation Main Nav : " + err);
+  //   }
+  // }
 
-      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-        (sibling: any) => sibling !== element
-      );
-      // Remove the "submenu" class from each sibling
-      siblings.forEach(function (sibling: any) {
-        sibling.classList.remove('submenu');
-      });
-    });
-    document.querySelectorAll('.main-mavigation').forEach(function (element) {
-      element.classList.add('submenu');
-    });
-    const meetingRoom = document.querySelector('#meetingroom');
+  // updated code 
 
-    if (meetingRoom) {
-      meetingRoom.replaceWith(meetingRoom.cloneNode(true));
-    }
-
+  private async GetMyLinks() {
     try {
-      sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get().then((items) => {
-        reactHandler.setState({
-          DeptandQuickLinksItems: items
+      const items = await sp.web.lists
+        .getByTitle(QuickLinkslist)
+        .items.select(
+          "*",
+          "Title",
+          "Image",
+          "ImageHover",
+          "OpenInNewTab",
+          "Order",
+          "URL"
+        )
+        .filter("IsActive eq 1")
+        .orderBy("Order0", true)
+        .top(5)
+        .get();
+
+      this.setState({ MyLinks: items });
+
+      const navLinks = document.querySelectorAll('#root-nav-links ul li');
+
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          // Remove "active" class from all siblings
+          navLinks.forEach((sibling) => sibling.classList.remove('active'));
+          // Add "active" class to the clicked item
+          link.classList.add('active');
         });
-        for (var i = 0; i < items.length; i++) {
-
-
-          //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
-          let ID = items[i].Id;
-
-          var Title = items[i].Title;
-          var Url = items[i].URL.Url;
-          let OpenInNewTab = items[i].OpenInNewTab;
-          let HasSubDept = items[i].HasSubDepartment;
-          reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
-          //   }
-        }
-        // $(".submenu-clear-wrap").show()
-        // $(".submenu-wrap-lists ul li").on("click", function () {
-        //   $(this).siblings().removeClass('active');
-        //   $(this).addClass('active');
-        // });
-
-        document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-
-        document.querySelectorAll('.submenu-wrap-lists ul li').forEach(function (item) {
-          item.addEventListener('click', function () {
-            // Remove "active" class from all siblings
-            this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
-              sibling.classList.remove('active');
-            });
-
-            // Add "active" class to the clicked item
-            this.classList.add('active');
-          });
-        });
-
       });
-    } catch (err) {
-      console.log("Navigation Department Link : " + err);
+
+    } catch (error) {
+      console.error("Error fetching MyLinks items: ", error);
     }
   }
+  // public GetDepartments() {
+  //   // $('.clears-subnav').show();
+  //   // $('.floating-content-editor-home').addClass('active')
+  //   // $('.breadcrum-block').addClass('open');
+  //   // $(".breadcrum-block").show();
 
+  //   document.querySelectorAll('.floating-content-editor-home').forEach(function (element) {
+  //     element.classList.add('active');
+  //   });
+
+  //   document.querySelectorAll('.clears-subnav').forEach(element => {
+  //     (element as HTMLElement).style.display = 'block';
+  //   });
+
+  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
+  //     element.classList.add('open');
+  //   });
+
+  //   document.querySelectorAll('.breadcrum-block').forEach(element => {
+  //     (element as HTMLElement).style.display = 'block';
+  //   });
+  //   var reactHandler = this;
+  //   reactHandler.displayData = [];
+  //   BreadCrumb = [];
+  //   // $(".main-mavigation").siblings().removeClass("submenu");
+  //   // $(".main-mavigation").addClass("submenu");
+  //   // $('#meetingroom').off('click');
+
+  //   const mainNavigationElements: any = document.querySelectorAll('.main-mavigation');
+  //   mainNavigationElements.forEach(function (element: any) {
+
+  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //       (sibling: any) => sibling !== element
+  //     );
+  //     // Remove the "submenu" class from each sibling
+  //     siblings.forEach(function (sibling: any) {
+  //       sibling.classList.remove('submenu');
+  //     });
+  //   });
+  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
+  //     element.classList.add('submenu');
+  //   });
+  //   const meetingRoom = document.querySelector('#meetingroom');
+
+  //   if (meetingRoom) {
+  //     meetingRoom.replaceWith(meetingRoom.cloneNode(true));
+  //   }
+
+  //   try {
+  //     sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get().then((items) => {
+  //       reactHandler.setState({
+  //         DeptandQuickLinksItems: items
+  //       });
+  //       for (var i = 0; i < items.length; i++) {
+
+
+  //         //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
+  //         let ID = items[i].Id;
+
+  //         var Title = items[i].Title;
+  //         var Url = items[i].URL.Url;
+  //         let OpenInNewTab = items[i].OpenInNewTab;
+  //         let HasSubDept = items[i].HasSubDepartment;
+  //         reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
+  //         //   }
+  //       }
+  //       // $(".submenu-clear-wrap").show()
+  //       // $(".submenu-wrap-lists ul li").on("click", function () {
+  //       //   $(this).siblings().removeClass('active');
+  //       //   $(this).addClass('active');
+  //       // });
+
+  //       document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+
+  //       document.querySelectorAll('.submenu-wrap-lists ul li').forEach(function (item) {
+  //         item.addEventListener('click', function () {
+  //           // Remove "active" class from all siblings
+  //           this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+  //             sibling.classList.remove('active');
+  //           });
+
+  //           // Add "active" class to the clicked item
+  //           this.classList.add('active');
+  //         });
+  //       });
+
+  //     });
+  //   } catch (err) {
+  //     console.log("Navigation Department Link : " + err);
+  //   }
+  // }
+
+  // Updated code 
+
+  public GetDepartments() {
+    try {
+      // Adding classes and showing elements
+      document.querySelectorAll('.floating-content-editor-home').forEach((element) => {
+        element.classList.add('active');
+      });
+
+      document.querySelectorAll('.clears-subnav').forEach((element) => {
+        (element as HTMLElement).style.display = 'block';
+      });
+
+      document.querySelectorAll('.breadcrum-block').forEach((element) => {
+        element.classList.add('open');
+        (element as HTMLElement).style.display = 'block';
+      });
+
+      const mainNavigationElements = document.querySelectorAll('.main-mavigation');
+      mainNavigationElements.forEach(function (element: any) {
+
+        const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+          (sibling: any) => sibling !== element
+        );
+        // Remove the "submenu" class from each sibling
+        siblings.forEach(function (sibling: any) {
+          sibling.classList.remove('submenu');
+        });
+      });
+      mainNavigationElements.forEach((element) => {
+        element.classList.add('submenu');
+      });
+
+      // Replace event listeners for the meeting room
+      const meetingRoom = document.querySelector('#meetingroom');
+      if (meetingRoom) {
+        meetingRoom.replaceWith(meetingRoom.cloneNode(true));
+      }
+
+      // Fetching data from SharePoint
+      sp.web.lists
+        .getByTitle(DepartmentsMasterlist)
+        .items.select(
+          "Title",
+          "ID",
+          "URL",
+          "HasSubDepartment",
+          "OpenInNewTab",
+          "PlaceDepartmentUnder/Title",
+          "PlaceDepartmentUnder/Id"
+        )
+        .filter("IsActive eq '1'")
+        .orderBy("Order0", true)
+        .expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder")
+        .get()
+        .then((items) => {
+          this.setState({
+            DeptandQuickLinksItems: items
+          });
+
+          items.forEach((item) => {
+            const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
+            const Url = URL.Url;
+            this.appendData(Id, Title, OpenInNewTab, HasSubDepartment, Url);
+          });
+
+          document.querySelectorAll('.submenu-clear-wrap').forEach((element) => {
+            (element as HTMLElement).style.display = 'block';
+          });
+
+          document.querySelectorAll('.submenu-wrap-lists ul li').forEach((item) => {
+            item.addEventListener('click', function () {
+              this.parentElement.querySelectorAll('li').forEach((sibling: any) => {
+                sibling.classList.remove('active');
+              });
+
+              this.classList.add('active');
+            });
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching departments data: ", error);
+        });
+
+    } catch (error) {
+      console.error("Error initializing departments: ", error);
+    }
+  }
   public async GetQuickLinks() {
     const { siteurl } = this.props;
     try {

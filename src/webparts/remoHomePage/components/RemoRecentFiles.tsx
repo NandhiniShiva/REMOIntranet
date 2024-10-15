@@ -30,17 +30,27 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
   }
 
 
-  public GetMyOneDriveRecents() {
-    this.serviceProvider.
-      getMyDriveRecents()
-      .then(
-        (result: any[]): void => {
-          this.setState({ myonedriveRecentData: result });
-        }
-      )
-      .catch(error => {
-        console.log(error);
-      });
+  // public GetMyOneDriveRecents() {
+  //   this.serviceProvider.
+  //     getMyDriveRecents()
+  //     .then(
+  //       (result: any[]): void => {
+  //         this.setState({ myonedriveRecentData: result });
+  //       }
+  //     )
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
+
+  // updated code 
+  public async GetMyOneDriveRecents() {
+    try {
+      const result = await this.serviceProvider.getMyDriveRecents();
+      this.setState({ myonedriveRecentData: result });
+    } catch (error) {
+      console.error("Error in GetMyOneDriveRecents:", error);
+    }
   }
 
   public OpenRecentfiles(url: string) {

@@ -34,26 +34,63 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
     this.GetGalleryFilesFolder();
   }
 
-  public GetGalleryFilesFolder() {
-    var reactHandler = this;
-    NewWeb.lists.getByTitle(PictureGalleryLib).items.expand("Folder", "File").top(1000).orderBy("Created", false).select("ID", "Title", "FileRef", "FileSystemObjectType", "FileLeafRef", "Folder/ServerRelativeUrl", "Folder/Name").get().then((items: any[]) => {
-      if (items.length != 0) {
-        // $("#if-gallery-present").show();
-        // $("#if-no-gallery-present").hide();
+  // public GetGalleryFilesFolder() {
+  //   var reactHandler = this;
+  //   NewWeb.lists.getByTitle(PictureGalleryLib).items.expand("Folder", "File").top(1000).orderBy("Created", false).select("ID", "Title", "FileRef", "FileSystemObjectType", "FileLeafRef", "Folder/ServerRelativeUrl", "Folder/Name").get().then((items: any[]) => {
+  //     if (items.length != 0) {
+  //       // $("#if-gallery-present").show();
+  //       // $("#if-no-gallery-present").hide();
 
+  //       document.querySelectorAll('#if-gallery-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('#if-no-gallery-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       reactHandler.setState({
+  //         Galleryitems: items
+  //       });
+  //     } else {
+  //       // $("#if-gallery-present").hide();
+  //       // $("#if-no-gallery-present").show();
+
+  //       document.querySelectorAll('#if-gallery-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('#if-no-gallery-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     }
+  //   });
+
+  // }
+
+  // Updated code
+
+  public async GetGalleryFilesFolder() {
+    try {
+      const items = await NewWeb.lists
+        .getByTitle(PictureGalleryLib)
+        .items
+        .expand("Folder", "File")
+        .top(1000)
+        .orderBy("Created", false)
+        .select("ID", "Title", "FileRef", "FileSystemObjectType", "FileLeafRef", "Folder/ServerRelativeUrl", "Folder/Name")
+        .get();
+
+      if (items.length !== 0) {
+        // Show gallery present section, hide no gallery present section
         document.querySelectorAll('#if-gallery-present').forEach(element => {
           (element as HTMLElement).style.display = 'block';
         });
         document.querySelectorAll('#if-no-gallery-present').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
-        reactHandler.setState({
+        this.setState({
           Galleryitems: items
         });
       } else {
-        // $("#if-gallery-present").hide();
-        // $("#if-no-gallery-present").show();
-
+        // Hide gallery present section, show no gallery present section
         document.querySelectorAll('#if-gallery-present').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
@@ -61,10 +98,10 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
           (element as HTMLElement).style.display = 'block';
         });
       }
-    });
-
+    } catch (error) {
+      console.error("Error fetching gallery files:", error);
+    }
   }
-
   public findValueInArray(value: any, arr: string | any[]) {
     var result = false;
 

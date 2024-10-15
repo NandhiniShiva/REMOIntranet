@@ -131,90 +131,125 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
   public async getCurrentUser() {
     var reacthandler = this;
     User = reacthandler.props.userid;
-    const profile = await pnp.sp.profiles.myProperties.get();
-    UserEmail = profile.Email;
-    Designation = profile.Title;
+    try {
 
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+
+      const profile = await pnp.sp.profiles.myProperties.get();
+      UserEmail = profile.Email;
+      Designation = profile.Title;
+
+      // Check if the UserProfileProperties collection exists and has the Department property
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        // Find the Department property in the profile
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
       }
+    } catch (error) {
+      console.log("Error in getCurrentUser", error);
+
     }
   }
 
   private async GetAllNews() {
-    var reactHandler = this;
-    await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter("IsActive eq 1").orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(1).get().then((items: { Id: any; }[]) => {
 
-      reactHandler.setState({
-        Items: items,
-      }, () => {
-        // Call LandingPageAnalytics after state is updated
-        this.LandingPageAnalytics();
+    var reactHandler = this;
+    try {
+
+
+      await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter("IsActive eq 1").orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(1).get().then((items: { Id: any; }[]) => {
+
+        reactHandler.setState({
+          Items: items,
+        }, () => {
+          // Call LandingPageAnalytics after state is updated
+          this.LandingPageAnalytics();
+        });
+        let ItemID = items[0].Id;
+        reactHandler.GetAllRecentNews(ItemID);
       });
-      let ItemID = items[0].Id;
-      reactHandler.GetAllRecentNews(ItemID);
-    });
+    } catch (error) {
+      console.log("Error in GetAllNews", error);
+
+    }
   }
 
   private async GetAllRecentNews(ID: any) {
     var reactHandler = this;
-    await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and ID ne '${ID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: any) => {
+    try {
 
-      reactHandler.setState({
-        RecentNewsItems: items
+
+      await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and ID ne '${ID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: any) => {
+
+        reactHandler.setState({
+          RecentNewsItems: items
+        });
       });
-    });
+    } catch (error) {
+      console.log("Error in GetAllRecentNews", error);
+
+    }
   }
 
   private async GetAllTopNews() {
     var reactHandler = this;
+    try {
 
-    await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "PageViewCount", "*").filter(`IsActive eq '1'`).orderBy("PageViewCount", false).expand("Dept", "SitePageID", "TransactionItemID").get().then((items: any[]) => {
 
-      if (items.length != 0) {
-        // $(".top-news-block-current-month").show();
+      await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "PageViewCount", "*").filter(`IsActive eq '1'`).orderBy("PageViewCount", false).expand("Dept", "SitePageID", "TransactionItemID").get().then((items: any[]) => {
 
-        document.querySelectorAll('.top-news-block-current-month').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        reactHandler.setState({
-          ViewBasedTopNews: items
-        });
-      } else {
-        // $(".top-news-block-current-month").hide();
-        document.querySelectorAll('.top-news-block-current-month').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-      }
-    });
+        if (items.length != 0) {
+          // $(".top-news-block-current-month").show();
+
+          document.querySelectorAll('.top-news-block-current-month').forEach(element => {
+            (element as HTMLElement).style.display = 'block';
+          });
+          reactHandler.setState({
+            ViewBasedTopNews: items
+          });
+        } else {
+          // $(".top-news-block-current-month").hide();
+          document.querySelectorAll('.top-news-block-current-month').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
+        }
+      });
+    } catch (error) {
+      console.log("Error in GetAllTopNews", error);
+
+    }
   }
 
   public async GetWeekOldNews() {
     var reactHandler = this;
     let today = moment().format("YYYY-MM-DD");
     let WkDate = moment(today, "YYYY-MM-DD").subtract(1, "week").format("YYYY-MM-DD");
-    await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and Created lt '${WkDate}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(20).get().then((items: any[]) => {
+    try {
 
-      if (items.length != 0) {
-        // $(".PastNewsData").show();
-        document.querySelectorAll('.PastNewsData').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        reactHandler.setState({
-          OneWkOldNews: items
-        });
-      } else {
-        document.querySelectorAll('.PastNewsData').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        // $(".PastNewsData").hide();
-      }
-    });
+
+      await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and Created lt '${WkDate}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(20).get().then((items: any[]) => {
+
+        if (items.length != 0) {
+          // $(".PastNewsData").show();
+          document.querySelectorAll('.PastNewsData').forEach(element => {
+            (element as HTMLElement).style.display = 'block';
+          });
+          reactHandler.setState({
+            OneWkOldNews: items
+          });
+        } else {
+          document.querySelectorAll('.PastNewsData').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
+          // $(".PastNewsData").hide();
+        }
+      });
+    } catch (error) {
+      console.log("Error in GetWeekOldNews", error);
+
+    }
   }
 
   private async GetAllNewsAvailableDepartments() {
@@ -222,80 +257,95 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     DeptNames = [];
     DeptNamesExitsUnique = [];
     var reactHandler = this;
-    await NewWeb.lists.getByTitle(Newslist).items.select("*", "ID", "Dept/Id", "Dept/Title", "Image").filter(`IsActive eq '1'`).orderBy("Created", false).expand("Dept").get().then((items: string | any[]) => {
+    try {
 
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].Dept == undefined) {
 
-        } else {
-          var DeptName = items[i].Dept.Title;
-          var DeptID = items[i].Dept.Title;
+      await NewWeb.lists.getByTitle(Newslist).items.select("*", "ID", "Dept/Id", "Dept/Title", "Image").filter(`IsActive eq '1'`).orderBy("Created", false).expand("Dept").get().then((items: string | any[]) => {
 
-        }
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].Dept == undefined) {
 
-        DeptNames.push(DeptName);
-        if (reactHandler.findValueInArray(DeptName, DeptNamesExitsUnique)) {
-        }
-        else {
-          if (reactHandler.findValueInArray(DeptName, DeptNames)) {
-            DeptNamesExitsUnique.push(DeptName);
-            let RawImageTxt = items[i].Image;
-            var serverRelativeUrl;
-            if (RawImageTxt != "" && RawImageTxt != null) {
+          } else {
+            var DeptName = items[i].Dept.Title;
+            var DeptID = items[i].Dept.Title;
 
-              var ImgObj = JSON.parse(RawImageTxt);
-              if (ImgObj.serverRelativeUrl == undefined) {
+          }
 
-                serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + items[i].ID + "/" + ImgObj.fileName
+          DeptNames.push(DeptName);
+          if (reactHandler.findValueInArray(DeptName, DeptNamesExitsUnique)) {
+          }
+          else {
+            if (reactHandler.findValueInArray(DeptName, DeptNames)) {
+              DeptNamesExitsUnique.push(DeptName);
+              let RawImageTxt = items[i].Image;
+              var serverRelativeUrl;
+              if (RawImageTxt != "" && RawImageTxt != null) {
 
-              } else {
+                var ImgObj = JSON.parse(RawImageTxt);
+                if (ImgObj.serverRelativeUrl == undefined) {
 
-                serverRelativeUrl = ImgObj.serverRelativeUrl
+                  serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + items[i].ID + "/" + ImgObj.fileName
 
+                } else {
+
+                  serverRelativeUrl = ImgObj.serverRelativeUrl
+
+                }
+                var PicUrl = serverRelativeUrl;
+                NewsAvailableDepts.push({ "ID": DeptID, "Title": DeptName, "URL": PicUrl });
               }
-              var PicUrl = serverRelativeUrl;
-              NewsAvailableDepts.push({ "ID": DeptID, "Title": DeptName, "URL": PicUrl });
             }
           }
         }
-      }
-      reactHandler.setState({ AvailableDepts: NewsAvailableDepts });
-      console.log(reactHandler.state.AvailableDepts);
-      reactHandler.GetDeptNews();
+        reactHandler.setState({ AvailableDepts: NewsAvailableDepts });
+        console.log(reactHandler.state.AvailableDepts);
+        reactHandler.GetDeptNews();
 
-    });
+      });
+    } catch (error) {
+      console.log("Error in GetAllNewsAvailableDepartments", error);
+
+    }
   }
 
 
   public async GetDeptNews() {
     var reactHandler = this;
+
     for (var j = 0; j < this.state.AvailableDepts.length;) {
       var string = this.state.AvailableDepts[j].Title;
       var Title = string.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
       var CustomID = "" + Title + "-Dept-News";
       var DeptID = this.state.AvailableDepts[j].ID;
       if (DeptID != "" || DeptID != undefined || DeptID != null) {
+        try {
 
-        await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id").filter(`IsActive eq '1' and Dept/Id eq '${DeptID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: string | any[]) => {
 
-          for (var i = 0; i < items.length;) {
-            // $("#" + CustomID + "").append(`<li><a href="${items[i].DetailsPageUrl}?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
-            // $("#" + CustomID + "").append(`<li><a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
-            const element = document.getElementById(CustomID);
-            if (element) {
-              element.insertAdjacentHTML('beforeend', `
+          await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id").filter(`IsActive eq '1' and Dept/Id eq '${DeptID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: string | any[]) => {
+
+            for (var i = 0; i < items.length;) {
+              // $("#" + CustomID + "").append(`<li><a href="${items[i].DetailsPageUrl}?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
+              // $("#" + CustomID + "").append(`<li><a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
+              const element = document.getElementById(CustomID);
+              if (element) {
+                element.insertAdjacentHTML('beforeend', `
                     <li>
                                     <a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off">
         <p>${items[i].Title}</p>
       </a>
     </li>
   `);
-            }
+              }
 
-            i++;
-          }
-          j++;
-        });
+              i++;
+            }
+            j++;
+          });
+
+        } catch (error) {
+          console.log("Error in GetDeptNews", error);
+
+        }
       }
     }
   }

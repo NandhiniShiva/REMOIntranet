@@ -28,35 +28,72 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
 
   }
+  // private async GetCEOMessage() {
+  //   var reactHandler = this;
+  //   await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
+
+  //     if (items.length == 0) {
+  //       // $("#if-no-ceo-msg-present").show();
+  //       // $("#if-ceo-msg-present").hide();
+  //       document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //     } else {
+  //       reactHandler.setState({
+  //         Items: items
+  //       });
+  //       // $("#if-no-ceo-msg-present").hide();
+  //       // $("#if-ceo-msg-present").show();
+
+  //       document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     }
+
+  //   });
+
+  // }
+
+  // Updated 
   private async GetCEOMessage() {
     var reactHandler = this;
-    await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
+    try {
 
-      if (items.length == 0) {
-        // $("#if-no-ceo-msg-present").show();
-        // $("#if-ceo-msg-present").hide();
-        document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-      } else {
-        reactHandler.setState({
-          Items: items
-        });
-        // $("#if-no-ceo-msg-present").hide();
-        // $("#if-ceo-msg-present").show();
+      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
 
-        document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-      }
+        if (items.length == 0) {
+          // $("#if-no-ceo-msg-present").show();
+          // $("#if-ceo-msg-present").hide();
+          document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
+            (element as HTMLElement).style.display = 'block';
+          }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
+        } else {
+          reactHandler.setState({
+            Items: items
+          });
+          // $("#if-no-ceo-msg-present").hide();
+          // $("#if-ceo-msg-present").show();
 
-    });
+          document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
+            (element as HTMLElement).style.display = 'block';
+          });
+        }
+
+      });
+    } catch (err) {
+      console.error("Error fetching CEO message:", err);
+    }
 
   }
+
   // public DynamicHeight() {
   //   setTimeout(() => {
   //     var ceotitleheight = $("#ceo-title-dynamic").height();

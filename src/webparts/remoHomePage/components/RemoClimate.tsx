@@ -193,6 +193,27 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
   }
 
 
+
+  // public GetCurrencyValue() {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("apikey", "6RaCIlf1R8C4viHMAQATs6kbVKeU2LlQ");
+  //   var requestOptions: any = {
+  //     method: 'GET',
+  //     redirect: 'follow',
+  //     headers: myHeaders
+  //   };
+  //   fetch("https://api.apilayer.com/exchangerates_data/convert?to=USD&from=AED&amount=1", requestOptions)
+  //     .then(resp => resp.json())
+  //     .then((data) => {
+  //       var num = parseFloat(data.result);
+  //       var new_num = num.toFixed(2);
+  //       this.setState({
+  //         CurrencyValue: new_num
+  //       });
+  //     });
+  // }
+
+  // Updated code
   public GetCurrencyValue() {
     var myHeaders = new Headers();
     myHeaders.append("apikey", "6RaCIlf1R8C4viHMAQATs6kbVKeU2LlQ");
@@ -201,15 +222,29 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
       redirect: 'follow',
       headers: myHeaders
     };
-    fetch("https://api.apilayer.com/exchangerates_data/convert?to=USD&from=AED&amount=1", requestOptions)
-      .then(resp => resp.json())
-      .then((data) => {
-        var num = parseFloat(data.result);
-        var new_num = num.toFixed(2);
-        this.setState({
-          CurrencyValue: new_num
+
+    try {
+      fetch("https://api.apilayer.com/exchangerates_data/convert?to=USD&from=AED&amount=1", requestOptions)
+        .then(resp => {
+          if (!resp.ok) {
+            throw new Error(`HTTP error! status: ${resp.status}`);
+          }
+          return resp.json();
+        })
+        .then((data) => {
+          var num = parseFloat(data.result);
+          var new_num = num.toFixed(2);
+          this.setState({
+            CurrencyValue: new_num
+          });
         });
+    } catch (error) {
+      console.error("Error fetching currency value:", error);
+      // Optionally, set an error state or display an error message to the user
+      this.setState({
+        CurrencyValue: "Error fetching currency value"
       });
+    }
   }
 
   public async GetCurrencySymbols() {

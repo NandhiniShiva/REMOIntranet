@@ -50,73 +50,153 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
   }
 
+  // public async GetBirthday() {
+  //   var reactHandler = this;
+
+  //   await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created").
+  //     orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
+
+  //       if (items.length != 0) {
+  //         // $("#today-bday").show();
+  //         document.querySelectorAll('#today-bday').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+
+  //         reactHandler.setState({
+  //           TodayBirthday: items,
+  //         });
+
+  //         for (var i = 0; i < items.length; i++) {
+
+  //           var tdaydate = moment().format('MM/DD');
+  //           var bdaydates = moment(items[i].DOB).format('MM/DD')
+
+  //           if (tdaydate == bdaydates) {
+  //             this.setState({ TotalBirthday: items.length })
+  //           }
+  //         }
+  //       } else {
+  //         // $("#today-bday").hide();
+  //         // $("#upcoming-bday").show();
+
+  //         document.querySelectorAll('#today-bday').forEach(element => {
+  //           (element as HTMLElement).style.display = 'none';
+  //         }); document.querySelectorAll('#upcoming-bday').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //       }
+
+  //     });
+  //   reactHandler.GetUpcomingBirthday();
+  // }
+
+  // Updated code 
+
   public async GetBirthday() {
-    var reactHandler = this;
+    try {
+      const items = await sp.web.lists
+        .getByTitle(Birthdaylist)
+        .items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created")
+        .orderBy("DOB", true)
+        .filter(`IsActive eq '1'`)
+        .get();
 
-    await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created").
-      orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
+      if (items.length !== 0) {
+        document.querySelectorAll('#today-bday').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
 
-        if (items.length != 0) {
-          // $("#today-bday").show();
-          document.querySelectorAll('#today-bday').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
+        this.setState({ TodayBirthday: items });
 
-          reactHandler.setState({
-            TodayBirthday: items,
-          });
+        const todayDate = moment().format('MM/DD');
+        const birthdaysToday = items.filter(item => moment(item.DOB).format('MM/DD') === todayDate);
 
-          for (var i = 0; i < items.length; i++) {
-
-            var tdaydate = moment().format('MM/DD');
-            var bdaydates = moment(items[i].DOB).format('MM/DD')
-
-            if (tdaydate == bdaydates) {
-              this.setState({ TotalBirthday: items.length })
-            }
-          }
-        } else {
-          // $("#today-bday").hide();
-          // $("#upcoming-bday").show();
-
-          document.querySelectorAll('#today-bday').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          }); document.querySelectorAll('#upcoming-bday').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
+        if (birthdaysToday.length > 0) {
+          this.setState({ TotalBirthday: birthdaysToday.length });
         }
+      } else {
+        document.querySelectorAll('#today-bday').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        document.querySelectorAll('#upcoming-bday').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+      }
 
-      });
-    reactHandler.GetUpcomingBirthday();
+      this.GetUpcomingBirthday();
+    } catch (error) {
+      console.error("Error fetching birthday data: ", error);
+    }
   }
 
+  // public async GetUpcomingBirthday() {
+  //   var reactHandler = this;
+  //   var FutureDate1 = moment().add(1, "days").format('MM/DD');
+  //   var FutureDate2 = moment().add(2, "days").format('MM/DD');
+  //   var FutureDate3 = moment().add(3, "days").format('MM/DD');
+
+  //   reactHandler.setState({
+  //     FirstBdayDate: moment(FutureDate1, 'MM/DD'),
+  //     LastBdayDate: moment(FutureDate3, 'MM/DD'),
+  //   });
+  //   await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created",).top(1000).
+  //     orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
+
+  //       reactHandler.setState({
+  //         UpcomingBirthday: items,
+  //       });
+  //       for (var i = 0; i < items.length; i++) {
+  //         var bdaydates = moment(items[i].DOB).format('MM/DD');
+
+  //         if (FutureDate1 == bdaydates || FutureDate2 == bdaydates || FutureDate3 == bdaydates) {
+  //           reactHandler.setState({
+  //             TotalBirthday: reactHandler.state.TotalBirthday + items.length
+  //           });
+  //         }
+  //       }
+  //       reactHandler.checkBirthdayAvailability();
+  //     });
+  // }
+
+  // Updated code 
+
   public async GetUpcomingBirthday() {
-    var reactHandler = this;
-    var FutureDate1 = moment().add(1, "days").format('MM/DD');
-    var FutureDate2 = moment().add(2, "days").format('MM/DD');
-    var FutureDate3 = moment().add(3, "days").format('MM/DD');
+    try {
+      const reactHandler = this;
+      const FutureDate1 = moment().add(1, "days").format('MM/DD');
+      const FutureDate2 = moment().add(2, "days").format('MM/DD');
+      const FutureDate3 = moment().add(3, "days").format('MM/DD');
 
-    reactHandler.setState({
-      FirstBdayDate: moment(FutureDate1, 'MM/DD'),
-      LastBdayDate: moment(FutureDate3, 'MM/DD'),
-    });
-    await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created",).top(1000).
-      orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
-
-        reactHandler.setState({
-          UpcomingBirthday: items,
-        });
-        for (var i = 0; i < items.length; i++) {
-          var bdaydates = moment(items[i].DOB).format('MM/DD');
-
-          if (FutureDate1 == bdaydates || FutureDate2 == bdaydates || FutureDate3 == bdaydates) {
-            reactHandler.setState({
-              TotalBirthday: reactHandler.state.TotalBirthday + items.length
-            });
-          }
-        }
-        reactHandler.checkBirthdayAvailability();
+      reactHandler.setState({
+        FirstBdayDate: moment(FutureDate1, 'MM/DD'),
+        LastBdayDate: moment(FutureDate3, 'MM/DD'),
       });
+
+      const items = await sp.web.lists
+        .getByTitle(Birthdaylist)
+        .items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created")
+        .top(1000)
+        .orderBy("DOB", true)
+        .filter(`IsActive eq '1'`)
+        .get();
+
+      reactHandler.setState({
+        UpcomingBirthday: items,
+      });
+
+      for (var i = 0; i < items.length; i++) {
+        var bdaydates = moment(items[i].DOB).format('MM/DD');
+
+        if (FutureDate1 == bdaydates || FutureDate2 == bdaydates || FutureDate3 == bdaydates) {
+          reactHandler.setState({
+            TotalBirthday: reactHandler.state.TotalBirthday + items.length
+          });
+        }
+      }
+      reactHandler.checkBirthdayAvailability();
+    } catch (error) {
+      console.error("Error fetching upcoming birthdays:", error);
+    }
   }
 
   public checkBirthdayAvailability() {
@@ -145,41 +225,41 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
   // New code autolistcreation
 
-  public CreateList = async () => {
-    //  spWeb = Web(this.props.siteurl);
-    let listEnsureResult = await spWeb.lists.ensure(this.props.name);
-    // debugger;
-    if (listEnsureResult.created === true) {
+  // public CreateList = async () => {
+  //   //  spWeb = Web(this.props.siteurl);
+  //   let listEnsureResult = await spWeb.lists.ensure(this.props.name);
+  //   // debugger;
+  //   if (listEnsureResult.created === true) {
 
-      await this.createColumn();
+  //     await this.createColumn();
 
 
-      await this.addData();
+  //     await this.addData();
 
-    } else {
+  //   } else {
 
-    }
+  //   }
 
-  }
+  // }
 
-  public async createColumn() {
+  // public async createColumn() {
 
-    await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
-    await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
 
-  }
+  // }
 
-  private async addData() {
-    sp.web.lists.getByTitle(this.props.name).items.add({
-      Title: "Sajjad",
-      IsActive: true,
-      Image: "",
+  // private async addData() {
+  //   sp.web.lists.getByTitle(this.props.name).items.add({
+  //     Title: "Sajjad",
+  //     IsActive: true,
+  //     Image: "",
 
-    }).catch((error: any) => {
-      console.log("Error: ", error);
-    });
+  //   }).catch((error: any) => {
+  //     console.log("Error: ", error);
+  //   });
 
-  }
+  // }
 
 
   public render(): React.ReactElement<IRemoHomePageProps> {

@@ -33,36 +33,75 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
 
   }
 
-  private GetDepartmentServices() {
-    var reactHandler = this;
-    NewWeb.lists.getByTitle(Serviceslist).items.select("ID", "Title", "Description").filter(`IsActive eq 1`).orderBy("Order0", true).get().then((items) => {
-      if (items.length == 0) {
-        // $("#if-service-present").hide();
-        // $("#if-no-service-present").show();
+  // private GetDepartmentServices() {
+  //   var reactHandler = this;
+  //   NewWeb.lists.getByTitle(Serviceslist).items.select("ID", "Title", "Description").filter(`IsActive eq 1`).orderBy("Order0", true).get().then((items) => {
+  //     if (items.length == 0) {
+  //       // $("#if-service-present").hide();
+  //       // $("#if-no-service-present").show();
 
-        document.querySelectorAll('#if-service-present').forEach(element => {
+  //       document.querySelectorAll('#if-service-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('$("#if-no-service-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     } else {
+  //       // $("#if-service-present").show();
+  //       // $("#if-no-service-present").hide();
+
+  //       document.querySelectorAll('#if-service-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('#if-no-service-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       reactHandler.setState({
+  //         Items: items,
+  //         ServiceDescription: items[0].Description
+  //       });
+  //     }
+  //   });
+  // }
+
+  // Updated code 
+  private async GetDepartmentServices() {
+    try {
+      const items = await NewWeb.lists
+        .getByTitle(Serviceslist)
+        .items.select("ID", "Title", "Description")
+        .filter(`IsActive eq 1`)
+        .orderBy("Order0", true)
+        .get();
+
+      if (items.length === 0) {
+        // Hide service present section, show no-service section
+        document.querySelectorAll('#if-service-present').forEach((element) => {
           (element as HTMLElement).style.display = 'none';
         });
-        document.querySelectorAll('$("#if-no-service-present').forEach(element => {
+        document.querySelectorAll('#if-no-service-present').forEach((element) => {
           (element as HTMLElement).style.display = 'block';
         });
       } else {
-        // $("#if-service-present").show();
-        // $("#if-no-service-present").hide();
-
-        document.querySelectorAll('#if-service-present').forEach(element => {
+        // Show service present section, hide no-service section
+        document.querySelectorAll('#if-service-present').forEach((element) => {
           (element as HTMLElement).style.display = 'block';
         });
-        document.querySelectorAll('#if-no-service-present').forEach(element => {
+        document.querySelectorAll('#if-no-service-present').forEach((element) => {
           (element as HTMLElement).style.display = 'none';
         });
-        reactHandler.setState({
+
+        // Update state with items and description
+        this.setState({
           Items: items,
-          ServiceDescription: items[0].Description
+          ServiceDescription: items[0].Description,
         });
       }
-    });
+    } catch (error) {
+      console.error("Error fetching department services:", error);
+    }
   }
+
 
   public LoadServiceDescription(ItemID: any) {
 

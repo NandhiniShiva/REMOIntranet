@@ -30,36 +30,74 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
   }
 
+  // public async getcurrentusersQuickLinks() {
+  //   var reactHandler = this;
+  //   let UserID = reactHandler.props.userid;
+  //   await sp.web.lists.getByTitle(UsersQuickLinkslist).items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id").filter(`Author/Id eq '${UserID}'`).expand("SelectedQuickLinks", "Author").top(5).orderBy("Order0", true).get().then(async (items) => { // //orderby is false -> decending          
+  //     let activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist).items.select("ID").filter("IsActive eq '1'").get();
+
+  //     // Store the IDs of active Quicklinks in a Set for efficient lookups
+  //     const activeQuickLinkIds = new Set(activeQuickLinks.map((link) => link.Id));
+
+  //     // Filter out Quicklinks from the "UsersQuickLinks" list that are not active in the "Quick Links" list
+  //     let updatedQuickLinks = items.filter((item) => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+
+  //     reactHandler.setState({
+  //       MyQuickLinksPrefference: updatedQuickLinks
+  //     });
+  //   });
+  // }
+
+  // Updated code
+
   public async getcurrentusersQuickLinks() {
-    var reactHandler = this;
-    let UserID = reactHandler.props.userid;
-    await sp.web.lists.getByTitle(UsersQuickLinkslist).items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id").filter(`Author/Id eq '${UserID}'`).expand("SelectedQuickLinks", "Author").top(5).orderBy("Order0", true).get().then(async (items) => { // //orderby is false -> decending          
-      let activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist).items.select("ID").filter("IsActive eq '1'").get();
+    try {
+      const reactHandler = this;
+      const { userid: UserID } = reactHandler.props;
 
-      // Store the IDs of active Quicklinks in a Set for efficient lookups
-      const activeQuickLinkIds = new Set(activeQuickLinks.map((link) => link.Id));
+      // Fetch user-specific quick links with a maximum of 5 items
+      const userQuickLinks = await sp.web.lists
+        .getByTitle(UsersQuickLinkslist)
+        .items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id")
+        .filter(`Author/Id eq '${UserID}'`)
+        .expand("SelectedQuickLinks", "Author")
+        .top(5)
+        .orderBy("Order0", true)
+        .get();
 
-      // Filter out Quicklinks from the "UsersQuickLinks" list that are not active in the "Quick Links" list
-      let updatedQuickLinks = items.filter((item) => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+      // Fetch active quick links
+      const activeQuickLinks = await sp.web.lists
+        .getByTitle(QuickLinkslist)
+        .items.select("ID")
+        .filter("IsActive eq '1'")
+        .get();
 
+      // Create a Set of active quick link IDs for efficient lookup
+      const activeQuickLinkIds = new Set(activeQuickLinks.map(link => link.ID));
+
+      // Filter user quick links to only include active ones
+      const updatedQuickLinks = userQuickLinks.filter(item => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+
+      // Update the state with the filtered quick links
       reactHandler.setState({
         MyQuickLinksPrefference: updatedQuickLinks
       });
-    });
+    } catch (error) {
+      console.error("Error fetching user quick links: ", error);
+    }
   }
-
   public render(): React.ReactElement<IRemoHomePageProps> {
     var reactHandler = this;
     const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => (
       <li key={key}>
-          <a href={item.URL} target="_blank" className="clearfix">
-              <img src={item.ImageSrc} className="quick-def" />
-              <img src={item.HoverImageSrc} className="quick-hov" />
-              <p>{item.SelectedQuickLinks.Title}</p>
-          </a>
+        <a href={item.URL} target="_blank" className="clearfix">
+          <img src={item.ImageSrc} className="quick-def" />
+          <img src={item.HoverImageSrc} className="quick-hov" />
+          <p>{item.SelectedQuickLinks.Title}</p>
+        </a>
       </li>
-  ));
-  
+    ));
+
     return (
       <div className={[styles.remoHomePage, "m-b-20 if-no-qlinks"].join(' ')} id="m-b-20-PQlink">
         <div className="quicklinks-wrap personal-qlinks-wrap m-b-20">

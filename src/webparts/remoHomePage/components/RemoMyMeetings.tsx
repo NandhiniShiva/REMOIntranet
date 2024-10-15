@@ -73,233 +73,435 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
 
     }
 
-    public getmytodaysroutines() {
-        uniqueCountItem = [];
-        this.serviceProvider.
-            getMyTodaysRoutine()
-            .then(
-                (result: any[]): void => {
-                    this.setState({ myroutineDatas: result });
+    // public getmytodaysroutines() {
 
-                    for (var i = 0; i < result.length; i++) {
-                        var Starttime = moment.utc(result[i].start.dateTime);
-                        let CTime = moment().format('DD-MM-YYYY');
-                        var subject = result[i].subject;
 
-                        if (moment(CTime, 'DD-MM-YYYY').format('DD-MM-YYYY') == moment(Starttime).local().format('DD-MM-YYYY')) {
-                            uniqueCountItem.push(subject);
-                        }
-                    }
+    //     uniqueCountItem = [];
+    //     this.serviceProvider.
+    //         getMyTodaysRoutine()
+    //         .then(
+    //             (result: any[]): void => {
+    //                 this.setState({ myroutineDatas: result });
 
-                    if (uniqueCountItem.length == 0) {
-                        // $(".present").hide();
-                        // $("#current-event").hide();
-                        // $(".future").show();
+    //                 for (var i = 0; i < result.length; i++) {
+    //                     var Starttime = moment.utc(result[i].start.dateTime);
+    //                     let CTime = moment().format('DD-MM-YYYY');
+    //                     var subject = result[i].subject;
 
-                        document.querySelectorAll('.present').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('#current-event').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
+    //                     if (moment(CTime, 'DD-MM-YYYY').format('DD-MM-YYYY') == moment(Starttime).local().format('DD-MM-YYYY')) {
+    //                         uniqueCountItem.push(subject);
+    //                     }
+    //                 }
 
-                        this.getmyFutureEvents();
-                    } else {
-                        this.setState({ IsCurrentFuture: "" });
-                        // $(".future").hide();
-                        // $(".present").show();
-                        // $("#current-event").show();
+    //                 if (uniqueCountItem.length == 0) {
+    //                     // $(".present").hide();
+    //                     // $("#current-event").hide();
+    //                     // $(".future").show();
 
-                        document.querySelectorAll('.present').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                        document.querySelectorAll('#current-event').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
+    //                     document.querySelectorAll('.present').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('#current-event').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
 
-                        // $("#dt-current").text(" My Meetings");
-                        let textContent: any = document.getElementById('dt-current');
-                        textContent.textContent = ' My Meetings';
+    //                     this.getmyFutureEvents();
+    //                 } else {
+    //                     this.setState({ IsCurrentFuture: "" });
+    //                     // $(".future").hide();
+    //                     // $(".present").show();
+    //                     // $("#current-event").show();
 
-                        // setTimeout(function () {
-                        //     let textField = $(".ms-TextField-field");
-                        //     textField.val(moment().format("D/M/YYYY"));
-                        // }, 1500);
-                        setTimeout(function () {
-                            // Select the text fields with the class 'ms-TextField-field'
-                            let textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
-                            // Get the formatted date
-                            let formattedDate = moment().format("D/M/YYYY");
-                            // Update the value of each text field
-                            textFields.forEach(function (field) {
-                                // Cast the field to HTMLInputElement to access the 'value' property
-                                (field as HTMLInputElement).value = formattedDate;
-                            });
-                        }, 1500);
-                    }
+    //                     document.querySelectorAll('.present').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                     document.querySelectorAll('#current-event').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+
+    //                     // $("#dt-current").text(" My Meetings");
+    //                     let textContent: any = document.getElementById('dt-current');
+    //                     textContent.textContent = ' My Meetings';
+
+    //                     // setTimeout(function () {
+    //                     //     let textField = $(".ms-TextField-field");
+    //                     //     textField.val(moment().format("D/M/YYYY"));
+    //                     // }, 1500);
+    //                     setTimeout(function () {
+    //                         // Select the text fields with the class 'ms-TextField-field'
+    //                         let textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
+    //                         // Get the formatted date
+    //                         let formattedDate = moment().format("D/M/YYYY");
+    //                         // Update the value of each text field
+    //                         textFields.forEach(function (field) {
+    //                             // Cast the field to HTMLInputElement to access the 'value' property
+    //                             (field as HTMLInputElement).value = formattedDate;
+    //                         });
+    //                     }, 1500);
+    //                 }
+    //             }
+    //         );
+
+    // }
+
+    // Updated code 
+    public async getmytodaysroutines() {
+        try {
+            uniqueCountItem = [];
+            const result = await this.serviceProvider.getMyTodaysRoutine();
+            this.setState({ myroutineDatas: result });
+
+            for (let i = 0; i < result.length; i++) {
+                const Starttime = moment.utc(result[i].start.dateTime);
+                const CTime = moment().format('DD-MM-YYYY');
+                const subject = result[i].subject;
+
+                if (moment(CTime, 'DD-MM-YYYY').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY')) {
+                    uniqueCountItem.push(subject);
                 }
-            );
+            }
+
+            if (uniqueCountItem.length === 0) {
+                document.querySelectorAll('.present').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('#current-event').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+
+                this.getmyFutureEvents();
+            } else {
+                this.setState({ IsCurrentFuture: "" });
+
+                document.querySelectorAll('.present').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+                document.querySelectorAll('#current-event').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+
+                const textContent = document.getElementById('dt-current');
+                if (textContent) {
+                    textContent.textContent = ' My Meetings';
+                }
+
+                setTimeout(() => {
+                    const textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
+                    const formattedDate = moment().format("D/M/YYYY");
+                    textFields.forEach(field => {
+                        field.value = formattedDate;
+                    });
+                }, 1500);
+            }
+        } catch (error) {
+            console.error("Error in getmytodaysroutines:", error);
+        }
     }
 
-    public getmytodaysPastroutines() {
-        this.serviceProvider.
-            getMyTodaysRoutinePast()
-            .then(
-                (result: any[]): void => {
-                    this.setState({ mypastroutineDatas: result });
-                    var myMeetingscount = this.state.mypastroutineDatas.length;
-                    for (var i = 0; i < myMeetingscount; i++) {
-                        var PastMeetingTime = this.state.mypastroutineDatas[i].end.dateTime;
-                        let ShortEndTime = moment.utc(PastMeetingTime).local().format("HHMM");
-                        var now = moment().format("HHMM");
-                        if (ShortEndTime < now) {
-                            // $("#past-event").show();
 
-                            document.querySelectorAll('#past-event').forEach(element => {
-                                (element as HTMLElement).style.display = 'block';
-                            });
-                        }
-                    }
+    // public getmytodaysPastroutines() {
+    //     this.serviceProvider.
+    //         getMyTodaysRoutinePast()
+    //         .then(
+    //             (result: any[]): void => {
+    //                 this.setState({ mypastroutineDatas: result });
+    //                 var myMeetingscount = this.state.mypastroutineDatas.length;
+    //                 for (var i = 0; i < myMeetingscount; i++) {
+    //                     var PastMeetingTime = this.state.mypastroutineDatas[i].end.dateTime;
+    //                     let ShortEndTime = moment.utc(PastMeetingTime).local().format("HHMM");
+    //                     var now = moment().format("HHMM");
+    //                     if (ShortEndTime < now) {
+    //                         // $("#past-event").show();
+
+    //                         document.querySelectorAll('#past-event').forEach(element => {
+    //                             (element as HTMLElement).style.display = 'block';
+    //                         });
+    //                     }
+    //                 }
+    //             }
+    //         );
+    // }
+
+    // Updated code 
+
+    public async getmytodaysPastroutines() {
+        try {
+            const result = await this.serviceProvider.getMyTodaysRoutinePast();
+            this.setState({ mypastroutineDatas: result });
+
+            const myMeetingsCount = this.state.mypastroutineDatas.length;
+            const now = moment().format("HHMM");
+
+            for (let i = 0; i < myMeetingsCount; i++) {
+                const PastMeetingTime = this.state.mypastroutineDatas[i].end.dateTime;
+                const ShortEndTime = moment.utc(PastMeetingTime).local().format("HHMM");
+
+                if (ShortEndTime < now) {
+                    document.querySelectorAll('#past-event').forEach(element => {
+                        (element as HTMLElement).style.display = 'block';
+                    });
                 }
-            );
+            }
+        } catch (error) {
+            console.error("Error in getmytodaysPastroutines:", error);
+        }
     }
 
-    public getmytodaysFutureroutines(date: moment.MomentInput) {
-        uniqueCountItemFuture = [];
-        this.serviceProvider.
-            getMyTodaysRoutineFuture(date)
-            .then(
-                (result: any[]): void => {
-                    this.setState({ myfutureroutineDatas: result });
-                    this.setState({ IsCurrentFuture: "true" });
+    // public getmytodaysFutureroutines(date: moment.MomentInput) {
+    //     uniqueCountItemFuture = [];
+    //     this.serviceProvider.
+    //         getMyTodaysRoutineFuture(date)
+    //         .then(
+    //             (result: any[]): void => {
+    //                 this.setState({ myfutureroutineDatas: result });
+    //                 this.setState({ IsCurrentFuture: "true" });
 
 
-                    for (var i = 0; i < result.length; i++) {
-                        var Starttime = moment.utc(result[i].start.dateTime);
-                        var subject = result[i].subject;
+    //                 for (var i = 0; i < result.length; i++) {
+    //                     var Starttime = moment.utc(result[i].start.dateTime);
+    //                     var subject = result[i].subject;
 
-                        if (moment(date).format('DD-MM-YYYY') == moment(Starttime).local().format('DD-MM-YYYY')) {
-                            uniqueCountItemFuture.push(subject);
-                        }
-                    }
-
-
-                    if (uniqueCountItemFuture.length == 0) {
-                        // $(".future").hide();
-                        // $(".present").hide();
-                        // $(".no-upcoming-events").show();
-                        // $("#dt-upcoming").text("Plan your Schedule");
-
-                        document.querySelectorAll('.present').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.no-upcoming-events').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-
-                        let textContent: any = document.getElementById('dt-upcoming');
-                        textContent.textContent = 'Plan your Schedule';
-                    } else {
-                        // $(".present").hide();
-                        // $(".no-upcoming-events").hide();
-                        // $(".future").show();
-
-                        document.querySelectorAll('.present').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.no-upcoming-events').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                    }
+    //                     if (moment(date).format('DD-MM-YYYY') == moment(Starttime).local().format('DD-MM-YYYY')) {
+    //                         uniqueCountItemFuture.push(subject);
+    //                     }
+    //                 }
 
 
-                    let dt = moment(date, "D/M/YYYY").format("YYYY-M-D");
+    //                 if (uniqueCountItemFuture.length == 0) {
+    //                     // $(".future").hide();
+    //                     // $(".present").hide();
+    //                     // $(".no-upcoming-events").show();
+    //                     // $("#dt-upcoming").text("Plan your Schedule");
 
-                    let now = moment();
-                    let then = moment(dt);
+    //                     document.querySelectorAll('.present').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.no-upcoming-events').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
 
-                    if (now > then) {
-                        // $("#dt-upcoming").text("Past Events");
+    //                     let textContent: any = document.getElementById('dt-upcoming');
+    //                     textContent.textContent = 'Plan your Schedule';
+    //                 } else {
+    //                     // $(".present").hide();
+    //                     // $(".no-upcoming-events").hide();
+    //                     // $(".future").show();
 
-                        let textContent: any = document.getElementById('dt-upcoming');
-                        textContent.textContent = 'Past Events';
-                    } else if (now < then) {
-                        // $("#dt-upcoming").text("Upcoming Events");
-                        let textContent: any = document.getElementById('dt-upcoming');
-                        textContent.textContent = 'Upcoming Events';
-                        // Past Events
-                        // $(".fut-dt").hide();
-                        document.querySelectorAll('.fut-dt').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                    }
+    //                     document.querySelectorAll('.present').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.no-upcoming-events').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                 }
 
+
+    //                 let dt = moment(date, "D/M/YYYY").format("YYYY-M-D");
+
+    //                 let now = moment();
+    //                 let then = moment(dt);
+
+    //                 if (now > then) {
+    //                     // $("#dt-upcoming").text("Past Events");
+
+    //                     let textContent: any = document.getElementById('dt-upcoming');
+    //                     textContent.textContent = 'Past Events';
+    //                 } else if (now < then) {
+    //                     // $("#dt-upcoming").text("Upcoming Events");
+    //                     let textContent: any = document.getElementById('dt-upcoming');
+    //                     textContent.textContent = 'Upcoming Events';
+    //                     // Past Events
+    //                     // $(".fut-dt").hide();
+    //                     document.querySelectorAll('.fut-dt').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                 }
+
+    //             }
+    //         );
+    //     // var dywidth = $(".dynamic-innerwidth-calc").width() - 6;
+    //     // var $element = $(".dynamic-innerwidth-calc");
+    //     // var dywidth = $element ? $element.width()! - 6 : 0;
+    //     // $(".ul-group").css("width", "" + dywidth + "");
+
+    //     var element = document.querySelector('.dynamic-innerwidth-calc');
+    //     var dywidth = element ? element.clientWidth - 6 : 0; // Use clientWidth for width calculation
+    //     let groupElement: any = document.querySelector('.ul-group')
+    //     groupElement.style.width = dywidth + 'px'; // Set width with 'px' unit
+
+    // }
+
+    // Updated code
+
+    public async getmytodaysFutureroutines(date: moment.MomentInput) {
+        try {
+            uniqueCountItemFuture = [];
+
+            const result = await this.serviceProvider.getMyTodaysRoutineFuture(date);
+            this.setState({ myfutureroutineDatas: result, IsCurrentFuture: "true" });
+
+            // Filter and collect future events
+            result.forEach((item) => {
+                const startTime = moment.utc(item.start.dateTime);
+                if (moment(date).format('DD-MM-YYYY') === moment(startTime).local().format('DD-MM-YYYY')) {
+                    uniqueCountItemFuture.push(item.subject);
                 }
-            );
-        // var dywidth = $(".dynamic-innerwidth-calc").width() - 6;
-        // var $element = $(".dynamic-innerwidth-calc");
-        // var dywidth = $element ? $element.width()! - 6 : 0;
-        // $(".ul-group").css("width", "" + dywidth + "");
+            });
 
-        var element = document.querySelector('.dynamic-innerwidth-calc');
-        var dywidth = element ? element.clientWidth - 6 : 0; // Use clientWidth for width calculation
-        let groupElement: any = document.querySelector('.ul-group')
-        groupElement.style.width = dywidth + 'px'; // Set width with 'px' unit
+            // Update UI based on the availability of future events
+            if (uniqueCountItemFuture.length === 0) {
+                document.querySelectorAll('.present').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.no-upcoming-events').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
 
+                const textContent = document.getElementById('dt-upcoming');
+                if (textContent) textContent.textContent = 'Plan your Schedule';
+            } else {
+                document.querySelectorAll('.present').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.no-upcoming-events').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+            }
+
+            // Determine if the date is past, present, or future
+            const formattedDate = moment(date, "D/M/YYYY").format("YYYY-M-D");
+            const now = moment();
+            const then = moment(formattedDate);
+
+            const textContent = document.getElementById('dt-upcoming');
+            if (now > then) {
+                if (textContent) textContent.textContent = 'Past Events';
+            } else if (now < then) {
+                if (textContent) textContent.textContent = 'Upcoming Events';
+                document.querySelectorAll('.fut-dt').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+            }
+
+            // Adjust the width of the element dynamically
+            const element = document.querySelector('.dynamic-innerwidth-calc');
+            const dywidth = element ? element.clientWidth - 6 : 0;
+            const groupElement = document.querySelector('.ul-group');
+            if (groupElement) {
+                (groupElement as HTMLElement).style.width = `${dywidth}px`;
+            }
+
+        } catch (error) {
+            console.error("Error in getmytodaysFutureroutines:", error);
+        }
     }
 
-    public getmyFutureEvents() {
-        this.serviceProvider.
-            getMyFutureMeetings()
-            .then(
-                (result: any[]): void => {
-                    this.setState({ myfutureroutineDatas: result });
-                    var myFutureMeetingscount = this.state.myfutureroutineDatas.length;
 
-                    if (myFutureMeetingscount == 0) {
-                        // $(".future").hide();
-                        // $(".no-upcoming-events").show();
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.no-upcoming-events').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                    } else {
-                        // $(".present").hide();
-                        // $(".no-upcoming-events").hide();
-                        // $(".future").show();
+    // public getmyFutureEvents() {
+    //     this.serviceProvider.
+    //         getMyFutureMeetings()
+    //         .then(
+    //             (result: any[]): void => {
+    //                 this.setState({ myfutureroutineDatas: result });
+    //                 var myFutureMeetingscount = this.state.myfutureroutineDatas.length;
 
-                        document.querySelectorAll('.present').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.no-upcoming-events').forEach(element => {
-                            (element as HTMLElement).style.display = 'none';
-                        });
-                        document.querySelectorAll('.future').forEach(element => {
-                            (element as HTMLElement).style.display = 'block';
-                        });
-                        setTimeout(function () {
-                            // $(".fut-dt").show();
-                            document.querySelectorAll('.fut-dt').forEach(element => {
-                                (element as HTMLElement).style.display = 'block';
-                            });
-                        }, 200);
-                    }
-                }
-            );
+    //                 if (myFutureMeetingscount == 0) {
+    //                     // $(".future").hide();
+    //                     // $(".no-upcoming-events").show();
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.no-upcoming-events').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                 } else {
+    //                     // $(".present").hide();
+    //                     // $(".no-upcoming-events").hide();
+    //                     // $(".future").show();
+
+    //                     document.querySelectorAll('.present').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.no-upcoming-events').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'none';
+    //                     });
+    //                     document.querySelectorAll('.future').forEach(element => {
+    //                         (element as HTMLElement).style.display = 'block';
+    //                     });
+    //                     setTimeout(function () {
+    //                         // $(".fut-dt").show();
+    //                         document.querySelectorAll('.fut-dt').forEach(element => {
+    //                             (element as HTMLElement).style.display = 'block';
+    //                         });
+    //                     }, 200);
+    //                 }
+    //             }
+    //         );
+    // }
+
+    // Updated code 
+
+    public async getmyFutureEvents() {
+        try {
+            const result: any[] = await this.serviceProvider.getMyFutureMeetings();
+            this.setState({ myfutureroutineDatas: result });
+
+            const myFutureMeetingsCount = this.state.myfutureroutineDatas.length;
+
+            if (myFutureMeetingsCount === 0) {
+                // Hide future events and show "no upcoming events" message
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.no-upcoming-events').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+            } else {
+                // Hide present events and "no upcoming events" message, and show future events
+                document.querySelectorAll('.present').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.no-upcoming-events').forEach(element => {
+                    (element as HTMLElement).style.display = 'none';
+                });
+                document.querySelectorAll('.future').forEach(element => {
+                    (element as HTMLElement).style.display = 'block';
+                });
+
+                setTimeout(() => {
+                    // Show future event details
+                    document.querySelectorAll('.fut-dt').forEach(element => {
+                        (element as HTMLElement).style.display = 'block';
+                    });
+                }, 200);
+            }
+        } catch (error) {
+            console.error("Error fetching future events:", error);
+        }
     }
 
     public openoutlookcal = () => {

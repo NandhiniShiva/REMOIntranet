@@ -36,32 +36,68 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
 
   }
 
-  private GetDepartmentAbout() {
-    var reactHandler = this;
-    NewWeb.lists.getByTitle(AboutDepartmentlist).items.select("ID", "Title", "Description", "DepartmentBannerImage", "*").filter(`IsActive eq 1`).orderBy("Created", false).top(1).get().then((items) => {
-      if (items.length == 0) {
-        // $("#if-about-present").hide();
-        // $("#if-no-about-present").show();
+  // private GetDepartmentAbout() {
+  //   var reactHandler = this;
+  //   NewWeb.lists.getByTitle(AboutDepartmentlist).items.select("ID", "Title", "Description", "DepartmentBannerImage", "*").filter(`IsActive eq 1`).orderBy("Created", false).top(1).get().then((items) => {
+  //     if (items.length == 0) {
+  //       // $("#if-about-present").hide();
+  //       // $("#if-no-about-present").show();
 
+  //       document.querySelectorAll('#if-about-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       }); document.querySelectorAll('#if-no-about-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     } else {
+  //       // $("#if-about-present").show();
+  //       // $("#if-no-about-present").hide();
+
+  //       document.querySelectorAll('#if-about-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       }); document.querySelectorAll('#if-no-about-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       reactHandler.setState({
+  //         Items: items
+  //       });
+  //     }
+  //   });
+  // }
+  // Updated code 
+
+  private async GetDepartmentAbout() {
+    try {
+      const reactHandler = this;
+      const items = await NewWeb.lists
+        .getByTitle(AboutDepartmentlist)
+        .items.select("ID", "Title", "Description", "DepartmentBannerImage", "*")
+        .filter(`IsActive eq 1`)
+        .orderBy("Created", false)
+        .top(1)
+        .get();
+
+      if (items.length === 0) {
         document.querySelectorAll('#if-about-present').forEach(element => {
           (element as HTMLElement).style.display = 'none';
-        }); document.querySelectorAll('#if-no-about-present').forEach(element => {
+        });
+        document.querySelectorAll('#if-no-about-present').forEach(element => {
           (element as HTMLElement).style.display = 'block';
         });
       } else {
-        // $("#if-about-present").show();
-        // $("#if-no-about-present").hide();
-
         document.querySelectorAll('#if-about-present').forEach(element => {
           (element as HTMLElement).style.display = 'block';
-        }); document.querySelectorAll('#if-no-about-present').forEach(element => {
+        });
+        document.querySelectorAll('#if-no-about-present').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
+
         reactHandler.setState({
           Items: items
         });
       }
-    });
+    } catch (error) {
+      console.error("Error fetching department information:", error);
+    }
   }
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
     var reactHandler = this;

@@ -95,47 +95,92 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
     }
   }
 
+  // public async getCurrentUser() {
+  //   const url: any = new URL(window.location.href);
+
+
+  //   const fullPath = url.pathname;
+
+  //   // Find the index of 'SitePages'
+  //   const segment = "SitePages";
+  //   const segmentIndex = fullPath.indexOf(`/${segment}`);
+
+  //   if (segmentIndex === -1) {
+  //     // If 'SitePages' is not found in the URL, return null
+  //     // return null;
+  //   }
+
+  //   // Extract the part of the URL before 'SitePages'
+  //   const relevantPart = fullPath.substring(0, segmentIndex);
+
+  //   // Find the last segment before 'SitePages'
+  //   const lastSegmentIndex = relevantPart.lastIndexOf('/');
+
+  //   // Extract the last segment
+  //   const lastSegment = relevantPart.substring(lastSegmentIndex + 1);
+  //   Dept = lastSegment;
+  //   var reacthandler = this;
+  //   User = reacthandler.props.userid;
+  //   const profile = await pnp.sp.profiles.myProperties.get();
+  //   UserEmail = profile.Email;
+  //   Designation = profile.Title;
+
+  //   // Check if the UserProfileProperties collection exists and has the Department property
+  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //     // Find the Department property in the profile
+  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     console.log(departmentProperty);
+  //     if (departmentProperty) {
+  //       Department = departmentProperty.Value;
+  //     }
+  //   }
+  // }
+
+  // Updated code 
   public async getCurrentUser() {
-    const url: any = new URL(window.location.href);
+    try {
+      const url = new URL(window.location.href);
+      const fullPath = url.pathname;
 
+      // Find the index of 'SitePages' in the URL
+      const segment = "SitePages";
+      const segmentIndex = fullPath.indexOf(`/${segment}`);
 
-    const fullPath = url.pathname;
-
-    // Find the index of 'SitePages'
-    const segment = "SitePages";
-    const segmentIndex = fullPath.indexOf(`/${segment}`);
-
-    if (segmentIndex === -1) {
-      // If 'SitePages' is not found in the URL, return null
-      // return null;
-    }
-
-    // Extract the part of the URL before 'SitePages'
-    const relevantPart = fullPath.substring(0, segmentIndex);
-
-    // Find the last segment before 'SitePages'
-    const lastSegmentIndex = relevantPart.lastIndexOf('/');
-
-    // Extract the last segment
-    const lastSegment = relevantPart.substring(lastSegmentIndex + 1);
-    Dept = lastSegment;
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    const profile = await pnp.sp.profiles.myProperties.get();
-    UserEmail = profile.Email;
-    Designation = profile.Title;
-
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+      if (segmentIndex === -1) {
+        // If 'SitePages' is not found in the URL, exit the function
+        console.warn("SitePages segment not found in the URL.");
+        return;
       }
+
+      // Extract the relevant part of the URL before 'SitePages' and get the last segment
+      const relevantPart = fullPath.substring(0, segmentIndex);
+      const lastSegmentIndex = relevantPart.lastIndexOf('/');
+      const lastSegment = relevantPart.substring(lastSegmentIndex + 1);
+      Dept = lastSegment;
+
+      // Retrieve user ID from props
+      const reactHandler = this;
+      User = reactHandler.props.userid;
+
+      // Fetch user profile properties
+      const profile = await pnp.sp.profiles.myProperties.get();
+      UserEmail = profile.Email;
+      Designation = profile.Title;
+
+      // Find the Department property if it exists in the profile
+      if (profile?.UserProfileProperties?.length > 0) {
+        const departmentProperty = profile.UserProfileProperties.find(
+          (prop: { Key: string }) => prop.Key === 'Department'
+        );
+
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching current user information:", error);
     }
   }
-
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
 
     return (

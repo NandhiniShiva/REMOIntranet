@@ -30,34 +30,71 @@ export default class DepartmentQuickLink extends React.Component<IRemoDeptLandin
 
   }
 
-  public getcurrentusersQuickLinks() {
-    var reactHandler = this;
-    NewWeb.lists.getByTitle(QuickLinkslist).items.select("ID", "Title", "URL", "HoverOffIcon", "HoverOnIcon", "OpenInNewTab", "*").filter(`IsActive eq 1`).top(5).orderBy("Order0", true).get().then((items) => {
-      reactHandler.setState({
-        QuickLinkData: items
-      });
-      if (items.length == 0) {
-        // $(".if-no-qlinks-present").show();
-        // $(".if-qlinks-present").hide();
+  // public getcurrentusersQuickLinks() {
+  //   var reactHandler = this;
+  //   NewWeb.lists.getByTitle(QuickLinkslist).items.select("ID", "Title", "URL", "HoverOffIcon", "HoverOnIcon", "OpenInNewTab", "*").filter(`IsActive eq 1`).top(5).orderBy("Order0", true).get().then((items) => {
+  //     reactHandler.setState({
+  //       QuickLinkData: items
+  //     });
+  //     if (items.length == 0) {
+  //       // $(".if-no-qlinks-present").show();
+  //       // $(".if-qlinks-present").hide();
 
-        document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
+  //       document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.if-qlinks-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //     } else {
+  //       // $(".if-no-qlinks-present").hide();
+  //       // $(".if-qlinks-present").show();
+
+  //       document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('.if-qlinks-present').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     }
+  //   });
+  // }
+
+  // Updated code
+  public async getcurrentusersQuickLinks() {
+    try {
+      const items = await NewWeb.lists
+        .getByTitle(QuickLinkslist)
+        .items.select("ID", "Title", "URL", "HoverOffIcon", "HoverOnIcon", "OpenInNewTab", "*")
+        .filter(`IsActive eq 1`)
+        .top(5)
+        .orderBy("Order0", true)
+        .get();
+
+      this.setState({
+        QuickLinkData: items,
+      });
+
+      if (items.length === 0) {
+        // Show no quick links present section, hide quick links present section
+        document.querySelectorAll('.if-no-qlinks-present').forEach((element) => {
           (element as HTMLElement).style.display = 'block';
         });
-        document.querySelectorAll('.if-qlinks-present').forEach(element => {
+        document.querySelectorAll('.if-qlinks-present').forEach((element) => {
           (element as HTMLElement).style.display = 'none';
         });
       } else {
-        // $(".if-no-qlinks-present").hide();
-        // $(".if-qlinks-present").show();
-
-        document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
+        // Hide no quick links present section, show quick links present section
+        document.querySelectorAll('.if-no-qlinks-present').forEach((element) => {
           (element as HTMLElement).style.display = 'none';
         });
-        document.querySelectorAll('.if-qlinks-present').forEach(element => {
+        document.querySelectorAll('.if-qlinks-present').forEach((element) => {
           (element as HTMLElement).style.display = 'block';
         });
       }
-    });
+    } catch (error) {
+      console.error("Error fetching current user's quick links:", error);
+    }
   }
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
     var reactHandler = this;

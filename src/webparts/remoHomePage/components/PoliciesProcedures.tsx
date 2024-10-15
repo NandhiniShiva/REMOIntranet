@@ -25,7 +25,7 @@ export default class PoliciesProcedures extends React.Component<IPoliciesProcedu
   public componentDidMount() {
     this.GetDocumentCenterLinks();
   }
-
+  // Updated code
   public async GetDocumentCenterLinks() {
     try {
       const { UserId } = this.props;
