@@ -4,7 +4,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
+import * as $ from 'jquery';
 import { Markup } from 'interweave';
 import { IWeb, Web } from "@pnp/sp/presets/all";
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';

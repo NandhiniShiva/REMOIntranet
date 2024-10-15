@@ -92,103 +92,162 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
   // }
 
 
+  // public async getCurrentUser() {
+  //   var reacthandler = this;
+  //   User = reacthandler.props.userid;
+  //   const profile = await pnp.sp.profiles.myProperties.get();
+  //   UserEmail = profile.Email;
+  //   Designation = profile.Title;
+  //   // Check if the UserProfileProperties collection exists and has the Department property
+  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //     // Find the Department property in the profile
+  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     console.log(departmentProperty);
+  //     if (departmentProperty) {
+  //       Department = departmentProperty.Value;
+  //     }
+  //   }
+  // }
   public async getCurrentUser() {
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    const profile = await pnp.sp.profiles.myProperties.get();
-    UserEmail = profile.Email;
-    Designation = profile.Title;
+    try {
+      var reacthandler = this;
+      User = reacthandler.props.userid;
 
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+      // Fetch the profile data
+      const profile = await pnp.sp.profiles.myProperties.get();
+
+      // Check if profile object and email exist
+      if (!profile || !profile.Email || !profile.Title) {
+        throw new Error("Profile information is incomplete.");
       }
+
+      // Assign user email and designation
+      UserEmail = profile.Email;
+      Designation = profile.Title;
+
+      // Check if the UserProfileProperties collection exists and has the Department property
+      if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        // Find the Department property in the profile
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+
+        // Check if departmentProperty exists
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        } else {
+          console.warn("Department property not found in the user profile.");
+        }
+      } else {
+        console.warn("UserProfileProperties collection is empty or undefined.");
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching the current user:", error);
     }
   }
+
   public async LandingPageAnalytics() {
-    if (!Department) {
-      Department = "NA";
-    }
-    if (!Designation) {
-      Designation = "NA";
-    }
-    console.log(this.state.Title);
     try {
+      if (!Department) {
+        Department = "NA";
+      }
+      if (!Designation) {
+        Designation = "NA";
+      }
+      console.log(this.state.Title);
     } catch (error) {
       console.error('Error adding data:', error);
     }
   }
 
-  public AddViews() {
-
-  }
   public viewsCount() {
-    sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending      
-      if (items.length != 0) {
-        views = items.length;
-      } else {
-        views = 0;
-      }
-    });
+    try {
+      sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending      
+        if (items.length != 0) {
+          views = items.length;
+        } else {
+          views = 0;
+        }
+      });
+    }
+    catch (error) {
+      console.error('Error adding data:', error);
+    }
   }
   //brithday code <
   public async GetBirthday(ItemID: string) {
     var reactHandler = this;
-    await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "EnableComments", "EnableLikes", "Created").filter(`IsActive eq '1'and ID eq '${ItemID}'`).getAll().then((items) => { // //orderby is false -> decending          
-      title = items[0].Title;
-      ID = items[0].ID;
-      var tdaydate = moment().format('MM/DD');
-      var bday = moment(items[0].DOB).format('MM/DD');
-      if (tdaydate == bday) {
-        bdaydate = "Today"
-      } else {
-        bdaydate = "" + moment(items[0].DOB).format('MMM DD') + "";
+    try {
+      const items = await sp.web.lists.getByTitle(Birthdaylist).items
+        .select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "EnableComments", "EnableLikes", "Created")
+        .filter(`IsActive eq '1' and ID eq '${ItemID}'`).getAll();  // orderby is false -> descending
+
+      // Check if the returned items array is valid and contains data
+      if (!items || items.length === 0) {
+        throw new Error("No active birthday items found for the provided ItemID.");
       }
+
+      const firstItem = items[0];
+      title = firstItem.Title;
+      ID = firstItem.ID;
+
+      var tdaydate = moment().format('MM/DD');
+      var bday = moment(firstItem.DOB).format('MM/DD');
+
+      // let bdaydate;
+      if (tdaydate === bday) {
+        bdaydate = "Today";
+      } else {
+        bdaydate = moment(firstItem.DOB).format('MMM DD');
+      }
+
+      // Update state with the fetched items and title
       reactHandler.setState({
         Items: items,
-        Title: items[0].Title
+        Title: firstItem.Title
       }, () => {
-        // Call LandingPageAnalytics after state is updated
-        reactHandler.LandingPageAnalytics();
-      })
-      if (items[0].EnableLikes == true) {
-        reactHandler.setState({
-          IsLikeEnabled: true
-        })
+        reactHandler.LandingPageAnalytics();  // Call after state is updated
+      });
+
+      // Handle likes and comments
+      if (firstItem.EnableLikes === true) {
+        reactHandler.setState({ IsLikeEnabled: true });
       }
-      if (items[0].EnableComments == true) {
-        reactHandler.setState({
-          IsCommentEnabled: true
-        })
+
+      if (firstItem.EnableComments === true) {
+        reactHandler.setState({ IsCommentEnabled: true });
       } else {
+        // Remove comment elements if comments are not enabled
         const allCommentsElements = document.querySelectorAll(".all-comments");
         allCommentsElements.forEach(element => {
           element.remove();
         });
-        // Remove the element with ID "commentedpost"
+
         const commentedPostElement = document.getElementById("commentedpost");
         if (commentedPostElement) {
           commentedPostElement.remove();
         }
       }
-      reactHandler.AddViews();
+
+      // Execute additional functionality
       reactHandler.checkUserAlreadyLiked();
       reactHandler.checkUserAlreadyCommented();
       reactHandler.viewsCount();
       reactHandler.likesCount();
       reactHandler.commentsCount();
-    })
+
+    } catch (error) {
+      // Log the error or handle it in the UI as appropriate
+      console.error("Error fetching birthday details:", error);
+    }
   }
-  //brithday code >
   public async checkUserAlreadyLiked() {
-    await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-      if (items.length != 0) {
-        // $(".like-selected").show();
-        // $(".like-default").hide();
+    try {
+      const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+        .filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
+        .top(5000)
+        .get();
+      if (items.length !== 0) {
+        // Show the "liked" UI state
         document.querySelectorAll('.like-selected').forEach(element => {
           (element as HTMLElement).style.display = 'block';
         });
@@ -199,50 +258,136 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
           IsUserAlreadyLiked: true
         });
       }
-    });
+    } catch (error) {
+      console.error("Error checking if user has already liked the content:", error);
+    }
   }
+
+  // public async GetBirthday(ItemID: string) {
+  //   var reactHandler = this;
+  //   await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "EnableComments", "EnableLikes", "Created").filter(`IsActive eq '1'and ID eq '${ItemID}'`).getAll().then((items) => { // //orderby is false -> decending          
+  //     title = items[0].Title;
+  //     ID = items[0].ID;
+  //     var tdaydate = moment().format('MM/DD');
+  //     var bday = moment(items[0].DOB).format('MM/DD');
+  //     if (tdaydate == bday) {
+  //       bdaydate = "Today"
+  //     } else {
+  //       bdaydate = "" + moment(items[0].DOB).format('MMM DD') + "";
+  //     }
+  //     reactHandler.setState({
+  //       Items: items,
+  //       Title: items[0].Title
+  //     }, () => {
+  //       // Call LandingPageAnalytics after state is updated
+  //       reactHandler.LandingPageAnalytics();
+  //     })
+  //     if (items[0].EnableLikes == true) {
+  //       reactHandler.setState({
+  //         IsLikeEnabled: true
+  //       })
+  //     }
+  //     if (items[0].EnableComments == true) {
+  //       reactHandler.setState({
+  //         IsCommentEnabled: true
+  //       })
+  //     } else {
+  //       const allCommentsElements = document.querySelectorAll(".all-comments");
+  //       allCommentsElements.forEach(element => {
+  //         element.remove();
+  //       });
+  //       // Remove the element with ID "commentedpost"
+  //       const commentedPostElement = document.getElementById("commentedpost");
+  //       if (commentedPostElement) {
+  //         commentedPostElement.remove();
+  //       }
+  //     }
+  //     // reactHandler.AddViews();
+  //     reactHandler.checkUserAlreadyLiked();
+  //     reactHandler.checkUserAlreadyCommented();
+  //     reactHandler.viewsCount();
+  //     reactHandler.likesCount();
+  //     reactHandler.commentsCount();
+  //   })
+  // }
+  //brithday code >
+  // public async checkUserAlreadyLiked() {
+  //   await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+  //     if (items.length != 0) {
+  //       // $(".like-selected").show();
+  //       // $(".like-default").hide();
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       this.setState({
+  //         IsUserAlreadyLiked: true
+  //       });
+  //     }
+  //   });
+  // }
   public async checkUserAlreadyCommented() {
-    await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq '${ID}' and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-      if (items.length != 0) {
-        this.setState({
-          IsUserAlreadyCommented: true
-        });
-        // $(".reply-tothe-post").hide();
-        document.querySelectorAll('.reply-tothe-post').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-      }
-    });
+    try {
+      await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq '${ID}' and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+        if (items.length != 0) {
+          this.setState({
+            IsUserAlreadyCommented: true
+          });
+          // $(".reply-tothe-post").hide();
+          document.querySelectorAll('.reply-tothe-post').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
+        }
+      });
+    }
+    catch (error) {
+      console.error("Error checking if user has already commented the content:", error);
+    }
   }
   public likesCount() {
-    sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-      if (items.length != 0) {
-        likes = items.length;
-      } else {
-        likes = 0;
-      }
-    });
+    try {
+      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+        if (items.length != 0) {
+          likes = items.length;
+        } else {
+          likes = 0;
+        }
+      });
+    }
+    catch (error) {
+      console.error("Error checking if user has already liked the content:", error);
+    }
 
   }
   public commentsCount() {
-    sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-      if (items.length != 0) {
-        commentscount = items.length;
-      } else {
-        commentscount = 0;
-      }
-    });
-    this.checkUserAlreadyCommented();
-    this.getusercomments();
+    try {
+      sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+        if (items.length != 0) {
+          commentscount = items.length;
+        } else {
+          commentscount = 0;
+        }
+      });
+      this.checkUserAlreadyCommented();
+      this.getusercomments();
+    }
+    catch (error) {
+      console.error("Error checking the commentcount:", error);
+    }
   }
   public getusercomments() {
-
-    sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending           
-
-      this.setState({
-        commentitems: items,
+    try {
+      sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending           
+        this.setState({
+          commentitems: items,
+        });
       });
-    });
+    }
+    catch (error) {
+      console.error("Error checking the comment:", error);
+    }
   }
   public async liked(mode: string) {
 
@@ -255,9 +400,6 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         Title: title,
         ContentID: ID,
       }).then(() => {
-        // $(".like-default").hide()
-        // $(".like-selected").show();
-
         document.querySelectorAll('.like-selected').forEach(element => {
           (element as HTMLElement).style.display = 'block';
         });
@@ -277,8 +419,6 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         });
       })
     } else {
-      // $(".like-selected").hide();
-      // $(".like-default").show();
       document.querySelectorAll('.like-selected').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
@@ -286,9 +426,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         (element as HTMLElement).style.display = 'block';
       });
       sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data) => {
-
         sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
-
           sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
             var like = items.length;
             var newspan = like.toString()
@@ -307,18 +445,20 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
   }
   public showComments() {
     // $(".all-commets").toggle();
-
-    document.querySelectorAll('.all-comments').forEach(element => {
-      const htmlElement = element as HTMLElement;
-      htmlElement.style.display = htmlElement.style.display === 'none' ? 'block' : 'none';
-    });
-    sp.web.lists.getByTitle("CommentsCountMaster").items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments", "*").expand("EmployeeName").filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending           
-
-      this.setState({
-        commentitems: items,
+    try {
+      document.querySelectorAll('.all-comments').forEach(element => {
+        const htmlElement = element as HTMLElement;
+        htmlElement.style.display = htmlElement.style.display === 'none' ? 'block' : 'none';
       });
-    });
-
+      sp.web.lists.getByTitle("CommentsCountMaster").items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments", "*").expand("EmployeeName").filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending           
+        this.setState({
+          commentitems: items,
+        });
+      });
+    }
+    catch (error) {
+      console.error("Error showing the Comments:", error);
+    }
   }
   public saveComments(e: any) {
     // var comments = $("#comments").val();

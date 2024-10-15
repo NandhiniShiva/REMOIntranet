@@ -106,20 +106,25 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   }
 
   public async getCurrentUser() {
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    const profile = await pnp.sp.profiles.myProperties.get();
-    UserEmail = profile.Email;
-    Designation = profile.Title;
+    try {
+      var reacthandler = this;
+      User = reacthandler.props.userid;
+      const profile = await pnp.sp.profiles.myProperties.get();
+      UserEmail = profile.Email;
+      Designation = profile.Title;
 
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+      // Check if the UserProfileProperties collection exists and has the Department property
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        // Find the Department property in the profile
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
       }
+    }
+    catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
     }
   }
 
@@ -184,116 +189,195 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   }
 
   private viewsCount() {
-    sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-      views = items.length || 0;
-    });
+    try {
+      sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
+        views = items.length || 0;
+      });
+    }
+    catch (error) {
+      console.error("An error occurred while fetching the viewsCount:", error);
+    }
   }
 
   private checkUserAlreadyLiked() {
-    sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
-      if (items.length > 0) {
-        // $(".like-selected").show();
-        // $(".like-default").hide();
+    try {
+      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
+        if (items.length > 0) {
+          // $(".like-selected").show();
+          // $(".like-default").hide();
 
-        document.querySelectorAll('.like-selected').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
+          document.querySelectorAll('.like-selected').forEach(element => {
+            (element as HTMLElement).style.display = 'block';
+          });
+          document.querySelectorAll('.like-default').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
 
-        this.setState({ IsUserAlreadyLiked: true });
-      }
-    });
+          this.setState({ IsUserAlreadyLiked: true });
+        }
+      });
+    } catch (error) {
+      console.error("An error occurred while checking if the user already liked:", error);
+    }
   }
 
   private checkUserAlreadyCommented() {
-    sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
-      if (items.length > 0) {
-        this.setState({ IsUserAlreadyCommented: true });
-        // $(".reply-tothe-post").hide();
+    try {
+      sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
+        if (items.length > 0) {
+          this.setState({ IsUserAlreadyCommented: true });
+          // $(".reply-tothe-post").hide();
+          document.querySelectorAll('.reply-tothe-post').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
 
-        document.querySelectorAll('.reply-tothe-post').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
+        }
+      });
+    } catch (error) {
+      console.error("An error occurred while checking if the user already commented:", error);
+    }
 
-      }
-    });
   }
 
   private likesCount() {
-    sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-      likes = items.length || 0;
-    });
+    try {
+      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
+        likes = items.length || 0;
+      });
+    }
+    catch (error) {
+      console.error("An error occurred while checking if the user already liked:", error);
+    }
   }
 
   private commentsCount() {
-    sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-      commentscount = items.length || 0;
-    });
-    this.checkUserAlreadyCommented();
-    this.getUserComments();
+    try {
+      sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
+        commentscount = items.length || 0;
+      });
+      this.checkUserAlreadyCommented();
+      this.getUserComments();
+    }
+    catch (error) {
+      console.error("An error occurred while checking the comments count:", error);
+    }
   }
 
   private async getUserComments() {
-    const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items
-      .select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments")
-      .expand("EmployeeName").filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-    this.setState({ commentitems: items });
+    try {
+      const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items
+        .select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments")
+        .expand("EmployeeName").filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+      this.setState({ commentitems: items });
+    } catch (error) {
+      console.error("An error occurred while checking if the user already commented:", error);
+    }
   }
 
   private async liked(mode: string) {
-    if (mode === "like") {
-      await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
-        EmployeeNameId: User,
-        LikedOn: CurrentDate,
-        EmployeeEmail: UserEmail,
-        ContentPage: "Hero-Banner",
-        Title: title,
-        ContentID: ID,
-      });
-      // $(".like-default").hide();
-      // $(".like-selected").show();
-
-      document.querySelectorAll('.like-default').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-      document.querySelectorAll('.like-selected').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-
-      const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-        .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-      // $("#likescount").text(items.length.toString());
-      const likesCountElement = document.getElementById('likescount');
-      if (likesCountElement) {
-        likesCountElement.textContent = items.length.toString();
+    try {
+      // Ensure required variables are defined
+      if (!ID || !User || !UserEmail) {
+        console.warn("ID, User, or UserEmail is undefined. Cannot proceed with the like operation.");
+        return;
       }
-    } else {
-      // $(".like-selected").hide();
-      // $(".like-default").show();
-
-      document.querySelectorAll('.like-default').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-      document.querySelectorAll('.like-selected').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-      const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-        .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
-      await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
-      const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-        .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-      // $("#likescount").text(items.length.toString());
-
-      // Select the element with the ID "likescount"
-      const likesCountElement = document.getElementById('likescount');
-      if (likesCountElement) {
-        likesCountElement.textContent = items.length.toString();
+      if (mode === "like") {
+        // Add a like to the list
+        await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+          EmployeeNameId: User,
+          LikedOn: CurrentDate,
+          EmployeeEmail: UserEmail,
+          ContentPage: "Hero-Banner",
+          Title: title,
+          ContentID: ID,
+        });
+        // Hide the default like button and show the selected one
+        document.querySelectorAll('.like-default').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        document.querySelectorAll('.like-selected').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+        // Get the updated like count
+        const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+        // Update the likes count display
+        const likesCountElement = document.getElementById('likescount');
+        if (likesCountElement) {
+          likesCountElement.textContent = items.length.toString();
+        }
+      } else {
+        // If mode is "unlike"
+        document.querySelectorAll('.like-default').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+        document.querySelectorAll('.like-selected').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        // Find the user's like entry and delete it
+        const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
+        if (data.length > 0) {
+          await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
+        }
+        // Get the updated like count after removing the like
+        const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+        // Update the likes count display
+        const likesCountElement = document.getElementById('likescount');
+        if (likesCountElement) {
+          likesCountElement.textContent = items.length.toString();
+        }
       }
-
+    } catch (error) {
+      console.error("An error occurred while processing the like/unlike action:", error);
     }
   }
+
+
+  // private async liked(mode: string) {
+  //   if (mode === "like") {
+  //     await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+  //       EmployeeNameId: User,
+  //       LikedOn: CurrentDate,
+  //       EmployeeEmail: UserEmail,
+  //       ContentPage: "Hero-Banner",
+  //       Title: title,
+  //       ContentID: ID,
+  //     });
+  //     document.querySelectorAll('.like-default').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+  //     document.querySelectorAll('.like-selected').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //     const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+  //     // $("#likescount").text(items.length.toString());
+  //     const likesCountElement = document.getElementById('likescount');
+  //     if (likesCountElement) {
+  //       likesCountElement.textContent = items.length.toString();
+  //     }
+  //   } else {
+  //     document.querySelectorAll('.like-default').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //     document.querySelectorAll('.like-selected').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+  //     const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
+  //     await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
+  //     const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+  //     // $("#likescount").text(items.length.toString());
+  //     // Select the element with the ID "likescount"
+  //     const likesCountElement = document.getElementById('likescount');
+  //     if (likesCountElement) {
+  //       likesCountElement.textContent = items.length.toString();
+  //     }
+  //   }
+  // }
 
   private showComments() {
     // $(".all-commets").toggle();
@@ -304,38 +388,84 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     });
     this.getUserComments();
   }
-
   private saveComments(e: any) {
-    // const comments = $("#comments").val();
-    const comments = e.target.value
+    try {
+      // Get the value of the comments from the event target
+      const comments = e.target.value;
+      // Check if the comments have at least 1 character
+      if (!comments || comments.toString().trim().length === 0) {
+        Swal.fire({ title: "Minimum 1 character is required!", icon: "warning" });
+      } else {
+        // Ensure required variables are defined
+        if (!User || !UserEmail || !ID || !title) {
+          console.warn("User, UserEmail, ID, or title is missing. Cannot proceed with saving the comment.");
+          return;
+        }
 
-    if (comments && comments.toString().length === 0) {
-      Swal.fire({ title: "Minimum 1 character is required!", icon: "warning" });
-    } else {
-      sp.web.lists.getByTitle(CommentsCountMasterlist).items.add({
-        EmployeeNameId: User,
-        CommentedOn: CurrentDate,
-        EmployeeEmail: UserEmail,
-        ContentPage: "Hero-Banner",
-        Title: title,
-        ContentID: ID,
-        UserComments: comments,
-      }).then(() => {
-        // $("#commentedpost").hide();
-        // $(".reply-tothe-post").hide();
+        // Add the comment to the SharePoint list
+        sp.web.lists.getByTitle(CommentsCountMasterlist).items.add({
+          EmployeeNameId: User,
+          CommentedOn: CurrentDate,
+          EmployeeEmail: UserEmail,
+          ContentPage: "Hero-Banner",
+          Title: title,
+          ContentID: ID,
+          UserComments: comments,
+        }).then(() => {
+          // Hide the commented post and reply elements
+          document.querySelectorAll('#commentedpost').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
 
-        document.querySelectorAll('#commentedpost').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
+          document.querySelectorAll('.reply-tothe-post').forEach(element => {
+            (element as HTMLElement).style.display = 'none';
+          });
+
+          // Update the comment count
+          this.commentsCount();
+        }).catch((error) => {
+          console.error("An error occurred while saving the comment:", error);
+          Swal.fire({ title: "Error saving comment", text: "Please try again later.", icon: "error" });
         });
-
-        document.querySelectorAll('.reply-tothe-post').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-
-        this.commentsCount();
-      });
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+      Swal.fire({ title: "Unexpected Error", text: "Something went wrong. Please try again later.", icon: "error" });
     }
   }
+
+
+  // private saveComments(e: any) {
+  //   // const comments = $("#comments").val();
+  //   const comments = e.target.value
+
+  //   if (comments && comments.toString().length === 0) {
+  //     Swal.fire({ title: "Minimum 1 character is required!", icon: "warning" });
+  //   } else {
+  //     sp.web.lists.getByTitle(CommentsCountMasterlist).items.add({
+  //       EmployeeNameId: User,
+  //       CommentedOn: CurrentDate,
+  //       EmployeeEmail: UserEmail,
+  //       ContentPage: "Hero-Banner",
+  //       Title: title,
+  //       ContentID: ID,
+  //       UserComments: comments,
+  //     }).then(() => {
+  //       // $("#commentedpost").hide();
+  //       // $(".reply-tothe-post").hide();
+
+  //       document.querySelectorAll('#commentedpost').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+
+  //       document.querySelectorAll('.reply-tothe-post').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+
+  //       this.commentsCount();
+  //     });
+  //   }
+  // }
 
   public render(): React.ReactElement<IHeroBannerReadMoreProps> {
     const HeroBannerDetails: JSX.Element[] = this.state.Items.map((item, key) => {
@@ -391,7 +521,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     });
 
     return (
-      <div className={styles.remoHomePage} id="heroBannerRm">
+      <div className={styles.remoHomePage} id="heroBannerRm" >
         <div id="Global-Top-Header-Navigation">
           <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
         </div>

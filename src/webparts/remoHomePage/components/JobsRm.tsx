@@ -124,33 +124,32 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
     }
   }
   public async getCurrentUser() {
-    const profile = await pnp.sp.profiles.myProperties.get();
-    Designation = profile.Title;
-    const currentUser = await sp.web.currentUser.get();
-    UserID = currentUser.Id;
-
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+    try {
+      const profile = await pnp.sp.profiles.myProperties.get();
+      Designation = profile.Title;
+      const currentUser = await sp.web.currentUser.get();
+      UserID = currentUser.Id;
+      // Check if the UserProfileProperties collection exists and has the Department property
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        // Find the Department property in the profile
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
       }
+    } catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
     }
   }
   public async LandingPageAnalytics() {
-    if (!Department) {
-      Department = "NA";
-    }
-    if (!Designation) {
-      Designation = "NA";
-    }
-    // console.log(this.state.Title);
-
     try {
-
-
+      if (!Department) {
+        Department = "NA";
+      }
+      if (!Designation) {
+        Designation = "NA";
+      }
     } catch (error) {
       console.error('Error adding data:', error);
     }

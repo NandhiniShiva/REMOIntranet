@@ -160,32 +160,35 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
 
   public async getCurrentUser() {
     var reacthandler = this;
-    $.ajax({
-      url: `${reacthandler.props.siteurl}/_api/SP.UserProfiles.PeopleManager/GetMyProperties`,
-      type: "GET",
-      headers: { Accept: "application/json; odata=verbose;" },
-      success: function (profile) {
-        console.log(profile);
-
-
-        Designation = profile.d.Title;
-        if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-          // Find the Department property in the profile
-          const departmentProperty = profile.d.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-          console.log(departmentProperty);
-          if (departmentProperty) {
-            Department = departmentProperty.Value;
+    try {
+      $.ajax({
+        url: `${reacthandler.props.siteurl}/_api/SP.UserProfiles.PeopleManager/GetMyProperties`,
+        type: "GET",
+        headers: { Accept: "application/json; odata=verbose;" },
+        success: function (profile) {
+          console.log(profile);
+          Designation = profile.d.Title;
+          if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+            // Find the Department property in the profile
+            const departmentProperty = profile.d.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+            console.log(departmentProperty);
+            if (departmentProperty) {
+              Department = departmentProperty.Value;
+            }
           }
-        }
-        // reacthandler.setState({
-        // //  CurrentUserName: Name,
-        //  // CurrentuserEmail: resultData.d.Email,
-        // });
+          // reacthandler.setState({
+          // //  CurrentUserName: Name,
+          //  // CurrentuserEmail: resultData.d.Email,
+          // });
 
 
-      },
-      error: function () { },
-    });
+        },
+        error: function () { },
+      });
+    }
+    catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
+    }
   }
 
 

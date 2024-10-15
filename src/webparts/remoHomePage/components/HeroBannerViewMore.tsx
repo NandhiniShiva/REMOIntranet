@@ -74,14 +74,17 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
   }
 
   public async getCurrentUser() {
-    const profile = await pnp.sp.profiles.myProperties.get();
-    Designation = profile.Title;
-
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+    try {
+      const profile = await pnp.sp.profiles.myProperties.get();
+      Designation = profile.Title;
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
       }
+    } catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
     }
   }
 
@@ -100,16 +103,20 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
   }
 
   private async GetBanner() {
-    const d = new Date().toISOString();
-    const items = await sp.web.lists.getByTitle(Hero_Bannerlist).items.select("Title", "Description", "Created", "Image", "ID", "*").filter(`IsActive eq 1 and ExpiresOn ge datetime'${d}'`).get();
-    const itemsPerPage = 6;
-    const pageCount = Math.ceil(items.length / itemsPerPage);
-
-    this.setState({
-      Items: items,
-      filteredItems: items,
-      pageCount: pageCount,
-    });
+    try {
+      const d = new Date().toISOString();
+      const items = await sp.web.lists.getByTitle(Hero_Bannerlist).items.select("Title", "Description", "Created", "Image", "ID", "*").filter(`IsActive eq 1 and ExpiresOn ge datetime'${d}'`).get();
+      const itemsPerPage = 6;
+      const pageCount = Math.ceil(items.length / itemsPerPage);
+      this.setState({
+        Items: items,
+        filteredItems: items,
+        pageCount: pageCount,
+      });
+    }
+    catch (error) {
+      console.error("An error occurred while fetching the user Banner:", error);
+    }
   }
 
   private handlePageClick = (data: { selected: number }) => {

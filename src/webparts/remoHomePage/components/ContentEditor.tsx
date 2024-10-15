@@ -105,62 +105,95 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
   }
 
   public async CheckPermission() {
-    let groups = await sp.web.currentUser.groups();
-    let isContentEditorAdmin = false;
-
-    for (let group of groups) {
-      if (group.Title === "ContentPageEditors") {
-        isContentEditorAdmin = true;
-        break;
+    try {
+      let groups = await sp.web.currentUser.groups();
+      let isContentEditorAdmin = false;
+      for (let group of groups) {
+        if (group.Title === "ContentPageEditors") {
+          isContentEditorAdmin = true;
+          break;
+        }
       }
-    }
-
-    this.setState({ ContentEditorAdmin: isContentEditorAdmin });
-
-    if (isContentEditorAdmin) {
-      // $("#access-denied-block").hide();
-
-      document.querySelectorAll('#access-denied-block').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-
-      await Promise.all([this.GetContentEditorTabs(), this.GetContentEditorNavigations(1)]);
-    } else {
-      // $("#access-denied-block").show();
-      document.querySelectorAll('#access-denied-block').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
+      this.setState({ ContentEditorAdmin: isContentEditorAdmin });
+      if (isContentEditorAdmin) {
+        document.querySelectorAll('#access-denied-block').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        await Promise.all([this.GetContentEditorTabs(), this.GetContentEditorNavigations(1)]);
+      } else {
+        document.querySelectorAll('#access-denied-block').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+      }
+    } catch (error) {
+      console.error("Error checking user permissions:", error)
     }
   }
 
-  public async GetContentEditorTabs() {
-    const { UserId } = this.props;
-    const items = await sp.web.lists.getByTitle(Content_Editor_Master_Categorylist)
-      .items.select("Title", "ID", "AccessibleTo/Title")
-      .expand("AccessibleTo")
-      .filter(`IsActive eq 1 and AccessibleTo/Id eq ${UserId}`)
-      .get();
 
-    this.setState({ Tabs: items });
+  // public async CheckPermission() {
+  //   let groups = await sp.web.currentUser.groups();
+  //   let isContentEditorAdmin = false;
+
+  //   for (let group of groups) {
+  //     if (group.Title === "ContentPageEditors") {
+  //       isContentEditorAdmin = true;
+  //       break;
+  //     }
+  //   }
+
+  //   this.setState({ ContentEditorAdmin: isContentEditorAdmin });
+
+  //   if (isContentEditorAdmin) {
+  //     // $("#access-denied-block").hide();
+
+  //     document.querySelectorAll('#access-denied-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+
+  //     await Promise.all([this.GetContentEditorTabs(), this.GetContentEditorNavigations(1)]);
+  //   } else {
+  //     // $("#access-denied-block").show();
+  //     document.querySelectorAll('#access-denied-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //   }
+  // }
+
+  public async GetContentEditorTabs() {
+    try {
+      const { UserId } = this.props;
+      const items = await sp.web.lists.getByTitle(Content_Editor_Master_Categorylist)
+        .items.select("Title", "ID", "AccessibleTo/Title")
+        .expand("AccessibleTo")
+        .filter(`IsActive eq 1 and AccessibleTo/Id eq ${UserId}`)
+        .get();
+      this.setState({ Tabs: items });
+    } catch (error) {
+      console.error("Error fetching ContentEditorTabs:", error);
+    }
   }
 
   public async GetContentEditorNavigations(ID: number) {
-    const { UserId } = this.props;
-    const items = await sp.web.lists.getByTitle(Content_Editor_Masterlist)
-      .items.select("Title", "URL", "Icon", "BelongsTo/Title", "AccessibleTo/Title", "*")
-      .expand("BelongsTo", "AccessibleTo")
-      .orderBy("Title", true)
-      .filter(`IsActive eq 1 and BelongsTo/Id eq ${ID} and AccessibleTo/Id eq ${UserId}`)
-      .get();
-
-    this.setState({ Items: items });
+    try {
+      const { UserId } = this.props;
+      const items = await sp.web.lists.getByTitle(Content_Editor_Masterlist)
+        .items.select("Title", "URL", "Icon", "BelongsTo/Title", "AccessibleTo/Title", "*")
+        .expand("BelongsTo", "AccessibleTo")
+        .orderBy("Title", true)
+        .filter(`IsActive eq 1 and BelongsTo/Id eq ${ID} and AccessibleTo/Id eq ${UserId}`)
+        .get();
+      this.setState({ Items: items });
+    }
+    catch (error) {
+      console.error("Error fetching ContentEditorNavigations:", error);
+    }
   }
 
   public async LandingPageAnalytics() {
     const { currentUser, UserEmail, Department, Designation } = this.state;
     // const CurrentDate = new Date();
     const ItemId = "NA";
-
     try {
       await sp.web.lists.getByTitle(Analytics).items.add({
         Category: "Content Editor",

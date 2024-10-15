@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-import * as $ from 'jquery';
-import { ServiceProvider } from '../services/ServiceProvider';
+// import * as $ from 'jquery';
+
+import { ServiceProvider } from '../ServiceProvider/ServiceProvider';
 import { IWeb, Web } from "@pnp/sp/webs";
 import "@pnp/sp/profiles";
 import "@pnp/sp/lists";
@@ -23,9 +24,14 @@ let Navigationslist = listNames.Navigations;
 let DepartmentsMasterlist = listNames.DepartmentsMaster;
 let QuickLinkslist = listNames.QuickLinks;
 
+// setTimeout(function () {
+//   $('html').css("visibility", "visible");
+//   $('html').addClass('loading-in-progress');
+// }, 1200);
+
 setTimeout(function () {
-  $('html').css("visibility", "visible");
-  $('html').addClass('loading-in-progress');
+  document.documentElement.style.visibility = "visible"; // Set visibility to visible
+  document.documentElement.classList.add('loading-in-progress'); // Add class to the <html> element
 }, 1200);
 
 export interface ISideNavProps {
@@ -166,10 +172,10 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       ActivePageUrl === `${siteurl}/`
     ) {
       setTimeout(() => {
-        $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-        $(".inner-pages-nav").hide();
-        $('#master_footer_parent').hide();
-        $('.ControlZone--control').attr('style', 'display: none !important');
+        // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
+        // $(".inner-pages-nav").hide();
+        // $('#master_footer_parent').hide();
+        // $('.ControlZone--control').attr('style', 'display: none !important');
 
 
         document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
@@ -263,18 +269,49 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     this.setState({ CurrentPageUrl: ActivePageUrl });
 
     // Event listeners
-    $('.globalleftmenu-fixed-area ul li').on('click', function () {
-      $(this).siblings().removeClass('active').removeClass('open');
-      $(this).addClass('active').toggleClass('open');
+    // $('.globalleftmenu-fixed-area ul li').on('click', function () {
+    //   $(this).siblings().removeClass('active').removeClass('open');
+    //   $(this).addClass('active').toggleClass('open');
+    // });
+
+
+    document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
+      item.addEventListener('click', function () {
+        // Get all sibling elements
+        const siblings = Array.prototype.slice.call(this.parentElement.children).filter(function (sibling: any) {
+          return sibling !== item;
+        });
+
+        // Remove 'active' and 'open' classes from all siblings
+        siblings.forEach(function (sibling: any) {
+          sibling.classList.remove('active', 'open');
+        });
+
+        // Add 'active' class to the clicked item and toggle 'open' class
+        this.classList.add('active');
+        this.classList.toggle('open');
+      });
     });
 
-    $(".reponsive-quick-wrap .main-menu ul li.submenu a img").on("click", function () {
-      $(this).parent().toggleClass("active");
+
+    // $(".reponsive-quick-wrap .main-menu ul li.submenu a img").on("click", function () {
+    //   $(this).parent().toggleClass("active");
+    // });
+
+    document.querySelectorAll('.reponsive-quick-wrap .main-menu ul li.submenu a img').forEach(function (img) {
+      img.addEventListener('click', function () {
+        this.parentElement.classList.toggle('active');
+      });
     });
 
     // Timeout to remove loading class
-    setTimeout(() => {
-      $('html').css("visibility", "visible").removeClass('loading-in-progress');
+    // setTimeout(() => {
+    //   $('html').css("visibility", "visible").removeClass('loading-in-progress');
+    // }, 5000);
+
+    setTimeout(function () {
+      document.documentElement.style.visibility = 'visible';
+      document.documentElement.classList.remove('loading-in-progress');
     }, 5000);
 
     // Inject CSS
@@ -286,27 +323,53 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     }
 
     // Click outside event listeners
-    document.addEventListener("mousedown", (event) => {
-      const target = event.target as Element;
-      const container1 = $(".reponsive-quick-wrap");
-      if (!container1.is(target) && container1.has(target).length === 0) {
-        $(".responsive-menu-wrap ").removeClass("open");
+    // document.addEventListener("mousedown", (event) => {
+    //   const target = event.target as Element;
+    //   const container1 = $(".reponsive-quick-wrap");
+    //   if (!container1.is(target) && container1.has(target).length === 0) {
+    //     $(".responsive-menu-wrap ").removeClass("open");
+    //   }
+    //   const container2 = $(".search");
+    //   if (!container2.is(target) && container2.has(target).length === 0) {
+    //     $(".responsive-background").removeClass("open");
+    //     $(".search").removeClass("open");
+    //   }
+    //   const user = $(".user-images");
+    //   if (!$(target).closest(user).length) {
+    //     $(".user-profile-details").removeClass("open");
+    //   }
+    //   const submenuContainer = $(".submenu");
+    //   if (!$(target).closest(submenuContainer).length) {
+    //     $(".main-submenu").removeClass("open");
+    //   }
+    // });
+
+    document.addEventListener("mousedown", function (event) {
+      const target: any = event.target;
+
+      const container1 = document.querySelector(".reponsive-quick-wrap");
+      if (container1 && !container1.contains(target) && container1 !== target) {
+        document.querySelector(".responsive-menu-wrap")?.classList.remove("open");
       }
-      const container2 = $(".search");
-      if (!container2.is(target) && container2.has(target).length === 0) {
-        $(".responsive-background").removeClass("open");
-        $(".search").removeClass("open");
+
+      const container2 = document.querySelector(".search");
+      if (container2 && !container2.contains(target) && container2 !== target) {
+        document.querySelector(".responsive-background")?.classList.remove("open");
+        container2.classList.remove("open");
       }
-      const user = $(".user-images");
-      if (!$(target).closest(user).length) {
-        $(".user-profile-details").removeClass("open");
+
+      const user = document.querySelector(".user-images");
+      if (user && !target.closest(".user-images")) {
+        document.querySelector(".user-profile-details")?.classList.remove("open");
       }
-      const submenuContainer = $(".submenu");
-      if (!$(target).closest(submenuContainer).length) {
-        $(".main-submenu").removeClass("open");
+
+      const submenuContainer = document.querySelector(".submenu");
+      if (submenuContainer && !target.closest(".submenu")) {
+        document.querySelector(".main-submenu")?.classList.remove("open");
       }
     });
   }
+
 
 
 
@@ -377,11 +440,18 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       if (mailcount > 0) {
         this.setState({ EmailCount: mailcount });
         if (mailcount > 999) {
-          $(".count-email").addClass("more");
+          // $(".count-email").addClass("more");
+          document.querySelectorAll(".count-email").forEach(function (element) {
+            element.classList.add("more");
+          });
+
         }
       } else {
         this.setState({ EmailCount: "0" });
-        $("#Emails_count").hide();
+        // $("#Emails_count").hide();
+        let elmailCoun: any = document.getElementById("Emails_count")
+        elmailCoun.style.display = "none";
+
       }
     } catch (error) {
       console.error("Error fetching unread mail count:", error);
@@ -390,60 +460,109 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public getmymeetings() {
-    this.serviceProvider.
-      getMyMeetingsCount()
-      .then(
-        (result: any[]): void => {
-          this.setState({ myMeetingsDatas: result });
-          var myMeetingscount = this.state.myMeetingsDatas.length;
-          if (this.state.myMeetingsDatas.length > 0) {
-            this.setState({ MeetingsCount: myMeetingscount });
-            if (this.state.myMeetingsDatas.length > 999) {
-              $(".meet-count").addClass("more");
+    try {
+      this.serviceProvider.
+        getMyMeetingsCount()
+        .then(
+          (result: any[]): void => {
+            this.setState({ myMeetingsDatas: result });
+            var myMeetingscount = this.state.myMeetingsDatas.length;
+            if (this.state.myMeetingsDatas.length > 0) {
+              this.setState({ MeetingsCount: myMeetingscount });
+              if (this.state.myMeetingsDatas.length > 999) {
+                // $(".meet-count").addClass("more");
+                document.querySelectorAll(".meet-count").forEach(function (element) {
+                  element.classList.add("more");
+                });
+              }
+            } else {
+              this.setState({ MeetingsCount: "0" });
+              // $("#Meetings_count").hide();
+
+              let elmailCoun: any = document.getElementById("Meetings_count")
+              elmailCoun.style.display = "none";
+
             }
-          } else {
-            this.setState({ MeetingsCount: "0" });
-            $("#Meetings_count").hide();
           }
-        }
-      )
+        )
+    }
+    catch (error) {
+      console.error("Error fetching Meeting Details:", error);
+    }
   }
 
   public async EnableContentEditorForSuperAdmins() {
-    let groups = await NewWeb.currentUser.groups();
-    for (var i = 0; i < groups.length; i++) {
-      if (groups[i].Title == "ContentPageEditors") {
-        this.setState({ IsAdminForContentEditor: true }); //To Show Content Editor on Center Nav to Specific Group Users alone
+    try {
+      let groups = await NewWeb.currentUser.groups();
+      for (var i = 0; i < groups.length; i++) {
+        if (groups[i].Title == "ContentPageEditors") {
+          this.setState({ IsAdminForContentEditor: true }); //To Show Content Editor on Center Nav to Specific Group Users alone
 
-      } else {
-        // this.setState({IsAdminForContentEditor:true});
+        } else {
+          // this.setState({IsAdminForContentEditor:true});
+        }
       }
+    }
+    catch (error) {
+      console.error("Error fetching group Details:", error);
     }
   }
 
   public async GetMainNavItems() {
     var reactHandler = this;
+    try {
+      await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+        reactHandler.setState({
+          MainNavItems: items
+        });
+        // $('#root-nav-links ul li').on('click', function () {
+        //   $(this).siblings().removeClass('active');
+        //   $(this).addClass('active');
+        // });
+        document.querySelectorAll('#root-nav-links ul li').forEach(function (item) {
+          item.addEventListener('click', function () {
+            // Remove 'active' class from all siblings
+            this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+              sibling.classList.remove('active');
+            });
+            // Add 'active' class to the clicked element
+            this.classList.add('active');
+          });
+        });
 
-    await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
-
-      reactHandler.setState({
-        MainNavItems: items
       });
-      $('#root-nav-links ul li').on('click', function () {
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
-      });
-    });
+    }
+    catch (error) {
+      console.error("Error fetching Navigation Details:", error);
+    }
   }
 
   public async GetDepartments() {
     //$(".global-qlink-main").hide();
     //$(".global-dept-main").show();
-    $(".responsi-inner-submenu").toggleClass("open");
-    $(".resp-dept-submenu-mob").toggleClass("active");
-    $(".resp-qlink-submenu").removeClass("active");
-    $(".global-qlink-main").removeClass("open");
-    $(".global-dept-main").toggleClass("open");
+    // $(".responsi-inner-submenu").toggleClass("open");
+    // $(".resp-dept-submenu-mob").toggleClass("active");
+    // $(".resp-qlink-submenu").removeClass("active");
+    // $(".global-qlink-main").removeClass("open");
+    // $(".global-dept-main").toggleClass("open");
+
+    document.querySelectorAll('.responsi-inner-submenu').forEach(function (element) {
+      element.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.resp-dept-submenu-mob').forEach(function (element) {
+      element.classList.toggle('active');
+    });
+    document.querySelectorAll('.resp-qlink-submenu').forEach(function (element) {
+      element.classList.remove('active');
+    });
+
+    document.querySelectorAll('.global-qlink-main').forEach(function (element) {
+      element.classList.remove('active');
+    });
+    document.querySelectorAll('.global-dept-main').forEach(function (element) {
+      element.classList.toggle('open');
+    });
     var reactHandler = this;
     reactHandler.displayData = [];
     reactHandler.displayDataResponsive = [];
@@ -461,11 +580,26 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
         reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
       }
 
-      $(".submenu-clear-wrap").show()
-      $(".submenu-wrap-lists ul li").on("click", function () {
-        $(this).siblings().removeClass('active');
-        $(this).addClass('active');
+      // $(".submenu-clear-wrap").show()
+      // $(".submenu-wrap-lists ul li").on("click", function () {
+      //   $(this).siblings().removeClass('active');
+      //   $(this).addClass('active');
+      // });
+
+      document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
+        (element as HTMLElement).style.display = 'block';
       });
+      document.querySelectorAll(".submenu-wrap-lists ul li").forEach(function (item) {
+        item.addEventListener("click", function () {
+          // Remove 'active' class from all siblings
+          this.parentElement.querySelectorAll("li").forEach(function (sibling: any) {
+            sibling.classList.remove("active");
+          });
+          // Add 'active' class to the clicked element
+          this.classList.add("active");
+        });
+      });
+
     });
   } catch(err: string) {
     console.log("Navigation Department Link : " + err);
@@ -474,11 +608,28 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetQuickLinks() {
     //$(".global-dept-main").hide();
     //$(".global-qlink-main").show();
-    $(".resp-qlink-submenu").toggleClass("active");
-    $(".resp-dept-submenu-mob").removeClass("active");
-    $(".third-level-submenu").removeClass("open");
-    $(".global-dept-main").removeClass("open");
-    $(".global-qlink-main").toggleClass("open");
+    // $(".resp-qlink-submenu").toggleClass("active");
+    // $(".resp-dept-submenu-mob").removeClass("active");
+    // $(".third-level-submenu").removeClass("open");
+    // $(".global-dept-main").removeClass("open");
+    // $(".global-qlink-main").toggleClass("open");
+
+    document.querySelectorAll('.resp-qlink-submenu').forEach(function (element) {
+      element.classList.toggle('active');
+    });
+    document.querySelectorAll('.resp-dept-submenu-mob').forEach(function (element) {
+      element.classList.remove('active');
+    });
+    document.querySelectorAll('.third-level-submenu').forEach(function (element) {
+      element.classList.remove('open');
+    });
+    document.querySelectorAll('.global-dept-main').forEach(function (element) {
+      element.classList.remove('open');
+    });
+
+    document.querySelectorAll('.global-qlink-main').forEach(function (element) {
+      element.classList.toggle('open');
+    });
     var reactHandler = this;
     reactHandler.displayDataQlink = [];
     reactHandler.displayDataQlinkResponsive = [];
@@ -503,9 +654,16 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetSubNodes(ID: string, Title: any, ClickFrom: string, key: string) {
     try {
 
-      $("#" + ID + "-Dept-Child").empty();
-      $("#" + ID + "-Dept-Child-parent").toggleClass("open");
+      // $("#" + ID + "-Dept-Child").empty();
+      // $("#" + ID + "-Dept-Child-parent").toggleClass("open");
+      const element = document.getElementById(ID + "-Dept-Child");
+      if (element) {
+        element.innerHTML = '';
+      }
 
+      document.querySelectorAll('"#" + ID + "-Dept-Child-parent"').forEach(function (element) {
+        element.classList.toggle('open');
+      });
       this.displayDataLevel2 = [];
       this.displayDataLevel2Responsive = [];
 
@@ -556,80 +714,84 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public appendData(ID: any, Title: any, OpenInNewTab: boolean, HasSubDept: boolean, Url: string) {
     const { displayData, displayDataResponsive } = this;
     const reactHandler = this;
+    try {
+      if (displayData.length < Title.length && displayDataResponsive.length < Title.length) {
+        if (OpenInNewTab) {
+          if (HasSubDept) {
+            const item = (
+              <li className="GetSubNodes">
+                <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
+                <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+                  <i className="fa fa-caret-down" aria-hidden="true"></i>
+                </a>
+                <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
+                  <ul id={`${ID}-Dept-Child`}>
+                    {reactHandler.state.showdataLevelTwo}
+                  </ul>
+                </div>
+              </li>
+            );
 
-    if (displayData.length < Title.length && displayDataResponsive.length < Title.length) {
-      if (OpenInNewTab) {
-        if (HasSubDept) {
-          const item = (
-            <li className="GetSubNodes">
-              <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
-              <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
-                <i className="fa fa-caret-down" aria-hidden="true"></i>
-              </a>
-              <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
-                <ul id={`${ID}-Dept-Child`}>
-                  {reactHandler.state.showdataLevelTwo}
-                </ul>
-              </div>
-            </li>
-          );
+            displayData.push(item);
+            displayDataResponsive.push(item);
+          } else {
+            const item = (
+              <li>
+                <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
+              </li>
+            );
 
-          displayData.push(item);
-          displayDataResponsive.push(item);
+            displayData.push(item);
+            displayDataResponsive.push(item);
+          }
         } else {
-          const item = (
-            <li>
-              <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
-            </li>
-          );
+          if (HasSubDept) {
+            const item = (
+              <li className="GetSubNodes">
+                <a href={Url} data-interception="off" role="button">{Title}</a>
+                <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+                  <i className="fa fa-caret-down" aria-hidden="true"></i>
+                </a>
+                <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
+                  <ul id={`${ID}-Dept-Child`}>
+                    {reactHandler.state.showdataLevelTwo}
+                  </ul>
+                </div>
+              </li>
+            );
 
-          displayData.push(item);
-          displayDataResponsive.push(item);
+            displayData.push(item);
+            displayDataResponsive.push(item);
+          } else {
+            const item = (
+              <li>
+                <a href={Url} data-interception="off" role="button">{Title}</a>
+              </li>
+            );
+
+            displayData.push(item);
+            displayDataResponsive.push(item);
+          }
         }
-      } else {
-        if (HasSubDept) {
-          const item = (
-            <li className="GetSubNodes">
-              <a href={Url} data-interception="off" role="button">{Title}</a>
-              <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
-                <i className="fa fa-caret-down" aria-hidden="true"></i>
-              </a>
-              <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
-                <ul id={`${ID}-Dept-Child`}>
-                  {reactHandler.state.showdataLevelTwo}
-                </ul>
-              </div>
-            </li>
-          );
 
-          displayData.push(item);
-          displayDataResponsive.push(item);
-        } else {
-          const item = (
-            <li>
-              <a href={Url} data-interception="off" role="button">{Title}</a>
-            </li>
-          );
-
-          displayData.push(item);
-          displayDataResponsive.push(item);
-        }
+        reactHandler.setState({
+          showdata: displayData,
+          showdataResponsive: displayDataResponsive
+        });
       }
-
-      reactHandler.setState({
-        showdata: displayData,
-        showdataResponsive: displayDataResponsive
-      });
+    }
+    catch (error) {
+      console.error('Error While appending Data:', error);
     }
   }
 
   public appendDataLevelTwo(ID: string, Title: any, OpenInNewTab: boolean, HasSubDept: boolean, Url: any) {
     const { displayDataLevel2, displayDataLevel2Responsive } = this;
     const reactHandler = this;
-
-    if (OpenInNewTab) {
-      if (HasSubDept) {
-        const item = `
+    try {
+      if (OpenInNewTab) {
+        if (HasSubDept) {
+          const item = `
               <li class="GetSubNodesLevelTwo">
                   <a href="${Url}" target="_blank" data-interception="off" role="button">${Title}</a>
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -639,19 +801,24 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-        $("#" + ID + "-Dept-Child").append(item);
-      } else {
-        const item = `
+          // $("#" + ID + "-Dept-Child").append(item);
+          let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
+          deptChildId.appendChild(item);
+        } else {
+          const item = `
               <li>
                   <a href="${Url}" target="_blank" data-interception="off" role="button">${Title}</a>
               </li>
           `;
 
-        $("#" + ID + "-Dept-Child").append(item);
-      }
-    } else {
-      if (HasSubDept) {
-        const item = `
+          // $("#" + ID + "-Dept-Child").append(item);
+          let deptChildId: any = document.getElementById(ID + "-Dept-Child")
+          deptChildId.appendChild(item);
+
+        }
+      } else {
+        if (HasSubDept) {
+          const item = `
               <li class="GetSubNodesLevelTwo">
                   <a href="${Url}" data-interception="off" role="button">${Title}</a>
                   <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -661,112 +828,161 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-        $("#" + ID + "-Dept-Child").append(item);
-      } else {
-        const item = `
+          // $("#" + ID + "-Dept-Child").append(item);
+          let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
+          deptChildId.appendChild(item);
+        } else {
+          const item = `
               <li>
                   <a href="${Url}" data-interception="off" role="button">${Title}</a>
               </li>
           `;
 
-        $("#" + ID + "-Dept-Child").append(item);
+          // $("#" + ID + "-Dept-Child").append(item);
+          let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
+          deptChildId.appendChild(item);
+        }
       }
+      reactHandler.setState({
+        showdataLevelTwo: displayDataLevel2,
+        showdataLevelTwoResponsive: displayDataLevel2Responsive
+      });
     }
-
-    reactHandler.setState({
-      showdataLevelTwo: displayDataLevel2,
-      showdataLevelTwoResponsive: displayDataLevel2Responsive
-    });
+    catch (error) {
+      console.error('Error While appending DataLevelTwo:', error);
+    }
   }
 
 
   public appendDataQLink(Title: any, OpenInNewTab: boolean, Url: any) {
     const { displayDataQlink, displayDataQlinkResponsive } = this;
     const reactHandler = this;
-
-    const linkItem = (
-      <li>
-        <a href={Url} target={OpenInNewTab ? "_blank" : undefined} data-interception="off" role="button">
-          <span>{Title}</span>
-        </a>
-      </li>
-    );
-
-    displayDataQlink.push(linkItem);
-    displayDataQlinkResponsive.push(linkItem);
-
-    reactHandler.setState({
-      showdataqlink: displayDataQlink,
-      showdataqlinkResponsive: displayDataQlinkResponsive
-    });
+    try {
+      const linkItem = (
+        <li>
+          <a href={Url} target={OpenInNewTab ? "_blank" : undefined} data-interception="off" role="button">
+            <span>{Title}</span>
+          </a>
+        </li>
+      );
+      displayDataQlink.push(linkItem);
+      displayDataQlinkResponsive.push(linkItem);
+      reactHandler.setState({
+        showdataqlink: displayDataQlink,
+        showdataqlinkResponsive: displayDataQlinkResponsive
+      });
+    }
+    catch (error) {
+      console.error('Error While appending DataQLink:', error);
+    }
   }
 
 
 
   public OpenSearchPage(e: any, url: string) {
     const pathname = window.location.pathname.indexOf("UnifiedSearch") !== -1;
-
-    if (e.keyCode === 13) {
-      const searchUrl = `${url}/SitePages/UnifiedSearch.aspx?q=${e.target.value}`;
-
-      if (!pathname) {
-        window.open(searchUrl, "_blank");
-      } else {
-        window.location.href = searchUrl;
+    try {
+      if (e.keyCode === 13) {
+        const searchUrl = `${url}/SitePages/UnifiedSearch.aspx?q=${e.target.value}`;
+        if (!pathname) {
+          window.open(searchUrl, "_blank");
+        } else {
+          window.location.href = searchUrl;
+        }
+        e.preventDefault();
       }
-
-      e.preventDefault();
+    }
+    catch (error) {
+      console.error('Error While appending DataQLink:', error);
     }
   }
 
 
 
   public OpenBurggerMainMenu() {
-    $(".responsive-menu-wrap").addClass("open");
-    $(".main-menu").show();
-    $(".quicklink-menu").hide();
+    // $(".responsive-menu-wrap").addClass("open");
+    // $(".main-menu").show();
+    // $(".quicklink-menu").hide();
+
+    document.querySelectorAll('.responsive-menu-wrap').forEach(function (element) {
+      element.classList.add('open');
+    });
+    document.querySelectorAll('.main-menu').forEach(element => {
+      (element as HTMLElement).style.display = 'block';
+    });
+    document.querySelectorAll('.quicklink-menu').forEach(element => {
+      (element as HTMLElement).style.display = 'none';
+    });
+
   }
 
   public OpenBurggerQuickLinkMenu() {
-    $(".responsive-menu-wrap").addClass("open");
-    $(".quicklink-menu").show();
-    $(".main-menu").hide();
+    // $(".responsive-menu-wrap").addClass("open");
+    // $(".quicklink-menu").show();
+    // $(".main-menu").hide();
+    document.querySelectorAll('.responsive-menu-wrap').forEach(function (element) {
+      element.classList.add('open');
+    });
+    document.querySelectorAll('.quicklink-menu').forEach(element => {
+      (element as HTMLElement).style.display = 'block';
+    });
+    document.querySelectorAll('.main-menu').forEach(element => {
+      (element as HTMLElement).style.display = 'none';
+    });
   }
 
   public OpenSearch() {
-    $(".responsive-background, .search").addClass("open");
+    // $(".responsive-background, .search").addClass("open");
+    document.querySelectorAll('.responsive-background, .search').forEach(function (element) {
+      element.classList.add('open');
+    });
   }
 
   public CloseSearch() {
-    $(".search").removeClass("open");
+    // $(".search").removeClass("open");
+    document.querySelectorAll('.search').forEach(function (element) {
+      element.classList.remove('open');
+    });
   }
 
   public ShowUserDetailBlock() {
-    $(".user-profile-details").toggleClass("open");
+    // $(".user-profile-details").toggleClass("open");
+    document.querySelectorAll('.user-profile-details').forEach(function (element) {
+      element.classList.toggle('open');
+    });
   }
 
 
 
 
   public render(): React.ReactElement<ISideNavProps> {
-    $('.globalleftmenu-fixed-area ul li').on('click', function () {
-      $(this).siblings().removeClass('active');
-      $(this).siblings().removeClass('open');
-      $(this).addClass('active');
-      $(this).toggleClass('open');
+    // $('.globalleftmenu-fixed-area ul li').on('click', function () {
+    //   $(this).siblings().removeClass('active');
+    //   $(this).siblings().removeClass('open');
+    //   $(this).addClass('active');
+    //   $(this).toggleClass('open');
+    // });
+    document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
+      item.addEventListener('click', function () {
+        // Remove 'active' and 'open' classes from all siblings
+        this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+          if (sibling !== item) {
+            sibling.classList.remove('active', 'open');
+          }
+        });
+        // Add 'active' class to the clicked item and toggle 'open' class
+        this.classList.add('active');
+        this.classList.toggle('open');
+      });
     });
 
     var handler = this;
-
-
     const MainNavigations: JSX.Element[] = handler.state.MainNavItems.map((item) => {
       const { OpenInNewTab, LinkMasterID, Title, URL } = item;
       let LinkMasterIDTitle;
-
       if (LinkMasterID !== undefined) {
         LinkMasterIDTitle = LinkMasterID.Title;
       }
-
       if (OpenInNewTab) {
         if (LinkMasterIDTitle === "DEPT_00001" || LinkMasterIDTitle === "QLINK_00002") {
           return (
@@ -780,7 +996,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
         } else {
           const conturl = URL.toLowerCase().split("?");
           const DomID = Title.replace(/[_\W]+/g, "_");
-
           if (Title === "Home" || (conturl[0] === `${handler.props.siteurl}/sitepages/content-editor.aspx` && handler.state.IsAdminForContentEditor)) {
             return <li id={DomID}><a href={URL} target="_blank" data-interception="off">{Title}</a></li>;
           } else {

@@ -164,29 +164,31 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public async getCurrentUser() {
-    const profile = await sp.profiles.myProperties.get();
-    Designation = profile.Title;
-
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+    try {
+      const profile = await sp.profiles.myProperties.get();
+      Designation = profile.Title;
+      // Check if the UserProfileProperties collection exists and has the Department property
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        // Find the Department property in the profile
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        }
       }
+    } catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
     }
   }
 
   public async LandingPageAnalytics() {
-    if (!Department) {
-      Department = "NA";
-    }
-    if (!Designation) {
-      Designation = "NA";
-    }
-
     try {
+      if (!Department) {
+        Department = "NA";
+      }
+      if (!Designation) {
+        Designation = "NA";
+      }
     } catch (error) {
       console.error('Error adding data:', error);
     }
@@ -249,11 +251,27 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public async AddToMyQuickLinkPreference(ItemID: any, ImageSrc: any, HoverImageSrc: any, URL: any, index: number) {
-    sp.web.lists.getByTitle(UsersQuickLinkslist).items.filter(`Author/Id eq ${this.props.userid}`).get().then(async (resp) => {
-      if (resp.length < 5) {
-        if (tempFavHolderArr.indexOf(ItemID) === -1) {
-          this.setState({ MyQLinksArray: [] });
-          this.getcurrentusersQuickLinksForEdit();
+    try {
+      sp.web.lists.getByTitle(UsersQuickLinkslist).items.filter(`Author/Id eq ${this.props.userid}`).get().then(async (resp) => {
+        if (resp.length < 5) {
+          if (tempFavHolderArr.indexOf(ItemID) === -1) {
+            this.setState({ MyQLinksArray: [] });
+            this.getcurrentusersQuickLinksForEdit();
+          } else {
+            // $("#bt-qlink-adder").prop("disabled", false);
+
+            const buttonElement: any = document.getElementById('bt-qlink-adder');
+            // Set the "disabled" property to false
+            if (buttonElement) {
+              buttonElement.disabled = false;
+            }
+            Swal.fire({
+              title: "Aleady exist",
+              icon: "warning",
+              showConfirmButton: false,
+              // timer: 1500,
+            });
+          }
         } else {
           // $("#bt-qlink-adder").prop("disabled", false);
 
@@ -263,28 +281,16 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
             buttonElement.disabled = false;
           }
           Swal.fire({
-            title: "Aleady exist",
+            title: "No space, only 5 links can be added!",
             icon: "warning",
             showConfirmButton: false,
             // timer: 1500,
-          });
+          } as any);
         }
-      } else {
-        // $("#bt-qlink-adder").prop("disabled", false);
-
-        const buttonElement: any = document.getElementById('bt-qlink-adder');
-        // Set the "disabled" property to false
-        if (buttonElement) {
-          buttonElement.disabled = false;
-        }
-        Swal.fire({
-          title: "No space, only 5 links can be added!",
-          icon: "warning",
-          showConfirmButton: false,
-          // timer: 1500,
-        } as any);
-      }
-    });
+      });
+    } catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
+    }
   }
 
   public DeleteMyQuickLink(ID: any) {

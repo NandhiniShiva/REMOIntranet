@@ -77,51 +77,75 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     })
 
   }
-
   public async getCurrentUser() {
-    const profile = await pnp.sp.profiles.myProperties.get();
-    Designation = profile.Title;
-
-    // Check if the UserProfileProperties collection exists and has the Department property
-    if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-      // Find the Department property in the profile
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      console.log(departmentProperty);
-      if (departmentProperty) {
-        Department = departmentProperty.Value;
+    try {
+      const profile = await pnp.sp.profiles.myProperties.get();
+      if (!profile || !profile.Title) {
+        throw new Error("Profile data is incomplete or missing.");
       }
+      Designation = profile.Title;
+      if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string }) => prop.Key === 'Department');
+        console.log(departmentProperty);
+        if (departmentProperty) {
+          Department = departmentProperty.Value;
+        } else {
+          console.warn("Department property not found in user profile.");
+        }
+      } else {
+        console.warn("UserProfileProperties is empty or undefined.");
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching the user profile:", error);
     }
   }
+
+
+  // public async getCurrentUser() {
+  //   const profile = await pnp.sp.profiles.myProperties.get();
+  //   Designation = profile.Title;
+
+  //   // Check if the UserProfileProperties collection exists and has the Department property
+  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //     // Find the Department property in the profile
+  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     console.log(departmentProperty);
+  //     if (departmentProperty) {
+  //       Department = departmentProperty.Value;
+  //     }
+  //   }
+  // }
   public async LandingPageAnalytics() {
-    if (!Department) {
-      Department = "NA";
-    }
-    if (!Designation) {
-      Designation = "NA";
-    }
-    console.log(this.state.Title);
-
     try {
-
-
-    } catch (error) {
+      if (!Department) {
+        Department = "NA";
+      }
+      if (!Designation) {
+        Designation = "NA";
+      }
+      console.log(this.state.Title);
+    }
+    catch (error) {
       console.error('Error adding data:', error);
     }
   }
 
   public async GetCeoMessage(ItemID: any) {
-    await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "Name", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
-      console.log(items);
+    try {
+      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "Name", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
+        console.log(items);
 
-      this.setState({
-        Items: items, ItemID: items[0].Id, Title: items[0].Title
-      }, () => {
-        // Call LandingPageAnalytics after state is updated
-        this.LandingPageAnalytics();
-
-
-      });
-    })
+        this.setState({
+          Items: items, ItemID: items[0].Id, Title: items[0].Title
+        }, () => {
+          // Call LandingPageAnalytics after state is updated
+          this.LandingPageAnalytics();
+        });
+      })
+    }
+    catch (error) {
+      console.error('Error adding data:', error);
+    }
   }
   public render(): React.ReactElement<ICeoMessageReadMoreProps> {
     var handler = this;

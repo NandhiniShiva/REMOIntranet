@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ServiceProvider } from '../services/ServiceProvider';
-import * as $ from 'jquery';
+import { ServiceProvider } from '../ServiceProvider/ServiceProvider';
+// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import "@pnp/sp/profiles";
 import "@pnp/sp/lists";
@@ -257,50 +257,44 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
     public async GetMainNavItems() {
         var reactHandler = this;
-
-        await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items) => {
-
-            reactHandler.setState({
-                MainNavItems: items
-            });
-            // $('#root-nav-links ul li').on('click', function () {
-            //     $(this).siblings().removeClass('active');
-            //     $(this).addClass('active');
-            // });
-
-
-            // $('.main-menu ul li').on('click', function () {
-            //     $(this).siblings().removeClass('active');
-            //     $(this).addClass('active');
-            // });
-
-
-            document.querySelectorAll('#root-nav-links ul li').forEach(function (item) {
-                item.addEventListener('click', function () {
-                    // Remove the 'active' class from all sibling elements
-                    this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
-                        sibling.classList.remove('active');
+        try {
+            await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items) => {
+                reactHandler.setState({
+                    MainNavItems: items
+                });
+                // $('#root-nav-links ul li').on('click', function () {
+                //     $(this).siblings().removeClass('active');
+                //     $(this).addClass('active');
+                // });
+                // $('.main-menu ul li').on('click', function () {
+                //     $(this).siblings().removeClass('active');
+                //     $(this).addClass('active');
+                // });
+                document.querySelectorAll('#root-nav-links ul li').forEach(function (item) {
+                    item.addEventListener('click', function () {
+                        // Remove the 'active' class from all sibling elements
+                        this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+                            sibling.classList.remove('active');
+                        });
+                        // Add the 'active' class to the clicked element
+                        this.classList.add('active');
                     });
-
-                    // Add the 'active' class to the clicked element
-                    this.classList.add('active');
+                });
+                document.querySelectorAll('.main-menu ul li').forEach(function (item) {
+                    item.addEventListener('click', function () {
+                        // Remove the 'active' class from all sibling elements
+                        this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+                            sibling.classList.remove('active');
+                        });
+                        // Add the 'active' class to the clicked element
+                        this.classList.add('active');
+                    });
                 });
             });
-
-            document.querySelectorAll('.main-menu ul li').forEach(function (item) {
-                item.addEventListener('click', function () {
-                    // Remove the 'active' class from all sibling elements
-                    this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
-                        sibling.classList.remove('active');
-                    });
-
-                    // Add the 'active' class to the clicked element
-                    this.classList.add('active');
-                });
-            });
-
-
-        });
+        }
+        catch (error) {
+            console.error("Error fetching unread mail count:", error);
+        }
     }
 
     public async GetDepartments() {
@@ -470,8 +464,16 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
 
     public async GetSubNodes(ID: string, Title: any, ClickFrom: string, key: string) {
-        $("#" + ID + "-Dept-Child").empty();
-        $("#" + ID + "-Dept-Child-parent").toggleClass("open");
+        // $("#" + ID + "-Dept-Child").empty();
+        // $("#" + ID + "-Dept-Child-parent").toggleClass("open");
+        const deptChild = document.getElementById(ID + "-Dept-Child");
+        if (deptChild) {
+            deptChild.innerHTML = "";
+        }
+        const deptChildParent = document.getElementById(ID + "-Dept-Child-parent");
+        if (deptChildParent) {
+            deptChildParent.classList.toggle("open");
+        }
         var reactHandler = this;
         this.displayDataLevel2 = [];
         this.displayDataLevel2Responsive = [];
@@ -482,11 +484,9 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 .orderBy("Order0", true)
                 .expand("PlaceDepartmentUnder")
                 .get();
-
             reactHandler.setState({
                 DeptandQuickLinksItems: items
             });
-
             items.forEach(item => {
                 const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
                 const Url = URL.Url;
@@ -506,11 +506,9 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 .orderBy("Order0", true)
                 .expand("PlaceDepartmentUnder")
                 .get();
-
             this.setState({
                 DeptandQuickLinksItems: items
             });
-
             items.forEach(item => {
                 const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
                 const Url = URL.Url;
@@ -523,68 +521,70 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
 
     public appendData(ID: any, Title: any, OpenInNewTab: boolean, HasSubDept: boolean, Url: string) {
-        const reactHandler = this;
-        const listItem = (
-            <li>
-                {OpenInNewTab ? (
-                    <a href={Url} target="_blank" data-interception="off" role="button">
-                        {HasSubDept && (
-                            <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
-                                <i className="fa fa-caret-down" aria-hidden="true"></i>
-                            </a>
-                        )}
-                        {Title}
+        try {
+            const reactHandler = this;
+            const listItem = (
+                <li>
+                    {OpenInNewTab ? (
+                        <a href={Url} target="_blank" data-interception="off" role="button">
+                            {HasSubDept && (
+                                <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+                                    <i className="fa fa-caret-down" aria-hidden="true"></i>
+                                </a>
+                            )}
+                            {Title}
+                        </a>
+                    ) : (
+                        <a href={Url} data-interception="off" role="button">
+                            {HasSubDept && (
+                                <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+                                    <i className="fa fa-caret-down" aria-hidden="true"></i>
+                                </a>
+                            )}
+                            {Title}
+                        </a>
+                    )}
+                    {HasSubDept && (
+                        <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
+                            <ul id={`${ID}-Dept-Child`}>
+                                {reactHandler.state.showdataLevelTwo}
+                            </ul>
+                        </div>
+                    )}
+                </li>
+            );
+            reactHandler.displayData.push(listItem);
+            // For Responsive
+            const responsiveListItem = (
+                <li>
+                    <a href={Url} target={OpenInNewTab ? "_blank" : undefined} data-interception="off" role="button">
+                        <span>{Title}</span>
                     </a>
-                ) : (
-                    <a href={Url} data-interception="off" role="button">
-                        {HasSubDept && (
-                            <a href="#" className="inner-deptdd" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
-                                <i className="fa fa-caret-down" aria-hidden="true"></i>
-                            </a>
-                        )}
-                        {Title}
-                    </a>
-                )}
-                {HasSubDept && (
-                    <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
-                        <ul id={`${ID}-Dept-Child`}>
-                            {reactHandler.state.showdataLevelTwo}
-                        </ul>
-                    </div>
-                )}
-            </li>
-        );
-
-        reactHandler.displayData.push(listItem);
-
-        // For Responsive
-        const responsiveListItem = (
-            <li>
-                <a href={Url} target={OpenInNewTab ? "_blank" : undefined} data-interception="off" role="button">
-                    <span>{Title}</span>
-                </a>
-                {HasSubDept && (
-                    <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
-                        <ul id={`${ID}-Dept-Child`}>
-                            {reactHandler.state.showdataLevelTwoResponsive}
-                        </ul>
-                    </div>
-                )}
-            </li>
-        );
-
-        reactHandler.displayDataResponsive.push(responsiveListItem);
-
-        reactHandler.setState({
-            showdata: this.displayData,
-            showdataResponsive: this.displayDataResponsive
-        });
+                    {HasSubDept && (
+                        <div className="third-level-submenu relative" id={`${ID}-Dept-Child-parent`}>
+                            <ul id={`${ID}-Dept-Child`}>
+                                {reactHandler.state.showdataLevelTwoResponsive}
+                            </ul>
+                        </div>
+                    )}
+                </li>
+            );
+            reactHandler.displayDataResponsive.push(responsiveListItem);
+            reactHandler.setState({
+                showdata: this.displayData,
+                showdataResponsive: this.displayDataResponsive
+            });
+        }
+        catch (error) {
+            console.log("Error fetching sub-nodes level two:", error);
+        }
     }
 
 
     public appendDataLevelTwo(ID: string, Title: any, OpenInNewTab: boolean, HasSubDept: boolean, Url: any) {
         const reactHandler = this;
-        const listItem = `
+        try {
+            const listItem: any = `
         <li class="GetSubNodesLevelTwo">
             <a href="${Url}" ${OpenInNewTab ? 'target="_blank"' : ''} data-interception="off" role="button">${Title}</a>
             ${HasSubDept ? '<i class="fa fa-caret-down" aria-hidden="true"></i>' : ''}
@@ -592,50 +592,57 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 <ul class="clearfix" id="${ID}-Dept-Child"></ul>
             </div>
         </li>`;
-
-        $("#" + ID + "-Dept-Child").append(listItem);
-
-        reactHandler.setState({
-            showdataLevelTwo: this.displayDataLevel2,
-            showdataLevelTwoResponsive: this.displayDataLevel2Responsive
-        });
+            // $("#" + ID + "-Dept-Child").append(listItem);
+            const deptChild = document.getElementById(ID + "-Dept-Child");
+            if (deptChild) {
+                deptChild.appendChild(listItem);  // Works if listItem is a Node (DOM element)
+            }
+            reactHandler.setState({
+                showdataLevelTwo: this.displayDataLevel2,
+                showdataLevelTwoResponsive: this.displayDataLevel2Responsive
+            });
+        }
+        catch (error) {
+            console.log("Error fetching DataLevelTwo:", error);
+        }
     }
 
 
     public appendDataQLink(Title: string, OpenInNewTab: boolean, Url: string) {
         const reactHandler = this;
-
-        // Create the JSX elements
-        const regularLinkItem = (
-            <li>
-                <a href={Url} data-interception="off" role="button">{Title}</a>
-            </li>
-        );
-
-        const responsiveLinkItem = (
-            <li>
-                <a href={Url} data-interception="off" role="button"><span>{Title}</span></a>
-            </li>
-        );
-
-        // Push the JSX elements into the arrays based on the condition
-        if (OpenInNewTab) {
-            reactHandler.displayDataQlink.push(
+        try {
+            // Create the JSX elements
+            const regularLinkItem = (
                 <li>
-                    <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
+                    <a href={Url} data-interception="off" role="button">{Title}</a>
                 </li>
             );
-            reactHandler.displayDataQlinkResponsive.push(responsiveLinkItem);
-        } else {
-            reactHandler.displayDataQlink.push(regularLinkItem);
-            reactHandler.displayDataQlinkResponsive.push(responsiveLinkItem);
+            const responsiveLinkItem = (
+                <li>
+                    <a href={Url} data-interception="off" role="button"><span>{Title}</span></a>
+                </li>
+            );
+            // Push the JSX elements into the arrays based on the condition
+            if (OpenInNewTab) {
+                reactHandler.displayDataQlink.push(
+                    <li>
+                        <a href={Url} target="_blank" data-interception="off" role="button">{Title}</a>
+                    </li>
+                );
+                reactHandler.displayDataQlinkResponsive.push(responsiveLinkItem);
+            } else {
+                reactHandler.displayDataQlink.push(regularLinkItem);
+                reactHandler.displayDataQlinkResponsive.push(responsiveLinkItem);
+            }
+            // Update the state
+            reactHandler.setState({
+                showdataqlink: reactHandler.displayDataQlink,
+                showdataqlinkResponsive: reactHandler.displayDataQlinkResponsive
+            });
         }
-
-        // Update the state
-        reactHandler.setState({
-            showdataqlink: reactHandler.displayDataQlink,
-            showdataqlinkResponsive: reactHandler.displayDataQlinkResponsive
-        });
+        catch (error) {
+            console.log("Error fetching sub-nodes level two:", error);
+        }
     }
 
 

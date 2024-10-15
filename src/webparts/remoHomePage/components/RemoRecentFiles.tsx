@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
-import { ServiceProvider } from '../components/services/ServiceProvider';
+import { ServiceProvider } from './ServiceProvider/ServiceProvider';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -25,10 +25,8 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
   }
 
   public componentDidMount() {
-
     this.GetMyOneDriveRecents();
     this.calculateDynamicHeight();
-
   }
 
 

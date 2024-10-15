@@ -136,16 +136,16 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
 
   // converted code
   public async getCurrentUser() {
-    // const { userid } = this.props;
-    const profile = await pnp.sp.profiles.myProperties.get();
-
-    // const { Email: UserEmail, Title: Designation } = profile;
-
-    // Use optional chaining and nullish coalescing to safely access properties
-    const departmentProperty = profile.UserProfileProperties?.find((prop: { Key: string; }) => prop.Key === 'Department');
-    // const Department = departmentProperty?.Value ?? null;
-
-    console.log(departmentProperty);
+    try {
+      // const { userid } = this.props;
+      const profile = await pnp.sp.profiles.myProperties.get();
+      const departmentProperty = profile.UserProfileProperties?.find((prop: { Key: string; }) => prop.Key === 'Department');
+      // const Department = departmentProperty?.Value ?? null;
+      console.log(departmentProperty);
+    }
+    catch (error) {
+      console.error('Error Feching current User Details:', error);
+    }
   }
 
   private async addViews() {
@@ -177,10 +177,10 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         this.setState({ IsCommentEnabled: true });
       } else {
         // $(".all-commets, #commentedpost").remove();
-        document.querySelectorAll(".all-commets, #commentedpost").forEach(function(element) {
+        document.querySelectorAll(".all-commets, #commentedpost").forEach(function (element) {
           element.remove();
         });
-        
+
       }
       this.addViews();
       this.checkUserAlreadyLiked();
@@ -203,31 +203,41 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
   // }
 
   private async checkUserAlreadyLiked() {
-    const items = await sp.web.lists
-      .getByTitle(LikesCountMasterlist)
-      .items
-      .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
-      .top(5000)
-      .get();
-    if (items.length !== 0) {
-      document.querySelectorAll('.like-selected').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-      document.querySelectorAll('.like-default').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-      this.setState({ IsUserAlreadyLiked: true });
+    try {
+      const items = await sp.web.lists
+        .getByTitle(LikesCountMasterlist)
+        .items
+        .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
+        .top(5000)
+        .get();
+      if (items.length !== 0) {
+        document.querySelectorAll('.like-selected').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+        document.querySelectorAll('.like-default').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+        this.setState({ IsUserAlreadyLiked: true });
+      }
+    }
+    catch (error) {
+      console.error(error);
     }
   }
 
   private async checkUserAlreadyCommented() {
-    const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get();
-    if (items.length !== 0) {
-      this.setState({ IsUserAlreadyCommented: true });
-      // $(".reply-tothe-post").hide();
-      document.querySelectorAll('.reply-tothe-post').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
+    try {
+      const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get();
+      if (items.length !== 0) {
+        this.setState({ IsUserAlreadyCommented: true });
+        // $(".reply-tothe-post").hide();
+        document.querySelectorAll('.reply-tothe-post').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+      }
+    }
+    catch (error) {
+      console.error(error);
     }
   }
 
@@ -263,7 +273,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       document.querySelectorAll('.like-selected').forEach(element => {
         (element as HTMLElement).style.display = 'block';
       });
-
       document.querySelectorAll('.like-default').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
@@ -303,12 +312,17 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
 
   private async showComments() {
     // $(".all-commets").toggle();
-    document.querySelectorAll('.all-comments').forEach(element => {
-      const htmlElement = element as HTMLElement;
-      htmlElement.style.display = htmlElement.style.display === 'none' ? 'block' : 'none';
-    });
-    const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-    this.setState({ commentitems: items });
+    try {
+      document.querySelectorAll('.all-comments').forEach(element => {
+        const htmlElement = element as HTMLElement;
+        htmlElement.style.display = htmlElement.style.display === 'none' ? 'block' : 'none';
+      });
+      const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
+      this.setState({ commentitems: items });
+    }
+    catch {
+      console.error("Element with ID 'Comment' not found.");
+    }
   }
 
   private async saveComments(e: any) {
