@@ -30,7 +30,7 @@ export interface ISideNavState {
     email: string;
     NotificationItems: any[];
     SidenavData: any[];
-    Noficationcount: any;
+    NotificationCount: any;
     logodata: any[];
     Name_Ar: string;
     Designation_Ar: string;
@@ -61,7 +61,7 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
             email: "",
             NotificationItems: [],
             SidenavData: [],
-            Noficationcount: [],
+            NotificationCount: [],
             logodata: [],
             Name_Ar: "",
             Designation_Ar: "",
@@ -72,7 +72,7 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
 
     public async componentDidMount() {
         await this.GetCurrentUserDetails().then(async () => {
-            await this.getNotication();
+            await this.getNotification();
         })
 
 
@@ -92,66 +92,101 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
         }
     }
 
-    public getNotication() {
-        var totalcount: any;
+    // public getNotification() {
+    //     var totalcount: any;
+    //     try {
+    //         newweb.lists.getByTitle(NotificationList).items.select("*").filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`).orderBy('Created', false).top(8000).get().then((response: any) => {
+    //             totalcount = response.length;
+
+
+    //             console.log(response);
+    //             if (response.length != 0) {
+
+
+    //                 this.setState({
+    //                     NotificationItems: response,
+    //                 })
+    //             }
+    //             if (totalcount < 10) {
+    //                 totalcount = response.length;
+    //             }
+    //             else if (10 > totalcount && totalcount < 20) {
+    //                 totalcount = "10+";
+    //             }
+    //             else if (20 > totalcount && totalcount < 30) {
+    //                 totalcount = "20+";
+    //             }
+    //             else if (30 > totalcount && totalcount < 40) {
+    //                 totalcount = "30+";
+    //             }
+    //             else if (40 > totalcount && totalcount < 50) {
+    //                 totalcount = "40+";
+    //             }
+    //             else if (50 > totalcount && totalcount < 60) {
+    //                 totalcount = "50+";
+    //             }
+    //             else if (60 > totalcount && totalcount < 70) {
+    //                 totalcount = "60+";
+    //             }
+    //             else if (70 > totalcount && totalcount < 80) {
+    //                 totalcount = "70+";
+    //             }
+    //             else if (80 > totalcount && totalcount < 90) {
+    //                 totalcount = "80+";
+    //             }
+    //             else if (90 > totalcount && totalcount < 100) {
+    //                 totalcount = "90+";
+    //             }
+    //             else {
+    //                 totalcount = "99+";
+    //             }
+
+    //             this.setState({
+    //                 NotificationCount: totalcount
+    //             })
+
+    //         })
+    //     } catch (error) {
+    //         console.log("Error in getNotification", error);
+
+    //     }
+    // }
+
+    // Optimized code
+
+    public async getNotification() {
         try {
-            newweb.lists.getByTitle(NotificationList).items.select("*").filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`).orderBy('Created', false).top(8000).get().then((response: any) => {
-                totalcount = response.length;
+            const response = await newweb.lists.getByTitle(NotificationList).items
+                .select("*")
+                .filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`)
+                .orderBy('Created', false)
+                .top(8000)
+                .get();
 
+            const totalcount = response.length;
+            console.log(response);
 
-                console.log(response);
-                if (response.length != 0) {
+            // Update state if notifications are found
+            if (totalcount > 0) {
+                this.setState({ NotificationItems: response });
+            }
 
+            // Determine display count based on total notifications
+            let displayCount;
+            if (totalcount < 10) {
+                displayCount = totalcount;
+            } else if (totalcount < 100) {
+                displayCount = `${Math.floor(totalcount / 10) * 10}+`;
+            } else {
+                displayCount = "99+";
+            }
 
-                    this.setState({
-                        NotificationItems: response,
-                    })
-                }
-                if (totalcount < 10) {
-                    totalcount = response.length;
-                }
-                else if (10 > totalcount && totalcount < 20) {
-                    totalcount = "10+";
-                }
-                else if (20 > totalcount && totalcount < 30) {
-                    totalcount = "20+";
-                }
-                else if (30 > totalcount && totalcount < 40) {
-                    totalcount = "30+";
-                }
-                else if (40 > totalcount && totalcount < 50) {
-                    totalcount = "40+";
-                }
-                else if (50 > totalcount && totalcount < 60) {
-                    totalcount = "50+";
-                }
-                else if (60 > totalcount && totalcount < 70) {
-                    totalcount = "60+";
-                }
-                else if (70 > totalcount && totalcount < 80) {
-                    totalcount = "70+";
-                }
-                else if (80 > totalcount && totalcount < 90) {
-                    totalcount = "80+";
-                }
-                else if (90 > totalcount && totalcount < 100) {
-                    totalcount = "90+";
-                }
-                else {
-                    totalcount = "99+";
-                }
+            this.setState({ NotificationCount: displayCount });
 
-                this.setState({
-                    Noficationcount: totalcount
-                })
-
-            })
         } catch (error) {
-            console.log("Error in getNotication", error);
-
+            console.error("Error in getNotification", error);
         }
     }
-
 
     public IsItemSeen(id: any, Currentcatagory: any, Listname: any, guID: any) {
         try {
@@ -164,12 +199,12 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
                     //     SeenOn: currentdate,
                     //     IsSeen: "true"
                     // }).then(() => {
-                    //     this.getNotication();
+                    //     this.getNotification();
                     // })
                     // alert(itemId)
                     await newweb.lists.getByTitle(NotificationList).items.getById(itemId).delete()
                         .then(async () => {
-                            await this.getNotication();
+                            await this.getNotification();
 
                         })
                 }
@@ -280,11 +315,11 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
             <div>
                 <div className="li_profile user-image-block left_notification">
                     <div className="notification_banner">
-                        <a href="#"> <img id='Bell-img' className='notification_bell' src={`${this.props.siteurl}/SiteAssets/ECAImage/notification_img.svg`} /> <span id='Bell-img'> {reactHandler.state.Noficationcount} </span> </a>
+                        <a href="#"> <img id='Bell-img' className='notification_bell' src={`${this.props.siteurl}/SiteAssets/ECAImage/notification_img.svg`} /> <span id='Bell-img'> {reactHandler.state.NotificationCount} </span> </a>
                         <div className="notification_part">
                             <div className="noti_header clearfix">
                                 <h3>Notification </h3>
-                                <p> {reactHandler.state.Noficationcount} Unread</p>
+                                <p> {reactHandler.state.NotificationCount} Unread</p>
                             </div>
                             <ul className="notification_ul">
                                 {ShowNotificationItems}

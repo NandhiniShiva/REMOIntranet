@@ -85,82 +85,156 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
 
   }
 
+  // public async GetAllQuickLinks() {
+  //   var reactHandler = this;
+  //   var AllID = "";
+  //   for (var i = 0; i < ExistingQlinks.length; i++) {
+  //     if (ExistingQlinks.length != 0) {
+  //       let LastIndex = ExistingQlinks.length - 1;
+  //       if (i == LastIndex) {
+  //         AllID += "Id ne " + ExistingQlinks[i].ItemId + "";
+  //       } else {
+  //         AllID += "Id ne " + ExistingQlinks[i].ItemId + " and ";
+  //       }
+  //     }
+  //   }
+  //   if (ExistingQlinks.length != 0) {
+  //     await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1' and ${AllID}`).orderBy("Order0", true).get().then((items) => {
+  //       reactHandler.setState({
+  //         items: items
+  //       });
+  //     });
+  //   } else {
+  //     await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1'`).orderBy("Order0", true).get().then((items) => {
+  //       reactHandler.setState({
+  //         items: items
+  //       });
+  //     });
+  //   }
+  // }
+
+  // Optimized code
+
   public async GetAllQuickLinks() {
-    var reactHandler = this;
-    var AllID = "";
-    for (var i = 0; i < ExistingQlinks.length; i++) {
-      if (ExistingQlinks.length != 0) {
-        let LastIndex = ExistingQlinks.length - 1;
-        if (i == LastIndex) {
-          AllID += "Id ne " + ExistingQlinks[i].ItemId + "";
-        } else {
-          AllID += "Id ne " + ExistingQlinks[i].ItemId + " and ";
-        }
-      }
-    }
-    if (ExistingQlinks.length != 0) {
-      await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1' and ${AllID}`).orderBy("Order0", true).get().then((items) => {
-        reactHandler.setState({
-          items: items
-        });
-      });
-    } else {
-      await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1'`).orderBy("Order0", true).get().then((items) => {
-        reactHandler.setState({
-          items: items
-        });
-      });
+    try {
+      // Build the filter string based on ExistingQlinks
+
+      const filterString = Array.isArray(ExistingQlinks) && ExistingQlinks.length > 0
+        ? `IsActive eq '1' and ${ExistingQlinks.map((link: any) => `Id ne ${link.ItemId}`).join(' and ')}`
+        : `IsActive eq '1'`;
+      // Fetch the items based on the filter
+      const items = await sp.web.lists.getByTitle(QuickLinkslist)
+        .items
+        .select("Title", "ID", "URL", "Image", "ImageHover", "*")
+        .filter(filterString)
+        .orderBy("Order0", true)
+        .get();
+
+      // Update state with the fetched items
+      this.setState({ items });
+    } catch (error) {
+      console.error('Error fetching quick links:', error);
     }
   }
 
+  // public async getcurrentusersQuickLinksForEdit() {
+  //   var reactHandler = this;
+  //   let UserID = this.props.userid;
+  //   ExistingQlinks = [];
+
+  //   await sp.web.lists.getByTitle(UsersQuickLinkslist).items.select("ID", "SelectedQuickLinks/Id", "SelectedQuickLinks/Title", "URL", "Order0", "ImageSrc", "HoverImageSrc").filter(`Author/Id eq '${UserID}'`).expand("SelectedQuickLinks").orderBy("Order0", true).get().then(async (items) => {
+  //     reactHandler.setState({
+  //       MyQuickLinksPrefference: items
+  //     });
+  //     if (this.state.IsEditModeisON == true) {
+  //       setTimeout(() => {
+  //         // $(".delete-quicklinks").addClass("open");
+
+  //         let allCommentsElements: any = document.querySelectorAll(".delete-quicklinks");
+  //         allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
+  //           element.add("open");
+  //         });
+
+  //       }, 1500);
+  //     }
+  //     if (items.length != 0) {
+  //       this.setState({
+  //         IsMyQuickLinksEmpty: false
+  //       });
+  //     } else {
+  //       this.setState({
+  //         IsMyQuickLinksEmpty: true
+  //       });
+  //     }
+
+  //     this.setState({ MyQLinksArray: items });
+
+  //     // Remove quick links that match the condition
+  //     let activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist).items.select("ID").filter("IsActive eq '1'").get();
+  //     const activeQuickLinkIds = new Set(activeQuickLinks.map((link) => link.Id));
+  //     let updatedMyQLinksArray = items.filter((item) => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+
+  //     // Update the state with the filtered quick links
+  //     this.setState({ MyQLinksArray: updatedMyQLinksArray });
+
+  //     for (var i = 0; i < updatedMyQLinksArray.length; i++) {
+  //       tempFavHolderArr.push(updatedMyQLinksArray[i].SelectedQuickLinks.Id);
+  //     }
+
+  //     let QlinkCount = ExistingQlinks.length;
+  //     reactHandler.setState({ AvailableSpaceCount: 5 - QlinkCount });
+  //     reactHandler.GetAllQuickLinks();
+  //   });
+  // }
+
+  // Optimized code
+
   public async getcurrentusersQuickLinksForEdit() {
-    var reactHandler = this;
-    let UserID = this.props.userid;
-    ExistingQlinks = [];
+    try {
+      const { userid } = this.props;
+      ExistingQlinks = [];
 
-    await sp.web.lists.getByTitle(UsersQuickLinkslist).items.select("ID", "SelectedQuickLinks/Id", "SelectedQuickLinks/Title", "URL", "Order0", "ImageSrc", "HoverImageSrc").filter(`Author/Id eq '${UserID}'`).expand("SelectedQuickLinks").orderBy("Order0", true).get().then(async (items) => {
-      reactHandler.setState({
-        MyQuickLinksPrefference: items
+      const items = await sp.web.lists.getByTitle(UsersQuickLinkslist)
+        .items.select("ID", "SelectedQuickLinks/Id", "SelectedQuickLinks/Title", "URL", "Order0", "ImageSrc", "HoverImageSrc")
+        .filter(`Author/Id eq '${userid}'`)
+        .expand("SelectedQuickLinks")
+        .orderBy("Order0", true)
+        .get();
+
+      this.setState({
+        MyQuickLinksPrefference: items,
+        IsMyQuickLinksEmpty: items.length === 0,
+        MyQLinksArray: items
       });
-      if (this.state.IsEditModeisON == true) {
+
+      if (this.state.IsEditModeisON) {
         setTimeout(() => {
-          // $(".delete-quicklinks").addClass("open");
-
-          let allCommentsElements: any = document.querySelectorAll(".delete-quicklinks");
-          allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
-            element.add("open");
+          document.querySelectorAll(".delete-quicklinks").forEach(element => {
+            element.classList.add("open");
           });
-
         }, 1500);
       }
-      if (items.length != 0) {
-        this.setState({
-          IsMyQuickLinksEmpty: false
-        });
-      } else {
-        this.setState({
-          IsMyQuickLinksEmpty: true
-        });
-      }
 
-      this.setState({ MyQLinksArray: items });
+      const activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist)
+        .items.select("ID")
+        .filter("IsActive eq '1'")
+        .get();
 
-      // Remove quick links that match the condition
-      let activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist).items.select("ID").filter("IsActive eq '1'").get();
-      const activeQuickLinkIds = new Set(activeQuickLinks.map((link) => link.Id));
-      let updatedMyQLinksArray = items.filter((item) => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+      const activeQuickLinkIds = new Set(activeQuickLinks.map(link => link.Id));
+      const updatedMyQLinksArray = items.filter(item => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
 
-      // Update the state with the filtered quick links
       this.setState({ MyQLinksArray: updatedMyQLinksArray });
 
-      for (var i = 0; i < updatedMyQLinksArray.length; i++) {
-        tempFavHolderArr.push(updatedMyQLinksArray[i].SelectedQuickLinks.Id);
-      }
+      tempFavHolderArr = updatedMyQLinksArray.map(link => link.SelectedQuickLinks.Id);
 
-      let QlinkCount = ExistingQlinks.length;
-      reactHandler.setState({ AvailableSpaceCount: 5 - QlinkCount });
-      reactHandler.GetAllQuickLinks();
-    });
+      this.setState({
+        AvailableSpaceCount: 5 - ExistingQlinks.length
+      });
+
+      this.GetAllQuickLinks();
+    } catch (error) {
+      console.error("Error in getting current user's quick links for edit:", error);
+    }
   }
 
   public async getCurrentUser() {

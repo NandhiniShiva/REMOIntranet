@@ -389,60 +389,117 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       console.error("Error checking the comment:", error);
     }
   }
+  // public async liked(mode: string) {
+
+  //   if (mode == "like") {
+  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+  //       EmployeeNameId: User,
+  //       LikedOn: CurrentDate,
+  //       EmployeeEmail: UserEmail,
+  //       ContentPage: "Birthday",
+  //       Title: title,
+  //       ContentID: ID,
+  //     }).then(() => {
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+  //         var like = items.length;
+  //         var newspan = like.toString()
+  //         // document.getElementById("likescount").textContent = newspan;
+  //         const commentsElement = document.getElementById("likescount");
+  //         if (commentsElement) {
+  //           commentsElement.textContent = newspan;  // Assuming 'newspan' is a valid string or value
+  //         } else {
+  //           console.error("Element with ID 'commentscount' not found.");
+  //         }
+  //       });
+  //     })
+  //   } else {
+  //     document.querySelectorAll('.like-selected').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+  //     document.querySelectorAll('.like-default').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data) => {
+  //       sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
+  //         sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
+  //           var like = items.length;
+  //           var newspan = like.toString()
+  //           // document.getElementById("likescount").textContent = newspan;
+  //           const commentsElement = document.getElementById("likescount");
+  //           if (commentsElement) {
+  //             commentsElement.textContent = newspan;  // Assuming 'newspan' is a valid string or value
+  //           } else {
+  //             console.error("Element with ID 'commentscount' not found.");
+  //           }
+  //         });
+  //       })
+  //     })
+  //   }
+
+  // }
+
+  // Optimized code 
+
   public async liked(mode: string) {
+    try {
+      const isLikeMode = mode === "like";
 
-    if (mode == "like") {
-      sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
-        EmployeeNameId: User,
-        LikedOn: CurrentDate,
-        EmployeeEmail: UserEmail,
-        ContentPage: "Birthday",
-        Title: title,
-        ContentID: ID,
-      }).then(() => {
-        document.querySelectorAll('.like-selected').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
+      if (isLikeMode) {
+        // Add a new like entry
+        await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+          EmployeeNameId: User,
+          LikedOn: CurrentDate,
+          EmployeeEmail: UserEmail,
+          ContentPage: "Birthday",
+          Title: title,
+          ContentID: ID,
         });
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-          var like = items.length;
-          var newspan = like.toString()
-          // document.getElementById("likescount").textContent = newspan;
-          const commentsElement = document.getElementById("likescount");
-          if (commentsElement) {
-            commentsElement.textContent = newspan;  // Assuming 'newspan' is a valid string or value
-          } else {
-            console.error("Element with ID 'commentscount' not found.");
-          }
-        });
-      })
-    } else {
-      document.querySelectorAll('.like-selected').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
+
+      } else {
+        // Fetch the existing like entry for the user and content
+        const data = await sp.web.lists.getByTitle(LikesCountMasterlist)
+          .items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
+          .get();
+
+        // If an entry is found, delete it
+        if (data.length > 0) {
+          await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
+        }
+      }
+
+      // Toggle the display based on the like mode
+      document.querySelectorAll<HTMLElement>('.like-selected').forEach(element => {
+        element.style.display = isLikeMode ? 'block' : 'none';
       });
-      document.querySelectorAll('.like-default').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
+
+      document.querySelectorAll<HTMLElement>('.like-default').forEach(element => {
+        element.style.display = isLikeMode ? 'none' : 'block';
       });
-      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data) => {
-        sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
-          sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`).top(5000).get().then((items) => { // //orderby is false -> decending          
-            var like = items.length;
-            var newspan = like.toString()
-            // document.getElementById("likescount").textContent = newspan;
-            const commentsElement = document.getElementById("likescount");
-            if (commentsElement) {
-              commentsElement.textContent = newspan;  // Assuming 'newspan' is a valid string or value
-            } else {
-              console.error("Element with ID 'commentscount' not found.");
-            }
-          });
-        })
-      })
+
+      // Fetch the updated like count and update the display
+      const items = await sp.web.lists.getByTitle(LikesCountMasterlist)
+        .items.filter(`ContentPage eq 'Birthday' and ContentID eq ${ID}`)
+        .top(5000)
+        .get();
+
+      const likesElement = document.getElementById("likescount");
+      if (likesElement) {
+        likesElement.textContent = items.length.toString();
+      } else {
+        console.error("Element with ID 'likescount' not found.");
+      }
+
+    } catch (error) {
+      console.error("Error in liked function:", error);
     }
-
   }
+
   public showComments() {
     // $(".all-commets").toggle();
     try {

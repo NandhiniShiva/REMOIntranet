@@ -22,7 +22,7 @@ export interface IGalleryGridViewState {
   Images: any[];
   Videos: any[];
   items: any[];
-  type: string;
+  type: string | null;
   FolderItems: any[];
   nav1: Slider | null;
   nav2: Slider | null;
@@ -30,7 +30,7 @@ export interface IGalleryGridViewState {
   Mode: string;
   slideIndex: number;
   updateCount: number;
-  Type: string;
+  Type: string | null;
   SliderIsOpen: boolean;
   Subfolderurl: string;
   MyFolderName: string;
@@ -100,135 +100,209 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
   }
 
+  // public componentDidMount() {
+  //   setTimeout(() => {
+  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+  //     // $('#spCommandBar').attr('style', 'display: none !important');
+  //     // $('#webPartContainer').attr('style', 'display: none !important');
+  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
+
+  //     const commentsWrapper = document.getElementById('CommentsWrapper');
+  //     if (commentsWrapper) {
+  //       commentsWrapper.style.setProperty('display', 'none', 'important');
+  //     }
+
+  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
+  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
+  //     pageHeaders.forEach((element: any) => {
+  //       element.style.setProperty('display', 'none', 'important');
+  //     });
+
+  //     // Show the element with ID "ceoMessageReadMore"
+  //     const webPartContainer = document.getElementById('webPartContainer');
+  //     if (webPartContainer) {
+  //       webPartContainer.style.display = 'none';
+  //     }
+
+  //     const spCommandBar = document.getElementById('spCommandBar');
+  //     if (spCommandBar) {
+  //       spCommandBar.style.setProperty('display', 'none', 'important');
+  //     }
+  //   }, 2000);
+  //   const url: any = new URL(window.location.href);
+  //   const FolderUrl = url.searchParams.get("FolderName");
+  //   // console.log(FolderUrl);
+  //   const Type = url.searchParams.get("Type");
+  //   Global_Type = Type;
+  //   if (Type == "Img") {
+  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+
+  //     // $(".image-gallery-allimg-block").show();
+  //     // $(".video-gallery-allimg-block").hide();
+  //   } else {
+  //     // $(".image-gallery-allimg-block").hide();
+  //     // $(".video-gallery-allimg-block").show();
+
+  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //   }
+  //   var folderurl = FolderUrl.replace(/['"]+/g, '');
+  //   // Remove trailing slash if it exists
+  //   folderurl = folderurl.replace(/\/$/, '');
+  //   // Split the URL to get the segments
+  //   const segments = folderurl.split('/');
+  //   // Get the last segment which is the folder name
+  //   const folderName = segments[segments.length - 1];
+  //   console.log(folderName); // Output: Test
+  //   this.setState({
+  //     nav1: this.slider1,
+  //     nav2: this.slider2,
+  //     Type: Type,
+  //     type: Type,
+  //     MyFolderName: folderName
+  //   });
+  //   this.getCurrentUser().then(() => {
+  //     this.GetSubFolder(folderurl, Type, "")
+  //   }).then(() => {
+  //     this.LandingPageAnalytics();
+  //   });
+
+  //   GlobalUrl = folderurl
+  //   // this.GetGalleryFilesFolder("Main");
+  //   if (Type == "Img") {
+  //     // $(".vdo-block-cntnt").removeClass("active");
+  //     // $(".img-block-cntnt").addClass("active");
+
+  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
+  //     vdoBlockElements.forEach(element => {
+  //       element.classList.remove('active');
+  //     });
+
+  //     // Add the "active" class to all elements with the class "img-block-cntnt"
+  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
+  //     imgBlockElements.forEach(element => {
+  //       element.classList.add('active');
+  //     });
+  //   } else {
+  //     this.ShowVideos()
+  //     // $(".img-block-cntnt").removeClass("active");
+  //     // $(".vdo-block-cntnt").addClass("active");
+
+  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
+  //     vdoBlockElements.forEach(element => {
+  //       element.classList.add('active');
+  //     });
+
+  //     // Add the "active" class to all elements with the class "img-block-cntnt"
+  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
+  //     imgBlockElements.forEach(element => {
+  //       element.classList.remove('active');
+  //     });
+  //   }
+  //   // $(".img-galler-section-cls ul li").on("click", function () {
+  //   //   $(this).siblings().removeClass("active");
+  //   //   $(this).addClass("active");
+  //   // });
+  //   // Select the parent <ul> element under ".img-galler-section-cls"
+  //   const ulElement: any = document.querySelector('.img-galler-section-cls ul');
+
+  //   // Attach a single click event listener to the <ul> element
+  //   ulElement.addEventListener('click', function (event: any) {
+  //     // Check if the clicked target is an <li> element
+  //     if (event.target.tagName === 'LI') {
+  //       // Remove the "active" class from all sibling <li> elements
+  //       const listItems = ulElement.querySelectorAll('li');
+  //       listItems.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
+
+  //       // Add the "active" class to the clicked <li> element
+  //       event.target.classList.add('active');
+  //     }
+  //   });
+
+  // }
+
+  // Optimized code
+
   public componentDidMount() {
     setTimeout(() => {
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#webPartContainer').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-
-      const commentsWrapper = document.getElementById('CommentsWrapper');
-      if (commentsWrapper) {
-        commentsWrapper.style.setProperty('display', 'none', 'important');
-      }
-
-      // Hide all div elements with the attribute data-automation-id="pageHeader"
-      const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-      pageHeaders.forEach((element: any) => {
-        element.style.setProperty('display', 'none', 'important');
+      // Hide elements by IDs or attributes
+      const selectors = ['#CommentsWrapper', 'div[data-automation-id="pageHeader"]', '#webPartContainer', '#spCommandBar'];
+      selectors.forEach(selector => {
+        document.querySelectorAll<HTMLElement>(selector).forEach(element => {
+          element.style.setProperty('display', 'none', 'important');
+        });
       });
-
-      // Show the element with ID "ceoMessageReadMore"
-      const webPartContainer = document.getElementById('webPartContainer');
-      if (webPartContainer) {
-        webPartContainer.style.display = 'none';
-      }
-
-      const spCommandBar = document.getElementById('spCommandBar');
-      if (spCommandBar) {
-        spCommandBar.style.setProperty('display', 'none', 'important');
-      }
     }, 2000);
-    const url: any = new URL(window.location.href);
-    const FolderUrl = url.searchParams.get("FolderName");
-    // console.log(FolderUrl);
-    const Type = url.searchParams.get("Type");
-    Global_Type = Type;
-    if (Type == "Img") {
-      document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-      document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
 
-      // $(".image-gallery-allimg-block").show();
-      // $(".video-gallery-allimg-block").hide();
-    } else {
-      // $(".image-gallery-allimg-block").hide();
-      // $(".video-gallery-allimg-block").show();
+    const url = new URL(window.location.href);
+    const folderUrl = (url.searchParams.get("FolderName")?.replace(/['"]+/g, '').replace(/\/$/, '')) || '';
+    const type = url.searchParams.get("Type");
+    Global_Type = type;
 
-      document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-      document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-    }
-    var folderurl = FolderUrl.replace(/['"]+/g, '');
-    // Remove trailing slash if it exists
-    folderurl = folderurl.replace(/\/$/, '');
-    // Split the URL to get the segments
-    const segments = folderurl.split('/');
-    // Get the last segment which is the folder name
-    const folderName = segments[segments.length - 1];
-    console.log(folderName); // Output: Test
+    // Toggle display and active classes based on type
+    this.toggleGallery(type === "Img");
+
+    const folderName = folderUrl.split('/').pop() || '';
+
     this.setState({
+
       nav1: this.slider1,
       nav2: this.slider2,
-      Type: Type,
-      type: Type,
+      Type: type,
+      type: type,
       MyFolderName: folderName
-    });
-    this.getCurrentUser().then(() => {
-      this.GetSubFolder(folderurl, Type, "")
-    }).then(() => {
-      this.LandingPageAnalytics();
+
     });
 
-    GlobalUrl = folderurl
-    // this.GetGalleryFilesFolder("Main");
-    if (Type == "Img") {
-      // $(".vdo-block-cntnt").removeClass("active");
-      // $(".img-block-cntnt").addClass("active");
+    this.getCurrentUser()
+      .then(() => this.GetSubFolder(folderUrl, type || "", ""))
+      .then(() => this.LandingPageAnalytics());
 
-      const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-      vdoBlockElements.forEach(element => {
-        element.classList.remove('active');
+    GlobalUrl = folderUrl;
+  }
+
+  // Unified function for toggling gallery display and active classes
+  private toggleGallery(isImageType: boolean) {
+    const elements = [
+      { selector: '.image-gallery-allimg-block', display: isImageType ? 'block' : 'none' },
+      { selector: '.video-gallery-allimg-block', display: isImageType ? 'none' : 'block' },
+      { selector: '.vdo-block-cntnt', classToggle: !isImageType },
+      { selector: '.img-block-cntnt', classToggle: isImageType }
+    ];
+
+    elements.forEach(({ selector, display, classToggle }) => {
+      document.querySelectorAll<HTMLElement>(selector).forEach(el => {
+        if (display !== undefined) {
+          el.style.display = display;
+        }
+        if (classToggle !== undefined) {
+          el.classList.toggle('active', classToggle);
+        }
       });
+    });
 
-      // Add the "active" class to all elements with the class "img-block-cntnt"
-      const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-      imgBlockElements.forEach(element => {
-        element.classList.add('active');
-      });
-    } else {
-      this.ShowVideos()
-      // $(".img-block-cntnt").removeClass("active");
-      // $(".vdo-block-cntnt").addClass("active");
-
-      const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-      vdoBlockElements.forEach(element => {
-        element.classList.add('active');
-      });
-
-      // Add the "active" class to all elements with the class "img-block-cntnt"
-      const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-      imgBlockElements.forEach(element => {
-        element.classList.remove('active');
+    // Initialize click handler for gallery section
+    const ulElement = document.querySelector('.img-galler-section-cls ul');
+    if (ulElement) {
+      ulElement.addEventListener('click', (event: Event) => {
+        const target = event.target as HTMLElement;
+        if (target.tagName === 'LI') {
+          ulElement.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+          target.classList.add('active');
+        }
       });
     }
-    // $(".img-galler-section-cls ul li").on("click", function () {
-    //   $(this).siblings().removeClass("active");
-    //   $(this).addClass("active");
-    // });
-    // Select the parent <ul> element under ".img-galler-section-cls"
-    const ulElement: any = document.querySelector('.img-galler-section-cls ul');
-
-    // Attach a single click event listener to the <ul> element
-    ulElement.addEventListener('click', function (event: any) {
-      // Check if the clicked target is an <li> element
-      if (event.target.tagName === 'LI') {
-        // Remove the "active" class from all sibling <li> elements
-        const listItems = ulElement.querySelectorAll('li');
-        listItems.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
-
-        // Add the "active" class to the clicked <li> element
-        event.target.classList.add('active');
-      }
-    });
-
   }
+
   public loaderInProgress() {
     setTimeout(() => {
 

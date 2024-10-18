@@ -58,49 +58,72 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     NewWeb = Web(this.props.siteurl)
   }
 
-  public componentDidMount() {
-    setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#RecommendedItems').attr('style', 'display: none !important');
+  // public componentDidMount() {
+  //   setTimeout(function () {
+  //     // $('#spCommandBar').attr('style', 'display: none !important');
+  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
+  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+  //     // $('#RecommendedItems').attr('style', 'display: none !important');
 
-      const spCommandBar = document.getElementById('spCommandBar');
-      if (spCommandBar) {
-        spCommandBar.style.setProperty('display', 'none', 'important');
-      }
-      const commentsWrapper = document.getElementById('CommentsWrapper');
-      if (commentsWrapper) {
-        commentsWrapper.style.setProperty('display', 'none', 'important');
-      }
-      const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-      pageHeaders.forEach((element: any) => {
+  //     const spCommandBar = document.getElementById('spCommandBar');
+  //     if (spCommandBar) {
+  //       spCommandBar.style.setProperty('display', 'none', 'important');
+  //     }
+  //     const commentsWrapper = document.getElementById('CommentsWrapper');
+  //     if (commentsWrapper) {
+  //       commentsWrapper.style.setProperty('display', 'none', 'important');
+  //     }
+  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
+  //     pageHeaders.forEach((element: any) => {
+  //       element.style.setProperty('display', 'none', 'important');
+  //     });
+  //     const RecommendedItems = document.getElementById('RecommendedItems');
+  //     if (RecommendedItems) {
+  //       RecommendedItems.style.setProperty('display', 'none', 'important');
+  //     }
+
+
+
+
+  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
+
+
+
+  //   }, 2000);
+
+  //   var reactHandler = this;
+  //   // reactHandler.GetAllNews();
+  //   reactHandler.getCurrentUser().then(() => {
+  //     reactHandler.GetAllNews();
+
+  //     reactHandler.GetAllTopNews();
+  //     reactHandler.GetAllNewsAvailableDepartments();
+  //     reactHandler.GetWeekOldNews();
+  //   })
+  // }
+
+  // Optimized code
+
+  public componentDidMount() {
+    setTimeout(() => {
+      ['spCommandBar', 'CommentsWrapper', 'RecommendedItems'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.style.setProperty('display', 'none', 'important');
+      });
+
+      document.querySelectorAll('div[data-automation-id="pageHeader"]').forEach((element: HTMLElement) => {
         element.style.setProperty('display', 'none', 'important');
       });
-      const RecommendedItems = document.getElementById('RecommendedItems');
-      if (RecommendedItems) {
-        RecommendedItems.style.setProperty('display', 'none', 'important');
-      }
-
-
-
-
-      // Hide all div elements with the attribute data-automation-id="pageHeader"
-
-
-
     }, 2000);
 
-    var reactHandler = this;
-    // reactHandler.GetAllNews();
-    reactHandler.getCurrentUser().then(() => {
-      reactHandler.GetAllNews();
-
-      reactHandler.GetAllTopNews();
-      reactHandler.GetAllNewsAvailableDepartments();
-      reactHandler.GetWeekOldNews();
-    })
+    this.getCurrentUser().then(() => {
+      this.GetAllNews();
+      this.GetAllTopNews();
+      this.GetAllNewsAvailableDepartments();
+      this.GetWeekOldNews();
+    });
   }
+
 
   public async LandingPageAnalytics() {
     if (!Department) {

@@ -54,72 +54,134 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     NewWeb = new Web(this.props.siteurl)
   }
 
+  // public componentDidMount() {
+  //   setTimeout(() => {
+  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+  //     // $('#spCommandBar').attr('style', 'display: none !important');
+  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
+  //     // $('#RecommendedItems').attr('style', 'display: none !important');
+  //     // $('.ms-CommandBar').attr('style', 'display: none !important');
+  //     // $('#eventsvm').show();
+
+  //     const commentsWrapper = document.getElementById('CommentsWrapper');
+  //     if (commentsWrapper) {
+  //       commentsWrapper.style.setProperty('display', 'none', 'important');
+  //     }
+
+  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
+  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
+  //     pageHeaders.forEach((element: any) => {
+  //       element.style.setProperty('display', 'none', 'important');
+  //     });
+
+  //     // Show the element with ID "ceoMessageReadMore"
+  //     const webPartContainer = document.getElementById('ms-CommandBar');
+  //     if (webPartContainer) {
+  //       webPartContainer.style.display = 'none';
+  //     }
+
+  //     const spCommandBar = document.getElementById('spCommandBar');
+  //     if (spCommandBar) {
+  //       spCommandBar.style.setProperty('display', 'none', 'important');
+  //     }
+
+  //     const RecommendedItems = document.getElementById('RecommendedItems');
+  //     if (RecommendedItems) {
+  //       RecommendedItems.style.setProperty('display', 'none', 'important');
+  //     }
+
+  //     document.querySelectorAll('#eventsvm').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+
+  //   }, 1000)
+  //   var handler = this;
+  //   $('#calendar').on('selectDate', function (event, newDate) {
+  //     let SelectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY")
+  //     handler.getCurrentUser().then(() => {
+  //       handler.GetEventsofSelectedDate(SelectedDate)
+  //       // .then(()=>{
+
+  //       //   handler.LandingPageAnalytics();
+  //       // })
+  //     })
+  //   });
+
+  //   const url: any = new URL(window.location.href);
+  //   const Date = url.searchParams.get("SelectedDate");
+  //   const Mode = url.searchParams.get("Mode");
+  //   if (Mode == "EvRM") {
+  //     this.setState({ Mode: "EvRM", Date: moment(Date, "YYYYMMDD").format('MMMM DD, YYYY') });
+  //     var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
+  //     handler.GetEvents(tdaydateAdd, 'EvRM');
+  //   } else {
+  //     this.setState({ Mode: "EvVM", Date: moment().format('MMMM DD, YYYY') });
+  //     var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
+  //     handler.GetEvents(tdaydateAdd, 'EvVM');
+  //   }
+  // }
+
+  // Optimized code 
+
   public componentDidMount() {
     setTimeout(() => {
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('#RecommendedItems').attr('style', 'display: none !important');
-      // $('.ms-CommandBar').attr('style', 'display: none !important');
-      // $('#eventsvm').show();
+      // Elements and their corresponding IDs/attributes for hiding
+      const elementsToHide = [
+        'CommentsWrapper',
+        'spCommandBar',
+        'RecommendedItems',
+        'ms-CommandBar'
+      ];
+      const attributesToHide = ['div[data-automation-id="pageHeader"]'];
 
-      const commentsWrapper = document.getElementById('CommentsWrapper');
-      if (commentsWrapper) {
-        commentsWrapper.style.setProperty('display', 'none', 'important');
-      }
-
-      // Hide all div elements with the attribute data-automation-id="pageHeader"
-      const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-      pageHeaders.forEach((element: any) => {
-        element.style.setProperty('display', 'none', 'important');
+      // Hide elements based on IDs
+      elementsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.style.setProperty('display', 'none', 'important');
+        }
       });
 
-      // Show the element with ID "ceoMessageReadMore"
-      const webPartContainer = document.getElementById('ms-CommandBar');
-      if (webPartContainer) {
-        webPartContainer.style.display = 'none';
-      }
-
-      const spCommandBar = document.getElementById('spCommandBar');
-      if (spCommandBar) {
-        spCommandBar.style.setProperty('display', 'none', 'important');
-      }
-
-      const RecommendedItems = document.getElementById('RecommendedItems');
-      if (RecommendedItems) {
-        RecommendedItems.style.setProperty('display', 'none', 'important');
-      }
-
-      document.querySelectorAll('#eventsvm').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
+      // Hide elements based on attributes
+      attributesToHide.forEach(attr => {
+        document.querySelectorAll<HTMLElement>(attr).forEach(el => {
+          el.style.setProperty('display', 'none', 'important');
+        });
       });
 
-    }, 1000)
-    var handler = this;
-    $('#calendar').on('selectDate', function (event, newDate) {
-      let SelectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY")
+      // Show specific elements
+      document.querySelectorAll('#eventsvm').forEach(el => {
+        (el as HTMLElement).style.display = 'block';
+
+      });
+
+    }, 1000);
+
+    // Event handler for calendar date selection
+    const handler = this;
+    $('#calendar').on('selectDate', (event, newDate) => {
+      const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
       handler.getCurrentUser().then(() => {
-        handler.GetEventsofSelectedDate(SelectedDate)
-        // .then(()=>{
-
-        //   handler.LandingPageAnalytics();
-        // })
-      })
+        handler.GetEventsofSelectedDate(selectedDate);
+      });
     });
 
-    const url: any = new URL(window.location.href);
-    const Date = url.searchParams.get("SelectedDate");
-    const Mode = url.searchParams.get("Mode");
-    if (Mode == "EvRM") {
-      this.setState({ Mode: "EvRM", Date: moment(Date, "YYYYMMDD").format('MMMM DD, YYYY') });
-      var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
-      handler.GetEvents(tdaydateAdd, 'EvRM');
-    } else {
-      this.setState({ Mode: "EvVM", Date: moment().format('MMMM DD, YYYY') });
-      var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
-      handler.GetEvents(tdaydateAdd, 'EvVM');
-    }
+    // Get URL parameters and set state based on mode
+    const url = new URL(window.location.href);
+    const selectedDateParam = url.searchParams.get("SelectedDate");
+    const modeParam = url.searchParams.get("Mode");
+    const formattedDate = selectedDateParam
+      ? moment(selectedDateParam, "YYYYMMDD").format('YYYY-MM-DD')
+      : moment().format('YYYY-MM-DD');
+    const formattedDisplayDate = selectedDateParam
+      ? moment(selectedDateParam, "YYYYMMDD").format('MMMM DD, YYYY')
+      : moment().format('MMMM DD, YYYY');
+
+    const mode = modeParam === "EvRM" ? "EvRM" : "EvVM";
+    this.setState({ Mode: mode, Date: formattedDisplayDate });
+    handler.GetEvents(formattedDate, mode);
   }
+
   //   public async getCurrentUser() {
   //     var reacthandler = this;
   //     User = reacthandler.props.userid;
@@ -209,95 +271,188 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     }
   }
 
-  private async GetEvents(Date: string, Mode: string) {
-    var reactHandler = this;
-    var result
-    if (Mode == "EvRM") {
+  // private async GetEvents(Date: string, Mode: string) {
+  //   var reactHandler = this;
+  //   var result
+  //   if (Mode == "EvRM") {
 
-      result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${Date}'`).get()
-    } else {
+  //     result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${Date}'`).get()
+  //   } else {
 
-      result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${moment().format('YYYY-MM-DD')}'`).get()
-    }
-    this.GetEventsForDots(Date, Mode);
-    if (result.length != 0) {
-      reactHandler.setState({
-        Items: result,
+  //     result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${moment().format('YYYY-MM-DD')}'`).get()
+  //   }
+  //   this.GetEventsForDots(Date, Mode);
+  //   if (result.length != 0) {
+  //     reactHandler.setState({
+  //       Items: result,
 
-      });
+  //     });
 
-      // $("#if-event-present").show();
-      // $("#if-no-event-present").hide();
+  //     // $("#if-event-present").show();
+  //     // $("#if-no-event-present").hide();
 
-      document.querySelectorAll('#if-event-present').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
-      document.querySelectorAll('#if-no-event-present').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
+  //     document.querySelectorAll('#if-event-present').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
+  //     document.querySelectorAll('#if-no-event-present').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
 
-    } else {
+  //   } else {
 
-      document.querySelectorAll('#if-event-present').forEach(element => {
-        (element as HTMLElement).style.display = 'none';
-      });
-      document.querySelectorAll('#if-no-event-present').forEach(element => {
-        (element as HTMLElement).style.display = 'block';
-      });
+  //     document.querySelectorAll('#if-event-present').forEach(element => {
+  //       (element as HTMLElement).style.display = 'none';
+  //     });
+  //     document.querySelectorAll('#if-no-event-present').forEach(element => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
 
-      // $("#if-event-present").hide();
-      // $("#if-no-event-present").show();
+  //     // $("#if-event-present").hide();
+  //     // $("#if-no-event-present").show();
+  //   }
+  // }
+
+  // Optimize thsi code
+
+  private async GetEvents(date: string, mode: string) {
+    try {
+      // Fetch events based on the mode and date
+      const filterDate = mode === "EvRM" ? date : moment().format('YYYY-MM-DD');
+      const result = await NewWeb.lists
+        .getByTitle(Eventslist)
+        .items
+        .select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate")
+        .orderBy("EventDate", true)
+        .filter(`EndDate gt '${filterDate}'`)
+        .get();
+
+      // Process events for dots
+      this.GetEventsForDots(date, mode);
+
+      // Update state and toggle visibility based on whether events are found
+      this.setState({ Items: result });
+
+      const isEventPresent = result.length !== 0;
+      this.toggleEventDisplay(isEventPresent);
+
+    } catch (error) {
+      console.error("Error fetching events:", error);
     }
   }
+
+  // Helper function to toggle display based on whether events are present
+  private toggleEventDisplay(isEventPresent: boolean) {
+    const eventPresentElements = document.querySelectorAll<HTMLElement>('#if-event-present');
+    const noEventPresentElements = document.querySelectorAll<HTMLElement>('#if-no-event-present');
+
+    eventPresentElements.forEach(element => {
+      element.style.display = isEventPresent ? 'block' : 'none';
+    });
+
+    noEventPresentElements.forEach(element => {
+      element.style.display = isEventPresent ? 'none' : 'block';
+    });
+  }
+
+  // private async GetEventsForDots(Date: moment.MomentInput, Mode: string) {
+  //   if (Mode == "EvVM") {
+  //     await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
+
+  //       for (var i = 0; i < items.length; i++) {
+  //         eventList.push(
+  //           { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
+  //         );
+  //       }
+
+  //       ($('#calendar') as any).evoCalendar({
+  //         calendarEvents: eventList,
+  //         'todayHighlight': true,
+  //         'eventListToggler': false,
+  //         'eventDisplayDefault': false,
+  //         'sidebarDisplayDefault': false
+  //       });
+  //     }).catch((err: any) => {
+  //       console.log(err);
+  //     });
+  //   } else {
+
+  //     await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
+  //       for (var i = 0; i < items.length; i++) {
+
+
+  //         eventList.push(
+  //           { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
+  //         );
+  //       }
+  //       const DateFormat = moment(Date).format("MMMM DD,YYYY");
+  //       ($('#calendar') as any).evoCalendar({
+  //         calendarEvents: eventList,
+  //         'todayHighlight': true,
+  //         'eventListToggler': false,
+  //         'eventDisplayDefault': false,
+  //         'sidebarDisplayDefault': false,
+  //         'selectDate': "07/09/2021"//this.state.Date
+  //       });
+  //       ($("#calendar") as any).evoCalendar('selectDate', "" + DateFormat + "");
+
+
+  //     }).catch((err: any) => {
+  //       console.log(err);
+  //     });
+  //   }
+
+  // }
+
+  // Optimized code
 
   private async GetEventsForDots(Date: moment.MomentInput, Mode: string) {
-    if (Mode == "EvVM") {
-      await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
+    try {
+      const items = await NewWeb.lists
+        .getByTitle(Eventslist)
+        .items.select("Title", "Description", "Location", "Image", "EventDate", "EndDate", "ID")
+        .orderBy("Created", false)
+        .getAll();
 
-        for (var i = 0; i < items.length; i++) {
-          eventList.push(
-            { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
-          );
-        }
-
-        ($('#calendar') as any).evoCalendar({
-          calendarEvents: eventList,
-          'todayHighlight': true,
-          'eventListToggler': false,
-          'eventDisplayDefault': false,
-          'sidebarDisplayDefault': false
+      // Populate eventList based on fetched items
+      items.forEach((item: { ID: any; Title: any; EventDate: moment.MomentInput; Description: any; }) => {
+        eventList.push({
+          id: `${item.ID}`,
+          name: `${item.Title}`,
+          date: `${moment(item.EventDate).format("MMMM/D/YYYY")}`,
+          type: "holiday",
+          description: `${item.Description}`
         });
-      }).catch((err: any) => {
-        console.log(err);
       });
-    } else {
 
-      await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
-        for (var i = 0; i < items.length; i++) {
+      // Common evoCalendar initialization options
+      const calendarOptions = {
+        calendarEvents: eventList,
+        todayHighlight: true,
+        eventListToggler: false,
+        eventDisplayDefault: false,
+        sidebarDisplayDefault: false
+      };
 
+      // Initialize evoCalendar with options
+      // ($('#calendar') as any).evoCalendar(calendarOptions);
 
-          eventList.push(
-            { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
-          );
-        }
-        const DateFormat = moment(Date).format("MMMM DD,YYYY");
-        ($('#calendar') as any).evoCalendar({
-          calendarEvents: eventList,
-          'todayHighlight': true,
-          'eventListToggler': false,
-          'eventDisplayDefault': false,
-          'sidebarDisplayDefault': false,
-          'selectDate': "07/09/2021"//this.state.Date
-        });
-        ($("#calendar") as any).evoCalendar('selectDate', "" + DateFormat + "");
+      const calendarElement = document.querySelector('#calendar') as HTMLElement;
+      if (calendarElement) {
+        (calendarElement as any).evoCalendar(calendarOptions);
+      }
 
+      if (Mode !== "EvVM") {
+        // If not 'EvVM' mode, set the selected date
+        const formattedDate = moment(Date).format("MMMM DD, YYYY");
+        // ($("#calendar") as any).evoCalendar('selectDate', formattedDate);
+        (calendarElement as any).evoCalendar('selectDate', formattedDate);
 
-      }).catch((err: any) => {
-        console.log(err);
-      });
+      }
+    } catch (err) {
+      console.error('Error fetching events for calendar:', err);
     }
-
   }
+
 
   private async GetEventsofSelectedDate(Date: moment.MomentInput) {
     var reactHandler = this;
@@ -322,7 +477,13 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     });
   }
   public CheckEvents() {
-    var active_events = ($("#calendar") as any).evoCalendar('getActiveEvents');
+    const calendarElement = document.querySelector('#calendar') as HTMLElement;
+    let active_events;
+
+    if (calendarElement) {
+      active_events = (calendarElement as any).evoCalendar('getActiveEvents');
+    }
+    // var active_events = ($("#calendar") as any).evoCalendar('getActiveEvents');
     console.log(active_events)
     if (active_events.length == 0) {
       // $("#if-event-present").hide();

@@ -549,73 +549,134 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
     }
   }
+  // public async liked(mode: string) {
+  //   try {
+
+
+  //     if (mode == "like") {
+
+  //       NewWeb.lists.getByTitle(LikesCountMasterlist).items.add({
+  //         EmployeeNameId: User,
+  //         LikedOn: CurrentDate,
+  //         EmployeeEmail: UserEmail,
+  //         ContentPage: "News",
+  //         Title: title,
+  //         ContentID: ID,
+  //       }).then(() => {
+
+  //         document.querySelectorAll('.like-default').forEach(element => {
+  //           (element as HTMLElement).style.display = 'none';
+  //         });
+  //         document.querySelectorAll('.like-selected').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //         // $(".like-default").hide()
+  //         // $(".like-selected").show();
+  //         NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
+  //           var like = items.length;
+  //           var newspan = like.toString()
+  //           const likescount = document.getElementById("likescount");
+  //           if (likescount) {
+  //             likescount.textContent = newspan;
+  //           } else {
+  //             console.error("Element with ID 'likescount' not found.");
+  //           }
+
+  //         });
+  //       })
+  //     } else {
+  //       // $(".like-selected").hide();
+  //       // $(".like-default").show();
+
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data: any) => {
+  //         NewWeb.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
+
+  //           NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
+  //             var like = items.length;
+  //             var newspan = like.toString()
+  //             // document.getElementById("likescount").textContent = newspan;
+  //             const likescount = document.getElementById("likescount");
+  //             if (likescount) {
+  //               likescount.textContent = newspan;
+  //             } else {
+  //               console.error("Element with ID 'likescount' not found.");
+  //             }
+  //           });
+  //         })
+  //       })
+  //     }
+  //   } catch (error) {
+  //     console.log("Error in liked", error);
+
+  //   }
+  // }
+
+  // Optimized code
   public async liked(mode: string) {
     try {
+      const likeDefaultElements = document.querySelectorAll('.like-default');
+      const likeSelectedElements = document.querySelectorAll('.like-selected');
+      const likesCountElement = document.getElementById("likescount");
 
-
-      if (mode == "like") {
-
-        NewWeb.lists.getByTitle(LikesCountMasterlist).items.add({
+      if (mode === "like") {
+        await NewWeb.lists.getByTitle(LikesCountMasterlist).items.add({
           EmployeeNameId: User,
           LikedOn: CurrentDate,
           EmployeeEmail: UserEmail,
           ContentPage: "News",
           Title: title,
           ContentID: ID,
-        }).then(() => {
-
-          document.querySelectorAll('.like-default').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          });
-          document.querySelectorAll('.like-selected').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
-          // $(".like-default").hide()
-          // $(".like-selected").show();
-          NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
-            var like = items.length;
-            var newspan = like.toString()
-            const likescount = document.getElementById("likescount");
-            if (likescount) {
-              likescount.textContent = newspan;
-            } else {
-              console.error("Element with ID 'likescount' not found.");
-            }
-
-          });
-        })
-      } else {
-        // $(".like-selected").hide();
-        // $(".like-default").show();
-
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
         });
-        document.querySelectorAll('.like-selected').forEach(element => {
+
+        // Toggle visibility for like elements
+        likeDefaultElements.forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
-        NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data: any) => {
-          NewWeb.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
+        likeSelectedElements.forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
 
-            NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
-              var like = items.length;
-              var newspan = like.toString()
-              // document.getElementById("likescount").textContent = newspan;
-              const likescount = document.getElementById("likescount");
-              if (likescount) {
-                likescount.textContent = newspan;
-              } else {
-                console.error("Element with ID 'likescount' not found.");
-              }
-            });
-          })
-        })
+      } else { // mode === "unlike"
+        likeDefaultElements.forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
+        likeSelectedElements.forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+
+        const likedItems = await NewWeb.lists.getByTitle(LikesCountMasterlist)
+          .items.filter(`ContentPage eq 'News' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
+          .get();
+
+        if (likedItems.length > 0) {
+          await NewWeb.lists.getByTitle(LikesCountMasterlist).items.getById(likedItems[0].Id).delete();
+        }
       }
-    } catch (error) {
-      console.log("Error in liked", error);
 
+      // Fetch and update the likes count
+      const items = await NewWeb.lists.getByTitle(LikesCountMasterlist)
+        .items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`)
+        .top(5000)
+        .get();
+
+      const likesCount = items.length.toString();
+      if (likesCountElement) {
+        likesCountElement.textContent = likesCount;
+      } else {
+        console.error("Element with ID 'likescount' not found.");
+      }
+
+    } catch (error) {
+      console.error("Error in liked function:", error);
     }
   }
+
   public showComments() {
     // $(".all-commets").toggle();
     document.querySelectorAll('.all-comments').forEach(element => {

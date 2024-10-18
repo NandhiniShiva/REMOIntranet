@@ -133,10 +133,12 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   public async GetCeoMessage(ItemID: any) {
     try {
       await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "Name", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
-        console.log(items);
+        // console.log(items);
 
         this.setState({
-          Items: items, ItemID: items[0].Id, Title: items[0].Title
+          Items: items,
+          ItemID: items[0].Id,
+          Title: items[0].Title
         }, () => {
           // Call LandingPageAnalytics after state is updated
           this.LandingPageAnalytics();

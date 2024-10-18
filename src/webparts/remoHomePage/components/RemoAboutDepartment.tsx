@@ -99,6 +99,10 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
       console.error("Error fetching department information:", error);
     }
   }
+
+  // Optimized code
+
+
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
     var reactHandler = this;
     const AboutDept: JSX.Element[] = this.state.Items.map(function (item, key) {

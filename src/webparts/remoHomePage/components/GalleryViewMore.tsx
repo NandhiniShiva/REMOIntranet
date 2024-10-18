@@ -216,146 +216,203 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
     return result;
   }
 
-  public GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
-    const FolderUrl = FolderURL.replace(/['"]+/g, '');
-    const reactHandler = this;
-    this.setState({ FolderURL: FolderUrl, SliderIsOpen: true, Mode: Mode });
+  // public GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
+  //   const FolderUrl = FolderURL.replace(/['"]+/g, '');
+  //   const reactHandler = this;
+  //   this.setState({ FolderURL: FolderUrl, SliderIsOpen: true, Mode: Mode });
+  //   try {
+  //     // Show or hide triggers based on mode
+  //     if (Mode === "Image") {
+  //       // $("#trigger-image").hide();
+  //       // $("#trigger-video").show();
+  //       document.querySelectorAll('#trigger-video').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('#trigger-image').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //     } else if (Mode === "Video") {
+  //       // $("#trigger-video").hide();
+  //       // $("#trigger-image").show();
+  //       document.querySelectorAll('#trigger-video').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('#trigger-image').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //     }
+  //     // Fetch files from the specified folder URL
+  //     sp.web.getFolderByServerRelativeUrl(FolderUrl).files.get()
+  //       .then(async (items) => {
+  //         // Filter files based on mode (image or video)
+  //         const imageItems = items.filter((item) => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.Name));
+  //         const videoItems = items.filter((item) => /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(item.Name));
+
+  //         // If mode is "Image" and there are video files, hide image trigger
+  //         if (Mode === "Image" && videoItems.length === 0) {
+  //           // $("#trigger-video").hide();
+
+  //           document.querySelectorAll('#trigger-video').forEach(element => {
+  //             (element as HTMLElement).style.display = 'none';
+  //           });
+
+  //         }
+
+  //         // If mode is "Video" and there are no video files, hide video trigger
+  //         if (Mode === "Video" && imageItems.length === 0) {
+  //           // $("#trigger-image").hide();
+
+  //           document.querySelectorAll('#trigger-image').forEach(element => {
+  //             (element as HTMLElement).style.display = 'none';
+  //           });
+  //         }
+
+  //         // Set the folder items in the state and open the lightbox
+  //         reactHandler.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
+  //         // $(".lightbox").addClass("open");
+
+
+  //         const lightboxElement = document.querySelector('.lightbox');
+
+  //         // Add the "open" class to the selected element
+  //         if (lightboxElement) {
+  //           lightboxElement.classList.add('open');
+  //         }
+  //         // Navigate to the specified key in the slider
+  //         reactHandler.slider1.slickGoTo(key);
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching folder items:', error);
+  //         // Handle error if needed
+  //         if (Mode === "Video") {
+  //           // $("#trigger-video").hide();
+
+  //           document.querySelectorAll('#trigger-video').forEach(element => {
+  //             (element as HTMLElement).style.display = 'none';
+  //           });
+  //         }
+  //       });
+  //   }
+  //   catch (error) {
+  //     console.error("An error occurred while fetching the images inside the folder:", error);
+  //   }
+  // }
+
+  // Optimized code 
+
+  public async GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
     try {
-      // Show or hide triggers based on mode
-      if (Mode === "Image") {
-        // $("#trigger-image").hide();
-        // $("#trigger-video").show();
+      const FolderUrl = FolderURL.replace(/['"]+/g, '');
+      this.setState({ FolderURL: FolderUrl, SliderIsOpen: true, Mode });
+
+      // Toggle visibility of triggers based on the mode
+      const displayImage = Mode === "Image" ? 'none' : 'block';
+      const displayVideo = Mode === "Image" ? 'block' : 'none';
+
+      document.querySelectorAll('#trigger-image').forEach(element => {
+        (element as HTMLElement).style.display = displayImage;
+      });
+      document.querySelectorAll('#trigger-video').forEach(element => {
+        (element as HTMLElement).style.display = displayVideo;
+      });
+
+      // Fetch files from the specified folder URL
+      const items = await sp.web.getFolderByServerRelativeUrl(FolderUrl).files.get();
+      const imageItems = items.filter((item) => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.Name));
+      const videoItems = items.filter((item) => /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(item.Name));
+
+      // Handle visibility based on the mode and available files
+      if (Mode === "Image" && videoItems.length === 0) {
         document.querySelectorAll('#trigger-video').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        document.querySelectorAll('#trigger-image').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
-      } else if (Mode === "Video") {
-        // $("#trigger-video").hide();
-        // $("#trigger-image").show();
-        document.querySelectorAll('#trigger-video').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
+      } else if (Mode === "Video" && imageItems.length === 0) {
         document.querySelectorAll('#trigger-image').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
+          (element as HTMLElement).style.display = 'none';
         });
       }
-      // Fetch files from the specified folder URL
-      sp.web.getFolderByServerRelativeUrl(FolderUrl).files.get()
-        .then(async (items) => {
-          // Filter files based on mode (image or video)
-          const imageItems = items.filter((item) => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.Name));
-          const videoItems = items.filter((item) => /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(item.Name));
 
-          // If mode is "Image" and there are video files, hide image trigger
-          if (Mode === "Image" && videoItems.length === 0) {
-            // $("#trigger-video").hide();
+      // Set the folder items in the state and open the lightbox
+      this.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
 
-            document.querySelectorAll('#trigger-video').forEach(element => {
-              (element as HTMLElement).style.display = 'none';
-            });
+      const lightboxElement = document.querySelector('.lightbox');
+      if (lightboxElement) {
+        lightboxElement.classList.add('open');
+      }
 
-          }
+      // Navigate to the specified key in the slider
+      this.slider1.slickGoTo(key);
+    } catch (error) {
+      console.error('An error occurred while fetching the images inside the folder:', error);
 
-          // If mode is "Video" and there are no video files, hide video trigger
-          if (Mode === "Video" && imageItems.length === 0) {
-            // $("#trigger-image").hide();
-
-            document.querySelectorAll('#trigger-image').forEach(element => {
-              (element as HTMLElement).style.display = 'none';
-            });
-          }
-
-          // Set the folder items in the state and open the lightbox
-          reactHandler.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
-          // $(".lightbox").addClass("open");
-
-
-          const lightboxElement = document.querySelector('.lightbox');
-
-          // Add the "open" class to the selected element
-          if (lightboxElement) {
-            lightboxElement.classList.add('open');
-          }
-          // Navigate to the specified key in the slider
-          reactHandler.slider1.slickGoTo(key);
-        })
-        .catch((error) => {
-          console.error('Error fetching folder items:', error);
-          // Handle error if needed
-          if (Mode === "Video") {
-            // $("#trigger-video").hide();
-
-            document.querySelectorAll('#trigger-video').forEach(element => {
-              (element as HTMLElement).style.display = 'none';
-            });
-          }
+      // Hide the video trigger if there's an error and the mode is "Video"
+      if (Mode === "Video") {
+        document.querySelectorAll('#trigger-video').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
         });
-    }
-    catch (error) {
-      console.error("An error occurred while fetching the images inside the folder:", error);
+      }
     }
   }
+
 
   public ShowHideVideos(FolderURL: string, Mode: any) {
     const FolderPath = FolderURL.replace(/[']/g, '');
     const FolderServerRelativeUrl = `${FolderPath}`;
-    try{
-    // Update the component state with the folder URL and mode
-    this.setState({ FolderURL: FolderURL, Mode: Mode });
-    // Open the lightbox
-    // $(".lightbox").addClass("open");
-    const lightboxElement = document.querySelector('.lightbox');
-    // Add the "open" class to the selected element
-    if (lightboxElement) {
-      lightboxElement.classList.add('open');
-    }
-    // Hide the video trigger by default
-    // $("#trigger-video").hide();
-    document.querySelectorAll('#trigger-video').forEach(element => {
-      (element as HTMLElement).style.display = 'none';
-    });
     try {
-      // Fetch all files from the specified folder or subfolder
-      sp.web.getFolderByServerRelativeUrl(FolderServerRelativeUrl).files.get()
-        .then((items) => {
-          // Check if there are any video files
-          const hasVideos = items.some((item) => {
-            const fileName = item.Name.toLowerCase();
-            return /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(fileName);
-
-          });
-
-          // If there are video files, show the video trigger
-          if (hasVideos) {
-            // $("#trigger-video").show();
-            document.querySelectorAll('#trigger-video').forEach(element => {
-              (element as HTMLElement).style.display = 'block';
-            });
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching folder items:', error);
-          // Handle error if needed
-          // $("#trigger-video").hide();
-          document.querySelectorAll('#trigger-video').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          });
-        });
-    } catch (err) {
-      console.error('Error fetching folder:', err);
-      // Handle error if needed
+      // Update the component state with the folder URL and mode
+      this.setState({ FolderURL: FolderURL, Mode: Mode });
+      // Open the lightbox
+      // $(".lightbox").addClass("open");
+      const lightboxElement = document.querySelector('.lightbox');
+      // Add the "open" class to the selected element
+      if (lightboxElement) {
+        lightboxElement.classList.add('open');
+      }
+      // Hide the video trigger by default
       // $("#trigger-video").hide();
-
       document.querySelectorAll('#trigger-video').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
+      try {
+        // Fetch all files from the specified folder or subfolder
+        sp.web.getFolderByServerRelativeUrl(FolderServerRelativeUrl).files.get()
+          .then((items) => {
+            // Check if there are any video files
+            const hasVideos = items.some((item) => {
+              const fileName = item.Name.toLowerCase();
+              return /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(fileName);
+
+            });
+
+            // If there are video files, show the video trigger
+            if (hasVideos) {
+              // $("#trigger-video").show();
+              document.querySelectorAll('#trigger-video').forEach(element => {
+                (element as HTMLElement).style.display = 'block';
+              });
+            }
+          })
+          .catch((error) => {
+            console.error('Error fetching folder items:', error);
+            // Handle error if needed
+            // $("#trigger-video").hide();
+            document.querySelectorAll('#trigger-video').forEach(element => {
+              (element as HTMLElement).style.display = 'none';
+            });
+          });
+      } catch (err) {
+        console.error('Error fetching folder:', err);
+        // Handle error if needed
+        // $("#trigger-video").hide();
+
+        document.querySelectorAll('#trigger-video').forEach(element => {
+          (element as HTMLElement).style.display = 'none';
+        });
+      }
     }
-  }
-  catch (error) {
-    console.error("An error occurred while showing the video:", error);
-  }
+    catch (error) {
+      console.error("An error occurred while showing the video:", error);
+    }
   }
   public CloseLightBox() {
 

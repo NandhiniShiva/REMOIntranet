@@ -274,6 +274,68 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     }
   }
 
+  // private async liked(mode: string) {
+  //   try {
+  //     // Ensure required variables are defined
+  //     if (!ID || !User || !UserEmail) {
+  //       console.warn("ID, User, or UserEmail is undefined. Cannot proceed with the like operation.");
+  //       return;
+  //     }
+  //     if (mode === "like") {
+  //       // Add a like to the list
+  //       await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+  //         EmployeeNameId: User,
+  //         LikedOn: CurrentDate,
+  //         EmployeeEmail: UserEmail,
+  //         ContentPage: "Hero-Banner",
+  //         Title: title,
+  //         ContentID: ID,
+  //       });
+  //       // Hide the default like button and show the selected one
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       // Get the updated like count
+  //       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+  //       // Update the likes count display
+  //       const likesCountElement = document.getElementById('likescount');
+  //       if (likesCountElement) {
+  //         likesCountElement.textContent = items.length.toString();
+  //       }
+  //     } else {
+  //       // If mode is "unlike"
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       // Find the user's like entry and delete it
+  //       const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
+  //       if (data.length > 0) {
+  //         await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
+  //       }
+  //       // Get the updated like count after removing the like
+  //       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+  //       // Update the likes count display
+  //       const likesCountElement = document.getElementById('likescount');
+  //       if (likesCountElement) {
+  //         likesCountElement.textContent = items.length.toString();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while processing the like/unlike action:", error);
+  //   }
+  // }
+
+  // Optimze this code
+
   private async liked(mode: string) {
     try {
       // Ensure required variables are defined
@@ -281,57 +343,63 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
         console.warn("ID, User, or UserEmail is undefined. Cannot proceed with the like operation.");
         return;
       }
+
+      // Perform like or unlike based on the mode
       if (mode === "like") {
-        // Add a like to the list
-        await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
-          EmployeeNameId: User,
-          LikedOn: CurrentDate,
-          EmployeeEmail: UserEmail,
-          ContentPage: "Hero-Banner",
-          Title: title,
-          ContentID: ID,
-        });
-        // Hide the default like button and show the selected one
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        document.querySelectorAll('.like-selected').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        // Get the updated like count
-        const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-        // Update the likes count display
-        const likesCountElement = document.getElementById('likescount');
-        if (likesCountElement) {
-          likesCountElement.textContent = items.length.toString();
-        }
+        await this.addLike();
+        this.toggleLikeDisplay(true);
       } else {
-        // If mode is "unlike"
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        document.querySelectorAll('.like-selected').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        // Find the user's like entry and delete it
-        const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
-        if (data.length > 0) {
-          await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
-        }
-        // Get the updated like count after removing the like
-        const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-          .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-        // Update the likes count display
-        const likesCountElement = document.getElementById('likescount');
-        if (likesCountElement) {
-          likesCountElement.textContent = items.length.toString();
-        }
+        await this.removeLike();
+        this.toggleLikeDisplay(false);
       }
+
+      // Get the updated like count and update the display
+      await this.updateLikeCount();
+
     } catch (error) {
       console.error("An error occurred while processing the like/unlike action:", error);
     }
+  }
+
+  private async addLike() {
+    await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
+      EmployeeNameId: User,
+      LikedOn: CurrentDate,
+      EmployeeEmail: UserEmail,
+      ContentPage: "Hero-Banner",
+      Title: title,
+      ContentID: ID,
+    });
+  }
+
+  private async removeLike() {
+    // Find the user's like entry and delete it
+    const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+      .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
+    if (data.length > 0) {
+      await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
+    }
+  }
+
+  private async updateLikeCount() {
+    const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
+      .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
+    const likesCountElement = document.getElementById('likescount');
+    if (likesCountElement) {
+      likesCountElement.textContent = items.length.toString();
+    }
+  }
+
+  private toggleLikeDisplay(isLiked: boolean) {
+    const likeDefaultDisplay = isLiked ? 'none' : 'block';
+    const likeSelectedDisplay = isLiked ? 'block' : 'none';
+
+    document.querySelectorAll('.like-default').forEach(element => {
+      (element as HTMLElement).style.display = likeDefaultDisplay;
+    });
+    document.querySelectorAll('.like-selected').forEach(element => {
+      (element as HTMLElement).style.display = likeSelectedDisplay;
+    });
   }
 
 

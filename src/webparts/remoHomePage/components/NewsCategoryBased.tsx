@@ -253,64 +253,114 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     reactHandler.setState({ TotalPageCount: PageCount });
   }
 
+
+
+  // public async GetAllOtherRelatedNews(ReleventCategory: any, Mode: string) {
+  //   var reactHandler = this;
+  //   try {
+  //     if (Mode === 'TagBased') {
+  //       for (var i = 0; i < reactHandler.state.AvailableTags.length; i++) {
+  //         try {
+  //           const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
+  //             .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
+  //             .filter(`IsActive eq '1' and Tag eq '${reactHandler.state.AvailableTags[i]}'`)
+  //             .orderBy("Created", false)
+  //             .expand("Dept", "SitePageID", "TransactionItemID")
+  //             .get();
+  //           if (items.length > 0 && items[0].Tag !== reactHandler.state.Tag) {
+  //             reactHandler.setState({ TagBasedNews: items });
+  //             $('.available-depts-or-tags').append(`
+  //                           <li>
+  //                               <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${items[0].Tag}" data-interception='off' class="clearfix">
+  //                                   <div class="vategory-news-left pull-left">
+  //                                       ${items[0].Tag}
+  //                                   </div>     
+  //                                   <div class="vategory-news-right pull-right">
+  //                                       ${items.length}
+  //                                   </div>     
+  //                               </a>
+  //                           </li>
+  //                       `);
+  //           }
+  //         } catch (error) {
+  //           console.error("Error fetching Tag-based news:", error);
+  //         }
+  //       }
+  //     } else { // DeptBased
+  //       for (var j = 0; j < reactHandler.state.AvailableDepts.length; j++) {
+  //         try {
+  //           const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
+  //             .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
+  //             .filter(`IsActive eq '1' and Dept/Id eq '${reactHandler.state.AvailableDepts[j].ID}'`)
+  //             .orderBy("Created", false)
+  //             .expand("Dept", "SitePageID", "TransactionItemID")
+  //             .get();
+  //           if (items.length > 0 && items[0].Dept.Title !== reactHandler.state.Department) {
+  //             reactHandler.setState({ DeptBasedNews: items });
+  //             $('.available-depts-or-tags').append(`
+  //                           <li>
+  //                               <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=DeptBased&Dept=${items[0].Dept.Title}" data-interception='off' class="clearfix">
+  //                                   <div class="vategory-news-left pull-left">
+  //                                       ${items[0].Dept.Title}
+  //                                   </div>     
+  //                                   <div class="vategory-news-right pull-right">
+  //                                       ${items.length}
+  //                                   </div>     
+  //                               </a>
+  //                           </li>
+  //                       `);
+  //           }
+  //         } catch (error) {
+  //           console.error("Error fetching Dept-based news:", error);
+  //         }
+  //       }
+  //     }
+  //   } catch (globalError) {
+  //     console.error("An error occurred in GetAllOtherRelatedNews:", globalError);
+  //   }
+  // }
+
+  // Optimized Code
+
   public async GetAllOtherRelatedNews(ReleventCategory: any, Mode: string) {
-    var reactHandler = this;
     try {
-      if (Mode === 'TagBased') {
-        for (var i = 0; i < reactHandler.state.AvailableTags.length; i++) {
-          try {
-            const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
-              .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
-              .filter(`IsActive eq '1' and Tag eq '${reactHandler.state.AvailableTags[i]}'`)
-              .orderBy("Created", false)
-              .expand("Dept", "SitePageID", "TransactionItemID")
-              .get();
-            if (items.length > 0 && items[0].Tag !== reactHandler.state.Tag) {
-              reactHandler.setState({ TagBasedNews: items });
-              $('.available-depts-or-tags').append(`
-                            <li>
-                                <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${items[0].Tag}" data-interception='off' class="clearfix">
-                                    <div class="vategory-news-left pull-left">
-                                        ${items[0].Tag}
-                                    </div>     
-                                    <div class="vategory-news-right pull-right">
-                                        ${items.length}
-                                    </div>     
-                                </a>
-                            </li>
-                        `);
-            }
-          } catch (error) {
-            console.error("Error fetching Tag-based news:", error);
+      const { AvailableTags, AvailableDepts, Tag, Department } = this.state;
+      const isTagBased = Mode === 'TagBased';
+      const categories = isTagBased ? AvailableTags : AvailableDepts;
+      const filterKey = isTagBased ? 'Tag' : 'Dept/Id';
+
+      for (const category of categories) {
+        try {
+          const filterValue = isTagBased ? category : category.ID;
+          const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
+            .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
+            .filter(`IsActive eq '1' and ${filterKey} eq '${filterValue}'`)
+            .orderBy("Created", false)
+            .expand("Dept", "SitePageID", "TransactionItemID")
+            .get();
+
+          if (items.length > 0 && (isTagBased ? items[0].Tag !== Tag : items[0].Dept.Title !== Department)) {
+            // const stateKey = isTagBased ? 'TagBasedNews' : 'DeptBasedNews';
+            // this.setState({ [stateKey]: items });
+
+            const href = `${this.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=${Mode}&${isTagBased ? 'Tag' : 'Dept'}=${isTagBased ? items[0].Tag : items[0].Dept.Title}`;
+            const title = isTagBased ? items[0].Tag : items[0].Dept.Title;
+
+            document.querySelector('.available-depts-or-tags')?.insertAdjacentHTML('beforeend', `
+                      <li>
+                          <a href="${href}" data-interception='off' class="clearfix">
+                              <div class="vategory-news-left pull-left">
+                                  ${title}
+                              </div>     
+                              <div class="vategory-news-right pull-right">
+                                  ${items.length}
+                              </div>     
+                          </a>
+                      </li>
+                  `);
           }
-        }
-      } else { // DeptBased
-        for (var j = 0; j < reactHandler.state.AvailableDepts.length; j++) {
-          try {
-            const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
-              .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
-              .filter(`IsActive eq '1' and Dept/Id eq '${reactHandler.state.AvailableDepts[j].ID}'`)
-              .orderBy("Created", false)
-              .expand("Dept", "SitePageID", "TransactionItemID")
-              .get();
-            if (items.length > 0 && items[0].Dept.Title !== reactHandler.state.Department) {
-              reactHandler.setState({ DeptBasedNews: items });
-              $('.available-depts-or-tags').append(`
-                            <li>
-                                <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=DeptBased&Dept=${items[0].Dept.Title}" data-interception='off' class="clearfix">
-                                    <div class="vategory-news-left pull-left">
-                                        ${items[0].Dept.Title}
-                                    </div>     
-                                    <div class="vategory-news-right pull-right">
-                                        ${items.length}
-                                    </div>     
-                                </a>
-                            </li>
-                        `);
-            }
-          } catch (error) {
-            console.error("Error fetching Dept-based news:", error);
-          }
+        } catch (error) {
+          console.error(`Error fetching ${isTagBased ? 'Tag' : 'Dept'}-based news:`, error);
         }
       }
     } catch (globalError) {

@@ -79,7 +79,6 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
 
       let totalHeightLeft = nwsHeight + socialHeight + videoHeight;
       let totalHeightRight = weatherHeight + highlightsHeight + pQlinkHeight;
-
       let totalCalculatedHeight = totalHeightLeft - totalHeightRight + 25;
 
       // $("#dynamic-height-recentsfiles").css("height", `${totalCalculatedHeight}px`);

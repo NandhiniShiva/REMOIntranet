@@ -9,11 +9,11 @@ import Slider from 'react-slick';
 import { sp } from '@pnp/sp'
 import * as moment from 'moment';
 import { listNames } from '../Configuration';
-import { Web } from '@pnp/sp/webs';
+// import { Web } from '@pnp/sp/webs';
 
 let Birthdaylist = listNames.Birthday;
 
-let spWeb: any;
+// let spWeb: any;
 
 
 export interface IBirthdayState {
@@ -39,7 +39,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       Dates: [],
       TotalBirthday: 0
     };
-    spWeb = Web(this.props.siteurl);
+    // spWeb = Web(this.props.siteurl);
 
 
   }

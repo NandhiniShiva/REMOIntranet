@@ -621,64 +621,111 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   // }
 
   // converted code
+  // public mylinks() {
+  //   // Remove "active" class from elements with the class "tab-2-data"
+  //   document.querySelectorAll('.tab-2-data').forEach(function (element) {
+  //     element.classList.remove('active');
+  //   });
+
+  //   // Hide the element with the ID "meetingroom"
+  //   document.querySelectorAll('#meetingroom').forEach(element => {
+  //     (element as HTMLElement).style.display = 'none';
+  //   });
+  //   // Add "active" class to elements with the class "tab-1-data"
+  //   document.querySelectorAll('.tab-1-data').forEach(function (element) {
+  //     element.classList.add('active');
+  //   });
+
+  //   // Show the element with the ID "contacts"
+  //   document.querySelectorAll('#contacts').forEach(element => {
+  //     (element as HTMLElement).style.display = 'block';
+  //   });
+  //   // Hide elements with the class "breadcrum-block"
+  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
+  //     (element as HTMLElement).style.display = 'none';
+  //   });
+
+  //   // Remove "submenu" class from elements with the class "main-mavigation"
+  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
+  //     element.classList.remove('submenu');
+  //   });
+
+  //   // Remove "active" class from siblings of list items in "#root-nav-links ul"
+  //   const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
+  //   mainNavigationElements.forEach(function (element: any) {
+
+  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //       (sibling: any) => sibling !== element
+  //     );
+  //     // Remove the "submenu" class from each sibling
+  //     siblings.forEach(function (sibling: any) {
+  //       sibling.classList.remove('active');
+  //     });
+  //   });
+  //   const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
+  //   submenuWrapListsElements.forEach(function (element: any) {
+
+  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //       (sibling: any) => sibling !== element
+  //     );
+  //     // Remove the "submenu" class from each sibling
+  //     siblings.forEach(function (sibling: any) {
+  //       sibling.classList.remove('active');
+  //     });
+  //   });
+
+  //   // Add "active" class to the first child of "#root-nav-links ul"
+  //   const firstChild = document.querySelector('#root-nav-links ul li:first-child');
+  //   if (firstChild) {
+  //     firstChild.classList.add('active');
+  //   }
+  // }
+
+  // optimized code
+
   public mylinks() {
-    // Remove "active" class from elements with the class "tab-2-data"
-    document.querySelectorAll('.tab-2-data').forEach(function (element) {
-      element.classList.remove('active');
-    });
+    const toggleDisplay = (selector: string, displayValue: string) => {
+      document.querySelectorAll(selector).forEach(element => {
+        (element as HTMLElement).style.display = displayValue;
+      });
+    };
 
-    // Hide the element with the ID "meetingroom"
-    document.querySelectorAll('#meetingroom').forEach(element => {
-      (element as HTMLElement).style.display = 'none';
-    });
-    // Add "active" class to elements with the class "tab-1-data"
-    document.querySelectorAll('.tab-1-data').forEach(function (element) {
-      element.classList.add('active');
-    });
+    const toggleClass = (selector: string, className: string, action: 'add' | 'remove') => {
+      document.querySelectorAll(selector).forEach(element => {
+        element.classList[action](className);
+      });
+    };
 
-    // Show the element with the ID "contacts"
-    document.querySelectorAll('#contacts').forEach(element => {
-      (element as HTMLElement).style.display = 'block';
-    });
+    // Remove "active" class from elements with "tab-2-data" and add "active" to "tab-1-data"
+    toggleClass('.tab-2-data', 'active', 'remove');
+    toggleClass('.tab-1-data', 'active', 'add');
+
+    // Toggle visibility of "meetingroom" and "contacts" sections
+    toggleDisplay('#meetingroom', 'none');
+    toggleDisplay('#contacts', 'block');
+
     // Hide elements with the class "breadcrum-block"
-    document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-      (element as HTMLElement).style.display = 'none';
-    });
+    toggleDisplay('.breadcrum-block', 'none');
 
     // Remove "submenu" class from elements with the class "main-mavigation"
-    document.querySelectorAll('.main-mavigation').forEach(function (element) {
-      element.classList.remove('submenu');
-    });
+    toggleClass('.main-mavigation', 'submenu', 'remove');
 
-    // Remove "active" class from siblings of list items in "#root-nav-links ul"
-    const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
-    mainNavigationElements.forEach(function (element: any) {
+    // Remove "active" class from siblings in "#root-nav-links ul" and ".submenu-wrap-lists ul"
+    ['#root-nav-links ul li', '.submenu-wrap-lists ul li'].forEach(selector => {
 
-      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-        (sibling: any) => sibling !== element
-      );
-      // Remove the "submenu" class from each sibling
-      siblings.forEach(function (sibling: any) {
-        sibling.classList.remove('active');
+      document.querySelectorAll(selector).forEach(element => {
+        const siblings = Array.prototype.slice.call(element.parentElement?.children || []).filter(
+          (sibling: Element) => sibling !== element
+        );
+        siblings.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
       });
-    });
-    const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
-    submenuWrapListsElements.forEach(function (element: any) {
 
-      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-        (sibling: any) => sibling !== element
-      );
-      // Remove the "submenu" class from each sibling
-      siblings.forEach(function (sibling: any) {
-        sibling.classList.remove('active');
-      });
+
     });
 
     // Add "active" class to the first child of "#root-nav-links ul"
     const firstChild = document.querySelector('#root-nav-links ul li:first-child');
-    if (firstChild) {
-      firstChild.classList.add('active');
-    }
+    firstChild?.classList.add('active');
   }
 
   // public quicklinkss() {
@@ -694,55 +741,109 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   //   // $('#root-nav-links ul li:first-child').addClass('active');
   // }
 
+  // public quicklinks() {
+  //   document.querySelectorAll('.tab-1-data').forEach(function (element) {
+  //     element.classList.remove('active');
+  //   });
+
+  //   document.querySelectorAll('#contacts').forEach(element => {
+  //     (element as HTMLElement).style.display = 'none';
+  //   });
+
+  //   document.querySelectorAll('.tab-2-data').forEach(function (element) {
+  //     element.classList.add('active');
+  //   });
+
+  //   document.querySelectorAll('#meetingroom').forEach(element => {
+  //     (element as HTMLElement).style.display = 'block';
+  //   });
+
+  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
+  //     (element as HTMLElement).style.display = 'none';
+  //   });
+
+  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
+  //     element.classList.remove('submenu');
+  //   });
+
+  //   const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
+  //   mainNavigationElements.forEach(function (element: any) {
+
+  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //       (sibling: any) => sibling !== element
+  //     );
+  //     // Remove the "submenu" class from each sibling
+  //     siblings.forEach(function (sibling: any) {
+  //       sibling.classList.remove('active');
+  //     });
+  //   });
+  //   const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
+  //   submenuWrapListsElements.forEach(function (element: any) {
+
+  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //       (sibling: any) => sibling !== element
+  //     );
+  //     // Remove the "submenu" class from each sibling
+  //     siblings.forEach(function (sibling: any) {
+  //       sibling.classList.remove('active');
+  //     });
+  //   });
+
+  // }
+
+  // Optimized code
+
   public quicklinks() {
-    document.querySelectorAll('.tab-1-data').forEach(function (element) {
-      element.classList.remove('active');
-    });
+    const removeActiveClass = (selector: string) => {
+      document.querySelectorAll(selector).forEach(element => {
+        element.classList.remove('active');
+      });
+    };
 
-    document.querySelectorAll('#contacts').forEach(element => {
-      (element as HTMLElement).style.display = 'none';
-    });
+    const setDisplay = (selector: string, display: string) => {
+      document.querySelectorAll(selector).forEach(element => {
+        (element as HTMLElement).style.display = display;
+      });
+    };
 
-    document.querySelectorAll('.tab-2-data').forEach(function (element) {
-      element.classList.add('active');
-    });
+    // Update classes and display styles
+    removeActiveClass('.tab-1-data');
+    setDisplay('#contacts', 'none');
+    removeActiveClass('.tab-2-data');
+    setDisplay('#meetingroom', 'block');
+    setDisplay('.breadcrum-block', 'none');
 
-    document.querySelectorAll('#meetingroom').forEach(element => {
-      (element as HTMLElement).style.display = 'block';
-    });
-
-    document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-      (element as HTMLElement).style.display = 'none';
-    });
-
-    document.querySelectorAll('.main-mavigation').forEach(function (element) {
+    // Remove "submenu" class from main navigation elements
+    document.querySelectorAll('.main-mavigation').forEach(element => {
       element.classList.remove('submenu');
     });
 
-    const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
-    mainNavigationElements.forEach(function (element: any) {
-
-      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-        (sibling: any) => sibling !== element
+    // Function to remove "active" class from siblings
+    const removeActiveFromSiblings = (element: HTMLElement) => {
+      const siblings = Array.prototype.slice.call(element.parentElement?.children || []).filter(
+        (sibling: HTMLElement) => sibling !== element
       );
-      // Remove the "submenu" class from each sibling
-      siblings.forEach(function (sibling: any) {
-        sibling.classList.remove('active');
-      });
-    });
-    const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
-    submenuWrapListsElements.forEach(function (element: any) {
+      siblings.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
+    };
 
-      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-        (sibling: any) => sibling !== element
-      );
-      // Remove the "submenu" class from each sibling
-      siblings.forEach(function (sibling: any) {
-        sibling.classList.remove('active');
-      });
+    // Apply the removeActiveFromSiblings function
+    const mainNavigationElements = document.querySelectorAll('#root-nav-links ul li');
+    mainNavigationElements.forEach(element => {
+      removeActiveFromSiblings(element as HTMLElement);
     });
 
+    const submenuWrapListsElements = document.querySelectorAll('.submenu-wrap-lists ul li');
+    submenuWrapListsElements.forEach(element => {
+      removeActiveFromSiblings(element as HTMLElement);
+    });
+
+    // Add "active" class to the first child of the specified list if needed
+    const firstChild = document.querySelector('#root-nav-links ul li:first-child');
+    if (firstChild) {
+      firstChild.classList.add('active');
+    }
   }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 

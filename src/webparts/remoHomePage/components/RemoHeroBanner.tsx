@@ -132,6 +132,12 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         .orderBy("Created", false)
         .getAll();
 
+      if (items.length == 0) {
+        alert("data is available")
+      } else {
+        alert("data is not available")
+
+      }
       const updatedItems = await Promise.all(items.map(async (item) => {
         const resolutionCategory = ResolutionCategory.Low; // Default category
 

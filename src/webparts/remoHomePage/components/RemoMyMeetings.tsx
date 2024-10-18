@@ -37,7 +37,7 @@ export interface IMyDayRoutineState {
 
 
 
-var uniqueCountItem = [];
+// var uniqueCountItem = [];
 var uniqueCountItemFuture = [];
 export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, IMyDayRoutineState, {}> {
     private serviceProvider;
@@ -151,64 +151,130 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
     // }
 
     // Updated code 
+    // public async getmytodaysroutines() {
+    //     try {
+    //         uniqueCountItem = [];
+    //         const result = await this.serviceProvider.getMyTodaysRoutine();
+    //         this.setState({ myroutineDatas: result });
+
+    //         for (let i = 0; i < result.length; i++) {
+    //             const Starttime = moment.utc(result[i].start.dateTime);
+    //             const CTime = moment().format('DD-MM-YYYY');
+    //             const subject = result[i].subject;
+
+    //             if (moment(CTime, 'DD-MM-YYYY').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY')) {
+    //                 uniqueCountItem.push(subject);
+    //             }
+    //         }
+
+    //         if (uniqueCountItem.length === 0) {
+    //             document.querySelectorAll('.present').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'none';
+    //             });
+    //             document.querySelectorAll('#current-event').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'none';
+    //             });
+    //             document.querySelectorAll('.future').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'block';
+    //             });
+
+    //             this.getmyFutureEvents();
+    //         } else {
+    //             this.setState({ IsCurrentFuture: "" });
+
+    //             document.querySelectorAll('.present').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'block';
+    //             });
+    //             document.querySelectorAll('#current-event').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'block';
+    //             });
+    //             document.querySelectorAll('.future').forEach(element => {
+    //                 (element as HTMLElement).style.display = 'none';
+    //             });
+
+    //             const textContent = document.getElementById('dt-current');
+    //             if (textContent) {
+    //                 textContent.textContent = ' My Meetings';
+    //             }
+
+    //             setTimeout(() => {
+    //                 const textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
+    //                 const formattedDate = moment().format("D/M/YYYY");
+    //                 textFields.forEach(field => {
+    //                     field.value = formattedDate;
+    //                 });
+    //             }, 1500);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error in getmytodaysroutines:", error);
+    //     }
+    // }
+
+    // Optimize this code
+
     public async getmytodaysroutines() {
         try {
-            uniqueCountItem = [];
+            const uniqueCountItem: string[] = [];
             const result = await this.serviceProvider.getMyTodaysRoutine();
             this.setState({ myroutineDatas: result });
 
-            for (let i = 0; i < result.length; i++) {
-                const Starttime = moment.utc(result[i].start.dateTime);
-                const CTime = moment().format('DD-MM-YYYY');
-                const subject = result[i].subject;
+            // Get current time in the same format as the start time
+            const currentDate = moment().format('DD-MM-YYYY');
 
-                if (moment(CTime, 'DD-MM-YYYY').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY')) {
-                    uniqueCountItem.push(subject);
+            result.forEach(item => {
+                const startTime = moment.utc(item.start.dateTime).local().format('DD-MM-YYYY');
+                if (currentDate === startTime) {
+                    uniqueCountItem.push(item.subject);
                 }
-            }
+            });
+
+            // Update UI based on whether there are any items for today
+            const displayStatus = uniqueCountItem.length === 0 ? 'none' : 'block';
+            const futureStatus = uniqueCountItem.length === 0 ? 'block' : 'none';
+
+            // Toggle display styles using utility function
+            this.toggleDisplay('.present', displayStatus);
+            this.toggleDisplay('#current-event', displayStatus);
+            this.toggleDisplay('.future', futureStatus);
 
             if (uniqueCountItem.length === 0) {
-                document.querySelectorAll('.present').forEach(element => {
-                    (element as HTMLElement).style.display = 'none';
-                });
-                document.querySelectorAll('#current-event').forEach(element => {
-                    (element as HTMLElement).style.display = 'none';
-                });
-                document.querySelectorAll('.future').forEach(element => {
-                    (element as HTMLElement).style.display = 'block';
-                });
-
                 this.getmyFutureEvents();
             } else {
                 this.setState({ IsCurrentFuture: "" });
-
-                document.querySelectorAll('.present').forEach(element => {
-                    (element as HTMLElement).style.display = 'block';
-                });
-                document.querySelectorAll('#current-event').forEach(element => {
-                    (element as HTMLElement).style.display = 'block';
-                });
-                document.querySelectorAll('.future').forEach(element => {
-                    (element as HTMLElement).style.display = 'none';
-                });
-
-                const textContent = document.getElementById('dt-current');
-                if (textContent) {
-                    textContent.textContent = ' My Meetings';
-                }
-
-                setTimeout(() => {
-                    const textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
-                    const formattedDate = moment().format("D/M/YYYY");
-                    textFields.forEach(field => {
-                        field.value = formattedDate;
-                    });
-                }, 1500);
+                this.updateCurrentEventText(' My Meetings');
+                this.updateTextFieldWithCurrentDate();
             }
         } catch (error) {
             console.error("Error in getmytodaysroutines:", error);
         }
     }
+
+    // Utility function to toggle display styles
+    private toggleDisplay(selector: string, display: string) {
+        document.querySelectorAll<HTMLElement>(selector).forEach(element => {
+            element.style.display = display;
+        });
+    }
+
+    // Update the current event text
+    private updateCurrentEventText(text: string) {
+        const textContent = document.getElementById('dt-current');
+        if (textContent) {
+            textContent.textContent = text;
+        }
+    }
+
+    // Update text fields with the current date
+    private updateTextFieldWithCurrentDate() {
+        setTimeout(() => {
+            const formattedDate = moment().format("D/M/YYYY");
+            const textFields = document.querySelectorAll<HTMLInputElement>(".ms-TextField-field");
+            textFields.forEach(field => {
+                field.value = formattedDate;
+            });
+        }, 1500);
+    }
+
 
 
     // public getmytodaysPastroutines() {
@@ -236,24 +302,49 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
 
     // Updated code 
 
+    // public async getmytodaysPastroutines() {
+    //     try {
+    //         const result = await this.serviceProvider.getMyTodaysRoutinePast();
+    //         this.setState({ mypastroutineDatas: result });
+
+    //         const myMeetingsCount = this.state.mypastroutineDatas.length;
+    //         const now = moment().format("HHMM");
+
+    //         for (let i = 0; i < myMeetingsCount; i++) {
+    //             const PastMeetingTime = this.state.mypastroutineDatas[i].end.dateTime;
+    //             const ShortEndTime = moment.utc(PastMeetingTime).local().format("HHMM");
+
+    //             if (ShortEndTime < now) {
+    //                 document.querySelectorAll('#past-event').forEach(element => {
+    //                     (element as HTMLElement).style.display = 'block';
+    //                 });
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error("Error in getmytodaysPastroutines:", error);
+    //     }
+    // }
+
+
+    // Optimized code 
+
     public async getmytodaysPastroutines() {
         try {
             const result = await this.serviceProvider.getMyTodaysRoutinePast();
             this.setState({ mypastroutineDatas: result });
 
-            const myMeetingsCount = this.state.mypastroutineDatas.length;
             const now = moment().format("HHMM");
+            const pastEventsVisible = result.some(meeting => {
+                const pastMeetingTime = meeting.end.dateTime;
+                const shortEndTime = moment.utc(pastMeetingTime).local().format("HHMM");
+                return shortEndTime < now;
+            });
 
-            for (let i = 0; i < myMeetingsCount; i++) {
-                const PastMeetingTime = this.state.mypastroutineDatas[i].end.dateTime;
-                const ShortEndTime = moment.utc(PastMeetingTime).local().format("HHMM");
+            // Toggle display based on whether any past meeting times are before the current time
+            document.querySelectorAll<HTMLElement>('#past-event').forEach(element => {
+                element.style.display = pastEventsVisible ? 'block' : 'none';
+            });
 
-                if (ShortEndTime < now) {
-                    document.querySelectorAll('#past-event').forEach(element => {
-                        (element as HTMLElement).style.display = 'block';
-                    });
-                }
-            }
         } catch (error) {
             console.error("Error in getmytodaysPastroutines:", error);
         }
@@ -419,6 +510,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
             console.error("Error in getmytodaysFutureroutines:", error);
         }
     }
+
 
 
     // public getmyFutureEvents() {

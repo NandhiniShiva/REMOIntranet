@@ -50,42 +50,82 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
   // Updated code
 
+  // public async getcurrentusersQuickLinks() {
+  //   try {
+  //     const reactHandler = this;
+  //     const { userid: UserID } = reactHandler.props;
+
+  //     // Fetch user-specific quick links with a maximum of 5 items
+  //     const userQuickLinks = await sp.web.lists
+  //       .getByTitle(UsersQuickLinkslist)
+  //       .items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id")
+  //       .filter(`Author/Id eq '${UserID}'`)
+  //       .expand("SelectedQuickLinks", "Author")
+  //       .top(5)
+  //       .orderBy("Order0", true)
+  //       .get();
+
+  //     // Fetch active quick links
+  //     const activeQuickLinks = await sp.web.lists
+  //       .getByTitle(QuickLinkslist)
+  //       .items.select("ID")
+  //       .filter("IsActive eq '1'")
+  //       .get();
+
+  //     // Create a Set of active quick link IDs for efficient lookup
+  //     const activeQuickLinkIds = new Set(activeQuickLinks.map(link => link.ID));
+
+  //     // Filter user quick links to only include active ones
+  //     const updatedQuickLinks = userQuickLinks.filter(item => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+
+  //     // Update the state with the filtered quick links
+  //     reactHandler.setState({
+  //       MyQuickLinksPrefference: updatedQuickLinks
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching user quick links: ", error);
+  //   }
+  // }
+
+  // Optimize this code 
+
   public async getcurrentusersQuickLinks() {
     try {
-      const reactHandler = this;
-      const { userid: UserID } = reactHandler.props;
+      const { userid: UserID } = this.props;
 
-      // Fetch user-specific quick links with a maximum of 5 items
-      const userQuickLinks = await sp.web.lists
-        .getByTitle(UsersQuickLinkslist)
-        .items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id")
-        .filter(`Author/Id eq '${UserID}'`)
-        .expand("SelectedQuickLinks", "Author")
-        .top(5)
-        .orderBy("Order0", true)
-        .get();
-
-      // Fetch active quick links
-      const activeQuickLinks = await sp.web.lists
-        .getByTitle(QuickLinkslist)
-        .items.select("ID")
-        .filter("IsActive eq '1'")
-        .get();
+      // Fetch user-specific quick links and active quick links concurrently
+      const [userQuickLinks, activeQuickLinks] = await Promise.all([
+        sp.web.lists
+          .getByTitle(UsersQuickLinkslist)
+          .items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id")
+          .filter(`Author/Id eq '${UserID}'`)
+          .expand("SelectedQuickLinks", "Author")
+          .top(5)
+          .orderBy("Order0", true)
+          .get(),
+        sp.web.lists
+          .getByTitle(QuickLinkslist)
+          .items.select("ID")
+          .filter("IsActive eq '1'")
+          .get()
+      ]);
 
       // Create a Set of active quick link IDs for efficient lookup
       const activeQuickLinkIds = new Set(activeQuickLinks.map(link => link.ID));
 
       // Filter user quick links to only include active ones
-      const updatedQuickLinks = userQuickLinks.filter(item => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
+      const updatedQuickLinks = userQuickLinks.filter(item =>
+        activeQuickLinkIds.has(item.SelectedQuickLinks.Id)
+      );
 
       // Update the state with the filtered quick links
-      reactHandler.setState({
-        MyQuickLinksPrefference: updatedQuickLinks
-      });
+      this.setState({ MyQuickLinksPrefference: updatedQuickLinks });
+
     } catch (error) {
-      console.error("Error fetching user quick links: ", error);
+      console.error("Error fetching user quick links:", error);
     }
   }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     var reactHandler = this;
     const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => (

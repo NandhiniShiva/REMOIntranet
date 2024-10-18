@@ -43,35 +43,61 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
     };
   }
 
+  // public componentDidMount() {
+  //   setTimeout(function () {
+  //     // $('#spCommandBar').attr('style', 'display: none !important');
+  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
+
+  //     const commentsWrapper = document.getElementById('CommentsWrapper');
+  //     if (commentsWrapper) {
+  //       commentsWrapper.style.setProperty('display', 'none', 'important');
+  //     }
+
+  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
+  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
+  //     pageHeaders.forEach((element: any) => {
+  //       element.style.setProperty('display', 'none', 'important');
+  //     });
+
+  //     // Show the element with ID "ceoMessageReadMore"
+
+  //     const spCommandBar = document.getElementById('spCommandBar');
+  //     if (spCommandBar) {
+  //       spCommandBar.style.setProperty('display', 'none', 'important');
+  //     }
+  //   }, 2000);
+
+  //   this.getCurrentUser().then(() => {
+  //     this.GetBanner();
+  //   });
+  // }
+
+  // Optimized code
   public componentDidMount() {
-    setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-
-      const commentsWrapper = document.getElementById('CommentsWrapper');
-      if (commentsWrapper) {
-        commentsWrapper.style.setProperty('display', 'none', 'important');
-      }
-
-      // Hide all div elements with the attribute data-automation-id="pageHeader"
+    setTimeout(() => {
+      this.hideElement('#CommentsWrapper');
+      this.hideElement('#spCommandBar');
       const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
       pageHeaders.forEach((element: any) => {
         element.style.setProperty('display', 'none', 'important');
       });
 
-      // Show the element with ID "ceoMessageReadMore"
-
-      const spCommandBar = document.getElementById('spCommandBar');
-      if (spCommandBar) {
-        spCommandBar.style.setProperty('display', 'none', 'important');
-      }
     }, 2000);
 
     this.getCurrentUser().then(() => {
       this.GetBanner();
     });
   }
+
+  // Helper function to hide an element by its ID
+  private hideElement(selector: string) {
+    const element = document.querySelector(selector);
+    if (element) {
+      (element as HTMLElement).style.setProperty('display', 'none', 'important');
+    }
+  }
+
 
   public async getCurrentUser() {
     try {
