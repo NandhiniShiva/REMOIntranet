@@ -41,6 +41,7 @@ export interface IHeroBannerState {
   Items: any[];
   AnncCount: number;
   TotalItem: number;
+  isDataAvailable: boolean
 }
 
 export default class HeroBanner extends React.Component<IRemoHomePageProps, IHeroBannerState, {}> {
@@ -49,7 +50,8 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     this.state = {
       Items: [],
       AnncCount: 0,
-      TotalItem: 0
+      TotalItem: 0,
+      isDataAvailable: false
     };
   }
 
@@ -132,12 +134,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         .orderBy("Created", false)
         .getAll();
 
-      if (items.length == 0) {
-        alert("data is available")
-      } else {
-        alert("data is not available")
 
-      }
       const updatedItems = await Promise.all(items.map(async (item) => {
         const resolutionCategory = ResolutionCategory.Low; // Default category
 
@@ -155,6 +152,16 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         return { ...item, resolutionCategory };
       }));
 
+      if (updatedItems.length != 0) {
+        this.setState({
+          isDataAvailable: true
+        })
+      } else {
+        alert("not")
+        this.setState({
+          isDataAvailable: false
+        })
+      }
       this.setState({
         Items: updatedItems,
         AnncCount: updatedItems.length
@@ -171,6 +178,10 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     this.setState({ TotalItem: total });
   }
 
+  public addData() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Hero_Bannerlist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     const settings = {
       dots: true,
@@ -239,18 +250,24 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
 
     return (
       <div className="col-md-8">
-        <div id="myCarousel" className="carousel slide" data-ride="carousel">
-          <div className="carousel-inner">
-            <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
-              <Slider {...settings} className='hero-banner-container-wrap' >
-                {MAslider}
-              </Slider>
-            </div>
-            <div id="if-Banner-not-Exist" className="background" style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}>
-              <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/If_no_Content_to_show.png`} alt="no-image-uploaded" />
+        {this.state.isDataAvailable == true ?
+          <div id="myCarousel" className="carousel slide" data-ride="carousel">
+            <div className="carousel-inner">
+              <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
+                <Slider {...settings} className='hero-banner-container-wrap' >
+                  {MAslider}
+                </Slider>
+              </div>
+              <div id="if-Banner-not-Exist" className="background" style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}>
+                <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/If_no_Content_to_show.png`} alt="no-image-uploaded" />
+              </div>
             </div>
           </div>
-        </div>
+          :
+          <div>
+            <button onClick={() => this.addData()}>Add Data</button>
+          </div>
+        }
       </div>
     );
   }

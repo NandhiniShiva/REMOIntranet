@@ -654,31 +654,48 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
     public render(): React.ReactElement<IRemoHomePageProps> {
 
         // var Focusthis = $('#current-event');
-        let Focusthis: any = document.getElementById("current-event")
-        if (Focusthis.length) {
-            // var TopValue = Focusthis.offset().top;
-            if (Focusthis) {
-                // var TopValue = Focusthis.offset()?.top || 0;
-                // $('.routine-timeline-scroll').animate({
-                //     scrollTop: TopValue
-                // }, 'slow');
+        // let Focusthis: any = document.getElementById("current-event")
+        // if (Focusthis.length) {
+        //     // var TopValue = Focusthis.offset().top;
+        //     if (Focusthis) {
+        //         // var TopValue = Focusthis.offset()?.top || 0;
+        //         // $('.routine-timeline-scroll').animate({
+        //         //     scrollTop: TopValue
+        //         // }, 'slow');
 
 
-                // Converted code 
-                // Assuming Focusthis is a DOM element
-                var TopValue = Focusthis.getBoundingClientRect().top + window.scrollY || 0;
-                // Animate scrolling to the specified position
-                let scrollElement: any = document.querySelector('.routine-timeline-scroll')
+        //         // Converted code 
+        //         // Assuming Focusthis is a DOM element
+        //         var TopValue = Focusthis.getBoundingClientRect().top + window.scrollY || 0;
+        //         // Animate scrolling to the specified position
+        //         let scrollElement: any = document.querySelector('.routine-timeline-scroll')
+        //         scrollElement.scrollTo({
+        //             top: TopValue,
+        //             behavior: 'smooth'
+        //         });
+
+        //     }
+
+
+        // }
+
+
+        const Focusthis = document.getElementById("current-event");
+
+        if (Focusthis) {
+            // Get the top position of the element relative to the viewport and add the scroll position
+            const TopValue = Focusthis.getBoundingClientRect().top + window.scrollY;
+
+            // Select the scroll container element
+            const scrollElement = document.querySelector('.routine-timeline-scroll') as HTMLElement;
+            if (scrollElement) {
+                // Scroll to the specified position smoothly
                 scrollElement.scrollTo({
                     top: TopValue,
                     behavior: 'smooth'
                 });
-
             }
-
-
         }
-
         var reacthandler = this;
 
         const AllMyEvents: JSX.Element[] = this.state.myroutineDatas.map(function (item, key) {
@@ -999,3 +1016,4 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
         );
     }
 }
+

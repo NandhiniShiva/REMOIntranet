@@ -12,12 +12,14 @@ let CEO_Messagelist = listNames.CEO_Message;
 
 export interface ICeoMessageState {
   Items: any[];
+  isDataAvailable: boolean;
 }
 export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, ICeoMessageState, {}> {
   public constructor(props: IRemoHomePageProps, state: ICeoMessageState) {
     super(props);
     this.state = {
-      Items: []
+      Items: [],
+      isDataAvailable: false
     };
   }
 
@@ -129,6 +131,10 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     }, 2000);
   }
 
+  public addData() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${CEO_Messagelist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
@@ -192,18 +198,27 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     return (
 
       <div className="col-md-4">
-        <div className="sec relative" id="if-ceo-msg-present">
-          <div className="heading" id="ceo-title-dynamic">
-            {/* CEO's Message */}
+
+        {this.state.isDataAvailable == true ?
+          <>
+            <div className="sec relative" id="if-ceo-msg-present">
+              <div className="heading" id="ceo-title-dynamic">
+                {/* CEO's Message */}
+              </div>
+              {CEOMessage}
+            </div>
+            <div className="sec shadoww relative" id="if-no-ceo-msg-present" style={{ display: "none" }}>
+              <div className="heading">
+                CEO's Message
+              </div>
+              <img className="err-img" src={`${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
+            </div>
+          </>
+          :
+          <div>
+            <button onClick={() => this.addData()}>Add Data</button>
           </div>
-          {CEOMessage}
-        </div>
-        <div className="sec shadoww relative" id="if-no-ceo-msg-present" style={{ display: "none" }}>
-          <div className="heading">
-            CEO's Message
-          </div>
-          <img className="err-img" src={`${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
-        </div>
+        }
       </div>
 
     );

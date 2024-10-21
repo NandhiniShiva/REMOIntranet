@@ -13,6 +13,7 @@ let QuickLinkslist = listNames.QuickLinks;
 
 export interface IQuickLinkState {
   MyQuickLinksPrefference: any[];
+  isDataAvailable: boolean;
 }
 
 export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, IQuickLinkState, {}> {
@@ -20,6 +21,7 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
     super(props);
     this.state = {
       MyQuickLinksPrefference: [],
+      isDataAvailable: false
     };
   }
 
@@ -119,13 +121,23 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
       );
 
       // Update the state with the filtered quick links
-      this.setState({ MyQuickLinksPrefference: updatedQuickLinks });
+      if (updatedQuickLinks.length != 0) {
+        this.setState({
+          MyQuickLinksPrefference: updatedQuickLinks,
+          isDataAvailable: true
+        });
+
+      }
 
     } catch (error) {
       console.error("Error fetching user quick links:", error);
     }
   }
 
+  public addData() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${UsersQuickLinkslist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var reactHandler = this;
     const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => (
@@ -140,25 +152,32 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
     return (
       <div className={[styles.remoHomePage, "m-b-20 if-no-qlinks"].join(' ')} id="m-b-20-PQlink">
-        <div className="quicklinks-wrap personal-qlinks-wrap m-b-20">
-          <div className="sec">
-            <div className="heading clearfix">
-              <div className="heading-left">
-                Quick Links
-              </div>
-              <div className="heading-right">
-                <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a>
+        {this.state.isDataAvailable == true ?
+          <div className="quicklinks-wrap personal-qlinks-wrap m-b-20">
+            <div className="sec">
+              <div className="heading clearfix">
+                <div className="heading-left">
+                  Quick Links
+                </div>
+                <div className="heading-right">
+                  <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a>
+                </div>
+
               </div>
 
-            </div>
-
-            <div className="section-part clearfix">
-              <ul id="result">
-                {QuickLinks}
-              </ul>
+              <div className="section-part clearfix">
+                <ul id="result">
+                  {QuickLinks}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+          :
+
+          <div>
+            <button onClick={() => this.addData()}>Add Data</button>
+          </div>
+        }
       </div >
     );
   }

@@ -40,7 +40,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, {}
 
   constructor(props: IRemoHomePageProps) {
     super(props);
-    console.log(spWeb, fetchList, IsListCreate);
 
     // this.state = {
 
@@ -49,6 +48,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, {}
     spWeb = Web(this.props.siteurl);
     fetchList = true
     IsListCreate = false;
+    console.log(spWeb, fetchList, IsListCreate);
 
   }
 

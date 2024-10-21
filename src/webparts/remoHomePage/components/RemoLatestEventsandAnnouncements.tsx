@@ -11,15 +11,17 @@ import "@pnp/sp/site-users/web";
 import * as moment from 'moment';
 import { listNames } from '../Configuration';
 import "@pnp/sp/clientside-pages/web";
-import { Web } from '@pnp/sp/webs';
+// import { Web } from '@pnp/sp/webs';
 
 let Announcementlist = listNames.Announcement;
 let Eventslist = listNames.Events;
-let spWeb: any;
+// let spWeb: any;
 
 export interface IEventsAnnouncementsState {
   Items: any[];
   Events: any[];
+  isDataAvailable: boolean;
+  isDataAvailableAnnc: boolean;
 }
 
 SPComponentLoader.loadCss("https://cdn.jsdelivr.net/npm/evo-calendar@1.1.2/evo-calendar/css/evo-calendar.min.css");
@@ -31,7 +33,9 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     super(props);
     this.state = {
       Items: [],
-      Events: []
+      Events: [],
+      isDataAvailable: false,
+      isDataAvailableAnnc: false
     };
 
   }
@@ -42,7 +46,7 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     reactHandler.GetAnnouncements();
     reactHandler.GetEvents();
     if (this.props.createList) {
-      reactHandler.CreateList();
+      // reactHandler.CreateList();
     }
   }
 
@@ -91,7 +95,10 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
         });
 
         // Update the state with fetched items
-        this.setState({ Items: items });
+        this.setState({
+          Items: items,
+          isDataAvailableAnnc: true
+        });
       } else {
         // Show the "no announcement" section
         document.querySelectorAll('#if-no-annc-present').forEach((element) => {
@@ -159,7 +166,10 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
         });
 
         // Update state with fetched events
-        this.setState({ Events: items });
+        this.setState({
+          Events: items,
+          isDataAvailable: true
+        });
       } else {
         // Hide the events section and show the "no events" section
         document.querySelectorAll('#if-events-present').forEach((element) => {
@@ -174,53 +184,57 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     }
   }
 
-  public CreateList = async () => {
-    spWeb = Web(this.props.siteurl);
-    await spWeb.lists.add(this.props.name, "This is a description of doc lib.", 104, true, { OnQuickLaunch: true });
+  // public CreateList = async () => {
+  //   spWeb = Web(this.props.siteurl);
+  //   await spWeb.lists.add(this.props.name, "This is a description of doc lib.", 104, true, { OnQuickLaunch: true });
 
 
-    await this.createColumn();
+  //   // await this.createColumn();
 
-    await this.addData();
+  //   // await this.addData();
 
-    // this.createSitePage();
-    // fetchList = true;
+  //   // this.createSitePage();
+  //   // fetchList = true;
 
-    await this.GetAnnouncements();
+  //   await this.GetAnnouncements();
 
 
+  // }
+
+  // public async createColumn() {
+  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
+  //     `<Field Type="Note" Name="Description" DisplayName="Description" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
+  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
+  //     `<Field Type="Note" Name="Body" DisplayName="Body" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
+  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml('<Field Type="DateTime" DisplayName="Expire" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="DateOnly" Group="Custom Columns" FriendlyDisplayFormat="Disabled"></Field>')
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableLikes", { Group: "My Group" });
+  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableComments", { Group: "My Group" });
+
+
+  // }
+
+  // private async addData() {
+  //   await sp.web.lists.getByTitle(this.props.name).items.add({
+  //     Title: " World Cup",
+  //     Description: "The ICC Men's T20 World Cup (earlier known as ICC World Twenty20)[4] is the international championship of Twenty20 cricket.",
+  //     IsActive: true,
+  //     EnableLikes: true,
+  //     EnableComments: true
+  //   }).catch((error: any) => {
+  //     console.log("Error: ", error);
+  //   });
+  //   // .then(function () {
+  //   //   location.reload();
+  //   // });
+  //   // window.open(`/sites/SPTraineeBT/Lists/${listName}/AllItems.aspx`, '_blank');
+  // }
+
+  public addDataEvenlist() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Eventslist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
   }
-
-  public async createColumn() {
-    await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
-      `<Field Type="Note" Name="Description" DisplayName="Description" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
-    await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
-      `<Field Type="Note" Name="Body" DisplayName="Body" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
-    await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
-    await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml('<Field Type="DateTime" DisplayName="Expire" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="DateOnly" Group="Custom Columns" FriendlyDisplayFormat="Disabled"></Field>')
-    await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
-    await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableLikes", { Group: "My Group" });
-    await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableComments", { Group: "My Group" });
-
-
-  }
-
-  private async addData() {
-    await sp.web.lists.getByTitle(this.props.name).items.add({
-      Title: " World Cup",
-      Description: "The ICC Men's T20 World Cup (earlier known as ICC World Twenty20)[4] is the international championship of Twenty20 cricket.",
-      IsActive: true,
-      EnableLikes: true,
-      EnableComments: true
-    }).catch((error: any) => {
-      console.log("Error: ", error);
-    });
-    // .then(function () {
-    //   location.reload();
-    // });
-    // window.open(`/sites/SPTraineeBT/Lists/${listName}/AllItems.aspx`, '_blank');
-  }
-
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
@@ -278,29 +292,37 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
       <div className={styles.remoHomePage} id="events-and-anncmnts">
         <div className="latest-news-announcemnst">
           <div >
-            <div className="col-md-6">
-              <div className="sec event-cal" id="if-events-present">
-                <div className="heading clearfix">
-                  <h4><a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}>
+            {this.state.isDataAvailable == true ?
+              <div className="col-md-6">
+                <div className="sec event-cal" id="if-events-present">
+                  <div className="heading clearfix">
+                    <h4><a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}>
+                      Latest Events
+                    </a>
+                    </h4>
+
+                  </div>
+                  <div className="section-part clearfix latest-events-bck">
+                    <ul>
+                      {Events}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="sec event-cal" id="if-no-events-present" style={{ display: "none" }}>
+                  <div className="heading">
                     Latest Events
-                  </a>
-                  </h4>
-
-                </div>
-                <div className="section-part clearfix latest-events-bck">
-                  <ul>
-                    {Events}
-                  </ul>
+                  </div>
+                  <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
                 </div>
               </div>
+              :
 
-              <div className="sec event-cal" id="if-no-events-present" style={{ display: "none" }}>
-                <div className="heading">
-                  Latest Events
-                </div>
-                <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
+              <div>
+                <button onClick={() => this.addDataEvenlist()}>Add Data</button>
               </div>
-            </div>
+            }
+            {this.state.isDataAvailableAnnc}
             <div className="col-md-6" id="if-annc-present">
               {AnncItems}
             </div>

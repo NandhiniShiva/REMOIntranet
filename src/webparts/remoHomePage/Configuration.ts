@@ -14,7 +14,7 @@ export const listNames: { [key: string]: string } = {
     Content_Editor_Master_Category: "Content Editor Master Category",
     Content_Editor_Master: "Content Editor Master",
     Events: "Events",
-    Hero_Banner: "Hero Banner",
+    Hero_Banner: "Hero_Banner",
     JobsMaster: "JobsMaster",
     UsersQuickLinks: "UsersQuickLinks",
     News: "News",

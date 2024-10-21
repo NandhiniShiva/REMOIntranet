@@ -17,6 +17,7 @@ export interface INavigationsState {
   showdataqlink: any[];
   IsAdminForContentEditor: boolean;
   MyLinks: any[];
+  isDataAvailable: boolean;
 }
 
 let BreadCrumb: { Title: any; ID: any; }[] = [];
@@ -42,6 +43,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       showdataqlink: [],
       IsAdminForContentEditor: false,
       MyLinks: [],
+      isDataAvailable: false
     };
     NewWeb = Web("" + this.props.siteurl + "");
   }
@@ -132,7 +134,13 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         .expand("LinkMasterID")
         .get();
 
-      this.setState({ MainNavItems: items });
+      if (items.length != 0) {
+        this.setState({
+          MainNavItems: items,
+          isDataAvailable: true
+        });
+
+      }
 
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
@@ -844,6 +852,11 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
+  // public addData() {
+  //   const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${}`; // Replace with your list URL
+  //   window.open(listUrl, "_blank");
+  // }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
@@ -1049,48 +1062,56 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
     return (
       <div className='tab-view-content'>
-        <div className="tab-view">
-          <ul className="nav nav-tabs" id="myTab" role="tablist">
-            <li className="nav-item active tab-1-data" role="presentation">
-              <a className="nav-link active tab-1-data" onClick={this.mylinks} id="home-tab" data-toggle="tab" href="#contacts" role="tab"
-                aria-controls="contacts" aria-selected="true">Quick Links </a>
-            </li>
-            <li className="nav-item tab-2-data" role="presentation">
-              <a className="nav-link tab-2-data" onClick={this.quicklinks} id="profile-tab" data-toggle="tab" href="#meetingroom" role="tab"
-                aria-controls="meetingroom" aria-selected="false">My Links</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="tab-content">
-          <div className="nav-link active tab-1-data" id="contacts">
-            <div className="main-mavigation m-b-20">
-              <nav className="sec" id="root-nav-links">
-                <div className="breadcrum-block">
-                  <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>All Menu<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                  {BreadCrumb.map((item, key) => (
-                    <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>{item.Title}<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                  ))}
-                </div>
-                <ul className="clearfix">
-                  {MainNavigations}
-                </ul>
-              </nav>
-
-            </div>
+        {/* {this.state.isDataAvailable ? */}
+        <>
+          <div className="tab-view">
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
+              <li className="nav-item active tab-1-data" role="presentation">
+                <a className="nav-link active tab-1-data" onClick={this.mylinks} id="home-tab" data-toggle="tab" href="#contacts" role="tab"
+                  aria-controls="contacts" aria-selected="true">Quick Links </a>
+              </li>
+              <li className="nav-item tab-2-data" role="presentation">
+                <a className="nav-link tab-2-data" onClick={this.quicklinks} id="profile-tab" data-toggle="tab" href="#meetingroom" role="tab"
+                  aria-controls="meetingroom" aria-selected="false">My Links</a>
+              </li>
+            </ul>
           </div>
 
-          <div className="nav-item tab-2-data" id="meetingroom">
-            <div className="main-mavigation quick m-b-20">
-              <nav className="sec" id="root-nav-links">
-                <ul className="clearfix">
-                  {MyLinks}
-                </ul>
-              </nav>
+          <div className="tab-content">
+            <div className="nav-link active tab-1-data" id="contacts">
+              <div className="main-mavigation m-b-20">
+                <nav className="sec" id="root-nav-links">
+                  <div className="breadcrum-block">
+                    <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>All Menu<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
+                    {BreadCrumb.map((item, key) => (
+                      <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>{item.Title}<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
+                    ))}
+                  </div>
+                  <ul className="clearfix">
+                    {MainNavigations}
+                  </ul>
+                </nav>
 
+              </div>
+            </div>
+
+            <div className="nav-item tab-2-data" id="meetingroom">
+              <div className="main-mavigation quick m-b-20">
+                <nav className="sec" id="root-nav-links">
+                  <ul className="clearfix">
+                    {MyLinks}
+                  </ul>
+                </nav>
+
+              </div>
             </div>
           </div>
-        </div>
+        </>
+        {/* // :
+          // <div>
+          //   <button onClick={() => this.addData()}>Add Data</button>
+          // </div>
+        // } */}
       </div>
 
     );

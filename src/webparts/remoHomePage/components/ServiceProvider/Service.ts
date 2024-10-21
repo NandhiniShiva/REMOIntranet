@@ -44,9 +44,16 @@ export class ServiceProvider {
   }
 
   public async getMyTodaysRoutine(): Promise<IMeetingData[]> {
-    const today = moment().subtract(2, 'days').format('YYYY-MM-DD');
-    const enddate = moment().add(1, 'days').format('YYYY-MM-DD');
-    return this.fetchMeetings(`${today}T21:00:00.000Z`, `${enddate}T21:00:00.000Z`);
+    try {
+
+
+      const today = moment().subtract(2, 'days').format('YYYY-MM-DD');
+      const enddate = moment().add(1, 'days').format('YYYY-MM-DD');
+      return this.fetchMeetings(`${today}T21:00:00.000Z`, `${enddate}T21:00:00.000Z`);
+    } catch (error) {
+      console.log("Error in getMyTodaysRoutine service provider", error);
+      return [];
+    }
   }
 
   public async getMyFutureMeetings(): Promise<IMeetingData[]> {

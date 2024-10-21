@@ -12,6 +12,7 @@ let VersionMasterlist = listNames.VersionMaster;
 
 export interface IFooterState {
     VersionData: string;
+    isDataAvailable: boolean
 }
 
 export default class Footer extends React.Component<IRemoHomePageProps, IFooterState> {
@@ -19,7 +20,8 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
     constructor(props: IRemoHomePageProps) {
         super(props);
         this.state = {
-            VersionData: ''
+            VersionData: '',
+            isDataAvailable: false
         };
 
         this.GetVersionData = this.GetVersionData.bind(this);
@@ -40,24 +42,52 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
 
             if (items.length != 0) {
                 this.setState({
-                    VersionData: items[0].Title
+                    VersionData: items[0].Title,
+                    isDataAvailable: true
                 });
             }
         } catch (error) {
             console.log("Unable to get VersionData due to: " + error);
         }
     }
+    public addData() {
+        const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
+        window.open(listUrl, "_blank");
+    }
+
 
     public render(): React.ReactElement<IRemoHomePageProps> {
         return (
-            <footer>
-                <div style={{ position: "relative" }} className="footer-name">
-                    <div style={{ position: "absolute", right: "-2px", bottom: "-25px" }} className="footer-head">
-                        <div className="footer-sub">
-                            <a href='https://technomaxsystems.com' target='blank'>  Crafted by Technomax Systems  |</a> <span>Release:{this.state.VersionData}</span>
+            // <footer>
+            //     <div style={{ position: "relative" }} className="footer-name">
+            //         <div style={{ position: "absolute", right: "-2px", bottom: "-25px" }} className="footer-head">
+            //             <div className="footer-sub">
+            //                 <a href='https://technomaxsystems.com' target='blank'>  Crafted by Technomax Systems  |</a> <span>Release:{this.state.VersionData}</span>
+            //             </div>
+            //         </div></div>
+            // </footer>
+
+
+            <>
+                {this.state.isDataAvailable ? (
+                    <footer>
+                        <div style={{ position: "relative" }} className="footer-name">
+                            <div style={{ position: "absolute", right: "-2px", bottom: "-25px" }} className="footer-head">
+                                <div className="footer-sub">
+                                    <a href='https://technomaxsystems.com' target='_blank' rel='noopener noreferrer'>
+                                        Crafted by Technomax Systems |
+                                    </a>
+                                    <span>Release: {this.state.VersionData}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div></div>
-            </footer>
+                    </footer>
+                ) : (
+                    <div>
+                        <button onClick={this.addData}>Add Data</button>
+                    </div>
+                )}
+            </>
         );
     }
 }
