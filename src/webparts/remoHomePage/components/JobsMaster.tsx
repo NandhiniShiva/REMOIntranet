@@ -6,11 +6,12 @@ import "@pnp/sp/items";
 import "@pnp/sp/fields";
 import * as moment from 'moment';
 // import * as $ from 'jquery';
-import pnp, { sp } from 'sp-pnp-js';
+import { sp } from 'sp-pnp-js';
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let JobsMasterlist = listNames.JobsMaster;
 
@@ -19,8 +20,8 @@ export interface IJobsMasterState {
     AppliedJobIds: number[];
 }
 var Appliedjobs: any;
-var Designation: any;
-var Department: any;
+// var Designation: any;
+// var Department: any;
 
 
 export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsMasterState, {}> {
@@ -55,32 +56,50 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
         if (spCommandBar) {
             spCommandBar.style.setProperty('display', 'none', 'important');
         }
-        this.getCurrentUser().then(() => {
-            this.isuserAlreadyApplied()
-        }).then(() => {
-            this.LandingPageAnalytics()
-        });
+        // this.getCurrentUser().then(() => {
+        //     this.isuserAlreadyApplied()
+        // }).then(() => {
+        //     this.LandingPageAnalytics()
+        // });
+
+        // updated code
+
+        const userDetails = new CurrentUserDetails();
+
+        userDetails.getCurrentUserDetails()
+            .then((data) => {
+                console.log("Current user details", data);
+                console.log("Data details", data?.Department, data?.Designation);
+
+                this.isuserAlreadyApplied();
+                this.LandingPageAnalytics(data?.Department, data?.Designation);
+            })
+            .catch((error) => {
+                console.error("Error fetching current user details:", error);
+            });
+
+
     }
 
-    public async getCurrentUser() {
-        try {
-            const profile = await pnp.sp.profiles.myProperties.get();
-            Designation = profile.Title;
-            // Check if the UserProfileProperties collection exists and has the Department property
-            if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-                // Find the Department property in the profile
-                const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-                console.log(departmentProperty);
-                if (departmentProperty) {
-                    Department = departmentProperty.Value;
-                }
-            }
-        }
-        catch (error) {
-            console.error("An error occurred while fetching the user profile:", error);
-        }
-    }
-    public async LandingPageAnalytics() {
+    // public async getCurrentUser() {
+    //     try {
+    //         const profile = await pnp.sp.profiles.myProperties.get();
+    //         Designation = profile.Title;
+    //         // Check if the UserProfileProperties collection exists and has the Department property
+    //         if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+    //             // Find the Department property in the profile
+    //             const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+    //             console.log(departmentProperty);
+    //             if (departmentProperty) {
+    //                 Department = departmentProperty.Value;
+    //             }
+    //         }
+    //     }
+    //     catch (error) {
+    //         console.error("An error occurred while fetching the user profile:", error);
+    //     }
+    // }
+    public async LandingPageAnalytics(Department: any, Designation: any) {
         try {
             if (!Department) {
                 Department = "NA";

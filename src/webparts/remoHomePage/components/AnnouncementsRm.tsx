@@ -14,7 +14,8 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { listNames } from '../../remoHomePage/Configuration';
 // import * as $ from 'jquery';
 import Footer from '../../remoHomePage/components/Footer/Footer'
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
+// import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
 let User = "";
 let UserEmail = "";
@@ -68,9 +69,13 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     ItemID = url.searchParams.get("ItemID");
 
     if (ItemID) {
-      await this.getCurrentUser();
+      // await this.getCurrentUser();
       await this.getAnnouncementsDetails(ItemID);
       await this.LandingPageAnalytics();
+
+      // const userdetails = new CurrentUserDetails();
+      // let currentUser = userdetails.getCurrentUserDetails()
+      // console.log("Current user details", currentUser);
     } else {
       console.error("ItemID is not present in the URL");
     }
@@ -135,18 +140,18 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
   // }
 
   // converted code
-  public async getCurrentUser() {
-    try {
-      // const { userid } = this.props;
-      const profile = await pnp.sp.profiles.myProperties.get();
-      const departmentProperty = profile.UserProfileProperties?.find((prop: { Key: string; }) => prop.Key === 'Department');
-      // const Department = departmentProperty?.Value ?? null;
-      console.log(departmentProperty);
-    }
-    catch (error) {
-      console.error('Error Feching current User Details:', error);
-    }
-  }
+  // public async getCurrentUser() {
+  //   try {
+  //     // const { userid } = this.props;
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     const departmentProperty = profile.UserProfileProperties?.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     // const Department = departmentProperty?.Value ?? null;
+  //     console.log(departmentProperty);
+  //   }
+  //   catch (error) {
+  //     console.error('Error Feching current User Details:', error);
+  //   }
+  // }
 
   private async addViews() {
     await sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({

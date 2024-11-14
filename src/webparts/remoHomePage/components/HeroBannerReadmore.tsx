@@ -14,6 +14,7 @@ import { listNames } from '../../remoHomePage/Configuration';
 import { Markup } from 'interweave';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import pnp, { Web } from 'sp-pnp-js';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let User = "";
 let UserEmail = "";
@@ -62,9 +63,22 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
   public componentDidMount() {
     this.hideElements();
-    this.getCurrentUser().then(() => {
-      this.getItemID();
-    })
+    // this.getCurrentUser().then(() => {
+    //   this.getItemID();
+    // });
+
+    // updated code
+
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+
+      this.getItemID(Department, Designation);
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
+
 
   }
 
@@ -79,7 +93,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   //   User = this.props.userid;
   //   UserEmail = this.props.useremail;
   // }
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
     }
@@ -128,7 +142,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     }
   }
 
-  private getItemID() {
+  private getItemID(Department: any, Designation: any) {
     const url = new URL(window.location.href);
     ItemID = url.searchParams.get("ItemID");
     this.getBannerDetails(ItemID);
@@ -147,7 +161,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
           Items: items, ItemID: item.ID, Title: title
         }, () => {
           // Call LandingPageAnalytics after state is updated
-          this.LandingPageAnalytics();
+          this.LandingPageAnalytics(Department, Designation);
 
         });
         if (item.EnableLikes) {

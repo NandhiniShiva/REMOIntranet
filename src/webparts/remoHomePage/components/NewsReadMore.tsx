@@ -15,6 +15,7 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 var User = "";
 var UserEmail = "";
@@ -24,8 +25,8 @@ var likes: number;
 var commentscount: number;
 var views: number;
 var CurrentDate = new Date();
-var Designation = "";
-var Department = "";
+// var Designation = "";
+// var Department = "";
 
 let ViewsCountMasterlist = listNames.ViewsCountMaster;
 let Newslist = listNames.News;
@@ -121,9 +122,22 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
     }, 1000);
 
     var reactHandler = this;
-    reactHandler.getCurrentUser().then(() => {
-      reactHandler.GetNews(ItemID);
-    })
+    // reactHandler.getCurrentUser().then(() => {
+    //   reactHandler.GetNews(ItemID);
+    // })
+
+    // updated code
+
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+
+      reactHandler.GetNews(ItemID, data?.Department, data?.Designation);
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
+
     const url: any = new URL(window.location.href);
     const ItemID = url.searchParams.get("ItemID");
     const List = url.searchParams.get("List");
@@ -232,7 +246,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   //   User = this.props.userid;
   //   UserEmail = this.props.useremail;
   // }
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
     }
@@ -258,30 +272,30 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
     }
   }
 
-  public async getCurrentUser() {
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    try {
+  // public async getCurrentUser() {
+  //   var reacthandler = this;
+  //   User = reacthandler.props.userid;
+  //   try {
 
 
-      const profile = await pnp.sp.profiles.myProperties.get();
-      UserEmail = profile.Email;
-      Designation = profile.Title;
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     UserEmail = profile.Email;
+  //     Designation = profile.Title;
 
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-      }
-    } catch (error) {
-      console.log("Error in getCurrentUser", error);
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log("Error in getCurrentUser", error);
 
-    }
-  }
+  //   }
+  // }
   public AddViews() {
     // const url: any = new URL(window.location.href);
     // const mode = url.searchParams.get("mode");
@@ -309,7 +323,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   }
 
   //news code<
-  private async GetNews(ItemID: any) {
+  private async GetNews(ItemID: any, Department: any, Designation: any) {
     var reactHandler = this;
     try {
 
@@ -323,7 +337,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
           ItemID: items[0].ID,
         }, () => {
           // Call LandingPageAnalytics after state is updated
-          this.LandingPageAnalytics();
+          this.LandingPageAnalytics(Department, Designation);
 
         });
         if (items[0].EnableLikes == true) {

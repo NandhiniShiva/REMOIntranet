@@ -236,6 +236,10 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     window.open(listUrl, "_blank");
   }
 
+  public addDataAncc() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
     const AnncItems: JSX.Element[] = this.state.Items.map((item, key) => {
@@ -319,13 +323,18 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
               :
 
               <div>
-                <button onClick={() => this.addDataEvenlist()}>Add Data</button>
+                <button onClick={() => this.addDataEvenlist()}>Add Data In Events</button>
               </div>
             }
-            {this.state.isDataAvailableAnnc}
-            <div className="col-md-6" id="if-annc-present">
-              {AnncItems}
-            </div>
+            {this.state.isDataAvailableAnnc ?
+              <div className="col-md-6" id="if-annc-present">
+                {AnncItems}
+              </div>
+              :
+              <div>
+                <button onClick={() => this.addDataAncc()}>Add Data In Announcement List</button>
+              </div>
+            }
           </div>
         </div>
       </div>

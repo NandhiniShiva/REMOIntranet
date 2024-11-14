@@ -13,7 +13,7 @@ import pnp from 'sp-pnp-js';
 import * as moment from 'moment';
 import RemoResponsive from './RemoResponsive';
 import { IInvokable } from '@pnp/odata';
-import { listNames } from '../../Configuration';
+import { Configuration, listNames } from '../../Configuration';
 var metaTag = document.createElement('meta');
 metaTag.name = "viewport"
 metaTag.content = "width=device-width, initial-scale=1.0"
@@ -119,10 +119,13 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/Responsive.css?v=4.18`);
 
 
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3`);
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/style.css?v=1.8`);
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/Responsive.css?v=4.18`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/style.css?v=1.8`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/Responsive.css?v=4.18`);
 
+    SPComponentLoader.loadCss(Configuration.cssPath);
+    SPComponentLoader.loadCss(Configuration.overRidingCss);
+    SPComponentLoader.loadCss(Configuration.respnsiveCss);
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 

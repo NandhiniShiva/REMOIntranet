@@ -14,10 +14,11 @@ import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 // import pnp, { sp } from 'sp-pnp-js';
 import { Web } from 'sp-pnp-js';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let Eventslist = listNames.Events;
-var Designation = "";
-var Department = "";
+// var Designation = "";
+// var Department = "";
 
 export interface IEventsVmState {
   Items: any[];
@@ -159,12 +160,44 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
 
     // Event handler for calendar date selection
     const handler = this;
-    $('#calendar').on('selectDate', (event, newDate) => {
-      const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
-      handler.getCurrentUser().then(() => {
-        handler.GetEventsofSelectedDate(selectedDate);
+    // $('#calendar').on('selectDate', (event, newDate) => {
+    //   console.log("calendar event", newDate);
+
+    //   const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
+    //   handler.getCurrentUser().then(() => {
+    //     handler.GetEventsofSelectedDate(selectedDate);
+    //   });
+
+
+    // });
+    const calendarElement = document.getElementById('calendar');
+
+    if (calendarElement) {
+      calendarElement.addEventListener('selectDate', (newDate: any) => {
+        // const newDate = event.detail; // Assuming newDate is passed in event.detail
+        const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
+
+        // handler.getCurrentUser().then(() => {
+        //   handler.GetEventsofSelectedDate(selectedDate);
+        // });
+
+        // Updated code
+
+        const userDetails = new CurrentUserDetails();
+        userDetails.getCurrentUserDetails().then((data) => {
+          console.log("Current user details", data);
+          console.log("data details", data?.Department, data?.Designation);
+          handler.GetEventsofSelectedDate(selectedDate, data?.Department, data?.Designation);
+
+        }).catch((error) => {
+          console.error("Error fetching current user details:", error);
+        });
+
       });
-    });
+    } else {
+      console.warn("Calendar element not found.");
+    }
+
 
     // Get URL parameters and set state based on mode
     const url = new URL(window.location.href);
@@ -220,41 +253,41 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
   // }
 
 
-  public async getCurrentUser() {
-    var reacthandler = this;
-    try {
-      $.ajax({
-        url: `${reacthandler.props.siteurl}/_api/SP.UserProfiles.PeopleManager/GetMyProperties`,
-        type: "GET",
-        headers: { Accept: "application/json; odata=verbose;" },
-        success: function (profile) {
-          console.log(profile);
-          Designation = profile.d.Title;
-          if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-            // Find the Department property in the profile
-            const departmentProperty = profile.d.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-            console.log(departmentProperty);
-            if (departmentProperty) {
-              Department = departmentProperty.Value;
-            }
-          }
-          // reacthandler.setState({
-          // //  CurrentUserName: Name,
-          //  // CurrentuserEmail: resultData.d.Email,
-          // });
+  // public async getCurrentUser() {
+  //   var reacthandler = this;
+  //   try {
+  //     $.ajax({
+  //       url: `${reacthandler.props.siteurl}/_api/SP.UserProfiles.PeopleManager/GetMyProperties`,
+  //       type: "GET",
+  //       headers: { Accept: "application/json; odata=verbose;" },
+  //       success: function (profile) {
+  //         console.log(profile);
+  //         Designation = profile.d.Title;
+  //         if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //           // Find the Department property in the profile
+  //           const departmentProperty = profile.d.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //           console.log(departmentProperty);
+  //           if (departmentProperty) {
+  //             Department = departmentProperty.Value;
+  //           }
+  //         }
+  //         // reacthandler.setState({
+  //         // //  CurrentUserName: Name,
+  //         //  // CurrentuserEmail: resultData.d.Email,
+  //         // });
 
 
-        },
-        error: function () { },
-      });
-    }
-    catch (error) {
-      console.error("An error occurred while fetching the user profile:", error);
-    }
-  }
+  //       },
+  //       error: function () { },
+  //     });
+  //   }
+  //   catch (error) {
+  //     console.error("An error occurred while fetching the user profile:", error);
+  //   }
+  // }
 
 
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
     }
@@ -454,7 +487,7 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
   }
 
 
-  private async GetEventsofSelectedDate(Date: moment.MomentInput) {
+  private async GetEventsofSelectedDate(Date: moment.MomentInput, Department: any, Designation: any) {
     var reactHandler = this;
     var tdaydateAdd = moment(Date, "DD/MM/YYYY").subtract(1, 'd').format('YYYY-MM-DD');
     this.setState({ Items: [], Date: moment(tdaydateAdd).add(1, 'd').format('YYYY-MM-DD'), SelectedDate: "" + moment(Date, "DD/MM/YYYY").format("MMM D") + "" });
@@ -463,7 +496,7 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
         Items: items, ItemID: items[0].Id, Title: items[0].Title
       }, () => {
         // Call LandingPageAnalytics after state is updated
-        this.LandingPageAnalytics();
+        this.LandingPageAnalytics(Department, Designation);
 
       });
       if (items.length == 0) {

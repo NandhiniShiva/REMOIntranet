@@ -10,7 +10,7 @@ import ReactTooltip from "react-tooltip";
 import pnp from 'sp-pnp-js';
 import { sp } from '@pnp/sp/presets/all';
 import { IInvokable } from '@pnp/odata';
-import { listNames } from '../../Configuration';
+import { Configuration, listNames } from '../../Configuration';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 
 let Navigationslist = listNames.Navigations;
@@ -95,9 +95,16 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             });
         });
 
-        SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3`);
-        SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.8`);
-        SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/Responsive.css?v=4.18`);
+        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3`);
+        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.8`);
+        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/Responsive.css?v=4.18`);
+
+        // Updated code
+
+        SPComponentLoader.loadCss(Configuration.cssPath);
+        SPComponentLoader.loadCss(Configuration.overRidingCss);
+        SPComponentLoader.loadCss(Configuration.respnsiveCss);
+
 
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");

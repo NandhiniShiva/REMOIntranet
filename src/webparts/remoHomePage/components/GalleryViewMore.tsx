@@ -12,13 +12,14 @@ import Slider from "react-slick";
 import GlobalSideNav from "../../remoHomePage/components/Header/GlobalSideNav";
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { sp } from "@pnp/sp/presets/all";
-import { PictureLib } from '../../remoHomePage/Configuration';
+import { listNames } from '../Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
-let PictureGalleryLib = PictureLib.PictureGallery;
-var Designation: any;
-var Department: any;
+let PictureGalleryLib = listNames.PictureGallery;
+// var Designation: any;
+// var Department: any;
 export interface IGalleryVmState {
   Galleryitems: any[];
   VideoItemsss: any[];
@@ -85,12 +86,31 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       }
     }, 2000);
 
-    this.getCurrentUser().then(() => {
-      this.GetGalleryFilesFolder();
-      // this.GetGalleryFilesFolderVideos();
-    }).then(() => {
-      this.LandingPageAnalytics()
-    })
+    // this.getCurrentUser().then(() => {
+    //   this.GetGalleryFilesFolder();
+    //   // this.GetGalleryFilesFolderVideos();
+    // }).then(() => {
+    //   this.LandingPageAnalytics()
+    // })
+
+    // Updated code
+
+    const userDetails = new CurrentUserDetails();
+
+    userDetails.getCurrentUserDetails()
+      .then((data) => {
+        console.log("Current user details", data);
+        console.log("Data details", data?.Department, data?.Designation);
+
+        // Call functions with the data once it is available
+        this.GetGalleryFilesFolder();
+        this.LandingPageAnalytics(data?.Department, data?.Designation);
+      })
+      .catch((error) => {
+        console.error("Error fetching current user details:", error);
+      });
+
+
 
     this.setState({
       nav1: this.slider1,
@@ -98,26 +118,26 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
     });
   }
 
-  public async getCurrentUser() {
-    try {
-      const profile = await pnp.sp.profiles.myProperties.get();
-      Designation = profile.Title;
+  // public async getCurrentUser() {
+  //   try {
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     Designation = profile.Title;
 
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-      }
-    }
-    catch (error) {
-      console.error("An error occurred while fetching the user profile:", error);
-    }
-  }
-  public async LandingPageAnalytics() {
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       }
+  //     }
+  //   }
+  //   catch (error) {
+  //     console.error("An error occurred while fetching the user profile:", error);
+  //   }
+  // }
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";

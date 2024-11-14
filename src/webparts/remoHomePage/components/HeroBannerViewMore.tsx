@@ -88,6 +88,8 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
     this.getCurrentUser().then(() => {
       this.GetBanner();
     });
+
+
   }
 
   // Helper function to hide an element by its ID

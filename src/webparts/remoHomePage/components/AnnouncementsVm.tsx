@@ -10,9 +10,10 @@ import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
 import ReactPaginate from 'react-paginate';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
 const Announcementlist = listNames.Announcement;
 const Analytics = listNames.Analytics;
@@ -56,9 +57,28 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
     //   $('#CommentsWrapper').attr('style', 'display: none !important');
     // }, 2000);
 
-    await this.getCurrentUser();
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Anoucement vm Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+      this.setState({
+        currentUser: this.props.userid,
+        UserEmail: data?.userEmail,
+        Department: data?.Department,
+        Designation: data?.Designation
+      });
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
+    // await this.getCurrentUser();
     this.GetAllAnnouncements();
     this.LandingPageAnalytics();
+
+    const userdetails = new CurrentUserDetails();
+    let currentUser = userdetails.getCurrentUserDetails();
+
+    console.log("Current user details", currentUser);
+
   }
 
   private hideElements() {
@@ -68,27 +88,27 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
     });
   }
 
-  private async getCurrentUser() {
-    try {
-      const profile = await pnp.sp.profiles.myProperties.get();
-      console.log('User Profile:', profile); // Debug log
+  // private async getCurrentUser() {
+  //   try {
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     console.log('User Profile:', profile); // Debug log
 
-      const userEmail = profile.Email || "No Email";
-      const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-      const department = departmentProperty && departmentProperty.Value !== "" ? departmentProperty.Value : "NA";
-      const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Title');
-      const designation = designationProperty ? designationProperty.Value : "NA";
+  //     const userEmail = profile.Email || "No Email";
+  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //     const department = departmentProperty && departmentProperty.Value !== "" ? departmentProperty.Value : "NA";
+  //     const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Title');
+  //     const designation = designationProperty ? designationProperty.Value : "NA";
 
-      this.setState({
-        currentUser: this.props.userid,
-        UserEmail: userEmail,
-        Department: department,
-        Designation: designation
-      });
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-    }
-  }
+  //     this.setState({
+  //       currentUser: this.props.userid,
+  //       UserEmail: userEmail,
+  //       Department: department,
+  //       Designation: designation
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching user profile:", error);
+  //   }
+  // }
 
   private async GetAllAnnouncements() {
     try {
@@ -179,8 +199,8 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
 
     return (
       <div className={styles.remoHomePage}> <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div>
+        <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
+      </div>
         <section>
           <div className="relative container">
             <div className="section-rigth">
@@ -236,7 +256,7 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
                 </div>
 
               </div>
-              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''}  />
+              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
 
             </div>
           </div>

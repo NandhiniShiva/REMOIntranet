@@ -1,15 +1,15 @@
 export const listNames: { [key: string]: string } = {
-
-    VersionMaster: "Version Master",
-    Logo: "Logo Master",
-    Navigations: "Navigations",
-    DepartmentsMaster: "DepartmentsMaster",
-    QuickLinks: "Quick Links",
-    ViewsCountMaster: "ViewsCountMaster",
-    Announcement: "Announcement",
+    PictureGallery: "Picture GalleryKas",
+    VersionMasterKas: "Version Master",
+    LogoKas: "Logo Master",
+    NavigationsKas: "Navigations",
+    DepartmentsMasterKas: "DepartmentsMaster",
+    QuickLinksKas: "Quick Links",
+    ViewsCountMasterKas: "ViewsCountMaster",
+    AnnouncementKas: "AnnouncementG",
     LikesCountMaster: "LikesCountMaster",
     CommentsCountMaster: "CommentsCountMaster",
-    Birthday: "Birthday",
+    Birthday: "Birthdayk",
     CEO_Message: "CEO Message",
     Content_Editor_Master_Category: "Content Editor Master Category",
     Content_Editor_Master: "Content Editor Master",
@@ -28,74 +28,19 @@ export const listNames: { [key: string]: string } = {
     NotificationList: "NotificationTransactionMaster"
 
 };
-export const PictureLib: { [key: string]: string } = {
-    PictureGallery: "Picture Gallery",
 
+export const Configuration = {
+    cssPath: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/style.css?v=1.8",
+    overRidingCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3",
+    respnsiveCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/responsive.css?v=4.18"
 }
+// export const PictureLib: { [key: string]: string } = {
+//     PictureGallery: "Picture Gallery",
+
+// }
 export const WEB: { [key: string]: string } = {
     NewWeb: "https://remodigital.sharepoint.com/sites/DemoIntranet1/",
     // NewWeb: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/"
 
 }
-// export const totalList: { [key: string]: { name: string, columns?: Array<{ columnName: string, type: string }> } } = {
-//     VersionMaster: {
-//         name: "Version Master",
-//         columns: [
-//             { columnName: "Image", type: "addImageField" },
-//             { columnName: "IsActive", type: "addBoolean" }
-//         ]
-//     },
-//     LogoMaster: {
-//         name: "Logo Masters",
-//         columns: [
-//             { columnName: "LogoImage", type: "addImageField" },
-//             { columnName: "IsActive", type: "addBoolean" }
-//         ]
-//     },
-// }
 
-export const totalList = [
-    {
-        name: "Version Master Test",
-        columns: [
-            { columnName: "Image", type: "addImageField" },
-            { columnName: "IsActive", type: "addBoolean" }
-        ]
-    },
-    {
-        name: "Logo Master Test",
-        columns: [
-            { columnName: "LogoImage", type: "addImageField" },
-            { columnName: "IsActive", type: "addBoolean" }
-        ]
-    },
-    {
-        name: "Navigations Test",
-        columns: [
-            { columnName: "NavLink", type: "addTextField" },
-            { columnName: "IsActive", type: "addBoolean" }
-        ]
-    },
-    {
-        name: "DepartmentsMaster Test",
-        columns: [
-            { columnName: "DepartmentName", type: "addTextField" },
-            { columnName: "IsActive", type: "addBoolean" }
-        ]
-    },
-    {
-        name: "Quick Links",
-        columns: [
-            { columnName: "LinkTitle", type: "addTextField" },
-            { columnName: "LinkUrl", type: "addTextField" }
-        ]
-    },
-    {
-        name: "ViewsCountMaster",
-        columns: [
-            { columnName: "ViewsCount", type: "addNumberField" },
-            { columnName: "Date", type: "addDateField" }
-        ]
-    },
-    // Add other lists here...
-];

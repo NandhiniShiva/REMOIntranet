@@ -8,7 +8,8 @@ import { listNames } from '../../remoHomePage/Configuration';
 import Swal from "sweetalert2";
 import { Web } from '@pnp/sp/webs';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 // import * as $ from "jquery"
 
 const JobsMasterlist = listNames.JobsMaster;
@@ -26,8 +27,8 @@ let JobTitle: string;
 let employmentType: any;
 let experienceLevel: any;
 let NewWeb: any;
-var Designation: any;
-var Department: any;
+// var Designation: any;
+// var Department: any;
 var UserID: any;
 var ItemID: any;
 
@@ -72,13 +73,30 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
     const url = new URL(window.location.href);
     ItemID = url.searchParams.get("ItemID");
 
-    await this.getCurrentUser().then(async () => {
+    // await this.getCurrentUser().then(async () => {
+    //   await this.GetJobs(ItemID);
+    // }).then(async () => {
+    //   await this.LandingPageAnalytics();
+    // }).then(async () => {
+    //   await this.isuserApplied()
+    // })
+
+    const userDetails = new CurrentUserDetails();
+
+    try {
+      const data = await userDetails.getCurrentUserDetails();
+      console.log("Current user details", data);
+
       await this.GetJobs(ItemID);
-    }).then(async () => {
-      await this.LandingPageAnalytics();
-    }).then(async () => {
-      await this.isuserApplied()
-    })
+      await this.LandingPageAnalytics(data?.Department, data?.Designation);
+      await this.isuserApplied();
+    } catch (error) {
+      console.error("Error fetching current user details or processing data:", error);
+    }
+
+
+
+
   }
 
   public async isuserApplied() {
@@ -123,26 +141,26 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
       console.error("Error getting job items:", error);
     }
   }
-  public async getCurrentUser() {
-    try {
-      const profile = await pnp.sp.profiles.myProperties.get();
-      Designation = profile.Title;
-      const currentUser = await sp.web.currentUser.get();
-      UserID = currentUser.Id;
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching the user profile:", error);
-    }
-  }
-  public async LandingPageAnalytics() {
+  // public async getCurrentUser() {
+  //   try {
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     Designation = profile.Title;
+  //     const currentUser = await sp.web.currentUser.get();
+  //     UserID = currentUser.Id;
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the user profile:", error);
+  //   }
+  // }
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";

@@ -17,7 +17,8 @@ export interface INavigationsState {
   showdataqlink: any[];
   IsAdminForContentEditor: boolean;
   MyLinks: any[];
-  isDataAvailable: boolean;
+  isDataAvailableNav: boolean;
+  isDataAvailableLink: boolean
 }
 
 let BreadCrumb: { Title: any; ID: any; }[] = [];
@@ -43,7 +44,9 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       showdataqlink: [],
       IsAdminForContentEditor: false,
       MyLinks: [],
-      isDataAvailable: false
+      isDataAvailableNav: false,
+      isDataAvailableLink: false
+
     };
     NewWeb = Web("" + this.props.siteurl + "");
   }
@@ -137,7 +140,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       if (items.length != 0) {
         this.setState({
           MainNavItems: items,
-          isDataAvailable: true
+          isDataAvailableNav: true
         });
 
       }
@@ -211,8 +214,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         .top(5)
         .get();
 
-      this.setState({ MyLinks: items });
-
+      if (items.length != 0) {
+        this.setState({
+          MyLinks: items,
+          isDataAvailableNav: true
+        });
+      }
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
       navLinks.forEach((link) => {
@@ -852,10 +859,14 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  // public addData() {
-  //   const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${}`; // Replace with your list URL
-  //   window.open(listUrl, "_blank");
-  // }
+  public addData() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
+  public addDataInLink() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
+  }
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
@@ -1079,32 +1090,43 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
           <div className="tab-content">
             <div className="nav-link active tab-1-data" id="contacts">
-              <div className="main-mavigation m-b-20">
-                <nav className="sec" id="root-nav-links">
-                  <div className="breadcrum-block">
-                    <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>All Menu<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                    {BreadCrumb.map((item, key) => (
-                      <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>{item.Title}<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                    ))}
-                  </div>
-                  <ul className="clearfix">
-                    {MainNavigations}
-                  </ul>
-                </nav>
+              {this.state.isDataAvailableNav == true ?
+                <div className="main-mavigation m-b-20">
+                  <nav className="sec" id="root-nav-links">
+                    <div className="breadcrum-block">
+                      <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>All Menu<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
+                      {BreadCrumb.map((item, key) => (
+                        <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>{item.Title}<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
+                      ))}
+                    </div>
+                    <ul className="clearfix">
+                      {MainNavigations}
+                    </ul>
+                  </nav>
 
-              </div>
+                </div>
+                :
+                <div>
+                  <button onClick={() => this.addData()}>Add DataNavigation</button>
+                </div>
+              }
             </div>
+            {this.state.isDataAvailableLink == true ?
+              <div className="nav-item tab-2-data" id="meetingroom">
+                <div className="main-mavigation quick m-b-20">
+                  <nav className="sec" id="root-nav-links">
+                    <ul className="clearfix">
+                      {MyLinks}
+                    </ul>
+                  </nav>
 
-            <div className="nav-item tab-2-data" id="meetingroom">
-              <div className="main-mavigation quick m-b-20">
-                <nav className="sec" id="root-nav-links">
-                  <ul className="clearfix">
-                    {MyLinks}
-                  </ul>
-                </nav>
-
+                </div>
               </div>
-            </div>
+              :
+              <div>
+                <button onClick={() => this.addDataInLink()}>Add DataInQuickLink</button>
+              </div>
+            }
           </div>
         </>
         {/* // :

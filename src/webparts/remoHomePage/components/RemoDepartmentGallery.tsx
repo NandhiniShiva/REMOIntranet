@@ -7,9 +7,9 @@ import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import { IWeb, Web } from "@pnp/sp/webs";
 import { IInvokable } from '@pnp/odata';
-import { PictureLib } from '../../remoHomePage/Configuration';
+import { listNames } from '../../remoHomePage/Configuration';
 
-let PictureGalleryLib = PictureLib.PictureGallery;
+let PictureGalleryLib = listNames.PictureGallery;
 
 export interface IDepartmentGalleryState {
   Items: any[];

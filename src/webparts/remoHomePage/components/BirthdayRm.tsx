@@ -8,10 +8,12 @@ import * as moment from 'moment';
 // import { Web } from "@pnp/sp/presets/all"
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import { sp } from '@pnp/sp';
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
+
 import Footer from '../../remoHomePage/components/Footer/Footer';
 var User = "";
 var UserEmail = "";
@@ -23,11 +25,14 @@ var views: number;
 var CurrentDate = new Date()  //moment().format("DD/MM/YYYY");
 var ItemID: string;
 var bdaydate: any;
-var Department: any;
-var Designation: any;
+// var Department: any;
+// var Designation: any;
 
 let ViewsCountMasterlist = listNames.ViewsCountMaster;
 let Birthdaylist = listNames.Birthday;
+// let LikesCountMaBirthdayliststerlist = listNames.LikesCountMaster;
+// let CommentsCountMasterlist = listNames.CommentsCountMaster;
+
 let LikesCountMasterlist = listNames.LikesCountMaster;
 let CommentsCountMasterlist = listNames.CommentsCountMaster;
 
@@ -81,8 +86,19 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
     var reactHandler = this;
     const url: any = new URL(window.location.href);
     ItemID = url.searchParams.get("ItemID");
-    reactHandler.getCurrentUser().then(() => {
-      reactHandler.GetBirthday(ItemID);
+
+    // reactHandler.getCurrentUser().then(() => {
+    //   reactHandler.GetBirthday(ItemID);
+    // });
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+
+      // this.LandingPageAnalytics(data?.Department, data?.Designation);
+      reactHandler.GetBirthday(ItemID, data?.Department, data?.Designation);
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
     });
   }
 
@@ -108,44 +124,47 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
   //     }
   //   }
   // }
-  public async getCurrentUser() {
-    try {
-      var reacthandler = this;
-      User = reacthandler.props.userid;
 
-      // Fetch the profile data
-      const profile = await pnp.sp.profiles.myProperties.get();
+  // public async getCurrentUser() {
+  //   try {
+  //     // var reacthandler = this;
+  //     // User = reacthandler.props.userid;
 
-      // Check if profile object and email exist
-      if (!profile || !profile.Email || !profile.Title) {
-        throw new Error("Profile information is incomplete.");
-      }
+  //     // Fetch the profile data
+  //     const profile = await pnp.sp.profiles.myProperties.get();
 
-      // Assign user email and designation
-      UserEmail = profile.Email;
-      Designation = profile.Title;
+  //     console.log("profile birthday", profile);
 
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
+  //     // Check if profile object and email exist
+  //     if (!profile || !profile.Email || !profile.Title) {
+  //       throw new Error("Profile information is incomplete.");
+  //     }
 
-        // Check if departmentProperty exists
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        } else {
-          console.warn("Department property not found in the user profile.");
-        }
-      } else {
-        console.warn("UserProfileProperties collection is empty or undefined.");
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching the current user:", error);
-    }
-  }
+  //     // Assign user email and designation
+  //     // UserEmail = profile.Email;
+  //     // Designation = profile.Title;
 
-  public async LandingPageAnalytics() {
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+
+  //       // Check if departmentProperty exists
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       } else {
+  //         console.warn("Department property not found in the user profile.");
+  //       }
+  //     } else {
+  //       console.warn("UserProfileProperties collection is empty or undefined.");
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the current user:", error);
+  //   }
+  // }
+
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";
@@ -174,7 +193,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
     }
   }
   //brithday code <
-  public async GetBirthday(ItemID: string) {
+  public async GetBirthday(ItemID: string, Department: any, Designation: any) {
     var reactHandler = this;
     try {
       const items = await sp.web.lists.getByTitle(Birthdaylist).items
@@ -205,7 +224,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         Items: items,
         Title: firstItem.Title
       }, () => {
-        reactHandler.LandingPageAnalytics();  // Call after state is updated
+        reactHandler.LandingPageAnalytics(Department, Designation);  // Call after state is updated
       });
 
       // Handle likes and comments

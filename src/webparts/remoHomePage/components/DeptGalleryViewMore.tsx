@@ -12,11 +12,11 @@ import Slider from "react-slick";
 import GlobalSideNav from "../../remoHomePage/components/Header/GlobalSideNav";
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { Web, sp } from "@pnp/sp/presets/all";
-import { PictureLib, WEB, listNames } from '../../remoHomePage/Configuration';
+import { WEB, listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import pnp from 'sp-pnp-js';
 
-let PictureGalleryLib = PictureLib.PictureGallery;
+let PictureGalleryLib = listNames.PictureGallery;
 const Analytics = listNames.Analytics;
 
 

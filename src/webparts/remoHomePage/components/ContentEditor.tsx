@@ -11,6 +11,7 @@ import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
 const Content_Editor_Master_Categorylist = listNames.Content_Editor_Master_Category;
 const Content_Editor_Masterlist = listNames.Content_Editor_Master;
@@ -77,9 +78,22 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
       });
     }, 1500);
 
-    await this.getCurrentUser();
+    // await this.getCurrentUser();
     await this.CheckPermission();
     this.LandingPageAnalytics();
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Anoucement vm Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+      this.setState({
+        currentUser: this.props.UserId,
+        UserEmail: data?.userEmail,
+        Department: data?.Department,
+        Designation: data?.Designation
+      });
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
   }
 
   public async getCurrentUser() {

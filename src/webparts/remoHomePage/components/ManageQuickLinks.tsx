@@ -11,10 +11,11 @@ import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let QuickLinkslist = listNames.QuickLinks;
 let UsersQuickLinkslist = listNames.UsersQuickLinks;
-let Designation: string, Department: string;
+// let Designation: string, Department: string;
 
 export interface IQuickLinkManagerState {
   items: any[];
@@ -73,12 +74,28 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
         commentsWrapper.style.setProperty('display', 'none', 'important');
       }
     }, 1000);
-    this.getCurrentUser().then(() => {
+    // this.getCurrentUser()
+    //   .then(() => {
+    //     this.getcurrentusersQuickLinksForEdit();
+    //     this.GetAllQuickLinks();
+    //     this.LandingPageAnalytics();
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error in loading user data or analytics:", error);
+    //   });
+
+    // updated code
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
       this.getcurrentusersQuickLinksForEdit();
       this.GetAllQuickLinks();
-    }).then(() => {
-      this.LandingPageAnalytics();
-    })
+      this.LandingPageAnalytics(data?.Department, data?.Designation);
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
+
 
 
 
@@ -237,25 +254,25 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
     }
   }
 
-  public async getCurrentUser() {
-    try {
-      const profile = await sp.profiles.myProperties.get();
-      Designation = profile.Title;
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching the user profile:", error);
-    }
-  }
+  // public async getCurrentUser() {
+  //   try {
+  //     const profile = await sp.profiles.myProperties.get();
+  //     Designation = profile.Title;
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the user profile:", error);
+  //   }
+  // }
 
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";

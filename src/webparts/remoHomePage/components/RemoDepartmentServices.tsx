@@ -14,6 +14,7 @@ let Serviceslist = listNames.Services;
 export interface IDepartmentServicesState {
   Items: any[];
   ServiceDescription: string;
+  isDataAvailable: boolean
 }
 var NewWeb: IWeb & IInvokable<any>
 export default class DepartmentServices extends React.Component<IRemoDeptLandingPageProps, IDepartmentServicesState, {}> {
@@ -21,7 +22,8 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
     super(props);
     this.state = {
       Items: [],
-      ServiceDescription: ""
+      ServiceDescription: "",
+      isDataAvailable: false
     };
     NewWeb = Web("" + this.props.siteurl + "")
   }
@@ -95,6 +97,7 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
         this.setState({
           Items: items,
           ServiceDescription: items[0].Description,
+          isDataAvailable: true
         });
       }
     } catch (error) {
@@ -111,6 +114,10 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
         ServiceDescription: items[0].Description
       });
     });
+  }
+  public addData() {
+    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Serviceslist}`; // Replace with your list URL
+    window.open(listUrl, "_blank");
   }
 
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
@@ -154,30 +161,36 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
 
       <div className="relative">
         <div className="section-rigth section_hr">
-          <div className="depat-key-people m-b-20">
-            <div className="sec">
-              <div className="heading">
-                Our Services
-              </div>
-              <div className="section-part clearfix" id="if-service-present">
-
-                <div className="ourservices-left">
-                  <ul id="service-main">
-                    {DeptServices}
-                  </ul>
+          {this.state.isDataAvailable == true ?
+            <div className="depat-key-people m-b-20">
+              <div className="sec">
+                <div className="heading">
+                  Our Services
                 </div>
-                <div className="ourservices-right">
-                  <p> <Markup content={this.state.ServiceDescription} /> </p>
-                </div>
+                <div className="section-part clearfix" id="if-service-present">
 
-              </div>
-              <div className="row" style={{ display: "none" }} id="if-no-service-present">
-                <div className="col-md-12 m-b-0 clearfix">
-                  <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-content"></img>
+                  <div className="ourservices-left">
+                    <ul id="service-main">
+                      {DeptServices}
+                    </ul>
+                  </div>
+                  <div className="ourservices-right">
+                    <p> <Markup content={this.state.ServiceDescription} /> </p>
+                  </div>
+
+                </div>
+                <div className="row" style={{ display: "none" }} id="if-no-service-present">
+                  <div className="col-md-12 m-b-0 clearfix">
+                    <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-content"></img>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+            :
+            <div>
+              <button onClick={() => this.addData()}>Add Data Services</button>
+            </div>
+          }
         </div>
       </div>
 

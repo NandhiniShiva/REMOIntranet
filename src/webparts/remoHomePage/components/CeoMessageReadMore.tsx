@@ -12,10 +12,12 @@ import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer'
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';```
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
+
 let CEO_Messagelist = listNames.CEO_Message;
-var Designation: any;
-var Department: any;
+// var Designation: any;
+// var Department: any;
 export interface ICeoMessageRmState {
   Items: any[];
   ItemID: any;
@@ -72,33 +74,43 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     var reactHandler = this;
     const url: any = new URL(window.location.href);
     const ItemID = url.searchParams.get("ItemID");
-    reactHandler.getCurrentUser().then(() => {
-      reactHandler.GetCeoMessage(ItemID);
-    })
+    // reactHandler.getCurrentUser().then(() => {
+    //   reactHandler.GetCeoMessage(ItemID);
+    // })
 
+    // updated code
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+      reactHandler.GetCeoMessage(ItemID, data?.Department, data?.Designation);
+
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
+    });
   }
-  public async getCurrentUser() {
-    try {
-      const profile = await pnp.sp.profiles.myProperties.get();
-      if (!profile || !profile.Title) {
-        throw new Error("Profile data is incomplete or missing.");
-      }
-      Designation = profile.Title;
-      if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        } else {
-          console.warn("Department property not found in user profile.");
-        }
-      } else {
-        console.warn("UserProfileProperties is empty or undefined.");
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching the user profile:", error);
-    }
-  }
+  // public async getCurrentUser() {
+  //   try {
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     if (!profile || !profile.Title) {
+  //       throw new Error("Profile data is incomplete or missing.");
+  //     }
+  //     Designation = profile.Title;
+  //     if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       } else {
+  //         console.warn("Department property not found in user profile.");
+  //       }
+  //     } else {
+  //       console.warn("UserProfileProperties is empty or undefined.");
+  //     }
+  //   } catch (error) {
+  //     console.error("An error occurred while fetching the user profile:", error);
+  //   }
+  // }
 
 
   // public async getCurrentUser() {
@@ -115,7 +127,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   //     }
   //   }
   // }
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";
@@ -130,7 +142,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     }
   }
 
-  public async GetCeoMessage(ItemID: any) {
+  public async GetCeoMessage(ItemID: any, Department: any, Designation: any) {
     try {
       await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "Name", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
         // console.log(items);
@@ -141,7 +153,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
           Title: items[0].Title
         }, () => {
           // Call LandingPageAnalytics after state is updated
-          this.LandingPageAnalytics();
+          this.LandingPageAnalytics(Department, Designation);
         });
       })
     }

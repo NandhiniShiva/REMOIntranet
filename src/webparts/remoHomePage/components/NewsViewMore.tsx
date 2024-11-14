@@ -13,7 +13,8 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-import pnp from 'sp-pnp-js';
+// import pnp from 'sp-pnp-js';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let Newslist = listNames.News;
 const Analytics = listNames.Analytics;
@@ -35,8 +36,8 @@ export interface INewsVmState {
 let NewsAvailableDepts: { ID: any; Title: any; URL: any; }[] = [];
 let DeptNames: any[] = [];
 let DeptNamesExitsUnique: any[] = [];
-var Designation = "";
-var Department = "";
+// var Designation = "";
+// var Department = "";
 var User = "";
 var UserEmail = "";
 
@@ -116,16 +117,30 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       });
     }, 2000);
 
-    this.getCurrentUser().then(() => {
-      this.GetAllNews();
+    // this.getCurrentUser().then(() => {
+    //   this.GetAllNews();
+    //   this.GetAllTopNews();
+    //   this.GetAllNewsAvailableDepartments();
+    //   this.GetWeekOldNews();
+    // });
+
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+      this.GetAllNews(data?.Department, data?.Designation);
       this.GetAllTopNews();
       this.GetAllNewsAvailableDepartments();
       this.GetWeekOldNews();
+      this.LandingPageAnalytics(data?.Department, data?.Designation);
+    }).catch((error) => {
+      console.error("Error fetching current user details:", error);
     });
+
   }
 
 
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
     }
@@ -151,32 +166,32 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     }
   }
 
-  public async getCurrentUser() {
-    var reacthandler = this;
-    User = reacthandler.props.userid;
-    try {
+  // public async getCurrentUser() {
+  //   var reacthandler = this;
+  //   User = reacthandler.props.userid;
+  //   try {
 
 
-      const profile = await pnp.sp.profiles.myProperties.get();
-      UserEmail = profile.Email;
-      Designation = profile.Title;
+  //     const profile = await pnp.sp.profiles.myProperties.get();
+  //     UserEmail = profile.Email;
+  //     Designation = profile.Title;
 
-      // Check if the UserProfileProperties collection exists and has the Department property
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        // Find the Department property in the profile
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-      }
-    } catch (error) {
-      console.log("Error in getCurrentUser", error);
+  //     // Check if the UserProfileProperties collection exists and has the Department property
+  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+  //       // Find the Department property in the profile
+  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+  //       console.log(departmentProperty);
+  //       if (departmentProperty) {
+  //         Department = departmentProperty.Value;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log("Error in getCurrentUser", error);
 
-    }
-  }
+  //   }
+  // }
 
-  private async GetAllNews() {
+  private async GetAllNews(Department: any, Designation: any) {
 
     var reactHandler = this;
     try {
@@ -188,7 +203,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
           Items: items,
         }, () => {
           // Call LandingPageAnalytics after state is updated
-          this.LandingPageAnalytics();
+          this.LandingPageAnalytics(Department, Designation);
         });
         let ItemID = items[0].Id;
         reactHandler.GetAllRecentNews(ItemID);

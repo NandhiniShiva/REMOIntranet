@@ -2,12 +2,17 @@ import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IOrganizationChartProps } from './IRemoHomePageProps';
 import { SPComponentLoader } from '@microsoft/sp-loader';
+import { Configuration } from '../Configuration';
 
 export default class OrganizationChart extends React.Component<IOrganizationChartProps> {
   public componentDidMount() {
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/Remo%20Portal%20Assets/css/OrgChartStyle.css`);
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.2`);
-    SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/responsive.css`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/Remo%20Portal%20Assets/css/OrgChartStyle.css`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.2`);
+    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/responsive.css`);
+
+    SPComponentLoader.loadCss(Configuration.cssPath);
+    SPComponentLoader.loadCss(Configuration.overRidingCss);
+    SPComponentLoader.loadCss(Configuration.respnsiveCss);
     this.getGraphDataFromList();
     this.saveData();
   }
@@ -68,7 +73,7 @@ export default class OrganizationChart extends React.Component<IOrganizationChar
       }
     });
   }
-  
+
 
   private saveData() {
     document.addEventListener('click', (event) => {

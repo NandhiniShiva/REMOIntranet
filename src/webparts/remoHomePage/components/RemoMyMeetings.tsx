@@ -32,6 +32,7 @@ export interface IMyDayRoutineState {
     IsCuurentMeetingPresent: string;
 
     FirstLoop: boolean;
+    isTodayRoutinesAvailable: boolean;
 }
 
 
@@ -60,6 +61,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
             IsCurrentFuture: "",
             IsCuurentMeetingPresent: "",
             FirstLoop: true,
+            isTodayRoutinesAvailable: false
         };
 
     }
@@ -216,7 +218,13 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
         try {
             const uniqueCountItem: string[] = [];
             const result = await this.serviceProvider.getMyTodaysRoutine();
-            this.setState({ myroutineDatas: result });
+            if (result.length != 0) {
+                this.setState({
+                    myroutineDatas: result,
+                    isTodayRoutinesAvailable: true
+                });
+
+            }
 
             // Get current time in the same format as the start time
             const currentDate = moment().format('DD-MM-YYYY');

@@ -15,6 +15,7 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { sp } from "@pnp/sp/presets/all";
 import pnp from 'sp-pnp-js';
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 var Designation: any;
 var Department: any;
 export interface IRemoGalleryGridViewState {
@@ -262,11 +263,23 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       MyFolderName: folderName
     });
 
-    this.getCurrentUser()
-      .then(() => this.GetSubFolder(folderName, Type, ""))
-      .then(() => this.LandingPageAnalytics());
+    // this.getCurrentUser()
+
+    //   .then(() => this.GetSubFolder(folderName, Type, ""))
+    //   .then(() => this.LandingPageAnalytics());
 
     GlobalUrl = folderName;
+
+    const userDetails = new CurrentUserDetails();
+    userDetails.getCurrentUserDetails().then((data) => {
+      console.log("Current user details", data);
+      console.log("data details", data?.Department, data?.Designation);
+
+    }).then(() => this.GetSubFolder(folderName, Type, ""))
+      .then(() => this.LandingPageAnalytics(Department, Designation))
+      .catch((error) => {
+        console.error("Error fetching current user details:", error);
+      });
 
     this.updateActiveClass(Type);
     this.attachClickListener();
@@ -366,7 +379,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       console.error("An error occurred while fetching the user profile:", error);
     }
   }
-  public async LandingPageAnalytics() {
+  public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
         Department = "NA";
