@@ -33,7 +33,7 @@ let spWeb: any;
 let fetchList: any;
 let IsListCreate: any;
 // const Analytics = listNames.Analytics;
-const docLibName = listNames.PictureGalleryKas;
+const docLibName = listNames.PictureGallery;
 var User: any;
 var UserEmail: any;
 var Designation: any;
@@ -466,33 +466,33 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
 
-  public async createDocumentLibrary(): Promise<void> {
-    // alert("hi");
+  public async createDocumentLibrary(docLibName: string): Promise<void> {
+    if (!docLibName) {
+      console.error("Library name is not provided.");
+      return;
+    }
+
     try {
-      if (!docLibName) {
-        throw new Error("Library name is not provided.");
+      // Check if the library already exists
+      let existingLibrary;
+      try {
+        existingLibrary = await sp.web.lists.getByTitle(docLibName).get();
+      } catch (error) {
+        if (error.status !== 404) {
+          throw new Error(`Error checking existing library: ${error.message}`);
+        }
       }
 
-      // Check if the library already exists
-      const existingLibrary = await sp.web.lists.getByTitle(docLibName).get().catch((error) => {
-        console.log(`Library not found: ${error}`);
-        return null;
-      });
-
       if (existingLibrary) {
-        // alert("hi2");
-        console.log(`Document Library '${docLibName}' already exists`);
+        console.log(`Document Library '${docLibName}' already exists.`);
         return;
       }
 
       // Create the document library
       await sp.web.lists.add(docLibName, "", 101, false, {
-        OnQuickLaunch: true // Optional: Adds to Quick Launch
+        OnQuickLaunch: true // Adds to Quick Launch
       });
-      // console.log(`Document Library '${libraryName}' created successfully`);
-
-      // Add columns to the library if needed
-      // await this.createLibraryColumns(libraryName);
+      console.log(`Document Library '${docLibName}' created successfully.`);
     } catch (error) {
       console.error(`Error creating document library '${docLibName}': `, error);
     }
@@ -545,7 +545,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         showDropdown: false,
       });
       await this.createSharePointLists();
-      // await this.createDocumentLibrary();
+      await this.createDocumentLibrary(docLibName);
       // await this.CreatePictureLibrary();
     }
     this.setState({
