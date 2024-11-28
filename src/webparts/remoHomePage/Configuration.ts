@@ -1,11 +1,12 @@
 export const listNames: { [key: string]: string } = {
-    PictureGallery: "Picture GalleryKas",
-    VersionMasterKas: "Version Master",
+    PictureGallery: "Picture GalleryTest",
+    DocumentLibrary: "Test Doc",
+    VersionMaster: "Version Master",
     LogoKas: "Logo Master",
-    NavigationsKas: "Navigations",
-    DepartmentsMasterKas: "DepartmentsMaster",
-    QuickLinksKas: "Quick Links",
-    ViewsCountMasterKas: "ViewsCountMaster",
+    Navigations: "Navigations",
+    DepartmentsMaster: "DepartmentsMaster",
+    QuickLinks: "Quick Links",
+    ViewsCountMaster: "ViewsCountMaster",
     AnnouncementKas: "AnnouncementG",
     LikesCountMaster: "LikesCountMaster",
     CommentsCountMaster: "CommentsCountMaster",
@@ -30,16 +31,16 @@ export const listNames: { [key: string]: string } = {
 };
 
 export const Configuration = {
-    cssPath: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/style.css?v=1.8",
-    overRidingCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3",
-    respnsiveCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/responsive.css?v=4.18"
+    cssPath: "erhttps://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css?v=1.8",
+    overRidingCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css/SP-NativeStyle-Overriding.css?v=3.3",
+    respnsiveCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.cssresponsive.css?v=4.18"
 }
 // export const PictureLib: { [key: string]: string } = {
 //     PictureGallery: "Picture Gallery",
 
 // }
 export const WEB: { [key: string]: string } = {
-    NewWeb: "https://remodigital.sharepoint.com/sites/DemoIntranet1/",
+    NewWeb: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/",
     // NewWeb: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/"
 
 }

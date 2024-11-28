@@ -14,6 +14,13 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { listNames } from '../../remoHomePage/Configuration';
 // import * as $ from 'jquery';
 import Footer from '../../remoHomePage/components/Footer/Footer'
+import { PageAnalytics } from './ServiceProvider/LandingPageAnalytics';
+import { ViewsCount } from './ServiceProvider/viewsCount';
+import { LikesCount } from './ServiceProvider/LikesCount';
+import { CommentsCount } from './ServiceProvider/CommentsCount';
+import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
+import { AddViews } from './ServiceProvider/AddViews';
+import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
 // import pnp from 'sp-pnp-js';
 // import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
@@ -28,7 +35,7 @@ let ItemID: any;
 var Designation = "";
 var Department = "";
 
-const ViewsCountMasterlist = listNames.ViewsCountMaster;
+// const ViewsCountMasterlist = listNames.ViewsCountMaster;
 const Announcementlist = listNames.Announcement;
 const LikesCountMasterlist = listNames.LikesCountMaster;
 const CommentsCountMasterlist = listNames.CommentsCountMaster;
@@ -71,7 +78,10 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     if (ItemID) {
       // await this.getCurrentUser();
       await this.getAnnouncementsDetails(ItemID);
-      await this.LandingPageAnalytics();
+      // await this.LandingPageAnalytics();
+
+      const pageAnalytics = new PageAnalytics("Announcements Read-More", User, Department, Designation, this.state.Title, ItemID, UserEmail);
+      pageAnalytics.LandingPageAnalytics();
 
       // const userdetails = new CurrentUserDetails();
       // let currentUser = userdetails.getCurrentUserDetails()
@@ -153,21 +163,21 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
   //   }
   // }
 
-  private async addViews() {
-    await sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
-      EmployeeNameId: User,
-      ViewedOn: CurrentDate,
-      EmployeeEmail: UserEmail,
-      ContentPage: "Announcements",
-      Title: this.state.Title,
-      ContentID: ID,
-    });
-  }
+  // private async addViews() {
+  //   await sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
+  //     EmployeeNameId: User,
+  //     ViewedOn: CurrentDate,
+  //     EmployeeEmail: UserEmail,
+  //     ContentPage: "Announcements",
+  //     Title: this.state.Title,
+  //     ContentID: ID,
+  //   });
+  // }
 
-  private async viewsCount() {
-    const items = await sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-    views = items.length !== 0 ? items.length : 0;
-  }
+  // private async viewsCount() {
+  //   const items = await sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
+  //   views = items.length !== 0 ? items.length : 0;
+  // }
 
   private async getAnnouncementsDetails(itemID: string) {
     const items = await sp.web.lists.getByTitle(Announcementlist).items.select("*").filter(`IsActive eq '1' and ID eq '${itemID}'`).getAll();
@@ -187,48 +197,118 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         });
 
       }
-      this.addViews();
-      this.checkUserAlreadyLiked();
-      this.checkUserAlreadyCommented();
-      this.viewsCount();
-      this.likesCount();
-      this.commentsCount();
+      // this.addViews();
+      // this.checkUserAlreadyLiked();
+      // this.checkUserAlreadyCommented();
+      // this.viewsCount();
+      // this.likesCount();
+      // this.commentsCount();
+      // New code
+
+      const viewsCount = new ViewsCount();
+      viewsCount.viewsCount(ID).then((data) => {
+        console.log("Current user details", data);
+      });
+
+      const likesCount = new LikesCount();
+      likesCount.likesCount(ID).then((likeData) => {
+        console.log("Current user details", likeData);
+      });
+
+      const commentsCount = new CommentsCount();
+      commentsCount.commentsCount(ID).then((commentData) => {
+        console.log("commentData", commentData);
+        this.checkUserAlreadyCommented();
+        this.getUserComments();
+      }).catch((err) => {
+        console.log("Erorr in comment count", err);
+
+      });
+
+
+
+      const checkUserAlreadyLiked = new CheckUserAlreadyLiked();
+      checkUserAlreadyLiked
+        .checkUserAlreadyLiked(ID, User)
+        .then((result: any) => {
+          if (result.length !== 0) {
+            // If the user has already liked the content
+            document.querySelectorAll(".like-selected").forEach((element) => {
+              (element as HTMLElement).style.display = "block";
+            });
+            document.querySelectorAll(".like-default").forEach((element) => {
+              (element as HTMLElement).style.display = "none";
+            });
+
+            // Update the React component's state
+            this.setState({ IsUserAlreadyLiked: true });
+            console.log("User already liked this item:", result);
+          } else {
+            // If no like records were found
+            console.log("No likes found for the user.");
+            this.setState({ IsUserAlreadyLiked: false });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking user likes:", error);
+        });
+
+      const addView = new AddViews();
+      addView.addViews(User, UserEmail, ID, this.state.Title)
+        .then(() => {
+          console.log("View logged successfully.");
+        })
+        .catch((error) => {
+          console.error("Failed to add view:", error);
+        });
+
+
+
+      const checkUserAlreadyCommented = new CheckUserAlreadyCommented();
+
+      checkUserAlreadyCommented
+        .checkUserAlreadyCommented(ID, User)
+        .then((isCommented) => {
+          if (isCommented) {
+            console.log("User has already commented.");
+            this.setState({ IsUserAlreadyCommented: true });
+          } else {
+            console.log("User has not commented yet.");
+            this.setState({ IsUserAlreadyCommented: false });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking user comments:", error);
+        });
+
     } else {
       console.error("No items found or ItemID doesn't exist");
     }
   }
 
+
   // private async checkUserAlreadyLiked() {
-  //   const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get();
-  //   if (items.length !== 0) {
-  //     $(".like-selected").show();
-  //     $(".like-default").hide();
-  //     this.setState({ IsUserAlreadyLiked: true });
+  //   try {
+  //     const items = await sp.web.lists
+  //       .getByTitle(LikesCountMasterlist)
+  //       .items
+  //       .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
+  //       .top(5000)
+  //       .get();
+  //     if (items.length !== 0) {
+  //       document.querySelectorAll('.like-selected').forEach(element => {
+  //         (element as HTMLElement).style.display = 'block';
+  //       });
+  //       document.querySelectorAll('.like-default').forEach(element => {
+  //         (element as HTMLElement).style.display = 'none';
+  //       });
+  //       this.setState({ IsUserAlreadyLiked: true });
+  //     }
+  //   }
+  //   catch (error) {
+  //     console.error(error);
   //   }
   // }
-
-  private async checkUserAlreadyLiked() {
-    try {
-      const items = await sp.web.lists
-        .getByTitle(LikesCountMasterlist)
-        .items
-        .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
-        .top(5000)
-        .get();
-      if (items.length !== 0) {
-        document.querySelectorAll('.like-selected').forEach(element => {
-          (element as HTMLElement).style.display = 'block';
-        });
-        document.querySelectorAll('.like-default').forEach(element => {
-          (element as HTMLElement).style.display = 'none';
-        });
-        this.setState({ IsUserAlreadyLiked: true });
-      }
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }
 
   private async checkUserAlreadyCommented() {
     try {
@@ -246,17 +326,17 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     }
   }
 
-  private async likesCount() {
-    const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-    likes = items.length !== 0 ? items.length : 0;
-  }
+  // private async likesCount() {
+  //   const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
+  //   likes = items.length !== 0 ? items.length : 0;
+  // }
 
-  private async commentsCount() {
-    const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-    commentscount = items.length !== 0 ? items.length : 0;
-    this.checkUserAlreadyCommented();
-    this.getUserComments();
-  }
+  // private async commentsCount() {
+  //   const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
+  //   commentscount = items.length !== 0 ? items.length : 0;
+  //   this.checkUserAlreadyCommented();
+  //   this.getUserComments();
+  // }
 
   private async getUserComments() {
     const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
@@ -451,8 +531,17 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                           )}
                           {this.state.IsCommentEnabled && (
                             <li>
-                              <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={() => this.showComments()} /> <span id="commentscount">{commentscount}</span>
+                              <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={
+                                () => this.showComments()
+                              } /> <span id="commentscount">{commentscount}</span>
                             </li>
+
+                            // <li>
+                            //   <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={
+                            //      const showCommentsInstance= new ShowComments();
+                            //   showCommentsInstance.showComments(this.state.ItemID);
+                            // } /> <span id="commentscount">{commentscount}</span>
+                            // </li>
                           )}
                           <li>
                             <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span>{views}</span>

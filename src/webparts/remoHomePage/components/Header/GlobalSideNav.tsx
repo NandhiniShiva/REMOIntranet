@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import RemoResponsive from './RemoResponsive';
 import { IInvokable } from '@pnp/odata';
 import { Configuration, listNames } from '../../Configuration';
+import { sp } from '@pnp/sp/presets/all';
 var metaTag = document.createElement('meta');
 metaTag.name = "viewport"
 metaTag.content = "width=device-width, initial-scale=1.0"
@@ -437,6 +438,8 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async getUnreadmailCount() {
     try {
       const result = await this.serviceProvider.getMyMailCount();
+      console.log("getUnreadmailCount", result);
+
       this.setState({ myMailDatas: result });
 
       const mailcount = this.state.myMailDatas.length;
@@ -452,9 +455,13 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       } else {
         this.setState({ EmailCount: "0" });
         // $("#Emails_count").hide();
-        let elmailCoun: any = document.getElementById("Emails_count")
-        elmailCoun.style.display = "none";
+        // let elmailCoun: any = document.getElementById("Emails_count")
+        // elmailCoun.style.display = "none";
 
+        let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
+        if (elmailCoun) {
+          elmailCoun.style.display = "none";
+        }
       }
     } catch (error) {
       console.error("Error fetching unread mail count:", error);
@@ -482,9 +489,13 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               this.setState({ MeetingsCount: "0" });
               // $("#Meetings_count").hide();
 
-              let elmailCoun: any = document.getElementById("Meetings_count")
-              elmailCoun.style.display = "none";
+              // let elmailCoun: any = document.getElementById("Meetings_count")
+              // elmailCoun.style.display = "none";
 
+              let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
+              if (elmailCoun) {
+                elmailCoun.style.display = "none";
+              }
             }
           }
         )
@@ -514,7 +525,9 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetMainNavItems() {
     var reactHandler = this;
     try {
-      await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+      //  / await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+      await sp.web.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+
         reactHandler.setState({
           MainNavItems: items
         });

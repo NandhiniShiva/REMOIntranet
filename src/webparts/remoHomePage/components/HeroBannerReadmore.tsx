@@ -15,6 +15,12 @@ import { Markup } from 'interweave';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import pnp, { Web } from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
+import { ViewsCount } from './ServiceProvider/viewsCount';
+import { AddViews } from './ServiceProvider/AddViews';
+import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
+import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
+import { CommentsCount } from './ServiceProvider/CommentsCount';
+import { LikesCount } from './ServiceProvider/LikesCount';
 
 let User = "";
 let UserEmail = "";
@@ -28,7 +34,7 @@ let ItemID: any;
 var Designation = "";
 var Department = "";
 
-const ViewsCountMasterlist = listNames.ViewsCountMaster;
+// const ViewsCountMasterlist = listNames.ViewsCountMaster;
 const Hero_Bannerlist = listNames.Hero_Banner;
 const LikesCountMasterlist = listNames.LikesCountMaster;
 const CommentsCountMasterlist = listNames.CommentsCountMaster;
@@ -179,61 +185,138 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
             element.remove();
           });
         }
-        this.addViews();
-        this.checkUserAlreadyLiked();
-        this.checkUserAlreadyCommented();
-        this.viewsCount();
-        this.likesCount();
-        this.commentsCount();
+        // this.addViews();
+        // this.checkUserAlreadyLiked();
+        // this.checkUserAlreadyCommented();
+        // this.viewsCount();
+        // this.likesCount();
+        // this.commentsCount();
+
+
+        const viewsCount = new ViewsCount();
+        viewsCount.viewsCount(ID).then((data) => {
+          console.log("Current user details", data);
+        });
+
+        const likesCount = new LikesCount();
+        likesCount.likesCount(ID).then((likeData) => {
+          console.log("Current user details", likeData);
+        });
+
+        const commentsCount = new CommentsCount();
+        commentsCount.commentsCount(ID).then((commentData) => {
+          console.log("commentData", commentData);
+          this.checkUserAlreadyCommented();
+          this.getUserComments();
+        }).catch((err) => {
+          console.log("Erorr in comment count", err);
+
+        });
+
+
+
+        const checkUserAlreadyLiked = new CheckUserAlreadyLiked();
+        checkUserAlreadyLiked
+          .checkUserAlreadyLiked(ID, User)
+          .then((result: any) => {
+            if (result.length !== 0) {
+              // If the user has already liked the content
+              document.querySelectorAll(".like-selected").forEach((element) => {
+                (element as HTMLElement).style.display = "block";
+              });
+              document.querySelectorAll(".like-default").forEach((element) => {
+                (element as HTMLElement).style.display = "none";
+              });
+
+              // Update the React component's state
+              this.setState({ IsUserAlreadyLiked: true });
+              console.log("User already liked this item:", result);
+            } else {
+              // If no like records were found
+              console.log("No likes found for the user.");
+              this.setState({ IsUserAlreadyLiked: false });
+            }
+          })
+          .catch((error) => {
+            console.error("Error while checking user likes:", error);
+          });
+
+        const addView = new AddViews();
+        addView.addViews(User, UserEmail, ID, this.state.Title)
+          .then(() => {
+            console.log("View logged successfully.");
+          })
+          .catch((error) => {
+            console.error("Failed to add view:", error);
+          });
+
+
+
+        const checkUserAlreadyCommented = new CheckUserAlreadyCommented();
+
+        checkUserAlreadyCommented
+          .checkUserAlreadyCommented(ID, User)
+          .then((isCommented) => {
+            if (isCommented) {
+              console.log("User has already commented.");
+              this.setState({ IsUserAlreadyCommented: true });
+            } else {
+              console.log("User has not commented yet.");
+              this.setState({ IsUserAlreadyCommented: false });
+            }
+          })
+          .catch((error) => {
+            console.error("Error while checking user comments:", error);
+          });
       }
     } catch (error) {
       console.error('Error fetching banner details:', error);
     }
   }
 
-  private addViews() {
-    sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
-      EmployeeNameId: User,
-      ViewedOn: CurrentDate,
-      EmployeeEmail: UserEmail,
-      ContentPage: "Hero-Banner",
-      Title: title,
-      ContentID: ID,
-    });
-  }
+  // private addViews() {
+  //   sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
+  //     EmployeeNameId: User,
+  //     ViewedOn: CurrentDate,
+  //     EmployeeEmail: UserEmail,
+  //     ContentPage: "Hero-Banner",
+  //     Title: title,
+  //     ContentID: ID,
+  //   });
+  // }
 
-  private viewsCount() {
-    try {
-      sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-        views = items.length || 0;
-      });
-    }
-    catch (error) {
-      console.error("An error occurred while fetching the viewsCount:", error);
-    }
-  }
+  // private viewsCount() {
+  //   try {
+  //     sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
+  //       views = items.length || 0;
+  //     });
+  //   }
+  //   catch (error) {
+  //     console.error("An error occurred while fetching the viewsCount:", error);
+  //   }
+  // }
 
-  private checkUserAlreadyLiked() {
-    try {
-      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
-        if (items.length > 0) {
-          // $(".like-selected").show();
-          // $(".like-default").hide();
+  // private checkUserAlreadyLiked() {
+  //   try {
+  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
+  //       if (items.length > 0) {
+  //         // $(".like-selected").show();
+  //         // $(".like-default").hide();
 
-          document.querySelectorAll('.like-selected').forEach(element => {
-            (element as HTMLElement).style.display = 'block';
-          });
-          document.querySelectorAll('.like-default').forEach(element => {
-            (element as HTMLElement).style.display = 'none';
-          });
+  //         document.querySelectorAll('.like-selected').forEach(element => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
+  //         document.querySelectorAll('.like-default').forEach(element => {
+  //           (element as HTMLElement).style.display = 'none';
+  //         });
 
-          this.setState({ IsUserAlreadyLiked: true });
-        }
-      });
-    } catch (error) {
-      console.error("An error occurred while checking if the user already liked:", error);
-    }
-  }
+  //         this.setState({ IsUserAlreadyLiked: true });
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error("An error occurred while checking if the user already liked:", error);
+  //   }
+  // }
 
   private checkUserAlreadyCommented() {
     try {
@@ -253,16 +336,16 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
   }
 
-  private likesCount() {
-    try {
-      sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-        likes = items.length || 0;
-      });
-    }
-    catch (error) {
-      console.error("An error occurred while checking if the user already liked:", error);
-    }
-  }
+  // private likesCount() {
+  //   try {
+  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
+  //       likes = items.length || 0;
+  //     });
+  //   }
+  //   catch (error) {
+  //     console.error("An error occurred while checking if the user already liked:", error);
+  //   }
+  // }
 
   private commentsCount() {
     try {

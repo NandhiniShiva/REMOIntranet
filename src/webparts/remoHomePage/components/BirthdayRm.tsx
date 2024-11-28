@@ -15,6 +15,12 @@ import { listNames } from '../../remoHomePage/Configuration';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
 import Footer from '../../remoHomePage/components/Footer/Footer';
+import { AddViews } from './ServiceProvider/AddViews';
+import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
+import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
+import { CommentsCount } from './ServiceProvider/CommentsCount';
+import { LikesCount } from './ServiceProvider/LikesCount';
+import { ViewsCount } from './ServiceProvider/viewsCount';
 var User = "";
 var UserEmail = "";
 var title = "";
@@ -253,6 +259,84 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       reactHandler.viewsCount();
       reactHandler.likesCount();
       reactHandler.commentsCount();
+
+
+      const viewsCount = new ViewsCount();
+      viewsCount.viewsCount(ID).then((data) => {
+        console.log("Current user details", data);
+      });
+
+      const likesCount = new LikesCount();
+      likesCount.likesCount(ID).then((likeData) => {
+        console.log("Current user details", likeData);
+      });
+
+      const commentsCount = new CommentsCount();
+      commentsCount.commentsCount(ID).then((commentData) => {
+        console.log("commentData", commentData);
+        this.checkUserAlreadyCommented();
+        this.getusercomments();
+      }).catch((err) => {
+        console.log("Erorr in comment count", err);
+
+      });
+
+
+
+      const checkUserAlreadyLiked = new CheckUserAlreadyLiked();
+      checkUserAlreadyLiked
+        .checkUserAlreadyLiked(ID, User)
+        .then((result: any) => {
+          if (result.length !== 0) {
+            // If the user has already liked the content
+            document.querySelectorAll(".like-selected").forEach((element) => {
+              (element as HTMLElement).style.display = "block";
+            });
+            document.querySelectorAll(".like-default").forEach((element) => {
+              (element as HTMLElement).style.display = "none";
+            });
+
+            // Update the React component's state
+            this.setState({ IsUserAlreadyLiked: true });
+            console.log("User already liked this item:", result);
+          } else {
+            // If no like records were found
+            console.log("No likes found for the user.");
+            this.setState({ IsUserAlreadyLiked: false });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking user likes:", error);
+        });
+
+      const addView = new AddViews();
+      addView.addViews(User, UserEmail, ID, this.state.Title)
+        .then(() => {
+          console.log("View logged successfully.");
+        })
+        .catch((error) => {
+          console.error("Failed to add view:", error);
+        });
+
+
+
+      const checkUserAlreadyCommented = new CheckUserAlreadyCommented();
+
+      checkUserAlreadyCommented
+        .checkUserAlreadyCommented(ID, User)
+        .then((isCommented) => {
+          if (isCommented) {
+            console.log("User has already commented.");
+            this.setState({ IsUserAlreadyCommented: true });
+          } else {
+            console.log("User has not commented yet.");
+            this.setState({ IsUserAlreadyCommented: false });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking user comments:", error);
+        });
+
 
     } catch (error) {
       // Log the error or handle it in the UI as appropriate

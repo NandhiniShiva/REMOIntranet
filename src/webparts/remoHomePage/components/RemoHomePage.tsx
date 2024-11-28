@@ -26,6 +26,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 // import {listNameDetalis} from '../Configuration';
 import { listNames } from '../Configuration';
+import { PageAnalytics } from './ServiceProvider/LandingPageAnalytics';
 
 
 let NewWeb: any;
@@ -33,7 +34,8 @@ let spWeb: any;
 let fetchList: any;
 let IsListCreate: any;
 // const Analytics = listNames.Analytics;
-const docLibName = listNames.PictureGallery;
+const PictureGalleryName = listNames.PictureGallery;
+const docLibName = listNames.DocumentLibrary;
 var User: any;
 var UserEmail: any;
 var Designation: any;
@@ -51,7 +53,7 @@ export interface IRemoHomePageState {
   showButton: boolean,
   showDropdown: boolean,
   selectedValue: any,
-  layoutItems: any[]
+  layoutItems: any[],
 
 }
 
@@ -71,7 +73,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       showButton: false,
       showDropdown: false,
       selectedValue: null,
-      layoutItems: []
+      layoutItems: [],
 
     };
     spWeb = Web(this.props.siteurl);
@@ -133,15 +135,50 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     // }
     // console.log("Current user details", currentUser);
 
-    const userDetails = new CurrentUserDetails();
-    userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
+    // const userDetails = new CurrentUserDetails();
+    // userDetails.getCurrentUserDetails().then((data) => {
+    //   console.log("Current user details", data);
+    //   console.log("data details", data?.Department, data?.Designation);
 
-      this.LandingPageAnalytics(data?.Department, data?.Designation);
-    }).catch((error) => {
-      console.error("Error fetching current user details:", error);
-    });
+    //   // this.LandingPageAnalytics(data?.Department, data?.Designation);
+
+    //   const pageAnalytics = new PageAnalytics("Landing Page", User.toString(), data?.Department, data?.Designation, "NA", "NA", UserEmail);
+    //   pageAnalytics.LandingPageAnalytics();
+
+
+    const userDetails = new CurrentUserDetails();
+    userDetails
+      .getCurrentUserDetails()
+      .then((data) => {
+        if (data) {
+          console.log("Current user details", data);
+          console.log("data details", data?.Department, data?.Designation);
+
+          // Call LandingPageAnalytics if needed
+          const pageAnalytics = new PageAnalytics(
+            "Landing Page",
+            User,
+            data?.Department ?? "NA",
+            data?.Designation ?? "NA",
+            "NA",
+            "NA",
+            UserEmail
+          );
+          pageAnalytics.LandingPageAnalytics();
+        } else {
+          console.warn("No user details were fetched.");
+        }
+      })
+
+      .catch((err) => {
+        console.error("Error fetching current user details:", err);
+      });
+
+
+
+    // }).catch((error) => {
+    //   console.error("Error fetching current user details:", error);
+    // });
 
   }
 
@@ -235,76 +272,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
-
-
-  // optimized code
-
-  // Updated function for creating SharePoint Lists
-  // public async createSharePointLists() {
-  //   try {
-
-  //     const listNames: string[] = ListLibraryColumnDetails.map(list => list.name); // Collect list names
-  //     const totalLists: any = listNames.length;
-
-  //     // Initialize progress
-  //     this.setState({
-  //       isCreatingLists: true,
-  //       progress: 0,
-  //       loadContent: false
-  //     });
-
-  //     // Track if any list was newly created
-  //     let anyListCreated = false;
-
-  //     // Loop over each list for creation
-  //     for (let i = 0; i < totalLists; i++) {
-  //       const listName = totalLists[i];
-  //       const columns = ListLibraryColumnDetails[i].columns; // Retrieve columns for the current list
-
-  //       // Update current progress and list name
-  //       this.setState({
-  //         currentList: listName,
-  //         progress: ((i + 1) / totalLists) * 100
-  //       });
-
-  //       // Check if the list exists; if not, create it
-  //       const listEnsureResult = await sp.web.lists.ensure(listName);
-  //       if (listEnsureResult.created) {
-  //         console.log(`List '${listName}' created successfully.`);
-  //         await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
-  //         anyListCreated = true;
-  //       } else {
-  //         console.log(`List '${listName}' already exists.`);
-  //       }
-  //     }
-
-  //     // Final progress update
-  //     this.setState({
-  //       progress: 100,
-  //       isCreatingLists: false,
-  //       loadContent: true
-  //     });
-
-  //     // Reset if no new lists were created
-  //     if (!anyListCreated) {
-  //       console.log("All lists already existed. No new lists were created.");
-  //       this.setState({
-  //         isCreatingLists: false,
-  //         loadContent: true,
-  //         progress: 0
-  //       });
-  //     }
-
-  //   } catch (error) {
-  //     console.error("Error creating lists:", error);
-  //     this.setState({
-  //       isCreatingLists: false,
-  //       currentList: null,
-  //       progress: 0,
-  //       loadContent: true
-  //     });
-  //   }
-  // }
 
 
   public async createSharePointLists() {
@@ -499,14 +466,23 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
+
+
+  // New picture lib code 
+
   public CreatePictureLibrary = async () => {
+    try {
 
-    await spWeb.lists.add("Image gallery1", " Picture Library1", 109, true, { OnQuickLaunch: true });
-    // await this.addFolder();
-    alert("CreatePictureLibrary")
+      const result = await spWeb.lists.add(PictureGalleryName, "Picture Library", 109, true, { OnQuickLaunch: true });
 
+      console.log("Picture Library Created:", result);
+      alert("Picture Library created successfully!");
+    } catch (error) {
+      console.error("Error creating Picture Library:", error);
+      alert("Failed to create Picture Library. Please check the console for more details.");
+    }
+  };
 
-  }
 
   public showDropDown() {
     this.getLayout();
@@ -537,6 +513,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
     }
   }
+
+
   public async handleSelectChange(event: any) {
     console.log("selected option", event.target.value);
     if (event.target.value == "Layout 1") {
@@ -546,7 +524,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       });
       await this.createSharePointLists();
       await this.createDocumentLibrary(docLibName);
-      // await this.CreatePictureLibrary();
+      await this.CreatePictureLibrary();
     }
     this.setState({
       selectedValue: event.target.value
@@ -645,105 +623,106 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     return (
       <>
         {/* Main Content */}
-        {this.state.showButton == false ?
+        {
+          this.state.showButton == false ?
 
-          <>
-            {this.state.showDropdown == false ?
-              <div>
+            <>
+              {this.state.showDropdown == false ?
+                <div>
 
-                <div className={styles.remoHomePage} id="load-content" style={{ display: this.state.loadContent ? "block" : "none" }}>
-                  <div id="Global-Top-Header-Navigation">
-                    <GlobalSideNav
-                      siteurl={this.props.siteurl}
-                      context={this.props.context}
-                      currentWebUrl=""
-                      CurrentPageserverRequestPath=""
-                    />
+                  <div className={styles.remoHomePage} id="load-content" style={{ display: this.state.loadContent ? "block" : "none" }}>
+                    <div id="Global-Top-Header-Navigation">
+                      <GlobalSideNav
+                        siteurl={this.props.siteurl}
+                        context={this.props.context}
+                        currentWebUrl=""
+                        CurrentPageserverRequestPath=""
+                      />
+                    </div>
+
+                    <section>
+                      <div className="container home_pg relative">
+                        <div className="section-right">
+                          {/* Banner and CEO Message */}
+                          <div className="banner-ceo-message">
+                            <div className="row">
+                              <RemoHeroBanner {...this.props} description="" createList={false} name="" />
+                              <RemoCEOMessage {...this.props} description="" createList={false} name="" />
+                            </div>
+                          </div>
+
+                          <RemoNavigations {...this.props} description="" createList={false} name="" />
+
+                          {/* Events Calendar and News Section */}
+                          <div className="row section_bottom">
+                            <div className="col-md-8">
+                              <div className="events-calendar">
+                                <RemoMyMeetings {...this.props} description="" createList={false} name="" />
+                              </div>
+
+                              <RemoNews {...this.props} description="" createList={false} name="" />
+
+                              <div className="latest-news-announcements" id="latest-news-announcements">
+                                <div className="row row-res">
+                                  <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name="" />
+                                </div>
+                              </div>
+
+                              <div id="social-and-gallery" className="images-social">
+                                <div className="row row-res">
+                                  <RemoImagesandVideos {...this.props} description="" createList={false} name="" />
+                                  <RemoSocialMedia {...this.props} description="" createList={false} name="" />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Sidebar Components */}
+                            <div className="col-md-4">
+                              <RemoBirthday {...this.props} description="" createList={false} name="" />
+                              <RemoClimate {...this.props} description="" />
+                              <RemoQuickLinks {...this.props} description="" createList={false} name="" />
+                              <RemoRecentFiles {...this.props} description="" createList={false} name="" />
+                            </div>
+                          </div>
+
+                          <RemoResponsive {...this.props} currentWebUrl="" CurrentPageserverRequestPath="" />
+                          <Footer {...this.props} description="" createList={false} name="" />
+                        </div>
+                      </div>
+                    </section>
                   </div>
 
-                  <section>
-                    <div className="container home_pg relative">
-                      <div className="section-right">
-                        {/* Banner and CEO Message */}
-                        <div className="banner-ceo-message">
-                          <div className="row">
-                            <RemoHeroBanner {...this.props} description="" createList={false} name="" />
-                            <RemoCEOMessage {...this.props} description="" createList={false} name="" />
-                          </div>
-                        </div>
-
-                        <RemoNavigations {...this.props} description="" createList={false} name="" />
-
-                        {/* Events Calendar and News Section */}
-                        <div className="row section_bottom">
-                          <div className="col-md-8">
-                            <div className="events-calendar">
-                              <RemoMyMeetings {...this.props} description="" createList={false} name="" />
-                            </div>
-
-                            <RemoNews {...this.props} description="" createList={false} name="" />
-
-                            <div className="latest-news-announcements" id="latest-news-announcements">
-                              <div className="row row-res">
-                                <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name="" />
-                              </div>
-                            </div>
-
-                            <div id="social-and-gallery" className="images-social">
-                              <div className="row row-res">
-                                <RemoImagesandVideos {...this.props} description="" createList={false} name="" />
-                                <RemoSocialMedia {...this.props} description="" createList={false} name="" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Sidebar Components */}
-                          <div className="col-md-4">
-                            <RemoBirthday {...this.props} description="" createList={false} name="" />
-                            <RemoClimate {...this.props} description="" />
-                            <RemoQuickLinks {...this.props} description="" createList={false} name="" />
-                            <RemoRecentFiles {...this.props} description="" createList={false} name="" />
-                          </div>
-                        </div>
-
-                        <RemoResponsive {...this.props} currentWebUrl="" CurrentPageserverRequestPath="" />
-                        <Footer {...this.props} description="" createList={false} name="" />
+                  {this.state.isCreatingLists && (
+                    <div id="loader-Icon" className="loader-block">
+                      <div id="progressContainer">
+                        <p id="currentListName">Creating: {this.state.currentList}</p>
+                        <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
                       </div>
                     </div>
-                  </section>
+                  )}
                 </div>
-
-                {this.state.isCreatingLists && (
-                  <div id="loader-Icon" className="loader-block">
-                    <div id="progressContainer">
-                      <p id="currentListName">Creating: {this.state.currentList}</p>
-                      <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
-                    </div>
-                  </div>
-                )}
-              </div>
-              :
-              <div>
-                <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-                  <option value="">Select Laout</option>
-                  {this.state.layoutItems.map((item) => (
-                    <option key={item.id} value={item.value}>
-                      {item.Title}
-                    </option>
-                  ))}
-                  {/* <option value="1">Layout 1</option>
+                :
+                <div>
+                  <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
+                    <option value="">Select Laout</option>
+                    {this.state.layoutItems.map((item) => (
+                      <option key={item.id} value={item.value}>
+                        {item.Title}
+                      </option>
+                    ))}
+                    {/* <option value="1">Layout 1</option>
                   <option value="2">Layout 2</option>
                   <option value="3">Layout 3</option> */}
-                </select>
-                {/* <p>Selected Value: {this.state.selectedValue}</p> */}
-              </div>
+                  </select>
+                  {/* <p>Selected Value: {this.state.selectedValue}</p> */}
+                </div>
 
-            }
-          </>
-          :
-          <div>
-            <button onClick={() => this.showDropDown()}>Configure</button>
-          </div>
+              }
+            </>
+            :
+            <div>
+              <button onClick={() => this.showDropDown()}>Configure</button>
+            </div>
         }
       </>
     );

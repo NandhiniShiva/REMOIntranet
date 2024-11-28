@@ -41,7 +41,9 @@ export interface IHeroBannerState {
   Items: any[];
   AnncCount: number;
   TotalItem: number;
-  isDataAvailable: boolean
+  isDataAvailable: boolean;
+  componentMasterItems: any[];
+  selectedValue: string
 }
 
 export default class HeroBanner extends React.Component<IRemoHomePageProps, IHeroBannerState, {}> {
@@ -51,7 +53,10 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
       Items: [],
       AnncCount: 0,
       TotalItem: 0,
-      isDataAvailable: false
+      isDataAvailable: false,
+      componentMasterItems: [],
+      selectedValue: ""
+
     };
   }
 
@@ -173,6 +178,35 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     }
   }
 
+  public async getComponent() {
+    try {
+
+
+      const items = await sp.web.lists
+        .getByTitle("ComponentMaster")
+        .items
+        .select("Title", "*")
+        // .filter(`IsActive eq '1'`)
+        // .orderBy("Created", false)
+        .getAll();
+
+      console.log("ComponentMaster item", items);
+      this.setState({
+        componentMasterItems: items
+      })
+
+    } catch (error) {
+      console.log("Error in getlayout", error);
+
+    }
+  }
+  public async handleSelectChange(event: any) {
+    console.log("selected option", event.target.value);
+
+    this.setState({
+      selectedValue: event.target.value
+    })
+  };
   public Validate() {
     const total = this.state.AnncCount;
     this.setState({ TotalItem: total });
@@ -264,9 +298,30 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
             </div>
           </div>
           :
-          <div>
+          // <div className="carousel slide">
+          //   <button onClick={() => this.addData()}>Add Data</button>
+          // </div>
+
+          // <div id="myCarousel" className="carousel slide" data-ride="carousel">
+          //   <div className="carousel-inner">
+          <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
             <button onClick={() => this.addData()}>Add Data</button>
+            <img src="https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/add_quick.png" alt="add icon" onClick={() => this.getComponent()} />
+            <div>
+              {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
+                {this.state.componentMasterItems.map((item: any) => {
+                  <option key={item.id} value={item.value}>
+                    {item.Title}
+                  </option>
+
+                })}
+              </select> */}
+            </div>
           </div>
+
+
+          //   </div>
+          // </div>
         }
       </div>
     );
