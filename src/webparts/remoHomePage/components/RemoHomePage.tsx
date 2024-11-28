@@ -68,7 +68,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       isCreatingLists: false,
       loadContent: false,
       currentList: "",
-      showButton: false,
+      showButton: true,
       showDropdown: false,
       selectedValue: null,
       layoutItems: []
@@ -82,9 +82,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public componentDidMount() {
-    this.setState({
-      showButton: true
-    })
+    debugger;
+    // this.setState({
+      // showButton: true
+    // })
     this.loaderInProgress();
     // console.log("listname", listNames);
     // $(".inner-pages-nav").remove();
@@ -92,9 +93,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       element.remove();
     });
     setTimeout(() => {
-
-
-
       document.querySelectorAll('.inner-pages-nav').forEach(function (element) {
         element.remove();
       });
@@ -137,7 +135,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     userDetails.getCurrentUserDetails().then((data) => {
       console.log("Current user details", data);
       console.log("data details", data?.Department, data?.Designation);
-
       this.LandingPageAnalytics(data?.Department, data?.Designation);
     }).catch((error) => {
       console.error("Error fetching current user details:", error);
@@ -517,16 +514,14 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
   public async getLayout() {
     try {
-
-
+      debugger;
       const items = await sp.web.lists
         .getByTitle("LayoutMaster")
         .items
         .select("Title", "*")
-        .filter(`IsActive eq '1'`)
+        // .filter(`IsActive eq '1'`)
         // .orderBy("Created", false)
-        .getAll();
-
+        .get();
       console.log("Layout item", items);
       this.setState({
         layoutItems: items
@@ -725,7 +720,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               :
               <div>
                 <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-                  <option value="">Select Laout</option>
+                  <option value="">Select Layout</option>
                   {this.state.layoutItems.map((item) => (
                     <option key={item.id} value={item.value}>
                       {item.Title}

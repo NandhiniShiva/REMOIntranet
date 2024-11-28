@@ -420,8 +420,7 @@ export const ListLibraryColumnDetails = [
     {
         name: " Component Configuration List",
         columns: [
-            { columnName: "LayoutId", type: "addTextField" },
-
+            { columnName: "ComponentId", type: "addTextField" },
         ]
     },
 
@@ -436,6 +435,13 @@ export const ListLibraryColumnDetails = [
     },
 
 
+    {
+        name: "Portal Font Configuration List",
+        columns: [
+            { columnName: " FontUrl", type: "addUrl" },
+
+        ]
+    },
     {
         name: "Portal Font Configuration List",
         columns: [

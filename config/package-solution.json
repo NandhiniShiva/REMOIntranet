@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "remo-intranet-single-page-client-side-solution",
-    "id": "18023aff-dcce-4072-9519-9da91c9efe8b",
+    "name": "remo-product-single-page-client-side-solution",
+    "id": "18023aff-dcce-4072-9519-9da91c9efe8c",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
@@ -35,6 +35,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/remo-intranet-single-page.sppkg"
+    "zippedPackage": "solution/remo-product-single-page.sppkg"
   }
 }
