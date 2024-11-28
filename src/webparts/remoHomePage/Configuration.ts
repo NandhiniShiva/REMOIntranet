@@ -25,7 +25,7 @@ export const listNames: { [key: string]: string } = {
     CurrencyMasterList: "CurrencyMasterList",
     JobApplicationMaster: "Job Application Master",
     Analytics: "AnalyticsMasterList",
-    NotificationList: "NotificationTransactionMaster"
+    NotificationList: "NotificationTransactionMaster",
 
 };
 

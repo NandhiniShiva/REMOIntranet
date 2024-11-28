@@ -5,7 +5,6 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-
 import * as strings from 'RemoHomePageWebPartStrings';
 import RemoHomePage from './components/RemoHomePage';
 import { IRemoHomePageProps } from './components/IRemoHomePageProps';
