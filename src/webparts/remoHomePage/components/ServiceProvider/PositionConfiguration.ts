@@ -1,0 +1,111 @@
+export const PositionDetails = [
+    {
+        Position: 1,
+        buttonId: "hide_components_01",
+        selectId: "show_components_01",
+        componentIndex: 1,
+    },
+    {
+        Position: 2,
+        buttonId: "hide_components_02",
+        selectId: "show_components_02",
+        componentIndex: 2,
+    },
+    {
+        Position: 3,
+        buttonId: "hide_components_03",
+        selectId: "show_components_03",
+        componentIndex: 3,
+    },
+    {
+        Position: 4,
+        buttonId: "hide_components_04",
+        selectId: "show_components_04",
+        componentIndex: 4,
+    },
+    {
+        Position: 5,
+        buttonId: "hide_components_05",
+        selectId: "show_components_05",
+        componentIndex: 5,
+    },
+    {
+        Position: 6,
+        buttonId: "hide_components_06",
+        selectId: "show_components_06",
+        componentIndex: 6,
+    },
+    {
+        Position: 7,
+        buttonId: "hide_components_07",
+        selectId: "show_components_07",
+        componentIndex: 7,
+    },
+    {
+        Position: 8,
+        buttonId: "hide_components_08",
+        selectId: "show_components_08",
+        componentIndex: 8,
+    },
+    {
+        Position: 9,
+        buttonId: "hide_components_09",
+        selectId: "show_components_09",
+        componentIndex: 9,
+    },
+    {
+        Position: 10,
+        buttonId: "hide_components_10",
+        selectId: "show_components_10",
+        componentIndex: 10,
+    },
+    {
+        Position: 11,
+        buttonId: "hide_components_11",
+        selectId: "show_components_11",
+        componentIndex: 11,
+    },
+    {
+        Position: 12,
+        buttonId: "hide_components_12",
+        selectId: "show_components_12",
+        componentIndex: 12,
+    },
+    {
+        Position: 13,
+        buttonId: "hide_components_13",
+        selectId: "show_components_13",
+        componentIndex: 13,
+    },
+    {
+        Position: 14,
+        buttonId: "hide_components_14",
+        selectId: "show_components_14",
+        componentIndex: 14,
+    },
+    {
+        Position: 15,
+        buttonId: "hide_components_15",
+        selectId: "show_components_15",
+        componentIndex: 15,
+    },
+    {
+        Position: 16,
+        buttonId: "hide_components_16",
+        selectId: "show_components_16",
+        componentIndex: 16,
+    },
+    {
+        Position: 17,
+        buttonId: "hide_components_17",
+        selectId: "show_components_17",
+        componentIndex: 17,
+    },
+    {
+        Position: 18,
+        buttonId: "hide_components_18",
+        selectId: "show_components_18",
+        componentIndex: 18,
+    },
+
+]

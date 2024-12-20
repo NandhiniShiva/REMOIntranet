@@ -6,6 +6,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/webs";
 import { listNames } from '../../Configuration';
 import { IRemoHomePageProps } from '../IRemoHomePageProps';
+import { ListCreation } from '../ServiceProvider/List&ColumnCreation';
 
 let VersionMasterlist = listNames.VersionMaster;
 
@@ -28,6 +29,8 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
     }
 
     public async componentDidMount() {
+        const listCreation = new ListCreation();
+        listCreation.createSharePointLists(this.props.name);
         await this.GetVersionData();
     }
 
@@ -51,7 +54,9 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
         }
     }
     public addData() {
-        const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
+        // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
+        const listUrl = `${this.props.siteurl}/Lists/${VersionMasterlist}`;
+
         window.open(listUrl, "_blank");
     }
 

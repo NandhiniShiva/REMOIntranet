@@ -17,7 +17,8 @@ export interface IRemoHomePageWebPartProps {
   description: string;
   createList: boolean;
   listName: string;
-
+  onReadMoreClick: any;
+  id: any
 
 
 }
@@ -56,7 +57,8 @@ export default class RemoHomePageWebPart extends BaseClientSideWebPart<IRemoHome
         userid: this.context.pageContext.legacyPageContext["userId"],
         createList: this.properties.createList,
         name: this.properties.listName,
-
+        onReadMoreClick: this.properties.onReadMoreClick,
+        id: this.properties.id
       }
     );
 

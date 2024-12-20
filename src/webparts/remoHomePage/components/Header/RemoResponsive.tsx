@@ -10,7 +10,7 @@ import ReactTooltip from "react-tooltip";
 import pnp from 'sp-pnp-js';
 import { sp } from '@pnp/sp/presets/all';
 import { IInvokable } from '@pnp/odata';
-import { Configuration, listNames } from '../../Configuration';
+import { listNames } from '../../Configuration';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 
 let Navigationslist = listNames.Navigations;
@@ -101,9 +101,12 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
         // Updated code
 
-        SPComponentLoader.loadCss(Configuration.cssPath);
-        SPComponentLoader.loadCss(Configuration.overRidingCss);
-        SPComponentLoader.loadCss(Configuration.respnsiveCss);
+        SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
+        SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
+        SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
+        // SPComponentLoader.loadCss(Configuration.cssPath);
+        // SPComponentLoader.loadCss(Configuration.overRidingCss);
+        // SPComponentLoader.loadCss(Configuration.respnsiveCss);
 
 
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
@@ -155,9 +158,9 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             SuiteNavWrapper.style.display = 'none';
         }
 
-        document.querySelectorAll('.ControlZone--control').forEach(function (element: any) {
-            element.style.setProperty('display', 'none', 'important');
-        });
+        // document.querySelectorAll('.ControlZone--control').forEach(function (element: any) {
+        //     element.style.setProperty('display', 'none', 'important');
+        // });
 
         // Get the active page URL
         const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();

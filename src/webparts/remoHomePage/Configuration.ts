@@ -1,20 +1,19 @@
 export const listNames: { [key: string]: string } = {
-    PictureGallery: "Picture GalleryKas",
-    VersionMasterKas: "Version Master",
-    LogoKas: "Logo Master",
-    NavigationsKas: "Navigations",
-    DepartmentsMasterKas: "DepartmentsMaster",
-    QuickLinksKas: "Quick Links",
-    ViewsCountMasterKas: "ViewsCountMaster",
-    AnnouncementKas: "AnnouncementG",
+    VersionMaster: "Version Master",
+    Logo: "Logo Master",
+    Navigations: "Navigations",
+    DepartmentsMaster: "DepartmentsMaster",
+    QuickLinks: "Quick Links",
+    ViewsCountMaster: "ViewsCountMaster",
+    Announcement: "Announcements",
     LikesCountMaster: "LikesCountMaster",
     CommentsCountMaster: "CommentsCountMaster",
-    Birthday: "Birthdayk",
+    Birthday: "Birthday",
     CEO_Message: "CEO Message",
     Content_Editor_Master_Category: "Content Editor Master Category",
     Content_Editor_Master: "Content Editor Master",
     Events: "Events",
-    Hero_Banner: "Hero_Banner",
+    Hero_Banner: "Hero Banner",
     JobsMaster: "JobsMaster",
     UsersQuickLinks: "UsersQuickLinks",
     News: "News",
@@ -26,20 +25,24 @@ export const listNames: { [key: string]: string } = {
     JobApplicationMaster: "Job Application Master",
     Analytics: "AnalyticsMasterList",
     NotificationList: "NotificationTransactionMaster",
+    PictureGallery: "Picture Gallery",
+    ComponentMaster: "Component Configuration Master",
+    PortalCssMaster: "PortalCSSConfigurationMaster",
+    PortalFontMaster: "Portal Font Configuration Master",
 
 };
 
 export const Configuration = {
-    cssPath: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/style.css?v=1.8",
-    overRidingCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3",
-    respnsiveCss: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/AutoListCreation/responsive.css?v=4.18"
+    cssPath: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css?v=1.8",
+    overRidingCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css/SP-NativeStyle-Overriding.css?v=3.3",
+    respnsiveCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.cssresponsive.css?v=4.18"
 }
 // export const PictureLib: { [key: string]: string } = {
 //     PictureGallery: "Picture Gallery",
 
 // }
 export const WEB: { [key: string]: string } = {
-    NewWeb: "https://remodigital.sharepoint.com/sites/DemoIntranet1/",
+    NewWeb: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/",
     // NewWeb: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/"
 
 }

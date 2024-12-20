@@ -7,7 +7,7 @@ import "@pnp/sp/items";
 import * as moment from 'moment';
 // import * as $ from 'jquery';
 import { Markup } from 'interweave';
-import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
+// import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
@@ -72,8 +72,10 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     }, 1500);
 
     var reactHandler = this;
-    const url: any = new URL(window.location.href);
-    const ItemID = url.searchParams.get("ItemID");
+    // const url: any = new URL(window.location.href);
+    // const ItemID = url.searchParams.get("ItemID");
+
+    const ItemID = this.props.id;
     // reactHandler.getCurrentUser().then(() => {
     //   reactHandler.GetCeoMessage(ItemID);
     // })
@@ -197,9 +199,9 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
 
     return (
       <div className={styles.remoHomePage} id="ceoMessageReadMore" style={{ display: "none" }}>
-        <div id="Global-Top-Header-Navigation">
+        {/* <div id="Global-Top-Header-Navigation">
           <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div>
+        </div> */}
         <section>
           <div className="relative container">
 
@@ -226,7 +228,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
                   </div>
                 </div>
               </div>
-              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} />
+              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} />
 
             </div>
           </div>

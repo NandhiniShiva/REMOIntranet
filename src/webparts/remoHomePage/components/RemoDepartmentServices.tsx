@@ -29,6 +29,7 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
   }
 
   public componentDidMount() {
+
     this.GetDepartmentServices();
 
 
@@ -116,7 +117,9 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
     });
   }
   public addData() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Serviceslist}`; // Replace with your list URL
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Serviceslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${Serviceslist}`;
+
     window.open(listUrl, "_blank");
   }
 

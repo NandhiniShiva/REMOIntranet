@@ -6,6 +6,7 @@ import ReactTooltip from "react-tooltip";
 import * as moment from 'moment';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../Configuration';
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 
 export interface INavigationsState {
@@ -53,6 +54,8 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
   async componentDidMount() {
     BreadCrumb = [];
+    const listCreation = new ListCreation();
+    listCreation.createSharePointLists(this.props.name);
     await this.JobsMasterCheck();
     await this.GetMainNavItems();
     await this.EnableContentEditorForSuperAdmins();
@@ -860,11 +863,15 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   }
 
   public addData() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${Navigationslist}`;
+
     window.open(listUrl, "_blank");
   }
   public addDataInLink() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${QuickLinkslist}`;
+
     window.open(listUrl, "_blank");
   }
 

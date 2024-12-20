@@ -1,90 +1,92 @@
 export const ListLibraryColumnDetails = [
     {
-        name: "AnnouncementKkGL",
+        name: "AnalyticsMasterList",
+        columns: []
+    },
+    {
+        name: "Announcement",
         columns: [
+            { columnName: "Description", type: "addMultilineText" },
             { columnName: "Image", type: "addImageField", update: "false" },
+            { columnName: "RMimage", type: "addImageField" },
             { columnName: "IsActive", type: "addBoolean" },
-            // { columnName: "Description", type: "Multiple lines of text" },
             { columnName: "EnableLikes", type: "addBoolean" },
             { columnName: "EnableComments", type: "addBoolean" },
             { columnName: "ShareAsEmail", type: "addBoolean" }
         ]
     },
-    // {
-    //     Analytics: "AnalyticsMasterList",
-    //     columns: []
-    // },
-    // {
-    //     name: "BirthdayKK",
-    //     columns: [
-    //         { columnName: "DOB", type: "Date and Time" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Description", type: "Multiple lines of text" },
-    //         { columnName: "Picture", type: "addImageField" },
-    //         { columnName: "DOJ", type: "Date and Time" },
-    //         { columnName: "Designation", type: "addTextField" },
-    //         { columnName: "Name", type: "addTextField" },
-    //         { columnName: "EnableLikes", type: "addBoolean" },
-    //         { columnName: "EnableComments", type: "addBoolean" },
-    //         { columnName: "ShareAsEmail", type: "addBoolean" }
 
-    //     ]
-    // },
     {
-        name: "CEO Messagekk",
+        name: "Birthday",
         columns: [
             { columnName: "Name", type: "addTextField" },
-            { columnName: "Designation", type: "addTextField" },
-            { columnName: "Description", type: "Multiple lines of text" },
+            { columnName: "DOB", type: "addDateField" },
+            { columnName: "Picture", type: "addImageField" },
+            { columnName: "RMimage", type: "addImageField" },
             { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Designation", type: "addTextField" },
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "EnableLikes", type: "addBoolean" },
+            { columnName: "EnableComments", type: "addBoolean" },
+            { columnName: "ShareAsEmail", type: "addBoolean" },
+            { columnName: "DOJ", type: "addDateField" }
+
+        ]
+    },
+    {
+        name: "CEO Message",
+        columns: [
+            { columnName: "Name", type: "addTextField" },
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "Designation", type: "addTextField" },
             { columnName: "Image", type: "addImageField" },
+            { columnName: "RMimage", type: "addImageField" },
+            { columnName: "IsActive", type: "addBoolean" },
+
         ]
     },
 
     {
-        name: "CommentsCountMasterKk",
+        name: "CommentsCountMaster",
         columns: [
             { columnName: "EmployeeName", type: "Person or Group" },
-            { columnName: "ContentPage", type: "addTextField" },
-            { columnName: "UserComments", type: "Multiple lines of text" },
-            { columnName: "ContentID", type: "Number" },
             { columnName: "CommentedOn", type: "addDateField" },
             { columnName: "EmployeeEmail", type: "addTextField" },
+            { columnName: "UserComments", type: "addMultilineText" },
+            { columnName: "ContentPage", type: "addTextField" },
+            { columnName: "ContentID", type: "addNumberField" },
         ]
     },
     {
-        name: "ContactConfigTransactionKk",
+        name: "ContactConfigTransaction",
         columns: [
-            { columnName: "Image", type: "addImageField" },
-            { columnName: "IsActive", type: "addBoolean" },
-            { columnName: "Description", type: "Multiple lines of text" }
+
         ]
     },
+    {
+        name: "ContactDirectoryMaster",
+        columns: [
 
+            { columnName: "jobTitle", type: "addTextField" },
+            { columnName: "givenName", type: "addTextField" },
+            { columnName: "surname", type: "addTextField" },
+            { columnName: "employeeId", type: "addTextField" },
+            { columnName: "country", type: "addTextField" },
+            { columnName: "businessPhones", type: "addTextField" },
+            { columnName: "city", type: "addTextField" },
+            { columnName: "mobilePhone", type: "addTextField" },
+            { columnName: "mail", type: "addTextField" },
+            { columnName: "ProfileImage", type: "addImageField" },
+            { columnName: "department", type: "addTextField" },
+            { columnName: "ProfilePictureURL", type: "addMultilineText" }
+        ]
+    },
     // {
-    //     name: "ContactDirectoryMaster",
-    //     columns: [
-
-    //         { columnName: "jobTitle", type: "addTextField" },
-    //         { columnName: "givenName", type: "addTextField" },
-    //         { columnName: "surname", type: "addTextField" },
-    //         { columnName: "employeeId", type: "addTextField" },
-    //         { columnName: "country", type: "addTextField" },
-    //         { columnName: "businessPhones", type: "addTextField" },
-    //         { columnName: "city", type: "addTextField" },
-    //         { columnName: "mobilePhone", type: "addTextField" },
-    //         { columnName: "mail", type: "addTextField" },
-    //         { columnName: "ProfileImage", type: "addImageField" },
-    //         { columnName: "department", type: "addTextField" },
-    //         { columnName: "ProfilePictureURL", type: "Multiple lines of text" }
-    //     ]
-    // },
-    // {
-    //     name: " Content and Structure Reports",
+    //     name: "Content and Structure Reports",
     //     columns: [
     //         // { columnName: "Image", type: "addImageField", },
     //         // { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Title", type: "Multiple lines of text" },
+    //         { columnName: "Title", type: "addMultilineText" },
     //         { columnName: "_x0024_Resources_x003a_cmscore_x", type: "addTextField" },
     //         { columnName: "_x0024_Resources_x003a_cmscore_x1", type: "addTextField" },
     //         { columnName: "_x0024_Resources_x003a_cmscore_x2", type: "addTextField" },
@@ -94,289 +96,282 @@ export const ListLibraryColumnDetails = [
 
     //     ]
     // },
-    // {
-    //     name: "Content Editor Master",
-    //     columns: [
-    //         { columnName: "Image", type: "Icon" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "AccessibleTo", type: "Person or Group" },
-    //         { columnName: "URL", type: "addUrl" },
-    //         { columnName: "BelongsTo", type: "addLookup" },
-    //     ]
-    // },
+    {
+        name: "Content Editor Master",
+        columns: [
+            { columnName: "URL", type: "addUrl" },
+            { columnName: "Icon", type: "Image" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "AccessibleTo", type: "Person or Group" },
+            {
+                columnName: "BelongsTo", type: "addLookup", targetListName: "Content Editor Master Category",
+                targetListColumn: "Title"
+            },
+        ]
+    },
 
-    // {
-    //     name: "Content Editor Master Category",
-    //     columns: [
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "AccessibleTo", type: "Person or Group" }
-    //     ]
-    // },
+    {
+        name: "Content Editor Master Category",
+        columns: [
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "AccessibleTo", type: "Person or Group" }
+        ]
+    },
+    {
+        name: "CurrencyMasterList",
+        columns: [
 
-    // {
-    //     name: "CurrencyMasterList",
-    //     columns: [
-    //         // { columnName: "Image", type: "addImageField" },
-    //         // { columnName: "IsActive", type: "addBoolean" },
-    //         // { columnName: "Description", type: "Multiple lines of text" }
-    //     ]
-    // },
+        ]
+    },
+    {
+        name: "DefinitionsMaster",
+        columns: [
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "Department", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"] },
+            { columnName: "Division", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"] },
+        ]
+    },
+    {
+        name: "DepartmentsMaster",
+        columns: [
+            { columnName: "URL", type: "addUrl" },
+            { columnName: "Place Department Under", type: "addMultilineText" },
+            { columnName: "Has Sub Department", type: "addBoolean" },
+            { columnName: " Place Department Under", type: "addMultilineText" }, //lookup
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "OpenInNewTab", type: "addBoolean" },
+            { columnName: "Order", type: "addNumberField" },
+        ]
+    },
+    {
+        name: "Employee Details",
+        columns: [
 
-    // {
-    //     name: "DefinitionsMaster",
-    //     columns: [
-    //         { columnName: "Term", type: "addTextField" },
-    //         { columnName: "Product", type: "addChoice" },
-    //         { columnName: "Department", type: "addChoice" },
-    //         { columnName: "Division", type: "addChoice" },
-    //         { columnName: "Division", type: "Tags" },
-    //     ]
-    // },
-    // {
-    //     name: "DepartmentsMaster",
-    //     columns: [
-    //         { columnName: "URL", type: "addUrl" },
-    //         { columnName: "Place Department Under", type: "Multiple lines of text" },
-    //         { columnName: "Has Sub Department", type: "addBoolean" },
-    //         { columnName: " Place Department Under", type: "Multiple lines of text" }, //lookup
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "OpenInNewTab", type: "addBoolean" },
-    //         { columnName: "Order", type: "Number" },
-    //     ]
-    // },
-    // {
-    //     name: "Digital Business Card Banner Master",
-    //     columns: [
-    //         { columnName: "BannerImage", type: "addImageField" }
-    //     ]
-    // },
-    // {
-    //     name: "Events",
-    //     columns: [
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "EndDate", type: "addDateField" },
-    //         { columnName: "Description", type: "Multiple lines of text" },
-    //         { columnName: "EventDate", type: "addDateField" },
-    //         { columnName: "Location", type: "addTextField" },
+            { columnName: "field_1", type: "addTextField" },
+            { columnName: "field_2", type: "addTextField" },
+            { columnName: "field_3", type: "addTextField" },
+            { columnName: "field_4", type: "addTextField" },
+            { columnName: "field_5", type: "addTextField" },
 
-    //     ]
-    // },
-    // {
-    //     name: "Floor Master",
-    //     columns: [
+            { columnName: "field_6", type: "addTextField" },
+            { columnName: "field_7", type: "addTextField" },
+            { columnName: "field_8", type: "addTextField" },
+            { columnName: "field_9", type: "addTextField" },
+            { columnName: "field_10", type: "addTextField" },
 
-    //         { columnName: "OrderNo", type: "Number" },
-    //         { columnName: "Floor", type: "addTextField" },
+            { columnName: "field_11", type: "addTextField" },
+            { columnName: "field_12", type: "addTextField" },
+            { columnName: "field_13", type: "addTextField" },
+            { columnName: "field_14", type: "addTextField" },
+            { columnName: "field_15", type: "addTextField" },
 
-    //     ]
-    // },
-    // {
-    //     name: "Birthday",
-    //     columns: [
-    //         { columnName: "Description", type: "Multiple lines of text" },
-    //         { columnName: "ExpiresOn", type: "Date and Time" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "DOJ", type: "Date and Time" },
-    //         { columnName: "Designation", type: "addTextField" },
-    //         { columnName: "EnableLikes", type: "addBoolean" },
-    //         { columnName: "EnableComments", type: "addBoolean" },
-    //         { columnName: "ShareAsEmail", type: "addBoolean" }
+            { columnName: "field_16", type: "addTextField" },
+            { columnName: "field_17", type: "addTextField" },
+            { columnName: "field_18", type: "addTextField" },
+            { columnName: "field_19", type: "addTextField" },
+            { columnName: "field_20", type: "addTextField" },
 
-    //     ]
-    // },
-    // {
-    //     name: "JobsMaster",
-    //     columns: [
-    //         { columnName: "JobSummary", type: "Multiple lines of text" },
-    //         // { columnName: "Status", type: "Choice" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "DateOfSubmission", type: "Date and Time" },
-    //         { columnName: "EmploymentType", type: "addTextField" },
-    //         { columnName: "ExperienceLevel", type: "addTextField" },
-    //         { columnName: "EmailID", type: "addTextField" },
+            { columnName: "field_21", type: "addTextField" },
+            { columnName: "field_22", type: "addTextField" },
+            { columnName: "field_23", type: "addTextField" },
+            { columnName: "field_24", type: "addTextField" },
+            { columnName: "field_25", type: "addTextField" },
 
+            { columnName: "field_26", type: "addTextField" },
+            { columnName: "field_27", type: "addTextField" },
+            { columnName: "field_28", type: "addTextField" },
+            { columnName: "field_29", type: "addTextField" },
+            { columnName: "field_30", type: "addTextField" },
 
+            { columnName: "field_31", type: "addTextField" },
+            { columnName: "field_32", type: "addTextField" },
+            { columnName: "field_33", type: "addTextField" },
+            { columnName: "field_34", type: "addTextField" },
+            { columnName: "field_35", type: "addTextField" },
 
-    //     ]
-    // },
-    // {
-    //     name: "LikesCountMaster",
-    //     columns: [
-    //         { columnName: "EmployeeName", type: "Person or Group" },
-    //         // { columnName: "Status", type: "Choice" },
-    //         { columnName: "LikedOn", type: "Date and Time" },
-    //         { columnName: "EmployeeEmail", type: "addTextField" },
-    //         { columnName: "ContentPage", type: "addTextField" },
-    //         { columnName: "ContentID", type: "Number" },
+            { columnName: "field_36", type: "addTextField" },
+            { columnName: "field_37", type: "addTextField" },
+            { columnName: "field_38", type: "addTextField" },
+            { columnName: "field_39", type: "addTextField" },
+            { columnName: "field_40", type: "addTextField" },
+
+            { columnName: "field_41", type: "addTextField" },
+            { columnName: "field_42", type: "addTextField" },
+            { columnName: "field_43", type: "addTextField" },
+            { columnName: "field_44", type: "addTextField" },
+            { columnName: "field_45", type: "addTextField" },
+
+            { columnName: "field_46", type: "addTextField" },
 
 
+        ]
+    },
 
-    //     ]
-    // },
+    {
+        name: "Events",
+        columns: [
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "EndDate", type: "addDateField" },
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "EventDate", type: "addDateField" },
+            { columnName: "Location", type: "addTextField" },
 
-    // {
-    //     name: "Logo Master Test",
-    //     columns: [
-    //         { columnName: "Logo", type: "addImageField" },
-    //         { columnName: "IsActive", type: "addBoolean" }
-    //     ]
-    // },
-    // {
-    //     name: "Navigations",
-    //     columns: [
-    //         { columnName: "HoverOnIcon", type: "addImageField" },
-    //         { columnName: "HoverOffIcon", type: "addImageField" },
-    //         { columnName: "OpenInNewTab", type: "addBoolean" },
-    //         { columnName: "Order0", type: "Number" },
-    //         { columnName: "Is Active", type: "addBoolean" },
-    //         { columnName: "URL", type: "Multiple lines of text" }
-    //         // { columnName: "LinkMasterID", type: "Multiple lines of text" } lookup field
+        ]
+    },
 
-    //     ]
-    // },
+    {
+        name: "Hero Banner",
+        columns: [
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "ExpiresOn", type: "addDateField" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "RMimage", type: "addImageField" },
+            { columnName: "EnableLikes", type: "addBoolean" },
+            { columnName: "EnableComments", type: "addBoolean" },
+            { columnName: "ShareAsEmail", type: "addBoolean" },
+            { columnName: "RecipientEmail", type: "Person or Group" },
+            { columnName: "new", type: "addTextField" },
+        ]
+    },
+    {
+        name: "JobsMaster",
+        columns: [
+            { columnName: "JobSummary", type: "addMultilineText" },
+            { columnName: "Status", type: "Choice" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "DateOfSubmission", type: "addDateField" },
+            { columnName: "EmploymentType", type: "addTextField" },
+            { columnName: "ExperienceLevel", type: "addTextField" },
+            { columnName: "EmailID", type: "addTextField" },
+        ]
+    },
+    {
+        name: "Job Application Master",
+        columns: [
+            { columnName: "JobSummary", type: "addMultilineText" },
+            // { columnName: "Status", type: "Choice" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "DateOfSubmission", type: "addDateField" },
+            { columnName: "EmploymentType", type: "addTextField" },
+            { columnName: "ExperienceLevel", type: "addTextField" },
+            { columnName: "EmailID", type: "addTextField" },
+        ]
+    },
+    {
+        name: "LikesCountMaster",
+        columns: [
+            { columnName: "EmployeeName", type: "Person or Group" },
+            { columnName: "LikedOn", type: "addDateField" },
+            { columnName: "EmployeeEmail", type: "addTextField" },
+            { columnName: "ContentPage", type: "addTextField" },
+            { columnName: "ContentID", type: "addNumberField" },
+        ]
+    },
+    {
+        name: "Logo Master",
+        columns: [
+            { columnName: "Logo", type: "addImageField" },
+            { columnName: "IsActive", type: "addBoolean" }
+        ]
+    },
+    {
+        name: "NavigationsIDMaster",
+        columns: [
+            { columnName: "IDFor", type: "addTextField" },
+        ]
+    },
+    {
+        name: "Navigations",
+        columns: [
+            { columnName: "HoverOnIcon", type: "addImageField" },
+            { columnName: "HoverOffIcon", type: "addImageField" },
+            { columnName: "OpenInNewTab", type: "addBoolean" },
+            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "Is Active", type: "addBoolean" },
+            { columnName: "URL", type: "addMultilineText" },
+            {
+                columnName: "LinkMasterID", type: "addLookup", targetListName: "Quick Links",
+                targetListColumn: "Title",
+            }
+
+        ]
+    },
+
+    {
+        name: "NotificationTransactionMaster",
+        columns: [
+            { columnName: "AssignedTo", type: "Person or Group" },
+            { columnName: "IsSeen", type: "addBoolean" },
+            { columnName: "ItemId", type: "addTextField" },
+            { columnName: "Catagory", type: "addTextField" },
+            { columnName: "TitleEnglish", type: "addTextField" },
+            { columnName: "TitleArabic", type: "addTextField" },
+            { columnName: "CatagoryArabic", type: "addTextField" },
+            { columnName: "SeenOn", type: "addDateField" },
+            { columnName: "CoverImage", type: "addImageField" },
+            { columnName: "Image", type: "addUrl" },
+            { columnName: "ListName", type: "addTextField" },
+            { columnName: "ItemLink", type: "addMultilineText" },
+            { columnName: "Checkoutuser", type: "Person or Group" },
+            // { columnName: "GeneralCatagory", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] },
+            { columnName: "Tag", type: "addTextField" },
+            { columnName: "Dept", type: "addTextField" },
+            { columnName: "EventDate", type: "addDateField" },
+            { columnName: "EndDate", type: "addDateField" },
 
 
 
-    // {
-    //     name: "NavigationsIDMaster",
-    //     columns: [
-    //         { columnName: "IDFor", type: "addTextField" },
-    //     ]
-    // },
-    // {
-    //     name: "Birthday",
-    //     columns: [
-    //         { columnName: "Description", type: "Multiple lines of text" },
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "DetailsPageUrl", type: "Multiple lines of text" },
-    //         { columnName: "ShortTitle", type: "addTextField" },
-    //         { columnName: "Department", type: "Choice" },
-    //         // TransactionItemID look up column
-    //         // Dept look up column
-    //         // SitePageID look up 
+        ]
+    },
 
-    //         { columnName: "RecipientEmail", type: "Person or Group" },
-    //         { columnName: "EnableLikes", type: "addBoolean" },
-    //         { columnName: "EnableComments", type: "addBoolean" },
-    //         { columnName: "ShareAsEmail", type: "addBoolean" },
-    //         { columnName: "Tag", type: "Choice" },
+    {
+        name: "OrgChartExceptions",
+        columns: [
 
-
-
-    //     ]
-    // },
-
-    // {
-    //     name: "OrgChartExceptions",
-    //     columns: [
-
-    //     ]
-    // },
+        ]
+    },
     // {
     //     name: "OrgChartMaster",
     //     columns: [
-
     //     ]
     // },
 
     // {
-    //     name: "ProductSegmentationK",
+    //     name: "ProductSegmentation",
     //     columns: [
-    //         // { columnName: "Description", type: "Multiple lines of text" },
+    //         // { columnName: "Description", type: "addMultilineText" },
     //         // { columnName: "ProductImage", type: "addImageField" },
     //         // { columnName: "Group", type: "addChoice" },
     //         // { columnName: "ProductType", type: "addChoice" },
     //         // { columnName: "ProductVariants", type: "addChoice" },
     //         { columnName: "Category", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] },
-
-    //     ]
-    // },
-    // {
-    //     name: "DepartmentsMaster Test",
-    //     columns: [
-    //         { columnName: "DepartmentName", type: "addTextField" },
-    //         { columnName: "IsActive", type: "addBoolean" }
-    //     ]
-    // },
-    // {
-    //     name: "Quick Links",
-    //     columns: [
-
-    //         { columnName: "Image", type: "addImageField" },
-    //         { columnName: "ImageHover", type: "addImageField" },
-    //         { columnName: "URL", type: "addUrl" },
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Order0", type: "Number" },
-    //         { columnName: "centernavigationicon", type: "addImageField" },
-    //         { columnName: "OpenInNewTab", type: "addBoolean" },
-
-    //     ]
-    // },
-
-
-
-
-    // {
-    //     name: "RemoSolNavigations",
-    //     columns: [
-    //         { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Order0", type: "Number" },
-    //         { columnName: "URL", type: "addUrl" },
-    //         { columnName: "OpenInNewTab", type: "addBoolean" },
-    //         { columnName: "ImageHover", type: "addImageField" },
-    //         { columnName: "Category", type: "addChoice" },
-
-    //     ]
-    // },
-    {
-        name: "ScheduleK",
-        columns: [
-            { columnName: "Schedule", type: "addTextField" },
-
-        ]
-    },
-
-    // {
-    //     name: "Schedule DepartmentMaster",
-    //     columns: [
-    //         { Department: "Schedule", type: "addTextField" },
-    //         // { Floor: "Schedule", type: "Lookup" }, 
     //     ]
     // },
 
     {
-        name: "Schedule Masterk",
+        name: "Quick Links",
         columns: [
-            { columnName: "Doctor_x0020_Name", type: "addTextField" },
-            // { columnName: "EndTiming", type: "addDateTime" },
-            // { columnName: "OTEndTime", type: "addDateTime" },
-            // { columnName: " OT", type: "addDateTime" },
-            // { columnName: "DepartmentBelongsTo", type: "Lookup" },
-            // { columnName: "FloorBelongsTo", type: "Lookup" },
-            { columnName: "Schedules", type: "addLookup", targetListName: "ScheduleK", targetListColumn: "Schedule" },
-            // { columnName: " Timing", type: "addDateTime" },
-
-        ]
-    },
-
-    {
-        name: " Taqeef Digital Business Card Master",
-        columns: [
-            { columnName: "JobTilte", type: "addTextField" },
-            { columnName: "DigitalBusinessCardLink", type: "addUrl" },
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "ImageHover", type: "addImageField" },
+            { columnName: "URL", type: "addUrl" },
             { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "OpenInNewTab", type: "addBoolean" },
 
         ]
     },
+
 
     {
         name: "TransactionViewsCount",
         columns: [
-            { columnName: "ActualNewsItemID", type: "lookup" },
+            {
+                columnName: "ActualNewsItemID", type: "addLookup", targetListName: "News",
+                targetListColumn: "ID",
+            },
             { columnName: "ShortTitle", type: "addTextField" },
             { columnName: "ViewCountofNews", type: "addNumberField" },
 
@@ -386,21 +381,25 @@ export const ListLibraryColumnDetails = [
     {
         name: "UsersQuickLinks",
         columns: [
-            { columnName: "SelectedQuickLinks", type: "Lookup" },
-            { columnName: "SelectedQuickLinks_x003a_ID", type: "lookup" },
-            { columnName: "Order0", type: "Number" },
-            { columnName: "ImageSrc", type: "Multiple lines of text" },
+            {
+                columnName: "SelectedQuickLinks", type: "addLookup", targetListName: "Quick Links",
+                targetListColumn: "Title",
+            },
+            {
+                columnName: "SelectedQuickLinks_x003a_ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
+                targetListColumn: "ID", // Specify the target column
+            },
+            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "ImageSrc", type: "addMultilineText" },
             { columnName: "URL", type: "addUrl" },
-            { columnName: "HoverImageSrc", type: "Multiple lines of text" },
+            { columnName: "HoverImageSrc", type: "addMultilineText" },
 
         ]
     },
     {
-        name: "Version Master Test",
+        name: "Version Master",
         columns: [
-            // { columnName: "Image", type: "addImageField" },
-            { columnName: "IsActive", type: "addBoolean" },
-            { columnName: "Description", type: "Multiple lines of text" }
+
         ]
     },
     {
@@ -418,36 +417,22 @@ export const ListLibraryColumnDetails = [
     },
 
     {
-        name: " Component Configuration List",
+        name: "Component Configuration Master",
         columns: [
             { columnName: "ComponentId", type: "addTextField" },
         ]
     },
 
     {
-        name: "Portal CSS Configuration List",
+        name: "Portal CSS Configuration Master",
         columns: [
             { columnName: "PrimaryColorCode", type: "addTextField" },
             { columnName: "SecondaryColorCode", type: "addTextField" },
-            { columnName: "Custom", type: "Multiple lines of text" },
+            { columnName: "Custom", type: "addMultilineText" },
 
         ]
     },
 
 
-    {
-        name: "Portal Font Configuration List",
-        columns: [
-            { columnName: " FontUrl", type: "addUrl" },
 
-        ]
-    },
-    {
-        name: "Portal Font Configuration List",
-        columns: [
-            { columnName: " FontUrl", type: "addUrl" },
-
-        ]
-    },
-    // Add other lists here...
 ];

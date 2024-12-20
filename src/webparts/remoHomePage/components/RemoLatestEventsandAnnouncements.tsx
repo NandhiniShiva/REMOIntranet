@@ -232,12 +232,15 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
   // }
 
   public addDataEvenlist() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Eventslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${Eventslist}`;
+
     window.open(listUrl, "_blank");
   }
 
   public addDataAncc() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${Announcementlist}`;
+
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {

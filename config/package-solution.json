@@ -3,10 +3,64 @@
   "solution": {
     "name": "remo-product-single-page-client-side-solution",
     "id": "18023aff-dcce-4072-9519-9da91c9efe8c",
-    "version": "1.0.0.0",
+    "version": "1.0.0.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Mail.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Mail.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Calendars.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Calendars.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.ReadWrite.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Sites.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Sites.ReadWrite.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.Create"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.ReadWrite.All"
+      }
+    ],
     "developer": {
       "name": "",
       "websiteUrl": "",
