@@ -46,6 +46,7 @@ let IsListCreate: any;
 const PictureGalleryName = listNames.PictureGallery;
 // const docLibName = listNames.DocumentLibrary;
 var ComponentConfigurationList = listNames.ComponentMaster;
+var ComponentallocationList = listNames.ComPonentAllocationMaster;
 var User: any;
 var UserEmail: any;
 var Designation: any;
@@ -112,10 +113,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     fetchList = true
     IsListCreate = false;
     console.log(spWeb, fetchList, IsListCreate);
-
   }
   public async componentDidMount() {
-    debugger;
     // this.GetAllavailablecomponents()
     const elements = document.querySelectorAll(".fui-FluentProvider.fui-FluentProvider6.___13yoiqc.f19n0e5.f3e3pzq.f1o700av.fk6fouc.fkhj508.figsok6.f1g96gwp");
 
@@ -124,7 +123,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       var item: any = elements[0];
       item.style.display = "none";
     }
-
 
     document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper,#spCommandBar,#CommentsWrapper, #spSiteHeader').forEach(function (element: any) {
       element.style.display = 'none';
@@ -188,8 +186,98 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   }
+
+  public async getAllocatedComponents() {
+    try {
+        // Fetch items from the SharePoint list
+        const response = await sp.web.lists.getByTitle(ComponentallocationList).items.get();
+
+        if (response.length === 0) {
+            console.log("No items found in the SharePoint list.");
+            return;
+        }
+
+        const selectedComponents: { [key: number]: string } = {};
+        let updatedIsInitialscreen = [...this.state.isInitialscreen];
+        let updatedAvailableComponents = [...this.state.AvailableComponents];
+
+        response.forEach((item) => {
+            if (item.Position != null && item.Component != null) {
+                // Update selectedComponents by position
+                selectedComponents[item.Position] = item.Component;
+
+                // Update isInitialscreen to mark the position as not initial
+                updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
+                    index === item.Position - 1 ? false : screen
+                );
+
+                // Remove the component from AvailableComponents
+                updatedAvailableComponents = updatedAvailableComponents.filter(
+                    (available) => available.Title !== item.Component
+                );
+            }
+        });
+
+        // Update the state with the aggregated changes
+        this.setState({
+            AvailableComponents: updatedAvailableComponents,
+            selectedComponents: selectedComponents,
+            isInitialscreen: updatedIsInitialscreen,
+        });
+
+        console.log("Available Components:", updatedAvailableComponents);
+        console.log("Selected Components:", selectedComponents);
+    } catch (error) {
+        console.error("Error fetching allocated components:", error);
+    }
+}
+
+
+  // public async getAllocatedComponents() {
+  //   debugger;
+  //   var updatedIsInitialscreen: any[] = [];
+  //   var updatedAvailableComponents: any[] = [];
+  //   try {
+  //     // Fetch items from the SharePoint list
+  //     const response = await sp.web.lists.getByTitle(ComponentallocationList).items.get();
+  //     if (response.length !== 0) {
+  //       // Create arrays for components and positions
+  //       const components: any[] = [];
+  //       const selectedComponents: any = {};
+  //       // Populate arrays and the selectedComponents map
+  //       response.forEach((item) => {
+  //         // components.push(item.Component);
+  //         if (item.Position != null && item.Component != null) {
+  //           selectedComponents[item.Position] = item.Component;
+  //           updatedIsInitialscreen = this.state.isInitialscreen.map((item1, index) =>
+  //             index === (item.Position - 1) ? false : item1
+  //           );
+  //           updatedAvailableComponents = this.state.AvailableComponents.filter(
+  //             (item2) => item.Component !== item2.Title
+  //           );
+
+  //           // this.setState({
+  //           //   AvailableComponents: updatedAvailableComponents,
+  //           // });
+  //         }
+  //       });
+  //       // Update the state with fetched data
+  //       this.setState({
+  //         AvailableComponents: updatedAvailableComponents, // Assuming you want to populate a list of available components
+  //         selectedComponents: selectedComponents, // Update selected components by position
+  //         isInitialscreen: updatedIsInitialscreen,
+  //       });
+  //       console.log("Available Components:", components);
+  //       console.log("Selected Components:", selectedComponents);
+  //     } else {
+  //       console.log("No items found in the SharePoint list.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching allocated components:", error);
+  //   }
+  // }
+
   public async GetAllavailablecomponents() {
-    debugger;
     try {
       var allcomponents = [];
       // NewWeb = Web(this.props.siteurl)
@@ -243,7 +331,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public loaderInProgress() {
     const loaderIcon = document.getElementById('loader-Icon');
     const loadContent = document.getElementById('load-content');
-    debugger;
     if (loaderIcon) {
       loaderIcon.style.display = 'block';
     }
@@ -383,8 +470,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async createSharePointLists() {
     try {
-      debugger;
-
       // Filter unmatched lists
       const unmatchedLists: any = ListLibraryColumnDetails.filter(
         listDetail => !this.state.landingPageComponentList.some(
@@ -786,66 +871,104 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     $("#" + DOMID + "").show();
     // this.setState({ isInitialscreen: false })
   }
-  public setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
-    debugger;
-    event.preventDefault();
-    var position = key;
-    this.setState((prevState) => ({
-      selectedComponents: {
-        ...prevState.selectedComponents,
-        [position]: value, // Store selected component for the position
-      },
-    }));
-    this.setState({
-      componentName: event.target.value
-    })
-    if (value != null) {
-      const selectedComponent = this.state.AvailableComponents.find(
-        (item) => item.Title === value
-      );
-      // if (selectedComponent) {
-      if (!Selectedcomponents.includes(selectedComponent.ComponentId)) {
-        // Push the selected component's ID into the global variable
-        Selectedcomponents.push(selectedComponent.ComponentId);
-        // Remove the selected component from AvailableComponents
-        const updatedAvailableComponents = this.state.AvailableComponents.filter(
-          (item) => item.ComponentId !== selectedComponent.ComponentId
+
+  public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
+    try {
+      event.preventDefault();
+
+      const position = key;
+      // Update selected component for the position
+      this.setState((prevState) => ({
+        selectedComponents: {
+          ...prevState.selectedComponents,
+          [position]: value,
+        },
+      }));
+
+      this.setState({
+        componentName: event.target.value
+      });
+
+      if (value != null) {
+        const selectedComponent = this.state.AvailableComponents.find(
+          (item) => item.Title === value
         );
 
-        const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
-          index === (key - 1) ? false : item
-        );
+        if (selectedComponent && !Selectedcomponents.includes(selectedComponent.ComponentId)) {
+          // Add to global selected list
+          Selectedcomponents.push(selectedComponent.ComponentId);
 
-        // Update the state
-        this.setState({
-          AvailableComponents: updatedAvailableComponents,
-          isInitialscreen: updatedIsInitialscreen,
-          // SelectedComponents: value,
-        });
-        $("#" + DOMID + "").hide();
-        // console.log("Global Selected IDs:", SelectedComponentIDs);
-        console.log("Updated Available Components:", updatedAvailableComponents);
+          // Update available components and screen states
+          const updatedAvailableComponents = this.state.AvailableComponents.filter(
+            (item) => item.ComponentId !== selectedComponent.ComponentId
+          );
+
+          const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+            index === (key - 1) ? false : item
+          );
+
+          this.setState({
+            AvailableComponents: updatedAvailableComponents,
+            isInitialscreen: updatedIsInitialscreen,
+          });
+
+          $("#" + DOMID).hide();
+
+          console.log("Updated Available Components:", updatedAvailableComponents);
+        }
+
+        // Ensure the SharePoint list exists
+        const listEnsureResult = await sp.web.lists.ensure(ComponentallocationList);
+        if (listEnsureResult.created) {
+          console.log(`List '${ComponentallocationList}' created successfully.`);
+        } else {
+          console.log(`List '${ComponentallocationList}' already exists.`);
+        }
+        await this.handleComponentAllocation(value, selectedComponent.ComponentId, position);
+
+        console.log("Item successfully added to the list.");
+      } else {
+        console.log("No value selected. Skipping addition to the list.");
       }
-      // if (!Selectedcomponents.includes(value)) {
-      //   // Add the value to Selectedcomponents
-      //   const updatedSelected = [...this.state.SelectedComponents, value];
-
-      //   // Remove the selected value from AvailableComponents
-      //   const updatedAvailable = this.state.AvailableComponents.filter(
-      //     (item) => item.Title !== value
-      //   );
-      //   // Update the state
-      //   this.setState({
-      //     SelectedComponents: updatedSelected,
-      //     AvailableComponents: updatedAvailable,
-      //   });
-      //   console.log(this.state.AvailableComponents);
-
-      // }
-    } else {
-
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   }
+
+  public async handleComponentAllocation(value: string, selectedComponent: any, position: number) {
+    try {
+      // Fetch the item for the specific position
+      const existingItems = await sp.web.lists
+        .getByTitle(ComponentallocationList)
+        .items.filter(`Position eq '${position}'`)
+        .get();
+
+      if (existingItems.length > 0) {
+        // If an item exists for the position, update it
+        const itemId = existingItems[0].Id; // Get the item ID
+        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).update({
+          Title: this.state.selectedValue,
+          Component: value,
+          ComponentID: selectedComponent,
+        });
+
+        console.log(`Item at position ${position} updated successfully.`);
+      } else {
+        // If no item exists, create a new one
+        await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+          Title: this.state.selectedValue,
+          Component: value,
+          ComponentID: selectedComponent,
+          Position: position,
+        });
+
+        console.log(`New item created at position ${position}.`);
+      }
+    } catch (error) {
+      console.error("Error handling component allocation:", error);
+    }
+  }
+
 
   public async getLayout() {
     try {
@@ -936,8 +1059,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         async () => {
           // await this.createLayoutMasterList();
           await this.loaderInProgress();
-          await this.GetAllavailablecomponents();
           await this.createSharePointLists();
+          await this.GetAllavailablecomponents();
+          await this.getAllocatedComponents();
           await this.HideInProgress();
         }
       );
@@ -1043,7 +1167,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                           {this.state.isInitialscreen[0] == true ?
                             <div className="col-md-8" >
                               {Components.map((item) => {
-                                debugger;
                                 if (item.Position == 1) {
                                   return (
                                     <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1144,7 +1267,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                           {this.state.isInitialscreen[1] == true ?
                             <div className="col-md-8" >
                               {Components.map((item) => {
-                                debugger;
                                 if (item.Position == 2) {
                                   return (
                                     <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1192,7 +1314,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       {this.state.isInitialscreen[2] == true ?
                         <div className="col-md-8" >
                           {Components.map((item) => {
-                            debugger;
                             if (item.Position == 3) {
                               return (
                                 <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1243,7 +1364,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                             {this.state.isInitialscreen[3] == true ?
                               <div className="col-md-8" >
                                 {Components.map((item) => {
-                                  debugger;
                                   if (item.Position == 4) {
                                     return (
                                       <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1289,7 +1409,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                           {this.state.isInitialscreen[4] == true ?
                             <div className="col-md-8" >
                               {Components.map((item) => {
-                                debugger;
                                 if (item.Position == 5) {
                                   return (
                                     <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1338,7 +1457,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               {this.state.isInitialscreen[5] == true ?
                                 <div className="col-md-8" >
                                   {Components.map((item) => {
-                                    debugger;
                                     if (item.Position == 6) {
                                       return (
                                         <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1388,7 +1506,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               {this.state.isInitialscreen[6] == true ?
                                 <div className="col-md-8" >
                                   {Components.map((item) => {
-                                    debugger;
                                     if (item.Position == 7) {
                                       return (
                                         <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
@@ -1433,7 +1550,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               {this.state.isInitialscreen[7] == true ?
                                 <div className="col-md-8" >
                                   {Components.map((item) => {
-                                    debugger;
                                     if (item.Position == 8) {
                                       return (
                                         <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
