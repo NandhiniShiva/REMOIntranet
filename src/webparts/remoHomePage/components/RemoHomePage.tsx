@@ -189,48 +189,47 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async getAllocatedComponents() {
     try {
-        // Fetch items from the SharePoint list
-        const response = await sp.web.lists.getByTitle(ComponentallocationList).items.get();
+      // Fetch items from the SharePoint list
+      const response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+      if (response.length === 0) {
+        console.log("No items found in the SharePoint list.");
+        return;
+      }
 
-        if (response.length === 0) {
-            console.log("No items found in the SharePoint list.");
-            return;
+      const selectedComponents: { [key: number]: string } = {};
+      let updatedIsInitialscreen = [...this.state.isInitialscreen];
+      let updatedAvailableComponents = [...this.state.AvailableComponents];
+
+      response.forEach((item) => {
+        if (item.Position != null && item.Component != null) {
+          // Update selectedComponents by position
+          selectedComponents[item.Position] = item.Component;
+
+          // Update isInitialscreen to mark the position as not initial
+          updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
+            index === item.Position - 1 ? false : screen
+          );
+
+          // Remove the component from AvailableComponents
+          updatedAvailableComponents = updatedAvailableComponents.filter(
+            (available) => available.Title !== item.Component
+          );
         }
+      });
 
-        const selectedComponents: { [key: number]: string } = {};
-        let updatedIsInitialscreen = [...this.state.isInitialscreen];
-        let updatedAvailableComponents = [...this.state.AvailableComponents];
+      // Update the state with the aggregated changes
+      this.setState({
+        AvailableComponents: updatedAvailableComponents,
+        selectedComponents: selectedComponents,
+        isInitialscreen: updatedIsInitialscreen,
+      });
 
-        response.forEach((item) => {
-            if (item.Position != null && item.Component != null) {
-                // Update selectedComponents by position
-                selectedComponents[item.Position] = item.Component;
-
-                // Update isInitialscreen to mark the position as not initial
-                updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
-                    index === item.Position - 1 ? false : screen
-                );
-
-                // Remove the component from AvailableComponents
-                updatedAvailableComponents = updatedAvailableComponents.filter(
-                    (available) => available.Title !== item.Component
-                );
-            }
-        });
-
-        // Update the state with the aggregated changes
-        this.setState({
-            AvailableComponents: updatedAvailableComponents,
-            selectedComponents: selectedComponents,
-            isInitialscreen: updatedIsInitialscreen,
-        });
-
-        console.log("Available Components:", updatedAvailableComponents);
-        console.log("Selected Components:", selectedComponents);
+      console.log("Available Components:", updatedAvailableComponents);
+      console.log("Selected Components:", selectedComponents);
     } catch (error) {
-        console.error("Error fetching allocated components:", error);
+      console.error("Error fetching allocated components:", error);
     }
-}
+  }
 
 
   // public async getAllocatedComponents() {
@@ -1049,25 +1048,23 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async handleSelectChange(event: any) {
     console.log("selected option", event.target.value);
-    if (event.target.value == "layout_1") {
-      this.setState(
-        {
-          showHomepage: true,
-          showDropdown: false,
-          selectedValue: event.target.value
-        },
-        async () => {
-          // await this.createLayoutMasterList();
-          await this.loaderInProgress();
-          await this.createSharePointLists();
-          await this.GetAllavailablecomponents();
-          await this.getAllocatedComponents();
-          await this.HideInProgress();
-        }
-      );
-    }
-
-
+    // if (event.target.value == "layout_1") {
+    this.setState(
+      {
+        showHomepage: true,
+        showDropdown: false,
+        selectedValue: event.target.value
+      },
+      async () => {
+        // await this.createLayoutMasterList();
+        await this.loaderInProgress();
+        await this.createSharePointLists();
+        await this.GetAllavailablecomponents();
+        await this.getAllocatedComponents();
+        await this.HideInProgress();
+      }
+    );
+    // }
   };
   public Showclearbutton() {
     var input = $("#SearchInput").val();
@@ -1104,11 +1101,47 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     });
   }
 
-  public renderComponent(position: string | number) {
+  public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
+    debugger;
+    event.preventDefault();
+    var data: any;
+    const existingItems = await sp.web.lists
+      .getByTitle(ComponentallocationList)
+      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+      .get();
+    if (existingItems.length > 0) {
+      // If an item exists for the position, update it
+      const itemId = existingItems[0].Id; // Get the item ID
+      await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).delete();
+      sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+        if (resp.length != 0) {
+          resp.forEach((items) => {
+            if (items.Title == value) {
+              data = items;
+            }
+          })
+        }
+        this.state.AvailableComponents.push(data)
+        const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+          index === (Position - 1) ? true : item
+        );
+        this.setState({
+          // AvailableComponents: updatedAvailableComponents,
+          isInitialscreen: updatedIsInitialscreen,
+        });
+      });
+    }
+
+
+  }
+
+  public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
     switch (componentName) {
       case "Hero Banner":
-        return <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return (
+          <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+          <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
       // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
       case "CEO Message":
         return <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
@@ -1140,6 +1173,110 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
+  public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
+    debugger;
+    event.preventDefault();
+
+    const value = event.target.value;
+    const previousLayout = this.state.selectedValue;
+    if (previousLayout == value) {
+      return;
+    }
+
+    try {
+      // Check if the new layout already exists
+      const isLayoutExist = await sp.web.lists
+        .getByTitle(ComponentallocationList)
+        .items.filter(`Title eq '${value}'`)
+        .get();
+
+      if (!isLayoutExist || isLayoutExist.length === 0) {
+        // Fetch all existing items from the previous layout
+        const existingItems = await sp.web.lists
+          .getByTitle(ComponentallocationList)
+          .items.filter(`Title eq '${previousLayout}'`)
+          .get();
+
+        if (existingItems.length === 0) {
+          console.log("No items found to duplicate.");
+          return;
+        }
+
+        // Duplicate each existing item with the new layout title
+        await Promise.all(
+          existingItems.map((item) =>
+            sp.web.lists.getByTitle(ComponentallocationList).items.add({
+              Title: value,
+              Component: item.Component,
+              ComponentID: item.ComponentID,
+              Position: item.Position,
+              // Add all other relevant fields here
+            })
+          )
+        );
+      }
+
+      // Update state and trigger dependent actions
+      this.setState(
+        { selectedValue: value },
+        async () => {
+          await this.loaderInProgress();
+          await this.GetAllavailablecomponents();
+          await this.getAllocatedComponents();
+          await this.HideInProgress();
+        }
+      );
+    } catch (error) {
+      console.error("Error handling layout change:", error);
+    }
+  }
+
+
+  // public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
+  //   debugger;
+  //   event.preventDefault();
+  //   var value = event.target.value;
+  //   const PreviousLayout = this.state.selectedValue
+  //   try {
+  //     var IslayoutExist = await sp.web.lists
+  //       .getByTitle(ComponentallocationList)
+  //       .items.filter(`Title eq '${value}'`).get();
+  //     if (!IslayoutExist) {
+  //       // Fetch all existing items in the list
+  //       const existingItems = await sp.web.lists
+  //         .getByTitle(ComponentallocationList)
+  //         .items.filter(`Title eq '${PreviousLayout}'`).get();
+
+  //       if (existingItems.length === 0) {
+  //         console.log("No items found to duplicate.");
+  //         return;
+  //       }
+
+  //       // Loop through each existing item to create a duplicate with a new title
+  //       for (const item of existingItems) {
+  //         await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+  //           Title: value, // Assign the new title
+  //           Component: item.Component, // Replace with your actual field names
+  //           ComponentID: item.ComponentID,
+  //           Position: item.Position,
+  //           // Add all other relevant fields here
+  //         });
+  //       }
+  //     }
+  //     this.setState({ selectedValue: value },
+  //       async () => {
+  //         await this.loaderInProgress();
+  //         await this.GetAllavailablecomponents();
+  //         await this.getAllocatedComponents();
+  //         await this.HideInProgress();
+  //       }
+  //     )
+
+  //   } catch (error) {
+  //     console.error("Error duplicating items:", error);
+  //   }
+  // }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
@@ -1156,6 +1293,16 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   currentWebUrl=""
                   CurrentPageserverRequestPath=""
                 />
+                <div>
+                  <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                    <option value="">Select Layout</option>
+                    {this.state.layoutItems.map((item) => (
+                      <option key={item.ID} value={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <section>
                 {this.state.isClicked != "yes" ?
@@ -1207,61 +1354,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                             <>
                               {this.state.selectedComponents[1] && this.renderComponent(1)}
                             </>
-
-                            // <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-                            // {Components.map(item => {
-                            //   return (
-                            //     <>
-                            //       {item.Position == 1 && item.componentName == "Climate" ?
-                            //                                   <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-
-                            //         <Climate siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //         :
-                            //         item.Position == 16 && item.componentName == "Headlines" ?
-                            //           <Headlines siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //           :
-                            //           item.Position == 16 && item.componentName == "LeadershipCorner" ?
-                            //             <LeadershipCorner siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //             :
-                            //             item.Position == 16 && item.componentName == "CorporateNews" ?
-                            //               <CorporateNews siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //               :
-                            //               item.Position == 16 && item.componentName == "EmployeeoftheMonth" ?
-                            //                 <EmployeeoftheMonth siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                 :
-                            //                 item.Position == 16 && item.componentName == "Announcements" ?
-                            //                   <Announcements siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                   :
-                            //                   item.Position == 16 && item.componentName == "Events" ?
-                            //                     <Events siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                     :
-                            //                     item.Position == 15 && item.componentName == "OffersPromoandBusinessapps" ?
-                            //                       <OffersPromoandBusinessapps siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                       :
-                            //                       item.Position == 15 && item.componentName == "Quiz" ?
-                            //                         <Quiz siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                         :
-                            //                         item.Position == 15 && item.componentName == "ImagesandVideos" ?
-                            //                           <ImagesandVideos siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                           :
-                            //                           item.Position == 15 && item.componentName == "Otherresources" ?
-                            //                             <Otherresources siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                             :
-                            //                             item.Position == 15 && item.componentName == "SocialMedia" ?
-                            //                               <SocialMedia siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                               :
-                            //                               item.Position == 15 && item.componentName == "Highlights" ?
-                            //                                 <Highlights siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} />
-                            //                                 :
-                            //                                 <>
-                            //                                 </>
-
-                            //       }
-
-                            //     </>
-
-                            //   )
-                            // })
                           }
 
                           {this.state.isInitialscreen[1] == true ?
