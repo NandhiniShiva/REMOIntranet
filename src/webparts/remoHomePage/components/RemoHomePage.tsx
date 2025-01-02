@@ -867,7 +867,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
   public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
-    $("#" + DOMID + "").show();
+    $("#" + DOMID + "").toggle();
     // this.setState({ isInitialscreen: false })
   }
 
@@ -1102,7 +1102,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-    debugger;
     event.preventDefault();
     var data: any;
     const existingItems = await sp.web.lists
@@ -1137,44 +1136,116 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
+    
+    // Define a function to render components dynamically
+    const renderWithRemoveButton = (Component: any, props = {}) => {
+      return (
+        <>
+          <button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+          <Component {...this.props} {...props} />
+        </>
+      );
+    };
+  
     switch (componentName) {
       case "Hero Banner":
-        return (
-          <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
-          <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
-      // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
+        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: null });
+  
       case "CEO Message":
-        return <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
+        return renderWithRemoveButton(RemoCEOMessage, { 
+          description: "", 
+          createList: false, 
+          name: this.state.componentName, 
+          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) 
+        });
+  
       case "Quick Links":
-        return <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
+  
       case "My Meetings":
-        return <RemoMyMeetings {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
+  
       case "Birthday":
-        return <RemoBirthday {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoBirthday, { description: "", createList: false, name: this.state.componentName });
+  
       case "News":
-        return <RemoNews {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoNews, { description: "", createList: false, name: this.state.componentName });
+  
       case "Climate":
-        return <RemoClimate {...this.props} description="" />
+        return renderWithRemoveButton(RemoClimate, { description: "" });
+  
       case "Manange Quick Links":
-        return <RemoQuickLinks {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName });
+  
       case "Events":
-        return <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
+  
       case "Announcement":
-        return <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />;
+        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName });
+  
       case "Recent Files":
-        return <RemoRecentFiles {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
+  
       case "Images and Videos":
-        return <RemoImagesandVideos {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+        return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName });
+  
       case "Social Media":
-        return <RemoSocialMedia {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-      // Add more cases for all components
+        return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
+  
       default:
         return null;
     }
   }
+  
+
+  // public renderComponent(position: number) {
+  //   const componentName = this.state.selectedComponents[position];
+  //   switch (componentName) {
+  //     case "Hero Banner":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
+  //     // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
+  //     case "CEO Message":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
+  //         </>
+  //       )
+  //     case "Quick Links":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
+  //         </>
+  //       )
+
+  //     case "My Meetings":
+  //       return <RemoMyMeetings {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Birthday":
+  //       return <RemoBirthday {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "News":
+  //       return <RemoNews {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Climate":
+  //       return <RemoClimate {...this.props} description="" />
+  //     case "Manange Quick Links":
+  //       return <RemoQuickLinks {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Events":
+  //       return <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Announcement":
+  //       return <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />;
+  //     case "Recent Files":
+  //       return <RemoRecentFiles {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Images and Videos":
+  //       return <RemoImagesandVideos {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Social Media":
+  //       return <RemoSocialMedia {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     // Add more cases for all components
+  //     default:
+  //       return null;
+  //   }
+  // }
 
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
-    debugger;
     event.preventDefault();
 
     const value = event.target.value;
@@ -1321,7 +1392,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                         <div className="input-arap relative">
                                           <input type="text" className="form-control"
                                             placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                            id="SearchInput" onKeyDown={() => this.Showclearbutton()} />
                                           <button className="form-control search_button" onClick={(e) => this.Search(e)}>
                                             {/* <img /> */}
                                           </button>
