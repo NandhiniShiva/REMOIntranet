@@ -220,7 +220,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
     return (
       <div id="dept-gallery-home">
         {this.state.isDataAvailable == true ?
-
           <>
             <div className="col-md-6" id="if-gallery-present">
               <div className="sec event-cal image-videos">

@@ -17,7 +17,8 @@ export interface IDepartmentGalleryState {
   VideoItemsss: any[];
 }
 
-var NewWeb: IWeb & IInvokable<any>
+var NewWeb: IWeb & IInvokable<any>;
+
 export default class DepartmentGallery extends React.Component<IRemoDeptLandingPageProps, IDepartmentGalleryState, {}> {
   public constructor(props: IRemoDeptLandingPageProps) {
     super(props);
@@ -68,6 +69,8 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
   // Updated code
 
   public async GetGalleryFilesFolder() {
+    console.log(NewWeb);
+debugger;
     try {
       const items = await NewWeb.lists
         .getByTitle(PictureGalleryLib)

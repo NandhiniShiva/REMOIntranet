@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
-import { sp } from "@pnp/sp/presets/all";
+import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
 // import * as $ from 'jquery';
 import { listNames } from '../Configuration';
+import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let CEO_Messagelist = listNames.CEO_Message;
 
@@ -23,10 +25,13 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     };
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
 
-    this.GetCEOMessage();
-    this.DynamicHeight();
+    const listCreation = new ListCreation();
+    listCreation.createSharePointLists(this.props.name);
+    // await this.createSharePointLists(this.props.name);
+    await this.GetCEOMessage();
+    await this.DynamicHeight();
 
 
   }
@@ -60,9 +65,14 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
   // }
 
+  public handleReadMoreClick(ItemID: any) {
+    let itemObj = { yesNo: "yes", id: ItemID }
+    this.props.onReadMoreClick(itemObj)
+  }
   // Updated 
   private async GetCEOMessage() {
     var reactHandler = this;
+    debugger;
     try {
 
       await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
@@ -77,7 +87,8 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
           });
         } else {
           reactHandler.setState({
-            Items: items
+            Items: items,
+            isDataAvailable: true
           });
           // $("#if-no-ceo-msg-present").hide();
           // $("#if-ceo-msg-present").show();
@@ -131,8 +142,143 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     }, 2000);
   }
 
+  public async createSharePointLists(componentListName: string) {
+    try {
+      console.log("List creation process started...");
+
+      // Find the list details based on the provided name
+      const listDetails = ListLibraryColumnDetails.find(
+        (list) => list.name.toLowerCase() === componentListName.toLowerCase()
+      );
+
+      if (!listDetails) {
+        console.error(`List details for '${componentListName}' not found.`);
+        return;
+      }
+
+      // Ensure the list exists; create it if it doesn't
+      const listEnsureResult = await sp.web.lists.ensure(componentListName);
+
+      if (listEnsureResult.created) {
+        console.log(`List '${componentListName}' created successfully.`);
+      } else {
+        console.log(`List '${componentListName}' already exists.`);
+      }
+
+      // Create columns for the list
+      console.log(`Adding columns to '${componentListName}'...`);
+      await this.createSharePointColumns(componentListName, listDetails.columns);
+      console.log(`Columns for '${componentListName}' created successfully.`);
+    } catch (error) {
+      console.error("Error creating lists or columns:", error);
+    }
+  }
+  public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
+    try {
+      for (const column of columns) {
+        if (!column.columnName || !column.type) {
+          console.error("Invalid column data:", column);
+          continue;
+        }
+
+        let columnExist = false;
+        try {
+          columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+        } catch {
+          columnExist = false; // Column does not exist
+        }
+
+        if (!columnExist) {
+          switch (column.type) {
+            case "addImageField":
+              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+              console.log(`Column '${column.columnName}' added as Image Field.`);
+              break;
+
+            case "addBoolean":
+              await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
+              console.log(`Column '${column.columnName}' added as Boolean.`);
+              break;
+
+            case "addTextField":
+              await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
+              console.log(`Column '${column.columnName}' added as Text Field.`);
+              break;
+
+            case "addNumberField":
+              await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
+              console.log(`Column '${column.columnName}' added as Number Field.`);
+              break;
+
+            case "addDateField":
+              await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
+              console.log(`Column '${column.columnName}' added as Date Field.`);
+              break;
+
+            case "addMultilineText":
+              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+              console.log(`Column '${column.columnName}' added as Multiline Field.`);
+              break;
+
+            case "Person or Group":
+              await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+              console.log(`Column '${column.columnName}' added as Person or Group Field.`);
+              break;
+
+            case "addMultiChoice":
+              await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+              console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
+              break;
+
+            case "addLookup":
+              if (!column.targetListName || !column.targetListColumn) {
+                console.error("Missing target list or column for lookup field:", column);
+                break;
+              }
+              const targetList = await sp.web.lists.getByTitle(column.targetListName).get();
+              await sp.web.lists
+                .getByTitle(name)
+                .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+              console.log(`Column '${column.columnName}' added as Lookup Field.`);
+              break;
+
+            case "addUrl":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
+              console.log(`Column '${column.columnName}' added as URL Field.`);
+              break;
+
+            case "Icon":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+              console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
+              break;
+
+            case "addChoice":
+              await sp.web.lists.getByTitle(name).fields.addChoice(
+                column.columnName,
+                column.choices,
+                ChoiceFieldFormatType.Dropdown
+              );
+              console.log(`Column '${column.columnName}' added as Choice Field.`);
+              break;
+
+            default:
+              console.log(`Unknown column type: ${column.type}`);
+          }
+
+          try {
+            await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+          } catch (viewError) {
+            console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error during column creation process:", error);
+    }
+  }
   public addData() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${CEO_Messagelist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${CEO_Messagelist}`;
+
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -165,7 +311,9 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <h4>{item.Name}</h4>
               <h6>{date}</h6>
               <p>{outputText}</p>
-              <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition">
+              {/* <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler()}> */}
+              <a href="#" data-interception="off" className="readmore transition" onClick={() => this.handleReadMoreClick(item.ID)}>
+
                 Read more
                 <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} className="transition" alt="image" />
               </a>

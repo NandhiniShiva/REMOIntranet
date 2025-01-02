@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import Slider from "react-slick";
 import { sp } from "@pnp/sp/presets/all";
 import { listNames } from '../Configuration';
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let Newslist = listNames.News;
 
@@ -37,7 +38,8 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   }
 
   public componentDidMount() {
-
+    const listCreation = new ListCreation();
+    listCreation.createSharePointLists(this.props.name);
     var reactHandler = this;
     reactHandler.GetNews();
 
@@ -110,7 +112,8 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
       });
 
       reactHandler.setState({
-        Items: items
+        Items: items,
+        isDataAvailable: true,
       });
     } catch (error) {
       console.error("Error fetching news items: ", error);
@@ -125,7 +128,8 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
     this.slider.slickPrev();
   }
   public addData() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Newslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${Newslist}`;
+
     window.open(listUrl, "_blank");
   }
 

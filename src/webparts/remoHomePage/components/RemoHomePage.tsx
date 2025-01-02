@@ -20,24 +20,39 @@ import Footer from './Footer/Footer'
 import pnp, { FieldUserSelectionMode } from 'sp-pnp-js';
 import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { Web } from '@pnp/sp/webs';
-import { sp } from '@pnp/sp';
-import ProgressBar from 'react-bootstrap/ProgressBar';
+// import { sp } from '@pnp/sp';
+import { ChoiceFieldFormatType, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
+
+// import ProgressBar from 'react-bootstrap/ProgressBar';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
+import { LayoutsDetails } from './ServiceProvider/Layoutconfiguration';
+import { PositionDetails } from './ServiceProvider/PositionConfiguration';
 // import {listNameDetalis} from '../Configuration';
 import { listNames } from '../Configuration';
+import CeoMessageRm from './CeoMessageReadMore';
+// import { PageAnalytics } from './ServiceProvider/LandingPageAnalytics';
+sp.setup({
+  sp: {
+    baseUrl: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct"
+  }
+});
 
-
-let NewWeb: any;
+// let NewWeb: any = WEB.NewWeb;
 let spWeb: any;
 let fetchList: any;
 let IsListCreate: any;
 // const Analytics = listNames.Analytics;
-const docLibName = listNames.PictureGallery;
+const PictureGalleryName = listNames.PictureGallery;
+// const docLibName = listNames.DocumentLibrary;
+var ComponentConfigurationList = listNames.ComponentMaster;
+var ComponentallocationList = listNames.ComPonentAllocationMaster;
 var User: any;
 var UserEmail: any;
 var Designation: any;
 var Department: any;
+var Selectedcomponents: any = [];
+var Components = PositionDetails;
 // var UserID: any;
 // var Dept: any
 // let libraryName: any = PictureLib
@@ -50,8 +65,18 @@ export interface IRemoHomePageState {
   currentList: any,
   showButton: boolean,
   showDropdown: boolean,
+  showHomepage: boolean,
   selectedValue: any,
-  layoutItems: any[]
+  layoutItems: any[],
+  AvailableComponents: any[],
+  // SelectedComponents: any[],
+  isInitialscreen: any[];
+  componentName: string;
+  selectedComponents: any, // To store selected components by position
+
+  landingPageComponentList: any[];
+  isClicked: string;
+  ceoMessegeID: any
 
 }
 
@@ -63,91 +88,218 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     super(props);
 
     this.state = {
-
       progress: 0,
       isCreatingLists: false,
       loadContent: false,
       currentList: "",
-      showButton: false,
+      showButton: true,
       showDropdown: false,
+      showHomepage: false,
       selectedValue: null,
-      layoutItems: []
+      layoutItems: [],
+      AvailableComponents: [],
+      componentName: "",
+      landingPageComponentList: [],
+      selectedComponents: {}, // To store selected components by position
+      // SelectedComponents: [],
+      // isInitialscreen: true,
+      isInitialscreen: Array(10).fill(true), // Create an array of 10 `true` values
+      isClicked: "",
+      ceoMessegeID: null
+
 
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
     IsListCreate = false;
     console.log(spWeb, fetchList, IsListCreate);
+  }
+  public async componentDidMount() {
+    // this.GetAllavailablecomponents()
+    const elements = document.querySelectorAll(".fui-FluentProvider.fui-FluentProvider6.___13yoiqc.f19n0e5.f3e3pzq.f1o700av.fk6fouc.fkhj508.figsok6.f1g96gwp");
+
+    // Check if there are elements and hide the first one
+    if (elements.length > 0) {
+      var item: any = elements[0];
+      item.style.display = "none";
+    }
+
+    document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper,#spCommandBar,#CommentsWrapper, #spSiteHeader').forEach(function (element: any) {
+      element.style.display = 'none';
+    });
+    // $(".ControlZone--control").show();
+    const userDetails = new CurrentUserDetails();
+    await userDetails
+      .getCurrentUserDetails()
+      .then(async (data) => {
+        if (data) {
+
+          console.log("Current user details", data);
+          console.log("data details", data?.Department, data?.Designation);
+          // Call LandingPageAnalytics if needed
+          // const pageAnalytics = new PageAnalytics(
+          //   "Landing Page",
+          //   User,
+          //   data?.Department ?? "NA",
+          //   data?.Designation ?? "NA",
+          //   "NA",
+          //   "NA",
+          //   UserEmail
+          // );
+          //  await  pageAnalytics.LandingPageAnalytics();
+        } else {
+          console.warn("No user details were fetched.");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching current user details:", err);
+      });
+    // setTimeout(() => {
+    // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
+    // $(".inner-pages-nav").hide();
+    // $('#master_footer_parent').hide();
+    // $('.ControlZone--control').attr('style', 'display: none !important');
+
+
+    // document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
+    //   element.style.padding = '0px';
+    //   element.style.margin = '0px';
+    // });
+
+    // const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
+    // if (innerPagesNav) {
+    //   innerPagesNav.style.display = 'none';
+    // }
+
+    // const masterFooter = document.getElementById('master_footer_parent');
+    // if (masterFooter) {
+    //   masterFooter.style.display = 'none';
+    // }
+
+    // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
+    // if (ControlZone) {
+    //   ControlZone.style.setProperty('display', 'none', 'important');
+    // }
+    // }, 500);
+
+    // this.setState({ showButton: true })
+
 
   }
 
-  public componentDidMount() {
-    this.setState({
-      showButton: true
-    })
-    this.loaderInProgress();
-    // console.log("listname", listNames);
-    // $(".inner-pages-nav").remove();
-    document.querySelectorAll('.inner-pages-nav').forEach(function (element) {
-      element.remove();
-    });
-    setTimeout(() => {
-
-
-
-      document.querySelectorAll('.inner-pages-nav').forEach(function (element) {
-        element.remove();
-      });
-      const commentsWrapper = document.getElementById('CommentsWrapper');
-      if (commentsWrapper) {
-        commentsWrapper.style.setProperty('display', 'none', 'important');
+  public async getAllocatedComponents() {
+    try {
+      // Fetch items from the SharePoint list
+      const response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+      if (response.length === 0) {
+        console.log("No items found in the SharePoint list.");
+        return;
       }
 
-      // Hide all div elements with the attribute data-automation-id="pageHeader"
-      const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-      pageHeaders.forEach((element: any) => {
-        element.style.setProperty('display', 'none', 'important');
+      const selectedComponents: { [key: number]: string } = {};
+      let updatedIsInitialscreen = [...this.state.isInitialscreen];
+      let updatedAvailableComponents = [...this.state.AvailableComponents];
+
+      response.forEach((item) => {
+        if (item.Position != null && item.Component != null) {
+          // Update selectedComponents by position
+          selectedComponents[item.Position] = item.Component;
+
+          // Update isInitialscreen to mark the position as not initial
+          updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
+            index === item.Position - 1 ? false : screen
+          );
+
+          // Remove the component from AvailableComponents
+          updatedAvailableComponents = updatedAvailableComponents.filter(
+            (available) => available.Title !== item.Component
+          );
+        }
       });
 
+      // Update the state with the aggregated changes
+      this.setState({
+        AvailableComponents: updatedAvailableComponents,
+        selectedComponents: selectedComponents,
+        isInitialscreen: updatedIsInitialscreen,
+      });
 
-      const spCommandBar = document.getElementById('spCommandBar');
-      if (spCommandBar) {
-        spCommandBar.style.setProperty('display', 'none', 'important');
+      console.log("Available Components:", updatedAvailableComponents);
+      console.log("Selected Components:", selectedComponents);
+    } catch (error) {
+      console.error("Error fetching allocated components:", error);
+    }
+  }
+
+
+  // public async getAllocatedComponents() {
+  //   debugger;
+  //   var updatedIsInitialscreen: any[] = [];
+  //   var updatedAvailableComponents: any[] = [];
+  //   try {
+  //     // Fetch items from the SharePoint list
+  //     const response = await sp.web.lists.getByTitle(ComponentallocationList).items.get();
+  //     if (response.length !== 0) {
+  //       // Create arrays for components and positions
+  //       const components: any[] = [];
+  //       const selectedComponents: any = {};
+  //       // Populate arrays and the selectedComponents map
+  //       response.forEach((item) => {
+  //         // components.push(item.Component);
+  //         if (item.Position != null && item.Component != null) {
+  //           selectedComponents[item.Position] = item.Component;
+  //           updatedIsInitialscreen = this.state.isInitialscreen.map((item1, index) =>
+  //             index === (item.Position - 1) ? false : item1
+  //           );
+  //           updatedAvailableComponents = this.state.AvailableComponents.filter(
+  //             (item2) => item.Component !== item2.Title
+  //           );
+
+  //           // this.setState({
+  //           //   AvailableComponents: updatedAvailableComponents,
+  //           // });
+  //         }
+  //       });
+  //       // Update the state with fetched data
+  //       this.setState({
+  //         AvailableComponents: updatedAvailableComponents, // Assuming you want to populate a list of available components
+  //         selectedComponents: selectedComponents, // Update selected components by position
+  //         isInitialscreen: updatedIsInitialscreen,
+  //       });
+  //       console.log("Available Components:", components);
+  //       console.log("Selected Components:", selectedComponents);
+  //     } else {
+  //       console.log("No items found in the SharePoint list.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching allocated components:", error);
+  //   }
+  // }
+
+  public async GetAllavailablecomponents() {
+    try {
+      var allcomponents = [];
+      // NewWeb = Web(this.props.siteurl)
+      const response = await sp.web.lists.getByTitle(ComponentConfigurationList).items.get();
+      console.log(response);
+      if (response.length != 0) {
+        allcomponents.push(response)
+        // }
+        this.setState({
+          AvailableComponents: response,
+          landingPageComponentList: response
+        })
       }
-    }, 1000);
-    // debugger;
-    // if (this.props.createList === true) {
-    // this.CreateList();
-    // this.CreateMultipleLists(totalListName);
-    // alert("ok")
-    // this.createSharePointLists();
-    // }
-    // this.getCurrentUser().then(() => {
-    //   this.LandingPageAnalytics();
-    // })
-
-    // const userdetails = new CurrentUserDetails();
-    // let currentUser = userdetails.getCurrentUserDetails();
-    // let data = currentUser.then(valuess){
-    //   data.
-    // }
-    // console.log("Current user details", currentUser);
-
-    const userDetails = new CurrentUserDetails();
-    userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
-
-      this.LandingPageAnalytics(data?.Department, data?.Designation);
-    }).catch((error) => {
-      console.error("Error fetching current user details:", error);
-    });
+      console.log(this.state.AvailableComponents);
+    } catch (e) {
+      console.error("error while getting all compoennts:", e)
+    }
 
   }
 
 
   public async LandingPageAnalytics(Department: any, Designation: any) {
-    NewWeb = Web(this.props.siteurl)
+    // NewWeb = Web(this.props.siteurl)
     if (!Department) {
       Department = "NA";
     }
@@ -157,7 +309,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     // console.log(this.state.Title);
 
     try {
-      const response = await NewWeb.lists.getByTitle("AnalyticsMasterList").items.add({
+      const response = await sp.web.lists.getByTitle("AnalyticsMasterList").items.add({
         Category: "Landing Page",
         UserId: User.toString(),
         Department: Department,
@@ -176,25 +328,29 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public loaderInProgress() {
-    setTimeout(() => {
-      const loaderIcon = document.getElementById('loader-Icon');
-      if (loaderIcon) {
-        loaderIcon.style.display = 'block';
-      }
-    }, 500);
+    const loaderIcon = document.getElementById('loader-Icon');
+    const loadContent = document.getElementById('load-content');
+    if (loaderIcon) {
+      loaderIcon.style.display = 'block';
+    }
+    if (loadContent) {
+      loadContent.style.display = 'none';
+    }
 
-    setTimeout(() => {
-      const loadContent = document.getElementById('load-content');
-      const loaderIcon = document.getElementById('loader-Icon');
+  }
+  public HideInProgress() {
+    // setTimeout(() => {
+    const loadContent = document.getElementById('load-content');
+    const loaderIcon = document.getElementById('loader-Icon');
 
-      if (loadContent) {
-        loadContent.style.display = 'block';
-      }
+    if (loadContent) {
+      loadContent.style.display = 'block';
+    }
 
-      if (loaderIcon) {
-        loaderIcon.style.display = 'none';
-      }
-    }, 2000);
+    if (loaderIcon) {
+      loaderIcon.style.display = 'none';
+    }
+    // }, 2000);
   }
 
 
@@ -235,22 +391,21 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
+  // Working create list function
 
-
-  // optimized code
-
-  // Updated function for creating SharePoint Lists
   // public async createSharePointLists() {
+  //   debugger;
   //   try {
 
-  //     const listNames: string[] = ListLibraryColumnDetails.map(list => list.name); // Collect list names
-  //     const totalLists: any = listNames.length;
+  //     const listNames: any[] = ListLibraryColumnDetails.map(list => list.name); // Collect list names
+  //     const totalLists: number = listNames.length; // `totalLists` is the count of lists
 
   //     // Initialize progress
   //     this.setState({
   //       isCreatingLists: true,
   //       progress: 0,
-  //       loadContent: false
+  //       loadContent: false,
+  //       currentList: null, // Ensure the current list is initially null
   //     });
 
   //     // Track if any list was newly created
@@ -258,22 +413,25 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   //     // Loop over each list for creation
   //     for (let i = 0; i < totalLists; i++) {
-  //       const listName = totalLists[i];
+
+  //       const listName = listNames[i]; // Corrected list name assignment
   //       const columns = ListLibraryColumnDetails[i].columns; // Retrieve columns for the current list
 
   //       // Update current progress and list name
   //       this.setState({
-  //         currentList: listName,
-  //         progress: ((i + 1) / totalLists) * 100
+  //         currentList: listName, // Dynamically update the list name being processed
+  //         progress: Math.round(((i + 1) / totalLists) * 100), // Calculate progress
   //       });
 
   //       // Check if the list exists; if not, create it
   //       const listEnsureResult = await sp.web.lists.ensure(listName);
+
   //       if (listEnsureResult.created) {
   //         console.log(`List '${listName}' created successfully.`);
   //         await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
   //         anyListCreated = true;
   //       } else {
+  //         await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
   //         console.log(`List '${listName}' already exists.`);
   //       }
   //     }
@@ -282,7 +440,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   //     this.setState({
   //       progress: 100,
   //       isCreatingLists: false,
-  //       loadContent: true
+  //       loadContent: true,
   //     });
 
   //     // Reset if no new lists were created
@@ -291,178 +449,356 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   //       this.setState({
   //         isCreatingLists: false,
   //         loadContent: true,
-  //         progress: 0
+  //         progress: 0,
   //       });
   //     }
-
   //   } catch (error) {
   //     console.error("Error creating lists:", error);
+
+  //     // Handle errors and reset the state
   //     this.setState({
   //       isCreatingLists: false,
   //       currentList: null,
   //       progress: 0,
-  //       loadContent: true
+  //       loadContent: true,
   //     });
   //   }
   // }
 
 
-  public async createSharePointLists() {
-    debugger;
-    try {
-      const listNames: string[] = ListLibraryColumnDetails.map(list => list.name); // Collect list names
-      const totalLists: number = listNames.length; // `totalLists` is the count of lists
 
-      // Initialize progress
-      this.setState({
-        isCreatingLists: true,
-        progress: 0,
-        loadContent: false,
-        currentList: null, // Ensure the current list is initially null
-      });
+  public async createSharePointLists() {
+    try {
+      // Filter unmatched lists
+      const unmatchedLists: any = ListLibraryColumnDetails.filter(
+        listDetail => !this.state.landingPageComponentList.some(
+          component => component.Title.toLowerCase() === listDetail.name.toLowerCase()
+        )
+      );
+
+      console.log("Unmatched Lists:", unmatchedLists);
+
+      // Get the total number of unmatched lists
+      const totalLists: number = unmatchedLists.length;
 
       // Track if any list was newly created
       let anyListCreated = false;
 
-      // Loop over each list for creation
+      // Loop through each unmatched list
       for (let i = 0; i < totalLists; i++) {
-        const listName = listNames[i]; // Corrected list name assignment
-        const columns = ListLibraryColumnDetails[i].columns; // Retrieve columns for the current list
+        const listName = unmatchedLists[i].name; // Access the list name
+        const columns = unmatchedLists[i].columns; // Access the columns for the list
 
-        // Update current progress and list name
-        this.setState({
-          currentList: listName, // Dynamically update the list name being processed
-          progress: Math.round(((i + 1) / totalLists) * 100), // Calculate progress
-        });
-
-        // Check if the list exists; if not, create it
+        // Ensure the list exists or create it
         const listEnsureResult = await sp.web.lists.ensure(listName);
 
         if (listEnsureResult.created) {
           console.log(`List '${listName}' created successfully.`);
-          await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
+          await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
           anyListCreated = true;
         } else {
           console.log(`List '${listName}' already exists.`);
+          await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
         }
       }
 
-      // Final progress update
-      this.setState({
-        progress: 100,
-        isCreatingLists: false,
-        loadContent: true,
-      });
-
-      // Reset if no new lists were created
+      // Log final status
       if (!anyListCreated) {
         console.log("All lists already existed. No new lists were created.");
-        this.setState({
-          isCreatingLists: false,
-          loadContent: true,
-          progress: 0,
-        });
       }
     } catch (error) {
       console.error("Error creating lists:", error);
-
-      // Handle errors and reset the state
-      this.setState({
-        isCreatingLists: false,
-        currentList: null,
-        progress: 0,
-        loadContent: true,
-      });
     }
   }
 
 
-  // Updated function for creating columns in a SharePoint List
+
+  // // Updated function for creating columns in a SharePoint List
+  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
+  //   try {
+  //     for (const column of columns) {
+  //       try {
+  //         // Check if the column already exists
+  //         await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+  //         console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
+  //       } catch (error) {
+  //         // If column does not exist, create it based on type
+  //         switch (column.type) {
+  //           case "addImageField":
+  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+  //             console.log(`Column '${column.columnName}' added as Image Field.`);
+  //             const view = await sp.web.lists.getByTitle(name).views.getByTitle("All Items").get();
+  //             console.log(view);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+
+  //           case "addBoolean":
+  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Boolean.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+
+  //           case "addTextField":
+  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Text Field.`);
+  //             break;
+
+  //           case "addNumberField":
+  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Number Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+
+  //           case "addDateField":
+  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Date Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+  //           case "addMultilineText":
+  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as multiline Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+
+  //           case "Person or Group":
+  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+  //             console.log(`Column '${column.columnName}' added as personorgroup Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+  //           case "addMultiChoice":
+  //             // await sp.web.lists.getByTitle(name).fields.addMultiChoice("My Field",  column.group,  false, "My Group" );
+  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(
+  //               column.columnName, // The title of the field
+  //               column.group, // The array of choices (["Midea", "Trosten", ...])
+  //               false, // Set to true if you want to allow custom user input
+  //               //  "My Group" // The group under which the field will appear (optional)
+  //             );
+  //             // const field2 = await sp.web.lists.getByTitle("My List").fields.addMultiChoice("My Field", { Choices: choices, FillInChoice: false, Group: "My Group" });
+  //             console.log(`Column '${column.columnName}' added as choice Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+  //           case "addLookup":
+  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
+  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+  //             console.log(`Column '${column.columnName}' added as lookup Field.`);
+  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //             break;
+  //             case "addUrl":
+  //               debugger;
+  //               await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink); // Or UrlFieldFormatType.Image
+  //               console.log(`Column '${column.columnName}' added as URL.`);
+  //               break;              
+  //           default:
+  //             console.log(`Unknown column type: ${column.type}`);
+
+  //         }
+
+  //         // Add the column to the "All Items" view
+  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during column creation process:", error);
+  //   }
+  // }
+
+
+  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
+  //   try {
+  //     for (const column of columns) {
+  //       var columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+  //       if (!columnExist) {
+  //         // try {
+  //         //   // Check if the column already exists
+
+  //         //   console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
+  //         // } catch (error) {
+  //         // If column does not exist, create it based on type
+  //         switch (column.type) {
+  //           case "addImageField":
+  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+  //             console.log(`Column '${column.columnName}' added as Image Field.`);
+  //             break;
+
+  //           case "addBoolean":
+  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Boolean.`);
+  //             break;
+
+  //           case "addTextField":
+  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
+  //             console.log(`Column '${column.columnName}' added as Text Field.`);
+  //             break;
+
+  //           case "addNumberField":
+  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Number Field.`);
+  //             break;
+
+  //           case "addDateField":
+  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Date Field.`);
+  //             break;
+
+  //           case "addMultilineText":
+  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+  //             console.log(`Column '${column.columnName}' added as Multiline Field.`);
+  //             break;
+
+  //           case "Person or Group":
+  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+  //             console.log(`Column '${column.columnName}' added as Person or Group Field.`);
+  //             break;
+
+  //           case "addMultiChoice":
+  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+  //             console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
+  //             break;
+
+  //           case "addLookup":
+  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
+  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+  //             console.log(`Column '${column.columnName}' added as Lookup Field.`);
+  //             break;
+
+  //           case "addUrl":
+  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
+  //             console.log(`Column '${column.columnName}' added as URL Field.`);
+  //             break;
+
+  //           case "Icon":
+  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+  //             console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
+  //             break;
+  //           case "addChoice":
+  //             debugger;
+  //             await sp.web.lists.getByTitle(name).fields.addChoice(
+  //               column.columnName,
+  //               column.choices,
+  //               ChoiceFieldFormatType.Dropdown // Use Dropdown or RadioButtons
+  //             );
+  //             console.log(`Column '${column.columnName}' added as Choice Field.`);
+  //             break;
+  //           default:
+  //             console.log(`Unknown column type: ${column.type}`);
+  //         }
+
+  //         // Add the column to the "All Items" view
+  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during column creation process:", error);
+  //   }
+  // }
+
+
   public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
     try {
       for (const column of columns) {
+        if (!column.columnName || !column.type) {
+          console.error("Invalid column data:", column);
+          continue;
+        }
+
+        let columnExist = false;
         try {
-          // Check if the column already exists
-          await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-          console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
-        } catch (error) {
-          // If column does not exist, create it based on type
+          columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+        } catch {
+          columnExist = false; // Column does not exist
+        }
+
+        if (!columnExist) {
           switch (column.type) {
             case "addImageField":
               await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
               console.log(`Column '${column.columnName}' added as Image Field.`);
-              const view = await sp.web.lists.getByTitle(name).views.getByTitle("All Items").get();
-              console.log(view);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               break;
 
             case "addBoolean":
               await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
               console.log(`Column '${column.columnName}' added as Boolean.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               break;
 
             case "addTextField":
               await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               console.log(`Column '${column.columnName}' added as Text Field.`);
               break;
 
             case "addNumberField":
               await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
               console.log(`Column '${column.columnName}' added as Number Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               break;
 
             case "addDateField":
               await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
               console.log(`Column '${column.columnName}' added as Date Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               break;
+
             case "addMultilineText":
               await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-              console.log(`Column '${column.columnName}' added as Date Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+              console.log(`Column '${column.columnName}' added as Multiline Field.`);
               break;
 
             case "Person or Group":
               await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-              console.log(`Column '${column.columnName}' added as Date Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+              console.log(`Column '${column.columnName}' added as Person or Group Field.`);
               break;
-            case "addMultiChoice":
-              // await sp.web.lists.getByTitle(name).fields.addMultiChoice("My Field",  column.group,  false, "My Group" );
-              await sp.web.lists.getByTitle(name).fields.addMultiChoice(
-                column.columnName, // The title of the field
-                column.group, // The array of choices (["Midea", "Trosten", ...])
-                false, // Set to true if you want to allow custom user input
-                //  "My Group" // The group under which the field will appear (optional)
-              );
-              // const field2 = await sp.web.lists.getByTitle("My List").fields.addMultiChoice("My Field", { Choices: choices, FillInChoice: false, Group: "My Group" });
 
-              console.log(`Column '${column.columnName}' added as Date Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+            case "addMultiChoice":
+              await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+              console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
               break;
 
             case "addLookup":
-              const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
-              await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-              console.log(`Column '${column.columnName}' added as Date Field.`);
-              await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+              if (!column.targetListName || !column.targetListColumn) {
+                console.error("Missing target list or column for lookup field:", column);
+                break;
+              }
+              const targetList = await sp.web.lists.getByTitle(column.targetListName).get();
+              await sp.web.lists
+                .getByTitle(name)
+                .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+              console.log(`Column '${column.columnName}' added as Lookup Field.`);
               break;
+
+            case "addUrl":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
+              console.log(`Column '${column.columnName}' added as URL Field.`);
+              break;
+
+            case "Icon":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+              console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
+              break;
+
+            case "addChoice":
+              await sp.web.lists.getByTitle(name).fields.addChoice(
+                column.columnName,
+                column.choices,
+                ChoiceFieldFormatType.Dropdown
+              );
+              console.log(`Column '${column.columnName}' added as Choice Field.`);
+              break;
+
             default:
               console.log(`Unknown column type: ${column.type}`);
-
           }
 
-          // Add the column to the "All Items" view
-          await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+          try {
+            await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+          } catch (viewError) {
+            console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
+          }
         }
       }
     } catch (error) {
       console.error("Error during column creation process:", error);
     }
   }
+
+
 
 
 
@@ -499,14 +835,28 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
+
+
+  // New picture lib code 
+
   public CreatePictureLibrary = async () => {
+    try {
+      var ListExist = await spWeb.lists.getByTitle(PictureGalleryName).get();
+      if (!ListExist) {
+        const result = await spWeb.lists.add(PictureGalleryName, "Picture Library", 109, true, { OnQuickLaunch: true });
+        console.log("Picture Library Created:", result);
+        // alert("Picture Library created successfully!");
+      } else {
+        console.log("Picture Library Created already");
+        return;
+      }
 
-    await spWeb.lists.add("Image gallery1", " Picture Library1", 109, true, { OnQuickLaunch: true });
-    // await this.addFolder();
-    alert("CreatePictureLibrary")
+    } catch (error) {
+      console.error("Error creating Picture Library:", error);
+      // alert("Failed to create Picture Library. Please check the console for more details.");
+    }
+  };
 
-
-  }
 
   public showDropDown() {
     this.getLayout();
@@ -515,238 +865,1130 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       showDropdown: true,
     })
   }
-  public async getLayout() {
+  public showcomponents(e: any, DOMID: string) {
+    e.preventDefault();
+    $("#" + DOMID + "").toggle();
+    // this.setState({ isInitialscreen: false })
+  }
+
+  public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
     try {
+      event.preventDefault();
 
+      const position = key;
+      // Update selected component for the position
+      this.setState((prevState) => ({
+        selectedComponents: {
+          ...prevState.selectedComponents,
+          [position]: value,
+        },
+      }));
 
-      const items = await sp.web.lists
-        .getByTitle("LayoutMaster")
-        .items
-        .select("Title", "*")
-        .filter(`IsActive eq '1'`)
-        // .orderBy("Created", false)
-        .getAll();
-
-      console.log("Layout item", items);
       this.setState({
-        layoutItems: items
-      })
+        componentName: event.target.value
+      });
 
+      if (value != null) {
+        const selectedComponent = this.state.AvailableComponents.find(
+          (item) => item.Title === value
+        );
+
+        if (selectedComponent && !Selectedcomponents.includes(selectedComponent.ComponentId)) {
+          // Add to global selected list
+          Selectedcomponents.push(selectedComponent.ComponentId);
+
+          // Update available components and screen states
+          const updatedAvailableComponents = this.state.AvailableComponents.filter(
+            (item) => item.ComponentId !== selectedComponent.ComponentId
+          );
+
+          const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+            index === (key - 1) ? false : item
+          );
+
+          this.setState({
+            AvailableComponents: updatedAvailableComponents,
+            isInitialscreen: updatedIsInitialscreen,
+          });
+
+          $("#" + DOMID).hide();
+
+          console.log("Updated Available Components:", updatedAvailableComponents);
+        }
+
+        // Ensure the SharePoint list exists
+        const listEnsureResult = await sp.web.lists.ensure(ComponentallocationList);
+        if (listEnsureResult.created) {
+          console.log(`List '${ComponentallocationList}' created successfully.`);
+        } else {
+          console.log(`List '${ComponentallocationList}' already exists.`);
+        }
+        await this.handleComponentAllocation(value, selectedComponent.ComponentId, position);
+
+        console.log("Item successfully added to the list.");
+      } else {
+        console.log("No value selected. Skipping addition to the list.");
+      }
     } catch (error) {
-      console.log("Error in getlayout", error);
-
+      console.error("An error occurred:", error);
     }
   }
+
+  public async handleComponentAllocation(value: string, selectedComponent: any, position: number) {
+    try {
+      // Fetch the item for the specific position
+      const existingItems = await sp.web.lists
+        .getByTitle(ComponentallocationList)
+        .items.filter(`Position eq '${position}'`)
+        .get();
+
+      if (existingItems.length > 0) {
+        // If an item exists for the position, update it
+        const itemId = existingItems[0].Id; // Get the item ID
+        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).update({
+          Title: this.state.selectedValue,
+          Component: value,
+          ComponentID: selectedComponent,
+        });
+
+        console.log(`Item at position ${position} updated successfully.`);
+      } else {
+        // If no item exists, create a new one
+        await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+          Title: this.state.selectedValue,
+          Component: value,
+          ComponentID: selectedComponent,
+          Position: position,
+        });
+
+        console.log(`New item created at position ${position}.`);
+      }
+    } catch (error) {
+      console.error("Error handling component allocation:", error);
+    }
+  }
+
+
+  public async getLayout() {
+    try {
+      this.setState({
+        layoutItems: LayoutsDetails
+      });
+      // Check if the "LayoutMaster" list exists
+      // const lists = await sp.web.lists.filter(`Title eq 'LayoutMaster'`).get();
+
+      // if (lists.length === 0) {
+      //   await sp.web.lists.add("LayoutMaster", "This list stores layout configurations.", 100, false); // 100 = Generic List
+      //   console.log("List 'LayoutMaster' created.");
+      //   await sp.web.lists.getByTitle("LayoutMaster").fields.addBoolean("IsActive", {
+      //     DefaultValue: "0", // Default to false
+      //     Title: "Is Active"
+      //   });
+      //   console.log("Field 'IsActive' added to the list.");
+      //   await sp.web.lists.getByTitle("LayoutMaster").items.add({
+      //     Title: "Layout1",
+      //     IsActive: true
+      //   });
+      //   console.log("Default item 'Layout1' added to 'LayoutMaster' list.");
+      //   // Add the default item to the list
+      // }
+
+
+      // // Fetch the active layouts from the list
+      // const items = await sp.web.lists
+      //   .getByTitle("LayoutMaster")
+      //   .items
+      //   .select("Title", "*")
+      //   .filter(`IsActive eq '1'`)
+      //   .getAll();
+
+      // console.log("Layout items", items);
+
+      // // Update the component state
+      // this.setState({
+      //   layoutItems: items
+      // });
+    } catch (error) {
+      console.log("Error in getLayout", error);
+    }
+  }
+
+
+  public readMoreHandler(isReadMoreClick: any) {
+    console.log("isReadMoreClick", isReadMoreClick);
+    // this.props.onReadMoreClick()
+    // this.props.onReadMoreClick("yes", ItemID)
+    alert(`hi homePage ${isReadMoreClick.yesNo, isReadMoreClick.id}`)
+    this.setState({
+      isClicked: isReadMoreClick.yesNo,
+      ceoMessegeID: isReadMoreClick.id
+    })
+
+  }
+
+  // public async createLayoutMasterList() {
+  //   try {
+  //     const list = await sp.web.lists.add("LayoutMaster");
+  //     console.log("List 'LayoutMaster' created.");
+  //     await list.fields.addBoolean("IsActive", {
+  //       DefaultValue: false,
+  //       Title: "Is Active"
+  //     });
+  //     console.log("Field 'IsActive' added.");
+  //     await list.items.add({
+  //       Title: "Layout1",
+  //       IsActive: true
+  //     });
+  //     console.log("Default item added to the list.");
+  //   } catch (error) {
+  //     console.error("Error creating or updating 'LayoutMaster':", error);
+  //   }
+  // }
+
+
   public async handleSelectChange(event: any) {
     console.log("selected option", event.target.value);
-    if (event.target.value == "Layout 1") {
-      this.setState({
-        showButton: false,
+    // if (event.target.value == "layout_1") {
+    this.setState(
+      {
+        showHomepage: true,
         showDropdown: false,
-      });
-      await this.createSharePointLists();
-      await this.createDocumentLibrary(docLibName);
-      // await this.CreatePictureLibrary();
-    }
-    this.setState({
-      selectedValue: event.target.value
-    })
+        selectedValue: event.target.value
+      },
+      async () => {
+        // await this.createLayoutMasterList();
+        await this.loaderInProgress();
+        await this.createSharePointLists();
+        await this.GetAllavailablecomponents();
+        await this.getAllocatedComponents();
+        await this.HideInProgress();
+      }
+    );
+    // }
   };
+  public Showclearbutton() {
+    var input = $("#SearchInput").val();
+    if (input == "") {
+      $(".clear_part").hide();
+    }
+    else {
+      $(".clear_part").addClass("active");
+      $(".clear_part").show();
+    }
+  }
+  public Search(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    $(".search_button").show();
+    var query: string = $.trim(($("#SearchInput") as any).val());
+    sp.web.lists.getByTitle(ComponentConfigurationList).items.filter(`substringof('${query}',Title)`).top(5000).orderBy("Title", true).get().then((resp) => {
+      if (resp.length != 0) {
+        this.setState({
+          AvailableComponents: resp
+        });
+      }
+    })
+  }
+  public Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    $("#SearchInput").val("");
+    $(".clear_part").removeClass("active");
+    sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+      if (resp.length != 0) {
+        this.setState({
+          AvailableComponents: resp
+        });
+      }
+    });
+  }
+
+  public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
+    event.preventDefault();
+    var data: any;
+    const existingItems = await sp.web.lists
+      .getByTitle(ComponentallocationList)
+      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+      .get();
+    if (existingItems.length > 0) {
+      // If an item exists for the position, update it
+      const itemId = existingItems[0].Id; // Get the item ID
+      await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).delete();
+      sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+        if (resp.length != 0) {
+          resp.forEach((items) => {
+            if (items.Title == value) {
+              data = items;
+            }
+          })
+        }
+        this.state.AvailableComponents.push(data)
+        const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+          index === (Position - 1) ? true : item
+        );
+        this.setState({
+          // AvailableComponents: updatedAvailableComponents,
+          isInitialscreen: updatedIsInitialscreen,
+        });
+      });
+    }
+
+
+  }
+
+  public renderComponent(position: number) {
+    const componentName = this.state.selectedComponents[position];
+    
+    // Define a function to render components dynamically
+    const renderWithRemoveButton = (Component: any, props = {}) => {
+      return (
+        <>
+          <button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+          <Component {...this.props} {...props} />
+        </>
+      );
+    };
+  
+    switch (componentName) {
+      case "Hero Banner":
+        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: null });
+  
+      case "CEO Message":
+        return renderWithRemoveButton(RemoCEOMessage, { 
+          description: "", 
+          createList: false, 
+          name: this.state.componentName, 
+          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) 
+        });
+  
+      case "Quick Links":
+        return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
+  
+      case "My Meetings":
+        return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Birthday":
+        return renderWithRemoveButton(RemoBirthday, { description: "", createList: false, name: this.state.componentName });
+  
+      case "News":
+        return renderWithRemoveButton(RemoNews, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Climate":
+        return renderWithRemoveButton(RemoClimate, { description: "" });
+  
+      case "Manange Quick Links":
+        return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Events":
+        return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Announcement":
+        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Recent Files":
+        return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Images and Videos":
+        return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName });
+  
+      case "Social Media":
+        return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
+  
+      default:
+        return null;
+    }
+  }
+  
+
+  // public renderComponent(position: number) {
+  //   const componentName = this.state.selectedComponents[position];
+  //   switch (componentName) {
+  //     case "Hero Banner":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
+  //     // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
+  //     case "CEO Message":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
+  //         </>
+  //       )
+  //     case "Quick Links":
+  //       return (
+  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+  //           <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
+  //         </>
+  //       )
+
+  //     case "My Meetings":
+  //       return <RemoMyMeetings {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Birthday":
+  //       return <RemoBirthday {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "News":
+  //       return <RemoNews {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Climate":
+  //       return <RemoClimate {...this.props} description="" />
+  //     case "Manange Quick Links":
+  //       return <RemoQuickLinks {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Events":
+  //       return <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Announcement":
+  //       return <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />;
+  //     case "Recent Files":
+  //       return <RemoRecentFiles {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Images and Videos":
+  //       return <RemoImagesandVideos {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     case "Social Media":
+  //       return <RemoSocialMedia {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
+  //     // Add more cases for all components
+  //     default:
+  //       return null;
+  //   }
+  // }
+
+  public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
+    event.preventDefault();
+
+    const value = event.target.value;
+    const previousLayout = this.state.selectedValue;
+    if (previousLayout == value) {
+      return;
+    }
+
+    try {
+      // Check if the new layout already exists
+      const isLayoutExist = await sp.web.lists
+        .getByTitle(ComponentallocationList)
+        .items.filter(`Title eq '${value}'`)
+        .get();
+
+      if (!isLayoutExist || isLayoutExist.length === 0) {
+        // Fetch all existing items from the previous layout
+        const existingItems = await sp.web.lists
+          .getByTitle(ComponentallocationList)
+          .items.filter(`Title eq '${previousLayout}'`)
+          .get();
+
+        if (existingItems.length === 0) {
+          console.log("No items found to duplicate.");
+          return;
+        }
+
+        // Duplicate each existing item with the new layout title
+        await Promise.all(
+          existingItems.map((item) =>
+            sp.web.lists.getByTitle(ComponentallocationList).items.add({
+              Title: value,
+              Component: item.Component,
+              ComponentID: item.ComponentID,
+              Position: item.Position,
+              // Add all other relevant fields here
+            })
+          )
+        );
+      }
+
+      // Update state and trigger dependent actions
+      this.setState(
+        { selectedValue: value },
+        async () => {
+          await this.loaderInProgress();
+          await this.GetAllavailablecomponents();
+          await this.getAllocatedComponents();
+          await this.HideInProgress();
+        }
+      );
+    } catch (error) {
+      console.error("Error handling layout change:", error);
+    }
+  }
+
+
+  // public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
+  //   debugger;
+  //   event.preventDefault();
+  //   var value = event.target.value;
+  //   const PreviousLayout = this.state.selectedValue
+  //   try {
+  //     var IslayoutExist = await sp.web.lists
+  //       .getByTitle(ComponentallocationList)
+  //       .items.filter(`Title eq '${value}'`).get();
+  //     if (!IslayoutExist) {
+  //       // Fetch all existing items in the list
+  //       const existingItems = await sp.web.lists
+  //         .getByTitle(ComponentallocationList)
+  //         .items.filter(`Title eq '${PreviousLayout}'`).get();
+
+  //       if (existingItems.length === 0) {
+  //         console.log("No items found to duplicate.");
+  //         return;
+  //       }
+
+  //       // Loop through each existing item to create a duplicate with a new title
+  //       for (const item of existingItems) {
+  //         await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+  //           Title: value, // Assign the new title
+  //           Component: item.Component, // Replace with your actual field names
+  //           ComponentID: item.ComponentID,
+  //           Position: item.Position,
+  //           // Add all other relevant fields here
+  //         });
+  //       }
+  //     }
+  //     this.setState({ selectedValue: value },
+  //       async () => {
+  //         await this.loaderInProgress();
+  //         await this.GetAllavailablecomponents();
+  //         await this.getAllocatedComponents();
+  //         await this.HideInProgress();
+  //       }
+  //     )
+
+  //   } catch (error) {
+  //     console.error("Error duplicating items:", error);
+  //   }
+  // }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
-    // const { siteurl, context, userid } = this.props
-
-    // return (
-    //   <>
-
-    //     <div className={styles.remoHomePage} id="load-content" style={{ display: this.state.loadContent ? "block" : "none" }}>
-
-    //       {/* <div className={styles.remoHomePage} id="load-content" style={{ display: "none" }}> */}
-    //       <div id="Global-Top-Header-Navigation">
-    //         <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-    //       </div>
-    //       <section>
-    //         <div className="container home_pg relative">
-
-    //           <div className="section-rigth">
-    //             <div className="banner-ceo-message ">
-    //               <div className="row">
-
-    //                 <RemoHeroBanner siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //                 <RemoCEOMessage siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-    //               </div>
-    //             </div>
-    //             <RemoNavigations siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //             <div className="row section_bottom">
-
-    //               <div className="col-md-8">
-    //                 <div className="events-calender">
-    //                   <RemoMyMeetings siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //                 </div>
-
-    //                 <RemoNews siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-
-    //                 <div className="latest-news-announcemnst" id="latest-news-announcemnst">
-    //                   <div className="row row-res">
-    //                     <RemoLatestEventsandAnnouncements siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-    //                   </div>
-    //                 </div>
-    //                 <div id="social-and-gallery">
-    //                   <div className="images-social">
-    //                     <div className="row row-res">
-    //                       <RemoImagesandVideos siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-    //                       <RemoSocialMedia siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //               </div>
-    //               <div className="col-md-4">
-
-    //                 <RemoBirthday siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //                 <RemoClimate siteurl={this.props.siteurl} context={this.props.context} description={''} />
-
-
-
-    //                 <RemoQuickLinks siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-
-    //                 <RemoRecentFiles siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //               </div>
-    //             </div>
-    //             <RemoResponsive siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-    //             <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} />
-
-    //           </div>
-
-    //         </div>
-    //       </section>
-    //     </div>
-
-
-    //     <div id='loader-Icon' className="loader-block" style={{ display: this.state.isCreatingLists ? "block" : "none" }}>
-    //       <div id="progressContainer" style={{ display: this.state.isCreatingLists ? "block" : "none" }}>
-    //         <p id="currentListName">Creating: {this.state.currentList}</p>
-    //         <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
-    //       </div>
-    //     </div>
-
-    //   </>
-
-    // );
-
-
-    // Optimized code
+    var handler = this;
 
     return (
+      //Layout 1
       <>
-        {/* Main Content */}
-        {this.state.showButton == false ?
-
-          <>
-            {this.state.showDropdown == false ?
-              <div>
-
-                <div className={styles.remoHomePage} id="load-content" style={{ display: this.state.loadContent ? "block" : "none" }}>
-                  <div id="Global-Top-Header-Navigation">
-                    <GlobalSideNav
-                      siteurl={this.props.siteurl}
-                      context={this.props.context}
-                      currentWebUrl=""
-                      CurrentPageserverRequestPath=""
-                    />
-                  </div>
-
-                  <section>
-                    <div className="container home_pg relative">
-                      <div className="section-right">
-                        {/* Banner and CEO Message */}
-                        <div className="banner-ceo-message">
-                          <div className="row">
-                            <RemoHeroBanner {...this.props} description="" createList={false} name="" />
-                            <RemoCEOMessage {...this.props} description="" createList={false} name="" />
-                          </div>
-                        </div>
-
-                        <RemoNavigations {...this.props} description="" createList={false} name="" />
-
-                        {/* Events Calendar and News Section */}
-                        <div className="row section_bottom">
-                          <div className="col-md-8">
-                            <div className="events-calendar">
-                              <RemoMyMeetings {...this.props} description="" createList={false} name="" />
-                            </div>
-
-                            <RemoNews {...this.props} description="" createList={false} name="" />
-
-                            <div className="latest-news-announcements" id="latest-news-announcements">
-                              <div className="row row-res">
-                                <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name="" />
-                              </div>
-                            </div>
-
-                            <div id="social-and-gallery" className="images-social">
-                              <div className="row row-res">
-                                <RemoImagesandVideos {...this.props} description="" createList={false} name="" />
-                                <RemoSocialMedia {...this.props} description="" createList={false} name="" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Sidebar Components */}
-                          <div className="col-md-4">
-                            <RemoBirthday {...this.props} description="" createList={false} name="" />
-                            <RemoClimate {...this.props} description="" />
-                            <RemoQuickLinks {...this.props} description="" createList={false} name="" />
-                            <RemoRecentFiles {...this.props} description="" createList={false} name="" />
-                          </div>
-                        </div>
-
-                        <RemoResponsive {...this.props} currentWebUrl="" CurrentPageserverRequestPath="" />
-                        <Footer {...this.props} description="" createList={false} name="" />
-                      </div>
-                    </div>
-                  </section>
+        {this.state.showHomepage == true &&
+          <div>
+            <div className={styles.remoHomePage} id="load-content">
+              <div id="Global-Top-Header-Navigation">
+                <GlobalSideNav
+                  siteurl={this.props.siteurl}
+                  context={this.props.context}
+                  currentWebUrl=""
+                  CurrentPageserverRequestPath=""
+                />
+                <div>
+                  <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                    <option value="">Select Layout</option>
+                    {this.state.layoutItems.map((item) => (
+                      <option key={item.ID} value={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+              </div>
+              <section>
+                {this.state.isClicked != "yes" ?
+                  <div className="container home_pg relative">
+                    <div className="section-right">
+                      {/* Banner and CEO Message */}
+                      <div className="banner-ceo-message">
+                        <div className="row">
+                          {this.state.isInitialscreen[0] == true ?
+                            <div className="col-md-8" >
+                              {Components.map((item) => {
+                                if (item.Position == 1) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onKeyDown={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
 
-                {this.state.isCreatingLists && (
-                  <div id="loader-Icon" className="loader-block">
-                    <div id="progressContainer">
-                      <p id="currentListName">Creating: {this.state.currentList}</p>
-                      <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[1] && this.renderComponent(1)}
+                            </>
+                          }
+
+                          {this.state.isInitialscreen[1] == true ?
+                            <div className="col-md-8" >
+                              {Components.map((item) => {
+                                if (item.Position == 2) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[2] && this.renderComponent(2)}
+                            </>
+                            // <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
+                          }
+                        </div>
+                      </div>
+                      {this.state.isInitialscreen[2] == true ?
+                        <div className="col-md-8" >
+                          {Components.map((item) => {
+                            if (item.Position == 3) {
+                              return (
+                                <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                  <div id={item.selectId} style={{ display: "none" }}>
+                                    <div className="input-arap relative">
+                                      <input type="text" className="form-control"
+                                        placeholder="Search for the contact here"
+                                        id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                      <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                        {/* <img /> */}
+                                      </button>
+                                      <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                        {/* <img/> */}
+                                        <span>Clear</span>
+                                      </button>
+                                      <ul>
+                                        {handler.state.AvailableComponents.map((Items1) => {
+                                          return (
+                                            <li
+                                              className='li-search-wrap'
+                                              onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                            >
+                                              <p className="people_name">{Items1.Title}</p>
+                                            </li>
+                                          )
+                                        }
+                                        )}
+                                      </ul>
+                                    </div>
+                                  </div>
+
+                                </>
+                              )
+                            }
+                          })}
+                        </div>
+                        :
+                        <>
+                          {this.state.selectedComponents[3] && this.renderComponent(3)}
+                        </>
+
+                      }
+
+                      {/* Events Calendar and News Section */}
+                      <div className="row section_bottom">
+                        <div className="col-md-8">
+                          <div className="events-calendar">
+                            {this.state.isInitialscreen[3] == true ?
+                              <div className="col-md-8" >
+                                {Components.map((item) => {
+                                  if (item.Position == 4) {
+                                    return (
+                                      <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                        <div id={item.selectId} style={{ display: "none" }}>
+                                          <div className="input-arap relative">
+                                            <input type="text" className="form-control"
+                                              placeholder="Search for the contact here"
+                                              id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                            <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                              {/* <img /> */}
+                                            </button>
+                                            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                              {/* <img/> */}
+                                              <span>Clear</span>
+                                            </button>
+                                            <ul>
+                                              {handler.state.AvailableComponents.map((Items1) => {
+                                                return (
+                                                  <li
+                                                    className='li-search-wrap'
+                                                    onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                  >
+                                                    <p className="people_name">{Items1.Title}</p>
+                                                  </li>
+                                                )
+                                              }
+                                              )}
+                                            </ul>
+                                          </div>
+                                        </div>
+
+                                      </>
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <>
+                                {this.state.selectedComponents[4] && this.renderComponent(4)}
+                              </>
+                            }
+                          </div>
+                          {this.state.isInitialscreen[4] == true ?
+                            <div className="col-md-8" >
+                              {Components.map((item) => {
+                                if (item.Position == 5) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[5] && this.renderComponent(5)}
+                            </>
+
+                          }
+
+                          <div className="latest-news-announcements" id="latest-news-announcements">
+                            <div className="row row-res">
+                              {this.state.isInitialscreen[5] == true ?
+                                <div className="col-md-8" >
+                                  {Components.map((item) => {
+                                    if (item.Position == 6) {
+                                      return (
+                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                          <div id={item.selectId} style={{ display: "none" }}>
+                                            <div className="input-arap relative">
+                                              <input type="text" className="form-control"
+                                                placeholder="Search for the contact here"
+                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                                {/* <img /> */}
+                                              </button>
+                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                                {/* <img/> */}
+                                                <span>Clear</span>
+                                              </button>
+                                              <ul>
+                                                {handler.state.AvailableComponents.map((Items1) => {
+                                                  return (
+                                                    <li
+                                                      className='li-search-wrap'
+                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                    >
+                                                      <p className="people_name">{Items1.Title}</p>
+                                                    </li>
+                                                  )
+                                                }
+                                                )}
+                                              </ul>
+                                            </div>
+                                          </div>
+
+                                        </>
+                                      )
+                                    }
+                                  })}
+                                </div>
+                                :
+                                <>
+                                  {this.state.selectedComponents[6] && this.renderComponent(6)}
+                                </>
+                              }
+                            </div>
+                          </div>
+
+                          <div id="social-and-gallery" className="images-social">
+                            <div className="row row-res">
+                              {this.state.isInitialscreen[6] == true ?
+                                <div className="col-md-8" >
+                                  {Components.map((item) => {
+                                    if (item.Position == 7) {
+                                      return (
+                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                          <div id={item.selectId} style={{ display: "none" }}>
+                                            <div className="input-arap relative">
+                                              <input type="text" className="form-control"
+                                                placeholder="Search for the contact here"
+                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                                {/* <img /> */}
+                                              </button>
+                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                                {/* <img/> */}
+                                                <span>Clear</span>
+                                              </button>
+                                              <ul>
+                                                {handler.state.AvailableComponents.map((Items1) => {
+                                                  return (
+                                                    <li
+                                                      className='li-search-wrap'
+                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                    >
+                                                      <p className="people_name">{Items1.Title}</p>
+                                                    </li>
+                                                  )
+                                                }
+                                                )}
+                                              </ul>
+                                            </div>
+                                          </div>
+
+                                        </>
+                                      )
+                                    }
+                                  })}
+                                </div>
+                                :
+                                <>
+                                  {this.state.selectedComponents[7] && this.renderComponent(7)}
+                                </>
+                              }
+                              {this.state.isInitialscreen[7] == true ?
+                                <div className="col-md-8" >
+                                  {Components.map((item) => {
+                                    if (item.Position == 8) {
+                                      return (
+                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                          <div id={item.selectId} style={{ display: "none" }}>
+                                            <div className="input-arap relative">
+                                              <input type="text" className="form-control"
+                                                placeholder="Search for the contact here"
+                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                                {/* <img /> */}
+                                              </button>
+                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                                {/* <img/> */}
+                                                <span>Clear</span>
+                                              </button>
+                                              <ul>
+                                                {handler.state.AvailableComponents.map((Items1) => {
+                                                  return (
+                                                    <li
+                                                      className='li-search-wrap'
+                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                    >
+                                                      <p className="people_name">{Items1.Title}</p>
+                                                    </li>
+                                                  )
+                                                }
+                                                )}
+                                              </ul>
+                                            </div>
+                                          </div>
+
+                                        </>
+                                      )
+                                    }
+                                  })}
+                                </div>
+                                :
+                                <>
+                                  {this.state.selectedComponents[8] && this.renderComponent(8)}
+                                </>
+                              }
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Sidebar Components */}
+                        <div className="col-md-4">
+                          {this.state.isInitialscreen[8] == true ?
+                            <div className="col-md-4">
+
+                              {Components.map((item) => {
+                                if (item.Position == 8) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[9] && this.renderComponent(9)}
+                            </>
+                          }
+                          {this.state.isInitialscreen[9] == true ?
+                            // <>
+                            <div className="col-md-4">
+
+                              {Components.map((item) => {
+                                if (item.Position == 9) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[10] && this.renderComponent(10)}
+                            </>
+                          }
+                          {this.state.isInitialscreen[9] == true ?
+                            <div className="col-md-4">
+
+                              {Components.map((item) => {
+                                if (item.Position == 9) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[10] && this.renderComponent(10)}
+                            </>
+                          }
+                          {this.state.isInitialscreen[10] == true ?
+                            <div className="col-md-4">
+                              {Components.map((item) => {
+                                if (item.Position == 10) {
+                                  return (
+                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
+                                      <div id={item.selectId} style={{ display: "none" }}>
+                                        <div className="input-arap relative">
+                                          <input type="text" className="form-control"
+                                            placeholder="Search for the contact here"
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
+                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
+                                            {/* <img /> */}
+                                          </button>
+                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
+                                            {/* <img/> */}
+                                            <span>Clear</span>
+                                          </button>
+                                          <ul>
+                                            {handler.state.AvailableComponents.map((Items1) => {
+                                              return (
+                                                <li
+                                                  className='li-search-wrap'
+                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
+                                                >
+                                                  <p className="people_name">{Items1.Title}</p>
+                                                </li>
+                                              )
+                                            }
+                                            )}
+                                          </ul>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  )
+                                }
+                              })}
+                            </div>
+                            :
+                            <>
+                              {this.state.selectedComponents[11] && this.renderComponent(11)}
+                            </>
+                          }
+                        </div>
+                      </div>
+
+                      <RemoResponsive {...this.props} currentWebUrl="" CurrentPageserverRequestPath="" />
+                      <Footer {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
                     </div>
                   </div>
-                )}
-              </div>
-              :
-              <div>
-                <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-                  <option value="">Select Laout</option>
-                  {this.state.layoutItems.map((item) => (
-                    <option key={item.id} value={item.value}>
-                      {item.Title}
-                    </option>
-                  ))}
-                  {/* <option value="1">Layout 1</option>
-                  <option value="2">Layout 2</option>
-                  <option value="3">Layout 3</option> */}
-                </select>
-                {/* <p>Selected Value: {this.state.selectedValue}</p> */}
-              </div>
+                  :
+                  // <div>Read More</div>
+                  <CeoMessageRm description={''} siteurl={''} context={this.props.context} userid={undefined} id={this.state.ceoMessegeID}></CeoMessageRm>
+                }
+              </section>
+            </div>
+            <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
+              <h1>Loader</h1>
+              {/* <div id="progressContainer">
+                <p id="currentListName">Creating: {this.state.currentList}</p>
+                <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
+              </div> */}
+            </div>
+            {/* )} */}
+          </div>
+        }
 
-            }
-          </>
-          :
+        {this.state.showDropdown == true &&
+          <div>
+            <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
+              <option value="">Select Layout</option>
+              {this.state.layoutItems.map((item) => (
+                <option key={item.ID} value={item.ID}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        }
+
+        {this.state.showButton == true &&
           <div>
             <button onClick={() => this.showDropDown()}>Configure</button>
           </div>
         }
+
       </>
+
+      //layouts
     );
 
   }
 }
+
+
+

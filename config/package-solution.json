@@ -1,12 +1,66 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "remo-intranet-single-page-client-side-solution",
-    "id": "18023aff-dcce-4072-9519-9da91c9efe8b",
-    "version": "1.0.0.0",
+    "name": "remo-product-single-page-client-side-solution",
+    "id": "18023aff-dcce-4072-9519-9da91c9efe8c",
+    "version": "1.0.0.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Mail.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Mail.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Calendars.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Calendars.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Files.ReadWrite.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Sites.Read.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Sites.ReadWrite.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.Create"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.ReadWrite"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Notes.ReadWrite.All"
+      }
+    ],
     "developer": {
       "name": "",
       "websiteUrl": "",
@@ -35,6 +89,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/remo-intranet-single-page.sppkg"
+    "zippedPackage": "solution/remo-product-single-page.sppkg"
   }
 }

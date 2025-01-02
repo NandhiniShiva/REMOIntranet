@@ -13,7 +13,8 @@ import pnp from 'sp-pnp-js';
 import * as moment from 'moment';
 import RemoResponsive from './RemoResponsive';
 import { IInvokable } from '@pnp/odata';
-import { Configuration, listNames } from '../../Configuration';
+import { listNames } from '../../Configuration';
+import { sp } from '@pnp/sp/presets/all';
 var metaTag = document.createElement('meta');
 metaTag.name = "viewport"
 metaTag.content = "width=device-width, initial-scale=1.0"
@@ -123,9 +124,12 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/style.css?v=1.8`);
     // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/Responsive.css?v=4.18`);
 
-    SPComponentLoader.loadCss(Configuration.cssPath);
-    SPComponentLoader.loadCss(Configuration.overRidingCss);
-    SPComponentLoader.loadCss(Configuration.respnsiveCss);
+    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
+    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
+    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
+    // SPComponentLoader.loadCss(Configuration.cssPath);
+    // SPComponentLoader.loadCss(Configuration.overRidingCss);
+    // SPComponentLoader.loadCss(Configuration.respnsiveCss);
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -162,45 +166,45 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public componentDidMount() {
-
+    debugger;
     const { siteurl } = this.props;
     const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
+    // const ActivePageUrl = (window.location.href.split('?')[0]);
+
 
     // Hide elements based on page URL
     if (
-      ActivePageUrl === `${siteurl}/sitepages/HomePage.aspx` ||
+      ActivePageUrl === `${siteurl}/sitepages/remointranethome.aspx` ||
       ActivePageUrl === `${siteurl}/sitepages/HomePage.aspx#` ||
       ActivePageUrl === `${siteurl}/` ||
       ActivePageUrl === `${siteurl}#` ||
       ActivePageUrl === `${siteurl}/`
     ) {
-      setTimeout(() => {
-        // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-        // $(".inner-pages-nav").hide();
-        // $('#master_footer_parent').hide();
-        // $('.ControlZone--control').attr('style', 'display: none !important');
+      // setTimeout(() => {
+      //   // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
+      //   // $(".inner-pages-nav").hide();
+      //   // $('#master_footer_parent').hide();
+      //   // $('.ControlZone--control').attr('style', 'display: none !important');
+      //   document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
+      //     element.style.padding = '0px';
+      //     element.style.margin = '0px';
+      //   });
 
+      //   const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
+      //   if (innerPagesNav) {
+      //     innerPagesNav.style.display = 'none';
+      //   }
 
-        document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
-          element.style.padding = '0px';
-          element.style.margin = '0px';
-        });
+      //   const masterFooter = document.getElementById('master_footer_parent');
+      //   if (masterFooter) {
+      //     masterFooter.style.display = 'none';
+      //   }
 
-        const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
-        if (innerPagesNav) {
-          innerPagesNav.style.display = 'none';
-        }
-
-        const masterFooter = document.getElementById('master_footer_parent');
-        if (masterFooter) {
-          masterFooter.style.display = 'none';
-        }
-
-        const ControlZone: any = document.getElementsByClassName('ControlZone--control');
-        if (ControlZone) {
-          ControlZone.style.setProperty('display', 'none', 'important');
-        }
-      }, 500);
+      //   // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
+      //   // if (ControlZone) {
+      //   //   ControlZone.style.setProperty('display', 'none', 'important');
+      //   // }
+      // }, 500);
     } else if (
       ActivePageUrl === `${siteurl}/eventsactivities/sitepages/HomePage.aspx` ||
       ActivePageUrl === `${siteurl}/eventsactivities/sitepages/HomePage.aspx#` ||
@@ -437,6 +441,8 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async getUnreadmailCount() {
     try {
       const result = await this.serviceProvider.getMyMailCount();
+      console.log("getUnreadmailCount", result);
+
       this.setState({ myMailDatas: result });
 
       const mailcount = this.state.myMailDatas.length;
@@ -452,9 +458,13 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       } else {
         this.setState({ EmailCount: "0" });
         // $("#Emails_count").hide();
-        let elmailCoun: any = document.getElementById("Emails_count")
-        elmailCoun.style.display = "none";
+        // let elmailCoun: any = document.getElementById("Emails_count")
+        // elmailCoun.style.display = "none";
 
+        let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
+        if (elmailCoun) {
+          elmailCoun.style.display = "none";
+        }
       }
     } catch (error) {
       console.error("Error fetching unread mail count:", error);
@@ -482,9 +492,13 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               this.setState({ MeetingsCount: "0" });
               // $("#Meetings_count").hide();
 
-              let elmailCoun: any = document.getElementById("Meetings_count")
-              elmailCoun.style.display = "none";
+              // let elmailCoun: any = document.getElementById("Meetings_count")
+              // elmailCoun.style.display = "none";
 
+              let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
+              if (elmailCoun) {
+                elmailCoun.style.display = "none";
+              }
             }
           }
         )
@@ -514,7 +528,9 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetMainNavItems() {
     var reactHandler = this;
     try {
-      await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+      //  / await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+      await sp.web.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
+
         reactHandler.setState({
           MainNavItems: items
         });
@@ -1042,7 +1058,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                 <img src={`${this.props.siteurl}/SiteAssets/img/search.png`} alt="image" />
                 <input type="search" id="txt-search" className="form-control insearch" placeholder="Search Here" autoComplete='off' onKeyDown={(e) => this.OpenSearchPage(e, this.props.siteurl)} />
                 <img className="res-ser-close" src={`${this.props.siteurl}/SiteAssets/img/close_resposnive.svg`} onClick={() => this.CloseSearch()} />
-
               </div>
             </div>
             <div className="header-right">

@@ -322,7 +322,7 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
                     </div>
                   </div>
                 </div>
-                <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} />
+                <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} />
 
               </div>
             </div>

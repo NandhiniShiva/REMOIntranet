@@ -16,6 +16,12 @@ import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
+import { AddViews } from './ServiceProvider/AddViews';
+import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
+import { CommentsCount } from './ServiceProvider/CommentsCount';
+import { LikesCount } from './ServiceProvider/LikesCount';
+import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
+import { ViewsCount } from './ServiceProvider/viewsCount';
 
 var User = "";
 var UserEmail = "";
@@ -299,9 +305,9 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   public AddViews() {
     // const url: any = new URL(window.location.href);
     // const mode = url.searchParams.get("mode");
-    var handler = this;
+    // var handler = this;
 
-    handler.viewsCount();
+    // handler.viewsCount();
     // }
   }
   public viewsCount() {
@@ -361,14 +367,97 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
             element.remove();
           });
         }
-        reactHandler.AddViews();
-        reactHandler.checkUserAlreadyLiked();
-        reactHandler.checkUserAlreadyCommented();
-        reactHandler.viewsCount();
-        reactHandler.likesCount();
-        reactHandler.commentsCount();
+        // reactHandler.AddViews();
+        // reactHandler.checkUserAlreadyLiked();
+        // reactHandler.checkUserAlreadyCommented();
+        // reactHandler.viewsCount();
+        // reactHandler.likesCount();
+        // reactHandler.commentsCount();
         // var TransID = items[0].TransactionItemID.Id;
         //reactHandler.GetNewsViewCount(temp, TransID);
+
+
+
+
+
+
+
+        const viewsCount = new ViewsCount();
+        viewsCount.viewsCount(ID).then((data) => {
+          console.log("Current user details", data);
+        });
+
+        const likesCount = new LikesCount();
+        likesCount.likesCount(ID).then((likeData) => {
+          console.log("Current user details", likeData);
+        });
+
+        const commentsCount = new CommentsCount();
+        commentsCount.commentsCount(ID).then((commentData) => {
+          console.log("commentData", commentData);
+          this.checkUserAlreadyCommented();
+          this.getusercomments();
+        }).catch((err) => {
+          console.log("Erorr in comment count", err);
+
+        });
+
+
+
+        const checkUserAlreadyLiked = new CheckUserAlreadyLiked();
+        checkUserAlreadyLiked
+          .checkUserAlreadyLiked(ID, User)
+          .then((result: any) => {
+            if (result.length !== 0) {
+              // If the user has already liked the content
+              document.querySelectorAll(".like-selected").forEach((element) => {
+                (element as HTMLElement).style.display = "block";
+              });
+              document.querySelectorAll(".like-default").forEach((element) => {
+                (element as HTMLElement).style.display = "none";
+              });
+
+              // Update the React component's state
+              this.setState({ IsUserAlreadyLiked: true });
+              console.log("User already liked this item:", result);
+            } else {
+              // If no like records were found
+              console.log("No likes found for the user.");
+              this.setState({ IsUserAlreadyLiked: false });
+            }
+          })
+          .catch((error) => {
+            console.error("Error while checking user likes:", error);
+          });
+
+        const addView = new AddViews();
+        addView.addViews(User, UserEmail, ID, this.state.Title)
+          .then(() => {
+            console.log("View logged successfully.");
+          })
+          .catch((error) => {
+            console.error("Failed to add view:", error);
+          });
+
+
+
+        const checkUserAlreadyCommented = new CheckUserAlreadyCommented();
+
+        checkUserAlreadyCommented
+          .checkUserAlreadyCommented(ID, User)
+          .then((isCommented) => {
+            if (isCommented) {
+              console.log("User has already commented.");
+              this.setState({ IsUserAlreadyCommented: true });
+            } else {
+              console.log("User has not commented yet.");
+              this.setState({ IsUserAlreadyCommented: false });
+            }
+          })
+          .catch((error) => {
+            console.error("Error while checking user comments:", error);
+          });
+
       });
     } catch (error) {
       console.log("Error in GetNews", error);
@@ -957,7 +1046,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                   </div>
                 </div>
               </div>
-              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} />
+              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} />
 
             </div>
           </div>

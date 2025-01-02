@@ -7,6 +7,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/site-users/web";
 import { sp } from '@pnp/sp';
 import { listNames } from '../Configuration';
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let UsersQuickLinkslist = listNames.UsersQuickLinks;
 let QuickLinkslist = listNames.QuickLinks;
@@ -27,6 +28,8 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
   public componentDidMount() {
     var reacthandler = this;
+    const listCreation = new ListCreation();
+    listCreation.createSharePointLists(this.props.name);
     reacthandler.getcurrentusersQuickLinks();
 
 
@@ -135,7 +138,9 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
   }
 
   public addData() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${UsersQuickLinkslist}`; // Replace with your list URL
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${UsersQuickLinkslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${UsersQuickLinkslist}`;
+
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
