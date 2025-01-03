@@ -1136,7 +1136,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
-    
+
     // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
@@ -1146,57 +1146,57 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         </>
       );
     };
-  
+
     switch (componentName) {
       case "Hero Banner":
         return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: null });
-  
+
       case "CEO Message":
-        return renderWithRemoveButton(RemoCEOMessage, { 
-          description: "", 
-          createList: false, 
-          name: this.state.componentName, 
-          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) 
+        return renderWithRemoveButton(RemoCEOMessage, {
+          description: "",
+          createList: false,
+          name: this.state.componentName,
+          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
         });
-  
+
       case "Quick Links":
         return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
-  
+
       case "My Meetings":
         return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Birthday":
         return renderWithRemoveButton(RemoBirthday, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "News":
         return renderWithRemoveButton(RemoNews, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Climate":
         return renderWithRemoveButton(RemoClimate, { description: "" });
-  
+
       case "Manange Quick Links":
         return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Events":
         return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Announcement":
         return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Recent Files":
         return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Images and Videos":
         return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Social Media":
         return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
-  
+
       default:
         return null;
     }
   }
-  
+
 
   // public renderComponent(position: number) {
   //   const componentName = this.state.selectedComponents[position];
