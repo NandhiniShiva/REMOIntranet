@@ -11,6 +11,8 @@ import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let UsersQuickLinkslist = listNames.UsersQuickLinks;
 let QuickLinkslist = listNames.QuickLinks;
+const Listtobecreated: any[] = [UsersQuickLinkslist, QuickLinkslist];
+
 
 export interface IQuickLinkState {
   MyQuickLinksPrefference: any[];
@@ -29,7 +31,11 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
   public componentDidMount() {
     var reacthandler = this;
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    Listtobecreated.forEach((Item) => {
+      listCreation.createSharePointLists(Item)
+        .then(() => console.log(`List ${Item} created successfully`))
+        .catch((error) => console.error(`Failed to create list ${Item}:`, error));
+    });
     reacthandler.getcurrentusersQuickLinks();
 
 

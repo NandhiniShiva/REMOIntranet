@@ -51,7 +51,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
   public async componentDidMount() {
     // await this.createSharePointLists(this.props.name);
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    listCreation.createSharePointLists(Birthdaylist);
     this.GetBirthday();
 
 

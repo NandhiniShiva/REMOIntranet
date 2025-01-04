@@ -39,7 +39,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
 
   public componentDidMount() {
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    listCreation.createSharePointLists(Newslist);
     var reactHandler = this;
     reactHandler.GetNews();
 

@@ -30,7 +30,7 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
 
     public async componentDidMount() {
         const listCreation = new ListCreation();
-        listCreation.createSharePointLists(this.props.name);
+        listCreation.createSharePointLists(VersionMasterlist);
         await this.GetVersionData();
     }
 

@@ -76,8 +76,10 @@ export interface IRemoHomePageState {
 
   landingPageComponentList: any[];
   isClicked: string;
-  ceoMessegeID: any
-
+  ceoMessegeID: any;
+  isCurrentUserAdmin: boolean;
+  editMode: any
+  isEditFalse: boolean
 }
 
 
@@ -105,8 +107,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       // isInitialscreen: true,
       isInitialscreen: Array(10).fill(true), // Create an array of 10 `true` values
       isClicked: "",
-      ceoMessegeID: null
-
+      ceoMessegeID: null,
+      isCurrentUserAdmin: false,
+      editMode: "",
+      isEditFalse: true
 
     };
     spWeb = Web(this.props.siteurl);
@@ -127,6 +131,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper,#spCommandBar,#CommentsWrapper, #spSiteHeader').forEach(function (element: any) {
       element.style.display = 'none';
     });
+    this.checkEditMode();
     // $(".ControlZone--control").show();
     const userDetails = new CurrentUserDetails();
     await userDetails
@@ -154,6 +159,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       .catch((err) => {
         console.error("Error fetching current user details:", err);
       });
+
+    this.checkUserAdmin();
     // setTimeout(() => {
     // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
     // $(".inner-pages-nav").hide();
@@ -185,6 +192,48 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     // this.setState({ showButton: true })
 
 
+  }
+
+  public checkEditMode() {
+    debugger;
+    const url: any = new URL(window.location.href);
+    const mode = url.searchParams.get("Mode");
+    this.setState({
+      editMode: mode
+    })
+  }
+
+  public async checkUserAdmin() {
+    try {
+      // Fetch all site users
+      // const profile = await pnp.sp.profiles.myProperties.get();
+
+      // console.log("Profile data:", profile);
+      const CurrentUserAdmin = await sp.web.currentUser.get()
+        .then(user => user.IsSiteAdmin);
+
+      console.log("currentUser", CurrentUserAdmin);
+
+
+      // const users = await sp.web.siteUsers.get();
+      // const currentUser = "Mariam" //"eservice"
+      // console.log("All site users:", users);
+
+      // // Filter for users named "Mariam" who are also site admins
+      // const admins = users.filter(user => user.Title === currentUser && user.IsSiteAdmin);
+
+      // if (admins.length > 0) {
+      this.setState({
+        isCurrentUserAdmin: CurrentUserAdmin
+      })
+
+      //   console.log("User 'Mariam' is a site admin:", admins);
+      // } else {
+      //   console.log("User 'Mariam' is not a site admin.");
+      // }
+    } catch (error) {
+      console.error("Error checking site admin status:", error);
+    }
   }
 
   public async getAllocatedComponents() {
@@ -712,7 +761,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         if (!columnExist) {
           switch (column.type) {
             case "addImageField":
-              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+              await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
               console.log(`Column '${column.columnName}' added as Image Field.`);
               break;
 
@@ -867,7 +916,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
   public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
-    $("#" + DOMID + "").toggle();
+    $("#" + DOMID + "").show();
     // this.setState({ isInitialscreen: false })
   }
 
@@ -1058,7 +1107,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       async () => {
         // await this.createLayoutMasterList();
         await this.loaderInProgress();
-        await this.createSharePointLists();
+        // await this.createSharePointLists();
         await this.GetAllavailablecomponents();
         await this.getAllocatedComponents();
         await this.HideInProgress();
@@ -1101,9 +1150,44 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     });
   }
 
+  // public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
+  //   debugger;
+  //   event.preventDefault();
+  //   var data: any;
+  //   const existingItems = await sp.web.lists
+  //     .getByTitle(ComponentallocationList)
+  //     .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+  //     .get();
+  //   if (existingItems.length > 0) {
+  //     // If an item exists for the position, update it
+  //     const itemId = existingItems[0].Id; // Get the item ID
+  //     await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).delete();
+  //     sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+  //       if (resp.length != 0) {
+  //         resp.forEach((items) => {
+  //           if (items.Title == value) {
+  //             data = items;
+  //           }
+  //         })
+  //       }
+  //       this.state.AvailableComponents.push(data)
+  //       const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+  //         index === (Position - 1) ? true : item
+  //       );
+  //       this.setState({
+  //         // AvailableComponents: updatedAvailableComponents,
+  //         isInitialscreen: updatedIsInitialscreen,
+  //       });
+  //     });
+  //   }
+
+
+  // }
+
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
     event.preventDefault();
     var data: any;
+    let updatedAvailableComponents: any[] = [];
     const existingItems = await sp.web.lists
       .getByTitle(ComponentallocationList)
       .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
@@ -1120,12 +1204,15 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
             }
           })
         }
-        this.state.AvailableComponents.push(data)
+        if (data) {
+          updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
+          updatedAvailableComponents.sort((a, b) => a.ComponentID - b.ComponentID); // Sort by componentid in ascending order
+        }
         const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
           index === (Position - 1) ? true : item
         );
         this.setState({
-          // AvailableComponents: updatedAvailableComponents,
+          AvailableComponents: updatedAvailableComponents,
           isInitialscreen: updatedIsInitialscreen,
         });
       });
@@ -1136,7 +1223,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
-    
+
     // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
@@ -1146,79 +1233,70 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         </>
       );
     };
-  
+
     switch (componentName) {
       case "Hero Banner":
         return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: null });
-  
       case "CEO Message":
-        return renderWithRemoveButton(RemoCEOMessage, { 
-          description: "", 
-          createList: false, 
-          name: this.state.componentName, 
-          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) 
+        return renderWithRemoveButton(RemoCEOMessage, {
+          description: "",
+          createList: false,
+          name: this.state.componentName,
+          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
         });
-  
+
       case "Quick Links":
         return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
-  
+
       case "My Meetings":
         return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Birthday":
         return renderWithRemoveButton(RemoBirthday, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "News":
         return renderWithRemoveButton(RemoNews, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Climate":
         return renderWithRemoveButton(RemoClimate, { description: "" });
-  
+
       case "Manange Quick Links":
         return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Events":
         return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Announcement":
         return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Recent Files":
         return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Images and Videos":
         return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName });
-  
+
       case "Social Media":
         return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
-  
+
       default:
         return null;
     }
   }
-  
 
   // public renderComponent(position: number) {
   //   const componentName = this.state.selectedComponents[position];
   //   switch (componentName) {
   //     case "Hero Banner":
+
   //       return (
-  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+
+  //         <>{this.state.isCurrentUserAdmin && this.state.editMode == true ? <button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button> : null}
   //           <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
   //     // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
   //     case "CEO Message":
-  //       return (
-  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
-  //           <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
-  //         </>
-  //       )
+  //       return <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
   //     case "Quick Links":
-  //       return (
-  //         <><button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
-  //           <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
-  //         </>
-  //       )
-
+  //       return <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
   //     case "My Meetings":
   //       return <RemoMyMeetings {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
   //     case "Birthday":
@@ -1246,6 +1324,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   // }
 
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
+    debugger;
     event.preventDefault();
 
     const value = event.target.value;
@@ -1302,6 +1381,17 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
+  public editHandler(event: any) {
+    event.preventDefault();
+    // alert("Edit Handler")
+    const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
+    window.location.href = url;
+    // this.setState({
+    //   editMode: true,
+    //   isEditFalse: false
+    // })
+
+  }
 
   // public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
   //   debugger;
@@ -1353,6 +1443,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
     return (
       //Layout 1
+
       <>
         {this.state.showHomepage == true &&
           <div>
@@ -1364,18 +1455,29 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   currentWebUrl=""
                   CurrentPageserverRequestPath=""
                 />
-                <div>
-                  <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
-                    <option value="">Select Layout</option>
-                    {this.state.layoutItems.map((item) => (
-                      <option key={item.ID} value={item.ID}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                {/* {this.state.isCurrentUserAdmin && this.state.editMode == "edit" && */}
+                <>
+                  <div>
+                    <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                      <option value="">Select Layout</option>
+                      {this.state.layoutItems.map((item) => (
+                        <option key={item.ID} value={item.ID}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {this.state.editMode != "edit" &&
+                    <div>
+                      <button onClick={(e) => this.editHandler(e)}>Edit</button>
+                    </div>
+                  }
+                </>
+                {/* } */}
               </div>
               <section>
+
+
                 {this.state.isClicked != "yes" ?
                   <div className="container home_pg relative">
                     <div className="section-right">
@@ -1392,7 +1494,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                         <div className="input-arap relative">
                                           <input type="text" className="form-control"
                                             placeholder="Search for the contact here"
-                                            id="SearchInput" onKeyDown={() => this.Showclearbutton()} />
+                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
                                           <button className="form-control search_button" onClick={(e) => this.Search(e)}>
                                             {/* <img /> */}
                                           </button>

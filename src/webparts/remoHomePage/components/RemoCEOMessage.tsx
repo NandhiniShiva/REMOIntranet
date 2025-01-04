@@ -28,7 +28,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
   public async componentDidMount() {
 
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    listCreation.createSharePointLists(CEO_Messagelist);
     // await this.createSharePointLists(this.props.name);
     await this.GetCEOMessage();
     await this.DynamicHeight();

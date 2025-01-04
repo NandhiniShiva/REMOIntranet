@@ -29,6 +29,8 @@ let Navigationslist = listNames.Navigations;
 let QuickLinkslist = listNames.QuickLinks;
 let DepartmentsMasterlist = listNames.DepartmentsMaster;
 
+const Listtobecreated: any[] = [JobsMasterlist, Navigationslist, QuickLinkslist, DepartmentsMasterlist];
+
 var NewWeb: IWeb & IInvokable<any>;
 
 export default class RemoNavigations extends React.Component<IRemoHomePageProps, INavigationsState> {
@@ -55,7 +57,11 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   async componentDidMount() {
     BreadCrumb = [];
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    Listtobecreated.forEach((Item) => {
+      listCreation.createSharePointLists(Item)
+        .then(() => console.log(`List ${Item} created successfully`))
+        .catch((error) => console.error(`Failed to create list ${Item}:`, error));
+    });    
     await this.JobsMasterCheck();
     await this.GetMainNavItems();
     await this.EnableContentEditorForSuperAdmins();

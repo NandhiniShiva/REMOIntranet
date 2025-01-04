@@ -77,10 +77,10 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
   }
 
   public async componentDidMount() {
-    alert("hero banner")
-    console.log('Component Name', this.props.name);
+    // alert("hero banner")
+    // console.log('Component Name', this.props.name);
     const listCreation = new ListCreation();
-    listCreation.createSharePointLists(this.props.name);
+    listCreation.createSharePointLists(Hero_Bannerlist);
     // await this.createSharePointLists(this.props.name);
     await this.hideProgessbar()
     this.GetBanner();
@@ -327,10 +327,13 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
           columnExist = false; // Column does not exist
         }
 
+        // createFieldAsXml(`
+        //  <Field Type="Image" Name="${column.columnName}" DisplayName="${column.columnName}" StaticName="${column.columnName}" />
+        // `);
         if (!columnExist) {
           switch (column.type) {
             case "addImageField":
-              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+              await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
               console.log(`Column '${column.columnName}' added as Image Field.`);
               break;
 

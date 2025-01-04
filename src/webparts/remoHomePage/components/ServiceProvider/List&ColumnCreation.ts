@@ -1,4 +1,8 @@
-import { sp, FieldUserSelectionMode, UrlFieldFormatType, ChoiceFieldFormatType } from "sp-pnp-js";
+// import { sp, FieldUserSelectionMode, UrlFieldFormatType, ChoiceFieldFormatType } from "sp-pnp-js";
+import { FieldUserSelectionMode } from 'sp-pnp-js';
+
+import { ChoiceFieldFormatType, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
+
 import { ListLibraryColumnDetails } from "./ListsLibraryColumnDetails";
 
 
@@ -55,7 +59,7 @@ export class ListCreation {
                 if (!columnExist) {
                     switch (column.type) {
                         case "addImageField":
-                            await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+                            await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
                             console.log(`Column '${column.columnName}' added as Image Field.`);
                             break;
 
