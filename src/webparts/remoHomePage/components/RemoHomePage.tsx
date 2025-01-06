@@ -47,6 +47,7 @@ const PictureGalleryName = listNames.PictureGallery;
 // const docLibName = listNames.DocumentLibrary;
 var ComponentConfigurationList = listNames.ComponentMaster;
 var ComponentallocationList = listNames.ComPonentAllocationMaster;
+var LayoutMasterList = listNames.LayoutMaster;
 var User: any;
 var UserEmail: any;
 var Designation: any;
@@ -86,7 +87,7 @@ export interface IRemoHomePageState {
 
 export default class RemoHomePage extends React.Component<IRemoHomePageProps, IRemoHomePageState, {}> {
 
-  constructor(props: IRemoHomePageProps, state: IRemoHomePageState) {
+  constructor(props: IRemoHomePageProps, _state: IRemoHomePageState) {
     super(props);
 
     this.state = {
@@ -195,7 +196,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public checkEditMode() {
-    debugger;
     const url: any = new URL(window.location.href);
     const mode = url.searchParams.get("Mode");
     this.setState({
@@ -1107,6 +1107,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       async () => {
         // await this.createLayoutMasterList();
         await this.loaderInProgress();
+        await this.setActiveLayout(this.state.selectedValue);
         // await this.createSharePointLists();
         await this.GetAllavailablecomponents();
         await this.getAllocatedComponents();
@@ -1115,6 +1116,81 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     );
     // }
   };
+
+  public async setActiveLayout(selectedLayout: string) {
+    try {
+      const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
+      const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
+      console.log(selectedItem);
+      // Fetch all items in the list
+      const response = await layoutList.items.get();
+
+      let layoutExists = false;
+      let existingItemId: number | null = null;
+
+      // Check if the selected layout exists
+      for (const item of response) {
+        if (item.Title === selectedLayout) {
+          layoutExists = true;
+          existingItemId = item.ID;
+          break;
+        }
+      }
+
+      if (layoutExists && existingItemId) {
+        // Update the matching item's IsActive to true
+        await layoutList.items.getById(existingItemId).update({
+          IsActive: true,
+        });
+
+        // Update all other items' IsActive to false
+        for (const item of response) {
+          if (item.ID !== existingItemId) {
+            await layoutList.items.getById(item.ID).update({
+              IsActive: false,
+            });
+          }
+        }
+      } else {
+        // Add the new layout
+        await layoutList.items.add({
+          Title: selectedLayout,
+          LayoutName: selectedItem.name,
+          IsActive: true,
+        });
+
+        // Update all other items' IsActive to false
+        for (const item of response) {
+          await layoutList.items.getById(item.ID).update({
+            IsActive: false,
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error in setActiveLayout:", error);
+    }
+  }
+
+
+  // public async setActiveLayout(selectedlayout: any) {
+  //   const response = await sp.web.lists.getByTitle(LayoutMasterList).items.get();
+  //   try {
+  //     response.forEach(async (item) => {
+  //       var ItemId = item.ID;
+  //       if (item.title == selectedlayout) {
+  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
+  //           IsActive: true
+  //         })
+  //       } else {
+  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
+  //           IsActive: false
+  //         })
+  //       }
+  //     })
+  //   } catch {
+
+  //   }
+  // }
   public Showclearbutton() {
     var input = $("#SearchInput").val();
     if (input == "") {
@@ -1137,18 +1213,24 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     })
   }
-  public Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
-    $("#SearchInput").val("");
-    $(".clear_part").removeClass("active");
-    sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
-      if (resp.length != 0) {
-        this.setState({
-          AvailableComponents: resp
-        });
-      }
-    });
-  }
+  // public Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  //   e.preventDefault();
+  //   $("#SearchInput").val("");
+  //   $(".clear_part").removeClass("active");
+  //   sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+
+  //     if (resp.length != 0) {
+  //       sp.web.lists.getByTitle(ComponentallocationList).items.filter(`substringof('${this.state.selectedValue}',Title)`).top(5000).orderBy("Title", true).get().then((res) => {
+  //         if (res.length != 0) {
+  //           var updatedavailablecomponent = resp.find((item)=> item.ComponentId !== res.ComponentID)
+  //         }
+  //       })
+  //       this.setState({
+  //         AvailableComponents: updatedavailablecomponent
+  //       });
+  //     }
+  //   });
+  // }
 
   // public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
   //   debugger;
@@ -1184,6 +1266,47 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   // }
 
+  public async Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+
+    // Clear the search input and reset any active state
+    $("#SearchInput").val("");
+    $(".clear_part").removeClass("active");
+
+    try {
+      // Fetch all components
+      const allComponents = await sp.web.lists
+        .getByTitle(ComponentConfigurationList)
+        .items.top(5000)
+        .orderBy("Title", true)
+        .get();
+
+      if (allComponents.length > 0) {
+        // Fetch already allocated components
+        const allocatedComponents = await sp.web.lists
+          .getByTitle(ComponentallocationList)
+          .items.filter(`substringof('${this.state.selectedValue}',Title)`)
+          .top(5000)
+          .orderBy("Title", true)
+          .get();
+
+        // Filter out the allocated components from the available components
+        const allocatedComponentIDs: any = allocatedComponents.map((comp) => comp.ComponentID);
+        const updatedAvailableComponents = allComponents.filter(
+          (item) => !allocatedComponentIDs.includes(item.ComponentId)
+        );
+        updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
+        // Update the state with the filtered components
+        this.setState({
+          AvailableComponents: updatedAvailableComponents,
+        });
+      }
+    } catch (error) {
+      console.error("Error in Clear function:", error);
+    }
+  }
+
+
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
     event.preventDefault();
     var data: any;
@@ -1206,7 +1329,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         }
         if (data) {
           updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
-          updatedAvailableComponents.sort((a, b) => a.ComponentID - b.ComponentID); // Sort by componentid in ascending order
+          updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
         }
         const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
           index === (Position - 1) ? true : item
@@ -1324,9 +1447,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   // }
 
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
-    debugger;
     event.preventDefault();
-
     const value = event.target.value;
     const previousLayout = this.state.selectedValue;
     if (previousLayout == value) {
@@ -1371,6 +1492,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         { selectedValue: value },
         async () => {
           await this.loaderInProgress();
+          await this.setActiveLayout(this.state.selectedValue);
           await this.GetAllavailablecomponents();
           await this.getAllocatedComponents();
           await this.HideInProgress();
