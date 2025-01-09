@@ -1330,6 +1330,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         if (data) {
           updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
           updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
+          if (Selectedcomponents.includes(data.ComponentId)) {
+            Selectedcomponents = Selectedcomponents.filter((id: any) => id !== data.ComponentId);
+            console.log("Item removed from Selectedcomponents:", data.ComponentId);
+          }
+
         }
         const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
           index === (Position - 1) ? true : item
@@ -1390,7 +1395,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
 
       case "Announcement":
-        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName });
+        return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
 
       case "Recent Files":
         return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });

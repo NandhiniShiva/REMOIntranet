@@ -26,7 +26,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
   }
 
   public async componentDidMount() {
-
     const listCreation = new ListCreation();
     listCreation.createSharePointLists(CEO_Messagelist);
     // await this.createSharePointLists(this.props.name);
@@ -72,11 +71,8 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
   // Updated 
   private async GetCEOMessage() {
     var reactHandler = this;
-    debugger;
     try {
-
-      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
-
+      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "CEOName", "Image", "Designation", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
         if (items.length == 0) {
           // $("#if-no-ceo-msg-present").show();
           // $("#if-ceo-msg-present").hide();
@@ -308,7 +304,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
         return (
           <div key={key} className="section-part clearfix">
             <div className="ceo-message-left">
-              <h4>{item.Name}</h4>
+              <h4>{item.CEOName}</h4>
               <h6>{date}</h6>
               <p>{outputText}</p>
               {/* <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler()}> */}
@@ -327,7 +323,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
         return (
           <div key={key} className="section-part relative clearfix">
             <div className="ceo-message-left">
-              <h4>{item.Name}</h4>
+              <h4>{item.CEOName}</h4>
               <h6>{date}</h6>
               <p>{outputText}</p>
               <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition">

@@ -19,7 +19,7 @@ export const ListLibraryColumnDetails = [
     {
         name: "Birthday",
         columns: [
-            { columnName: "Name", type: "addTextField" },
+            { columnName: "EmployeeName", type: "addTextField" },
             { columnName: "DOB", type: "addDateField" },
             { columnName: "Picture", type: "addImageField" },
             { columnName: "RMimage", type: "addImageField" },
@@ -36,7 +36,7 @@ export const ListLibraryColumnDetails = [
     {
         name: "CEO Message",
         columns: [
-            { columnName: "Name", type: "addTextField" },
+            { columnName: "CEOName", type: "addTextField" },
             { columnName: "Description", type: "addMultilineText" },
             { columnName: "Designation", type: "addTextField" },
             { columnName: "Image", type: "addImageField" },

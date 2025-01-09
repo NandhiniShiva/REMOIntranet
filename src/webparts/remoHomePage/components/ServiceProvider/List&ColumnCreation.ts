@@ -52,9 +52,17 @@ export class ListCreation {
                 let columnExist = false;
                 try {
                     columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+                    // const columnfield = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName == "Name" ? "FileLeafRef" : column.columnName).get();
+                    // columnExist = !!columnfield.Id; // Check if the column object has a valid Id
+                    // console.log(columnExist ? "Column exists." : "Column does not exist.");
                 } catch {
                     columnExist = false; // Column does not exist
                 }
+
+                // if (columnExist == false && column.columnName.trim() === "Name" && column.type.trim() === "addTextField") {
+                //     await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
+                //     console.log("Text field 'Name' created.");
+                // }
 
                 if (!columnExist) {
                     switch (column.type) {
@@ -69,7 +77,8 @@ export class ListCreation {
                             break;
 
                         case "addTextField":
-                            await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
+                            await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
+                            // await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
                             console.log(`Column '${column.columnName}' added as Text Field.`);
                             break;
 

@@ -166,7 +166,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public componentDidMount() {
-    debugger;
     const { siteurl } = this.props;
     const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
     // const ActivePageUrl = (window.location.href.split('?')[0]);

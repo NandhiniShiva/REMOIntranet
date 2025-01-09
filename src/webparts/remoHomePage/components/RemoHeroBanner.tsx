@@ -509,7 +509,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
   }
 
   public addData() {
-    debugger;
     // const listUrl = `${NewWeb}/Lists/${Hero_Bannerlist}`; // Replace with your list URL
 
     const listUrl = `${this.props.siteurl}/Lists/${Hero_Bannerlist}`;

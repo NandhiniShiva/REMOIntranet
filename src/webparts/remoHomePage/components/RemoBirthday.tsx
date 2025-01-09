@@ -239,7 +239,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
     try {
       const items = await sp.web.lists
         .getByTitle(Birthdaylist)
-        .items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created")
+        .items.select("Title", "DOB", "EmployeeName", "Picture", "Designation", "Description", "ID", "Created")
         .orderBy("DOB", true)
         .filter(`IsActive eq '1'`)
         .get();
@@ -317,7 +317,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
       const items = await sp.web.lists
         .getByTitle(Birthdaylist)
-        .items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created")
+        .items.select("Title", "DOB", "EmployeeName", "Picture", "Designation", "Description", "ID", "Created")
         .top(1000)
         .orderBy("DOB", true)
         .filter(`IsActive eq '1'`)
@@ -425,7 +425,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       const ItemId = item.ID;
 
       if (Tday1Bday === Bdaydate) {
-        const Name = item.Name;
+        const Name = item.EmployeeName;
         const imgSrc = (RawImageTxt && RawImageTxt !== "") ?
           ((JSON.parse(RawImageTxt).serverRelativeUrl === undefined) ?
             `${reactHandler.props.siteurl}/Lists/${Birthdaylist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}` :
@@ -467,8 +467,8 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       const RawImageTxt = item.Picture;
       const Bdaydate = moment(item.DOB).format("MM/DD");
 
-      if (item.Name && Bdaydate > Tday1Bday && moment(Bdaydate, 'MM/DD').isBetween(moment(reactHandler.state.FirstBdayDate, 'MM/DD'), moment(reactHandler.state.LastBdayDate, 'MM/DD'), undefined, '[]')) {
-        Name = item.Name;
+      if (item.EmployeeName && Bdaydate > Tday1Bday && moment(Bdaydate, 'MM/DD').isBetween(moment(reactHandler.state.FirstBdayDate, 'MM/DD'), moment(reactHandler.state.LastBdayDate, 'MM/DD'), undefined, '[]')) {
+        Name = item.EmployeeName;
 
         const imgSrc = RawImageTxt && RawImageTxt !== "" ?
           JSON.parse(RawImageTxt).serverRelativeUrl ?? `${reactHandler.props.siteurl}/Lists/${Birthdaylist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}` :
