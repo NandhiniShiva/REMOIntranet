@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
 import { IWeb, Web } from "@pnp/sp/webs";
-import { sp } from "@pnp/sp/presets/all";
+import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
 import ReactTooltip from "react-tooltip";
 import * as moment from 'moment';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
+import { DepartmentListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 
 
 export interface INavigationsState {
@@ -19,7 +20,10 @@ export interface INavigationsState {
   IsAdminForContentEditor: boolean;
   MyLinks: any[];
   isDataAvailableNav: boolean;
-  isDataAvailableLink: boolean
+  isDataAvailableLink: boolean;
+  IsDeptDataAvailable: boolean;
+  IsDeptClicked: boolean;
+  isSubNodeAvailable: number
 }
 
 let BreadCrumb: { Title: any; ID: any; }[] = [];
@@ -48,7 +52,11 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       IsAdminForContentEditor: false,
       MyLinks: [],
       isDataAvailableNav: false,
-      isDataAvailableLink: false
+      isDataAvailableLink: false,
+      IsDeptDataAvailable: false,
+      isSubNodeAvailable: 0,
+      IsDeptClicked: false,
+
 
     };
     NewWeb = Web("" + this.props.siteurl + "");
@@ -61,14 +69,13 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       listCreation.createSharePointLists(Item)
         .then(() => console.log(`List ${Item} created successfully`))
         .catch((error) => console.error(`Failed to create list ${Item}:`, error));
-    });    
+    });
     await this.JobsMasterCheck();
     await this.GetMainNavItems();
     await this.EnableContentEditorForSuperAdmins();
     await this.GetMyLinks();
-    // $("#meetingroom").hide();
-    // $("#clearbutton").hide();
-    // $('.clears-subnav').hide();
+    // await this.GetDeptData();
+
 
     document.querySelectorAll('#meetingroom').forEach(element => {
       (element as HTMLElement).style.display = 'none';
@@ -126,6 +133,8 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
   // Updated code 
 
+
+
   private async GetMainNavItems() {
     try {
       const items = await sp.web.lists
@@ -142,7 +151,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         )
         .filter("IsActive eq 1")
         .orderBy("Order0", true)
-        .top(7)
+        // .top(7)
         .expand("LinkMasterID")
         .get();
 
@@ -154,16 +163,33 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
       }
 
+      // const navLinks = document.querySelectorAll('#root-nav-links ul li');
+
+      // navLinks.forEach((link) => {
+      //   link.addEventListener('click', () => {
+      //     // Remove "active" class from all siblings
+      //     navLinks.forEach((sibling) => sibling.classList.remove('active'));
+      //     // Add "active" class to the clicked item
+      //     link.classList.add('active');
+      //   });
+      // });
+
+      // new code 
+
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
-      navLinks.forEach((link) => {
-        link.addEventListener('click', () => {
-          // Remove "active" class from all siblings
-          navLinks.forEach((sibling) => sibling.classList.remove('active'));
-          // Add "active" class to the clicked item
-          link.classList.add('active');
+      if (navLinks.length > 0) {
+        navLinks.forEach((link) => {
+          link.addEventListener('click', () => {
+            // Remove "active" class from all siblings
+            navLinks.forEach((sibling) => sibling.classList.remove('active'));
+            // Add "active" class to the clicked item
+            link.classList.add('active');
+          });
         });
-      });
+      } else {
+        console.error('No navigation links found.');
+      }
 
     } catch (error) {
       console.error("Error fetching navigation items: ", error);
@@ -226,7 +252,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       if (items.length != 0) {
         this.setState({
           MyLinks: items,
-          isDataAvailableNav: true
+          // isDataAvailableNav: true
         });
       }
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
@@ -244,188 +270,191 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       console.error("Error fetching MyLinks items: ", error);
     }
   }
-  // public GetDepartments() {
-  //   // $('.clears-subnav').show();
-  //   // $('.floating-content-editor-home').addClass('active')
-  //   // $('.breadcrum-block').addClass('open');
-  //   // $(".breadcrum-block").show();
+  public GetDepartments() {
+    // $('.clears-subnav').show();
+    // $('.floating-content-editor-home').addClass('active')
+    // $('.breadcrum-block').addClass('open');
+    // $(".breadcrum-block").show();
 
-  //   document.querySelectorAll('.floating-content-editor-home').forEach(function (element) {
-  //     element.classList.add('active');
-  //   });
+    document.querySelectorAll('.floating-content-editor-home').forEach(function (element) {
+      element.classList.add('active');
+    });
 
-  //   document.querySelectorAll('.clears-subnav').forEach(element => {
-  //     (element as HTMLElement).style.display = 'block';
-  //   });
+    document.querySelectorAll('.clears-subnav').forEach(element => {
+      (element as HTMLElement).style.display = 'block';
+    });
 
-  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-  //     element.classList.add('open');
-  //   });
+    document.querySelectorAll('.breadcrum-block').forEach(function (element) {
+      element.classList.add('open');
+    });
 
-  //   document.querySelectorAll('.breadcrum-block').forEach(element => {
-  //     (element as HTMLElement).style.display = 'block';
-  //   });
-  //   var reactHandler = this;
-  //   reactHandler.displayData = [];
-  //   BreadCrumb = [];
-  //   // $(".main-mavigation").siblings().removeClass("submenu");
-  //   // $(".main-mavigation").addClass("submenu");
-  //   // $('#meetingroom').off('click');
+    document.querySelectorAll('.breadcrum-block').forEach(element => {
+      (element as HTMLElement).style.display = 'block';
+    });
+    var reactHandler = this;
+    reactHandler.displayData = [];
+    BreadCrumb = [];
+    // $(".main-mavigation").siblings().removeClass("submenu");
+    // $(".main-mavigation").addClass("submenu");
+    // $('#meetingroom').off('click');
 
-  //   const mainNavigationElements: any = document.querySelectorAll('.main-mavigation');
-  //   mainNavigationElements.forEach(function (element: any) {
+    const mainNavigationElements: any = document.querySelectorAll('.main-mavigation');
+    mainNavigationElements.forEach(function (element: any) {
 
-  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //       (sibling: any) => sibling !== element
-  //     );
-  //     // Remove the "submenu" class from each sibling
-  //     siblings.forEach(function (sibling: any) {
-  //       sibling.classList.remove('submenu');
-  //     });
-  //   });
-  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
-  //     element.classList.add('submenu');
-  //   });
-  //   const meetingRoom = document.querySelector('#meetingroom');
+      const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+        (sibling: any) => sibling !== element
+      );
+      // Remove the "submenu" class from each sibling
+      siblings.forEach(function (sibling: any) {
+        sibling.classList.remove('submenu');
+      });
+    });
+    document.querySelectorAll('.main-mavigation').forEach(function (element) {
+      element.classList.add('submenu');
+    });
+    const meetingRoom = document.querySelector('#meetingroom');
 
-  //   if (meetingRoom) {
-  //     meetingRoom.replaceWith(meetingRoom.cloneNode(true));
-  //   }
+    if (meetingRoom) {
+      meetingRoom.replaceWith(meetingRoom.cloneNode(true));
+    }
 
-  //   try {
-  //     sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get().then((items) => {
-  //       reactHandler.setState({
-  //         DeptandQuickLinksItems: items
-  //       });
-  //       for (var i = 0; i < items.length; i++) {
+    try {
+      sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get().then((items) => {
+        reactHandler.setState({
+          DeptandQuickLinksItems: items,
+          // IsDeptDataAvailable: true,
+          isSubNodeAvailable: items.length
+
+        });
+        for (var i = 0; i < items.length; i++) {
 
 
-  //         //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
-  //         let ID = items[i].Id;
+          //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
+          let ID = items[i].Id;
 
-  //         var Title = items[i].Title;
-  //         var Url = items[i].URL.Url;
-  //         let OpenInNewTab = items[i].OpenInNewTab;
-  //         let HasSubDept = items[i].HasSubDepartment;
-  //         reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
-  //         //   }
-  //       }
-  //       // $(".submenu-clear-wrap").show()
-  //       // $(".submenu-wrap-lists ul li").on("click", function () {
-  //       //   $(this).siblings().removeClass('active');
-  //       //   $(this).addClass('active');
-  //       // });
+          var Title = items[i].Title;
+          var Url = items[i].URL.Url;
+          let OpenInNewTab = items[i].OpenInNewTab;
+          let HasSubDept = items[i].HasSubDepartment;
+          reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
+          //   }
+        }
+        // $(".submenu-clear-wrap").show()
+        // $(".submenu-wrap-lists ul li").on("click", function () {
+        //   $(this).siblings().removeClass('active');
+        //   $(this).addClass('active');
+        // });
 
-  //       document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
+        document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
+          (element as HTMLElement).style.display = 'block';
+        });
 
-  //       document.querySelectorAll('.submenu-wrap-lists ul li').forEach(function (item) {
-  //         item.addEventListener('click', function () {
-  //           // Remove "active" class from all siblings
-  //           this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
-  //             sibling.classList.remove('active');
-  //           });
+        document.querySelectorAll('.submenu-wrap-lists ul li').forEach(function (item) {
+          item.addEventListener('click', function () {
+            // Remove "active" class from all siblings
+            this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
+              sibling.classList.remove('active');
+            });
 
-  //           // Add "active" class to the clicked item
-  //           this.classList.add('active');
-  //         });
-  //       });
+            // Add "active" class to the clicked item
+            this.classList.add('active');
+          });
+        });
 
-  //     });
-  //   } catch (err) {
-  //     console.log("Navigation Department Link : " + err);
-  //   }
-  // }
+      });
+    } catch (err) {
+      console.log("Navigation Department Link : " + err);
+    }
+  }
 
   // Updated code 
 
-  public GetDepartments() {
-    try {
-      // Adding classes and showing elements
-      document.querySelectorAll('.floating-content-editor-home').forEach((element) => {
-        element.classList.add('active');
-      });
+  // public GetDepartments() {
+  //   try {
+  //     // Adding classes and showing elements
+  //     document.querySelectorAll('.floating-content-editor-home').forEach((element) => {
+  //       element.classList.add('active');
+  //     });
 
-      document.querySelectorAll('.clears-subnav').forEach((element) => {
-        (element as HTMLElement).style.display = 'block';
-      });
+  //     document.querySelectorAll('.clears-subnav').forEach((element) => {
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
 
-      document.querySelectorAll('.breadcrum-block').forEach((element) => {
-        element.classList.add('open');
-        (element as HTMLElement).style.display = 'block';
-      });
+  //     document.querySelectorAll('.breadcrum-block').forEach((element) => {
+  //       element.classList.add('open');
+  //       (element as HTMLElement).style.display = 'block';
+  //     });
 
-      const mainNavigationElements = document.querySelectorAll('.main-mavigation');
-      mainNavigationElements.forEach(function (element: any) {
+  //     const mainNavigationElements = document.querySelectorAll('.main-mavigation');
+  //     mainNavigationElements.forEach(function (element: any) {
 
-        const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-          (sibling: any) => sibling !== element
-        );
-        // Remove the "submenu" class from each sibling
-        siblings.forEach(function (sibling: any) {
-          sibling.classList.remove('submenu');
-        });
-      });
-      mainNavigationElements.forEach((element) => {
-        element.classList.add('submenu');
-      });
+  //       const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
+  //         (sibling: any) => sibling !== element
+  //       );
+  //       // Remove the "submenu" class from each sibling
+  //       siblings.forEach(function (sibling: any) {
+  //         sibling.classList.remove('submenu');
+  //       });
+  //     });
+  //     mainNavigationElements.forEach((element) => {
+  //       element.classList.add('submenu');
+  //     });
 
-      // Replace event listeners for the meeting room
-      const meetingRoom = document.querySelector('#meetingroom');
-      if (meetingRoom) {
-        meetingRoom.replaceWith(meetingRoom.cloneNode(true));
-      }
+  //     // Replace event listeners for the meeting room
+  //     const meetingRoom = document.querySelector('#meetingroom');
+  //     if (meetingRoom) {
+  //       meetingRoom.replaceWith(meetingRoom.cloneNode(true));
+  //     }
 
-      // Fetching data from SharePoint
-      sp.web.lists
-        .getByTitle(DepartmentsMasterlist)
-        .items.select(
-          "Title",
-          "ID",
-          "URL",
-          "HasSubDepartment",
-          "OpenInNewTab",
-          "PlaceDepartmentUnder/Title",
-          "PlaceDepartmentUnder/Id"
-        )
-        .filter("IsActive eq '1'")
-        .orderBy("Order0", true)
-        .expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder")
-        .get()
-        .then((items) => {
-          this.setState({
-            DeptandQuickLinksItems: items
-          });
+  //     // Fetching data from SharePoint
+  //     sp.web.lists
+  //       .getByTitle(DepartmentsMasterlist)
+  //       .items.select(
+  //         "Title",
+  //         "ID",
+  //         "URL",
+  //         "HasSubDepartment",
+  //         "OpenInNewTab",
+  //         "PlaceDepartmentUnder/Title",
+  //         "PlaceDepartmentUnder/Id"
+  //       )
+  //       .filter("IsActive eq '1'")
+  //       .orderBy("Order0", true)
+  //       .expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder")
+  //       .get()
+  //       .then((items) => {
+  //         this.setState({
+  //           DeptandQuickLinksItems: items
+  //         });
 
-          items.forEach((item) => {
-            const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
-            const Url = URL.Url;
-            this.appendData(Id, Title, OpenInNewTab, HasSubDepartment, Url);
-          });
+  //         items.forEach((item) => {
+  //           const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
+  //           const Url = URL.Url;
+  //           this.appendData(Id, Title, OpenInNewTab, HasSubDepartment, Url);
+  //         });
 
-          document.querySelectorAll('.submenu-clear-wrap').forEach((element) => {
-            (element as HTMLElement).style.display = 'block';
-          });
+  //         document.querySelectorAll('.submenu-clear-wrap').forEach((element) => {
+  //           (element as HTMLElement).style.display = 'block';
+  //         });
 
-          document.querySelectorAll('.submenu-wrap-lists ul li').forEach((item) => {
-            item.addEventListener('click', function () {
-              this.parentElement.querySelectorAll('li').forEach((sibling: any) => {
-                sibling.classList.remove('active');
-              });
+  //         document.querySelectorAll('.submenu-wrap-lists ul li').forEach((item) => {
+  //           item.addEventListener('click', function () {
+  //             this.parentElement.querySelectorAll('li').forEach((sibling: any) => {
+  //               sibling.classList.remove('active');
+  //             });
 
-              this.classList.add('active');
-            });
-          });
-        })
-        .catch((error) => {
-          console.error("Error fetching departments data: ", error);
-        });
+  //             this.classList.add('active');
+  //           });
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching departments data: ", error);
+  //       });
 
-    } catch (error) {
-      console.error("Error initializing departments: ", error);
-    }
-  }
+  //   } catch (error) {
+  //     console.error("Error initializing departments: ", error);
+  //   }
+  // }
   public async GetQuickLinks() {
     const { siteurl } = this.props;
     try {
@@ -491,8 +520,10 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         .get();
 
       this.setState({
-        DeptandQuickLinksItems: items
+        DeptandQuickLinksItems: items,
+        // isSubNodeAvailable: items.length
       });
+      console.log("Department Item", items);
 
       items.forEach(item => {
         const { Id: ItemID, Title, URL, OpenInNewTab, HasSubDepartment } = item;
@@ -507,30 +538,38 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
   public appendData(ID: string, Title: {}, OpenInNewTab: boolean, HasSubDept: boolean, Url: string) {
     var reactHandler = this;
-
-    if (OpenInNewTab == true) {
-      if (HasSubDept == true) {
-        reactHandler.displayData.push(<li>
-          <a href={Url} target="_blank" data-interception="off" role="button"> <span>{Title}</span></a>
-          <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
-        </li>);
+    if (reactHandler.state.isSubNodeAvailable != 0) {
+      if (OpenInNewTab == true) {
+        if (HasSubDept == true) {
+          reactHandler.displayData.push(<li>
+            <a href={Url} target="_blank" data-interception="off" role="button"> <span>{Title}</span></a>
+            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
+          </li>);
+        } else {
+          reactHandler.displayData.push(<li>
+            <a href={Url} target="_blank" data-interception="off" role="button" > <span>{Title}</span></a>
+          </li>);
+        }
       } else {
-        reactHandler.displayData.push(<li>
-          <a href={Url} target="_blank" data-interception="off" role="button" > <span>{Title}</span></a>
-        </li>);
-      }
-    } else {
-      if (HasSubDept == true) {
-        reactHandler.displayData.push(<li>
-          <a href={Url} data-interception="off" role="button"> <span>{Title}</span></a>
-          <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
-        </li>);
-      } else {
-        reactHandler.displayData.push(<li>
-          <a href={Url} data-interception="off" role="button" > <span>{Title}</span></a>
-        </li>);
+        if (HasSubDept == true) {
+          reactHandler.displayData.push(<li>
+            <a href={Url} data-interception="off" role="button"> <span>{Title}</span></a>
+            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
+          </li>);
+        } else {
+          reactHandler.displayData.push(<li>
+            <a href={Url} data-interception="off" role="button" > <span>{Title}</span></a>
+          </li>);
+        }
       }
     }
+    else {
+      reactHandler.displayData.push(<li>
+        <button onClick={(e) => this.addDataInDepartmentMasterlist(e)}>Add Data</button>
+
+      </li>);
+    }
+
 
     reactHandler.setState({
       showdata: reactHandler.displayData
@@ -752,71 +791,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     firstChild?.classList.add('active');
   }
 
-  // public quicklinkss() {
-  //   $(".tab-1-data").removeClass("active");
-  //   $("#contacts").hide()
-  //   $(".tab-2-data").addClass("active");
-  //   $("#meetingroom").show()
-
-  //   $(".breadcrum-block").hide();
-  //   $(".main-mavigation").removeClass("submenu");
-  //   $('#root-nav-links ul li').siblings().removeClass('active');
-  //   $(".submenu-wrap-lists ul li").siblings().removeClass('active');
-  //   // $('#root-nav-links ul li:first-child').addClass('active');
-  // }
-
-  // public quicklinks() {
-  //   document.querySelectorAll('.tab-1-data').forEach(function (element) {
-  //     element.classList.remove('active');
-  //   });
-
-  //   document.querySelectorAll('#contacts').forEach(element => {
-  //     (element as HTMLElement).style.display = 'none';
-  //   });
-
-  //   document.querySelectorAll('.tab-2-data').forEach(function (element) {
-  //     element.classList.add('active');
-  //   });
-
-  //   document.querySelectorAll('#meetingroom').forEach(element => {
-  //     (element as HTMLElement).style.display = 'block';
-  //   });
-
-  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-  //     (element as HTMLElement).style.display = 'none';
-  //   });
-
-  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
-  //     element.classList.remove('submenu');
-  //   });
-
-  //   const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
-  //   mainNavigationElements.forEach(function (element: any) {
-
-  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //       (sibling: any) => sibling !== element
-  //     );
-  //     // Remove the "submenu" class from each sibling
-  //     siblings.forEach(function (sibling: any) {
-  //       sibling.classList.remove('active');
-  //     });
-  //   });
-  //   const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
-  //   submenuWrapListsElements.forEach(function (element: any) {
-
-  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //       (sibling: any) => sibling !== element
-  //     );
-  //     // Remove the "submenu" class from each sibling
-  //     siblings.forEach(function (sibling: any) {
-  //       sibling.classList.remove('active');
-  //     });
-  //   });
-
-  // }
-
-  // Optimized code
-
   public quicklinks() {
     const removeActiveClass = (selector: string) => {
       document.querySelectorAll(selector).forEach(element => {
@@ -868,16 +842,275 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  public addData() {
+  public addData(event:any) {
+    event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Navigationslist}`;
-
     window.open(listUrl, "_blank");
   }
-  public addDataInLink() {
+
+  public async checkDeptData(event: any) {
+    debugger;
+    event.preventDefault();
+    var DepartmentItems: any[] = [];
+    var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
+    // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
+    if (response.length != 0) {
+      this.setState({ IsDeptDataAvailable: true, IsDeptClicked: true })
+      response.forEach((item) => {
+        if (DepartmentItems.indexOf(item.Title) == -1) {
+          DepartmentItems.push(item.Title)
+        }
+      })
+      // await this.Createalldepartmentlist(DepartmentItems)
+    }
+    //  else {
+    //   this.setState({ IsDeptDataAvailable: false, IsDeptClicked: true })
+    // }
+  }
+
+  public GetDeptData() {
+    setInterval(async () => {
+      var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
+      // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
+      if (response.length != 0) {
+        response.forEach(async (item) => {
+          const newDeptTitle = item.Title; // Replace with actual logic to get this title
+          // Check if the subsite exists before creating it
+          const subsiteExists = await this.checkSubsiteExists(newDeptTitle);
+          if (!subsiteExists) {
+            // Create a subsite if it doesn't exist
+            await this.createSubsite(newDeptTitle);
+            this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
+          } else {
+            console.log("Subsite already exists. No need to create.");
+          }
+        })
+        // for (let i = 0; i < DepartmentListDetails.length; i++) {
+        //   const listName = DepartmentListDetails[i].name; // Access the list name
+        //   const columns = DepartmentListDetails[i].columns; // Access the columns for the list
+        //   // Ensure the list exists or create it
+        //   const listEnsureResult = await sp.web.lists.ensure(listName);
+        //   if (listEnsureResult.created) {
+        //     console.log(`List '${listName}' created successfully.`);
+        //     await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
+        //   } else {
+        //     console.log(`List '${listName}' already exists.`);
+        //     await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
+        //   }
+        // }
+
+
+        // await this.Createalldepartmentlist(DepartmentItems)
+      }
+    }, 500)
+  }
+  public async createListInSubsite(subsiteUrl: any) {
+    try {
+      const subsite = Web(subsiteUrl);
+      for (let i = 0; i < DepartmentListDetails.length; i++) {
+        const listName = DepartmentListDetails[i].name; // Access the list name
+        const columns = DepartmentListDetails[i].columns; // Access the columns for the list
+        // Ensure the list exists or create it
+        const listEnsureResult = await subsite.lists.ensure(listName);
+        if (listEnsureResult.created) {
+          console.log(`List '${listName}' created successfully.`);
+          await this.createSharePointColumns(listName, columns, subsite); // Create columns for the newly created list
+        } else {
+          console.log(`List '${listName}' already exists.`);
+          await this.createSharePointColumns(listName, columns, subsite); // Ensure columns exist even if the list already exists
+        }
+        console.log(`List '${listName}' created in subsite: ${subsiteUrl}`);
+      }
+      // Create the list in the subsite      console.log(list)
+    } catch (error) {
+      console.error("Error creating list in subsite:", error);
+    }
+
+  }
+
+  public async createSharePointColumns(name: string, columns: any[], subsite: IWeb & IInvokable<any>): Promise<void> {
+    try {
+      for (const column of columns) {
+        if (!column.columnName || !column.type) {
+          console.error("Invalid column data:", column);
+          continue;
+        }
+
+        let columnExist = false;
+        try {
+          columnExist = await subsite.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+          // const columnfield = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName == "Name" ? "FileLeafRef" : column.columnName).get();
+          // columnExist = !!columnfield.Id; // Check if the column object has a valid Id
+          // console.log(columnExist ? "Column exists." : "Column does not exist.");
+        } catch {
+          columnExist = false; // Column does not exist
+        }
+
+        // if (columnExist == false && column.columnName.trim() === "Name" && column.type.trim() === "addTextField") {
+        //     await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
+        //     console.log("Text field 'Name' created.");
+        // }
+
+        if (!columnExist) {
+          switch (column.type) {
+            case "addImageField":
+              await subsite.lists.getByTitle(name).fields.addImageField(column.columnName);
+              console.log(`Column '${column.columnName}' added as Image Field.`);
+              break;
+
+            case "addBoolean":
+              await subsite.lists.getByTitle(name).fields.addBoolean(column.columnName);
+              console.log(`Column '${column.columnName}' added as Boolean.`);
+              break;
+
+            case "addTextField":
+              await subsite.lists.getByTitle(name).fields.addText(column.columnName);
+              // await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+              console.log(`Column '${column.columnName}' added as Text Field.`);
+              break;
+
+            case "addNumberField":
+              await subsite.lists.getByTitle(name).fields.addNumber(column.columnName);
+              console.log(`Column '${column.columnName}' added as Number Field.`);
+              break;
+
+            case "addDateField":
+              await subsite.lists.getByTitle(name).fields.addDateTime(column.columnName);
+              console.log(`Column '${column.columnName}' added as Date Field.`);
+              break;
+
+            case "addMultilineText":
+              await subsite.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+              console.log(`Column '${column.columnName}' added as Multiline Field.`);
+              break;
+
+            case "Person or Group":
+              await subsite.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+              console.log(`Column '${column.columnName}' added as Person or Group Field.`);
+              break;
+
+            case "addMultiChoice":
+              await subsite.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+              console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
+              break;
+
+            case "addLookup":
+              if (!column.targetListName || !column.targetListColumn) {
+                console.error("Missing target list or column for lookup field:", column);
+                break;
+              }
+              const targetList = await subsite.lists.getByTitle(column.targetListName).get();
+              await subsite.lists
+                .getByTitle(name)
+                .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+              console.log(`Column '${column.columnName}' added as Lookup Field.`);
+              break;
+
+            case "addUrl":
+              await subsite.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
+              console.log(`Column '${column.columnName}' added as URL Field.`);
+              break;
+
+            case "Icon":
+              await subsite.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+              console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
+              break;
+
+            case "addChoice":
+              await subsite.lists.getByTitle(name).fields.addChoice(
+                column.columnName,
+                column.choices,
+                ChoiceFieldFormatType.Dropdown
+              );
+              console.log(`Column '${column.columnName}' added as Choice Field.`);
+              break;
+
+            default:
+              console.log(`Unknown column type: ${column.type}`);
+          }
+          try {
+            await subsite.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+          } catch (viewError) {
+            console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
+          }
+        }
+        // alert("list and column created")
+      }
+    } catch (error) {
+      console.error("Error during column creation process:", error);
+    }
+  }
+
+  public async addDeptData(event: any) {
+    event.preventDefault();
+    // Open the department list for adding a department
+    const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
+    window.open(listUrl, "_blank");
+
+    // Assuming you have a way to get the new department's title after it's added
+    // For demonstration, let's assume you have the department title (e.g. newDeptTitle)
+
+  }
+
+  private async checkSubsiteExists(departmentName: string): Promise<boolean> {
+    try {
+      const subsites = await sp.web.webs();
+      return subsites.some(subsite => subsite.Title === departmentName);
+    } catch (error) {
+      console.error("Error checking if subsite exists:", error);
+      return false;
+    }
+  }
+  private async createSubsite(departmentName: string) {
+    try {
+      const subsiteExists = await this.checkSubsiteExists(departmentName);
+
+      if (!subsiteExists) {
+        // Use a simplified string for the URL (e.g., remove spaces or extra text)
+        const subsiteUrl = departmentName.replace(/\s+/g, ''); // Removes any spaces in the departmentName
+
+        // Add the subsite with the clean URL
+        await sp.web.webs.add(subsiteUrl, departmentName, `${departmentName} Subsite Description`, "STS#0", 1033);
+        console.log("Subsite created successfully.");
+      } else {
+        console.log("Subsite already exists.");
+      }
+    } catch (error) {
+      console.error("Error creating subsite:", error);
+    }
+  }
+
+
+  public Createalldepartmentlist(Navigationitems: any[]) {
+    debugger;
+    Navigationitems.forEach((item) => {
+      let AboutList = listNames.AboutDepartment;
+      let LogoList = listNames.Logo;
+      let QuicklinksList = listNames.QuickLinks;
+      let ServicesList = listNames.Services;
+      let versionMasterList = listNames.VersionMaster;
+      const Listtobecreated: any[] = [`${item}${AboutList}`, `${item}${LogoList}`, `${item}${QuicklinksList}`, `${item}${ServicesList}`, `${item}${versionMasterList}`];
+      const listCreation = new ListCreation();
+      Listtobecreated.forEach((Item) => {
+        listCreation.createSharePointLists(Item)
+          .then(() => console.log(`List ${Item} created successfully`))
+          .catch((error) => console.error(`Failed to create list ${Item}:`, error));
+      });
+    })
+
+  }
+  public addDataInLink(event:any) {
+    event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${QuickLinkslist}`;
 
+    window.open(listUrl, "_blank");
+  }
+  public addDataInDepartmentMasterlist(event:any) {
+    event.preventDefault();
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
+    const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
     window.open(listUrl, "_blank");
   }
 
@@ -885,41 +1118,30 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     var handler = this;
 
     const MainNavigations: JSX.Element[] = handler.state.MainNavItems.map(function (item) {
+      debugger;
       let RawImageTxtOn = item.HoverOnIcon;
       let RawImageTxtOff = item.HoverOffIcon;
       if (RawImageTxtOn != null || RawImageTxtOn != undefined && RawImageTxtOff != null || RawImageTxtOff != undefined) {
         var ImgObjforON = JSON.parse(RawImageTxtOn);
         if (ImgObjforON.serverRelativeUrl == undefined) {
-
           var serverRelativeUrl = `${handler.props.siteurl}/Lists/${Navigationslist}/Attachments/` + item.ID + "/" + ImgObjforON.fileName
-
         } else {
-
           serverRelativeUrl = ImgObjforON.serverRelativeUrl
-
         }
-
         var ImgObjforOFF = JSON.parse(RawImageTxtOff);
         if (ImgObjforOFF.serverRelativeUrl == undefined) {
-
           var serverRelativeUrl2 = `${handler.props.siteurl}/Lists/${Navigationslist}/Attachments/` + item.ID + "/" + ImgObjforOFF.fileName
-
         } else {
-
           serverRelativeUrl2 = ImgObjforOFF.serverRelativeUrl
-
         }
-
-
         if (item.LinkMasterID != undefined) { var LinkMasterIDTitle = item.LinkMasterID.Title }
-
         if (item.OpenInNewTab == true) {
           if (LinkMasterIDTitle == "DEPT_00001") {
             return (
               <li>
                 <a href="#" onClick={() => handler.GetDepartments()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
+                {/* {this.state.IsDeptDataAvailable == true ? ( */}
                 <div className="submenu-wrap-lists department-wrap">
-
                   <ul className="clearfix">
                     {handler.state.showdata}
                   </ul>
@@ -946,17 +1168,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
             );
           }
           if (LinkMasterIDTitle == undefined) {
-
             var str2 = item.Title;
-
             var ContentEditorURL = item.URL;
             var conturl = ContentEditorURL.toLowerCase();
-
             conturl = conturl.split("?");
             var DomID2 = str2.replace(/[_\W]+/g, "_");
-
             if (item.Title == "Home") {
-
               return (
                 <li className="active" id={DomID2}> <a href={`${item.URL}`} target="_blank" data-interception="off"> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
               );
@@ -967,8 +1184,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                   <li> <a href={`${item.URL}`} target="_blank" data-interception="off"> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
                 );
               }
+            }
+            else if (item.Title == "Department") {
+              return (
+                <li id={DomID2}> <a href={`${item.URL}`} target="_blank" data-interception="off" onClick={(e) => { handler.checkDeptData(e) }}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
+              );
             } else {
-
               return (
                 <li id={DomID2}> <a href={`${item.URL}`} target="_blank" data-interception="off"> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
               );
@@ -980,7 +1201,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
               <li>
                 <a href="#" onClick={() => handler.GetDepartments()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
                 <div className="submenu-wrap-lists department-wrap">
-
                   <ul className="clearfix">
                     {handler.state.showdata}
                   </ul>
@@ -1008,9 +1228,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           if (LinkMasterIDTitle == undefined) {
             var str = item.Title;
             var ContentEditorURL = item.URL;
-
             var conturl = ContentEditorURL.toLowerCase();
-
             conturl = conturl.split("?");
             var DomID = str.replace(/[_\W]+/g, "_");
             if (item.Title == "Home") {
@@ -1033,9 +1251,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       }
     })
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
-
-
-
     const MyLinks: JSX.Element[] = handler.state.MyLinks.map(function (item) {
       let RawImageTxtOn = item.ImageHover;
       let RawImageTxtOff = item.Image;
@@ -1085,70 +1300,79 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
 
     return (
-      <div className='tab-view-content'>
-        {/* {this.state.isDataAvailable ? */}
-        <>
-          <div className="tab-view">
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
-              <li className="nav-item active tab-1-data" role="presentation">
-                <a className="nav-link active tab-1-data" onClick={this.mylinks} id="home-tab" data-toggle="tab" href="#contacts" role="tab"
-                  aria-controls="contacts" aria-selected="true">Quick Links </a>
-              </li>
-              <li className="nav-item tab-2-data" role="presentation">
+      <div className="col-md-12 navigation">
+        <div className='tab-view-content'>
+          {/* {this.state.isDataAvailable ? */}
+          <>
+            <div className="tab-view">
+              <ul className="nav nav-tabs" id="myTab" role="tablist">
+                <li className="nav-item active tab-1-data" role="presentation">
+                  <a className="nav-link active tab-1-data" onClick={this.mylinks} id="home-tab" data-toggle="tab" href="#contacts" role="tab"
+                    aria-controls="contacts" aria-selected="true">Quick Links </a>
+                </li>
+                {/* <li className="nav-item tab-2-data" role="presentation">
                 <a className="nav-link tab-2-data" onClick={this.quicklinks} id="profile-tab" data-toggle="tab" href="#meetingroom" role="tab"
                   aria-controls="meetingroom" aria-selected="false">My Links</a>
-              </li>
-            </ul>
-          </div>
+              </li> */}
+              </ul>
+            </div>
 
-          <div className="tab-content">
-            <div className="nav-link active tab-1-data" id="contacts">
-              {this.state.isDataAvailableNav == true ?
-                <div className="main-mavigation m-b-20">
-                  <nav className="sec" id="root-nav-links">
-                    <div className="breadcrum-block">
-                      <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>All Menu<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                      {BreadCrumb.map((item, key) => (
-                        <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>{item.Title}<img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off"></img></a>
-                      ))}
-                    </div>
-                    <ul className="clearfix">
-                      {MainNavigations}
-                    </ul>
-                  </nav>
+            <div className="tab-content">
+              <div className="nav-link active tab-1-data" id="contacts">
+                {handler.state.isDataAvailableNav == true ?
+                  <div className="main-mavigation m-b-20">
+                    <nav className="sec" id="root-nav-links">
+                      {handler.state.IsDeptDataAvailable && handler.state.IsDeptClicked && (
+                        <div className="breadcrum-block">
+                          <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
+                            All Menu
+                            <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
+                          </a>
+                          {BreadCrumb.map((item, key) => (
+                            <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
+                              {item.Title}
+                              <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                      {/* {handler.state.IsDeptDataAvailable === false && handler.state.IsDeptClicked === true && ( */}
+                      <div>
+                        <button onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                      </div>
+                      {/* )} */}
 
+                      <ul className="clearfix">
+                        {MainNavigations}
+                      </ul>
+                    </nav>
+                  </div>
+                  :
+                  <div>
+                    <button onClick={(e) => this.addData(e)}>Add DataNavigation</button>
+                  </div>
+                }
+              </div>
+              {this.state.isDataAvailableLink == true ?
+                <div className="nav-item tab-2-data" id="meetingroom">
+                  <div className="main-mavigation quick m-b-20">
+                    <nav className="sec" id="root-nav-links">
+                      <ul className="clearfix">
+                        {MyLinks}
+                      </ul>
+                    </nav>
+
+                  </div>
                 </div>
                 :
                 <div>
-                  <button onClick={() => this.addData()}>Add DataNavigation</button>
+                  <button onClick={(e) => this.addDataInLink(e)}>Add DataInQuickLink</button>
                 </div>
               }
             </div>
-            {this.state.isDataAvailableLink == true ?
-              <div className="nav-item tab-2-data" id="meetingroom">
-                <div className="main-mavigation quick m-b-20">
-                  <nav className="sec" id="root-nav-links">
-                    <ul className="clearfix">
-                      {MyLinks}
-                    </ul>
-                  </nav>
-
-                </div>
-              </div>
-              :
-              <div>
-                <button onClick={() => this.addDataInLink()}>Add DataInQuickLink</button>
-              </div>
-            }
-          </div>
-        </>
-        {/* // :
-          // <div>
-          //   <button onClick={() => this.addData()}>Add Data</button>
-          // </div>
-        // } */}
+          </>
+        </div>
       </div>
-
     );
   }
 }

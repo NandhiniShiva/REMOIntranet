@@ -504,32 +504,34 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
 
     return (
-      <div className={styles.remoHomePage} id="bday-highlights">
-        <div className="birthday-wrap m-b-20" id="if-birthdays-present">
-          <div id="today-bday" style={{ display: "none" }}>
-            <div className="sec">
-              <Slider {...settings} className='hero-banner-container-wrap' >
-                {TodayBirthday}
-                {UpcomingBirthday}
-              </Slider>
+      <div className='col-md-12  birthday'>
+        <div className={styles.remoHomePage} id="bday-highlights">
+          <div className="birthday-wrap m-b-20" id="if-birthdays-present">
+            <div id="today-bday" style={{ display: "none" }}>
+              <div className="sec">
+                <Slider {...settings} className='hero-banner-container-wrap' >
+                  {TodayBirthday}
+                  {UpcomingBirthday}
+                </Slider>
+              </div>
+            </div>
+            <div id="upcoming-bday" style={{ display: "none" }}>
+              <div className="sec">
+                <Slider {...settings} className='hero-banner-container-wrap' >
+                  {UpcomingBirthday}
+                </Slider>
+              </div>
             </div>
           </div>
-          <div id="upcoming-bday" style={{ display: "none" }}>
+          <div className="birthday-wrap m-b-20" id="if-no-birthdays-present" style={{ display: "none" }} >
             <div className="sec">
-              <Slider {...settings} className='hero-banner-container-wrap' >
-                {UpcomingBirthday}
-              </Slider>
+              <div className="heading clearfix ">
+                <h4 >
+                  Birthday
+                </h4>
+              </div>
+              <p className="text-center" > No Birthday's at this moment.  </p>
             </div>
-          </div>
-        </div>
-        <div className="birthday-wrap m-b-20" id="if-no-birthdays-present" style={{ display: "none" }} >
-          <div className="sec">
-            <div className="heading clearfix ">
-              <h4 >
-                Birthday
-              </h4>
-            </div>
-            <p className="text-center" > No Birthday's at this moment.  </p>
           </div>
         </div>
       </div>

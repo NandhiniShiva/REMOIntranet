@@ -127,9 +127,9 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   previous() {
     this.slider.slickPrev();
   }
-  public addData() {
+  public addData(event:any) {
+    event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Newslist}`;
-
     window.open(listUrl, "_blank");
   }
 
@@ -201,35 +201,37 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
 
 
     return (
-      <div className={[styles.remoHomePage, "m-b-15 m-b-20-news"].join(' ')} id="m-b-20-news">
-        <div className="news-wrap m-b-20">
-          {this.state.isDataAvailable == true ?
-            <div className="sec event-cal">
-              <div className="heading clearfix ">
-                <h4>
-                  <a href={viewall}>
-                    News
-                  </a>
-                </h4>
-                <div className="prev-next">
-                  <a href="#" onClick={this.previous} ><img src={`${this.props.siteurl}/SiteAssets/img/previous.svg`} alt="image" className="prev-img" /> </a>
-                  <a href="#" onClick={this.next}><img src={`${this.props.siteurl}/SiteAssets/img/next-2.svg`} alt="image" className="next-img" /> </a>
+      <div className="col-md-12 news">
+        <div className={[styles.remoHomePage, "m-b-15 m-b-20-news"].join(' ')} id="m-b-20-news">
+          <div className="news-wrap m-b-20">
+            {this.state.isDataAvailable == true ?
+              <div className="sec event-cal">
+                <div className="heading clearfix ">
+                  <h4>
+                    <a href={viewall}>
+                      News
+                    </a>
+                  </h4>
+                  <div className="prev-next">
+                    <a href="#" onClick={this.previous} ><img src={`${this.props.siteurl}/SiteAssets/img/previous.svg`} alt="image" className="prev-img" /> </a>
+                    <a href="#" onClick={this.next}><img src={`${this.props.siteurl}/SiteAssets/img/next-2.svg`} alt="image" className="next-img" /> </a>
+                  </div>
+                </div>
+                <div className="section-part clearfix">
+                  <div className="news-section-wrap clearfix" >
+                    <Slider ref={c => (this.slider = c!)} {...settings} className='hero-banner-container-wrap'>
+                      {Newsslider}
+                    </Slider>
+                  </div>
                 </div>
               </div>
-              <div className="section-part clearfix">
-                <div className="news-section-wrap clearfix" >
-                  <Slider ref={c => (this.slider = c!)} {...settings} className='hero-banner-container-wrap'>
-                    {Newsslider}
-                  </Slider>
-                </div>
+              :
+              <div>
+                <button onClick={(e) => this.addData(e)}>Add Data</button>
               </div>
-            </div>
-            :
-            <div>
-              <button onClick={() => this.addData()}>Add Data</button>
-            </div>
-          }
+            }
 
+          </div>
         </div>
       </div>
     )

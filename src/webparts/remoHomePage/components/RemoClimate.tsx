@@ -284,6 +284,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
   public render(): React.ReactElement<IWeatherCurrencyProps> {
     const { selectedOption } = this.state;
     return (
+      <div className='col-md-12 climate'>
       <div id="m-b-20-weather">
         <div className="climate-wrap m-b-20">
           <div className="sec climate-prayer-exchage m-b-20">
@@ -321,7 +322,8 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
             </ul>
           </div >
         </div >
-      </div >
+      </div>
+      </div>
     )
   }
 }

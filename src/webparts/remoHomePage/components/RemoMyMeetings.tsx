@@ -943,80 +943,81 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
 
 
         return (
+            <div className='col-md-12 mymeetings'>
+                <div className={[styles.remoHomePage, "m-b-20 m-b-50 m-b-routine clearfix"].join(' ')}>
+                    <div className="routine-wrap">
+                        <div className="sec dynamic-innerwidth-calc shadoww">
+                            <div className="Ssec-wrapper">
+                                {/*For Present*/}
+                                <div className="today-routine-blockk present" >
+                                    <div className="routine-Heading clearfix" id="current-date">
+                                        <span id="dt-current"> My Meetings </span>
+                                        <DatePicker placeholder="Select a date..."
+                                            onSelectDate={this._onSelectDate}
+                                            value={this.state.SelectedDate}
+                                            formatDate={this._onFormatDate}
+                                            isMonthPickerVisible={false}
+                                        />
 
-            <div className={[styles.remoHomePage, "m-b-20 m-b-50 m-b-routine clearfix"].join(' ')}>
-                <div className="routine-wrap">
-                    <div className="sec dynamic-innerwidth-calc shadoww">
-                        <div className="Ssec-wrapper">
-                            {/*For Present*/}
-                            <div className="today-routine-blockk present" >
-                                <div className="routine-Heading clearfix" id="current-date">
-                                    <span id="dt-current"> My Meetings </span>
-                                    <DatePicker placeholder="Select a date..."
-                                        onSelectDate={this._onSelectDate}
-                                        value={this.state.SelectedDate}
-                                        formatDate={this._onFormatDate}
-                                        isMonthPickerVisible={false}
-                                    />
-
-                                </div>
-
-                                <div className="routine-time-wrap scroller">
-                                    <div className="routine-timeline routine-timeline-scroll" id="top-parent-event" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
-                                        <ul id="past-event" style={{ display: "none" }}>
-                                            {AllMyPastEvents}
-                                        </ul>
-                                        <ul id="current-event">
-                                            {AllMyEvents}
-                                        </ul>
                                     </div>
-                                </div>
-                            </div>
 
-                            {/*For Future*/}
-                            <div className="today-routine-blockk future" style={{ display: "none" }}>
-                                <div className="routine-Heading clearfix" id="current-date-future">
-                                    <span id="dt-upcoming"> Upcoming Events </span>
-                                    <DatePicker placeholder="Select a date..."
-                                        onSelectDate={this._onSelectDate}
-                                        value={this.state.SelectedDate}
-                                        formatDate={this._onFormatDate}
-                                        isMonthPickerVisible={false}
-                                    />
-                                </div>
-
-                                <div className="routine-time-wrap scroller">
-                                    <div className="routine-timeline routine-timeline-noscroll" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
-                                        <ul id="current-event-future">
-                                            {AllMyEventsFuture}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/*For No Events*/}
-                            <div className="today-routine-blockk no-upcoming-events" style={{ display: "none" }}>
-                                <div className="routine-Heading clearfix">
-                                    <span id="dt-upcoming-no-events"> Schedule your Event </span>
-                                    <DatePicker placeholder="Select a date..."
-                                        onSelectDate={this._onSelectDate}
-                                        value={this.state.SelectedDate}
-                                        formatDate={this._onFormatDate}
-                                        isMonthPickerVisible={false}
-                                    //showMonthPickerAsOverlay={true}
-                                    />
-
-                                </div>
-
-                                <div className="routine-time-wrap scroller">
-                                    <div className="routine-timeline" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
-                                        <div className="Schedule-ur-event">
-                                            <a href="#" onClick={() => this.openoutlookcal()}><i className="fa fa-calendar" aria-hidden="true" data-interception="off"></i>Schedule Now</a>
+                                    <div className="routine-time-wrap scroller">
+                                        <div className="routine-timeline routine-timeline-scroll" id="top-parent-event" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
+                                            <ul id="past-event" style={{ display: "none" }}>
+                                                {AllMyPastEvents}
+                                            </ul>
+                                            <ul id="current-event">
+                                                {AllMyEvents}
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
+                                {/*For Future*/}
+                                <div className="today-routine-blockk future" style={{ display: "none" }}>
+                                    <div className="routine-Heading clearfix" id="current-date-future">
+                                        <span id="dt-upcoming"> Upcoming Events </span>
+                                        <DatePicker placeholder="Select a date..."
+                                            onSelectDate={this._onSelectDate}
+                                            value={this.state.SelectedDate}
+                                            formatDate={this._onFormatDate}
+                                            isMonthPickerVisible={false}
+                                        />
+                                    </div>
+
+                                    <div className="routine-time-wrap scroller">
+                                        <div className="routine-timeline routine-timeline-noscroll" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
+                                            <ul id="current-event-future">
+                                                {AllMyEventsFuture}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/*For No Events*/}
+                                <div className="today-routine-blockk no-upcoming-events" style={{ display: "none" }}>
+                                    <div className="routine-Heading clearfix">
+                                        <span id="dt-upcoming-no-events"> Schedule your Event </span>
+                                        <DatePicker placeholder="Select a date..."
+                                            onSelectDate={this._onSelectDate}
+                                            value={this.state.SelectedDate}
+                                            formatDate={this._onFormatDate}
+                                            isMonthPickerVisible={false}
+                                        //showMonthPickerAsOverlay={true}
+                                        />
+
+                                    </div>
+
+                                    <div className="routine-time-wrap scroller">
+                                        <div className="routine-timeline" style={{ 'position': 'relative', 'marginLeft': '' + this.state.MarginValue + '' }}>
+                                            <div className="Schedule-ur-event">
+                                                <a href="#" onClick={() => this.openoutlookcal()}><i className="fa fa-calendar" aria-hidden="true" data-interception="off"></i>Schedule Now</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

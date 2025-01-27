@@ -68,6 +68,7 @@ export interface IRemoHomePageState {
   showDropdown: boolean,
   showHomepage: boolean,
   selectedValue: any,
+  selectedDept: any,
   layoutItems: any[],
   AvailableComponents: any[],
   // SelectedComponents: any[],
@@ -80,7 +81,8 @@ export interface IRemoHomePageState {
   ceoMessegeID: any;
   isCurrentUserAdmin: boolean;
   editMode: any
-  isEditFalse: boolean
+  isEditFalse: boolean,
+  isSearchActive: boolean,
 }
 
 
@@ -99,6 +101,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       showDropdown: false,
       showHomepage: false,
       selectedValue: null,
+      selectedDept: null,
       layoutItems: [],
       AvailableComponents: [],
       componentName: "",
@@ -106,13 +109,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       selectedComponents: {}, // To store selected components by position
       // SelectedComponents: [],
       // isInitialscreen: true,
-      isInitialscreen: Array(10).fill(true), // Create an array of 10 `true` values
+      isInitialscreen: Array(12).fill(true), // Create an array of 10 `true` values
       isClicked: "",
       ceoMessegeID: null,
       isCurrentUserAdmin: false,
       editMode: "",
-      isEditFalse: true
-
+      isEditFalse: true,
+      isSearchActive: false,
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
@@ -280,51 +283,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-
-  // public async getAllocatedComponents() {
-  //   debugger;
-  //   var updatedIsInitialscreen: any[] = [];
-  //   var updatedAvailableComponents: any[] = [];
-  //   try {
-  //     // Fetch items from the SharePoint list
-  //     const response = await sp.web.lists.getByTitle(ComponentallocationList).items.get();
-  //     if (response.length !== 0) {
-  //       // Create arrays for components and positions
-  //       const components: any[] = [];
-  //       const selectedComponents: any = {};
-  //       // Populate arrays and the selectedComponents map
-  //       response.forEach((item) => {
-  //         // components.push(item.Component);
-  //         if (item.Position != null && item.Component != null) {
-  //           selectedComponents[item.Position] = item.Component;
-  //           updatedIsInitialscreen = this.state.isInitialscreen.map((item1, index) =>
-  //             index === (item.Position - 1) ? false : item1
-  //           );
-  //           updatedAvailableComponents = this.state.AvailableComponents.filter(
-  //             (item2) => item.Component !== item2.Title
-  //           );
-
-  //           // this.setState({
-  //           //   AvailableComponents: updatedAvailableComponents,
-  //           // });
-  //         }
-  //       });
-  //       // Update the state with fetched data
-  //       this.setState({
-  //         AvailableComponents: updatedAvailableComponents, // Assuming you want to populate a list of available components
-  //         selectedComponents: selectedComponents, // Update selected components by position
-  //         isInitialscreen: updatedIsInitialscreen,
-  //       });
-  //       console.log("Available Components:", components);
-  //       console.log("Selected Components:", selectedComponents);
-  //     } else {
-  //       console.log("No items found in the SharePoint list.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching allocated components:", error);
-  //   }
-  // }
-
   public async GetAllavailablecomponents() {
     try {
       var allcomponents = [];
@@ -438,81 +396,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       console.error('Error fetching user profile:', error);
     }
   }
-
-
-  // Working create list function
-
-  // public async createSharePointLists() {
-  //   debugger;
-  //   try {
-
-  //     const listNames: any[] = ListLibraryColumnDetails.map(list => list.name); // Collect list names
-  //     const totalLists: number = listNames.length; // `totalLists` is the count of lists
-
-  //     // Initialize progress
-  //     this.setState({
-  //       isCreatingLists: true,
-  //       progress: 0,
-  //       loadContent: false,
-  //       currentList: null, // Ensure the current list is initially null
-  //     });
-
-  //     // Track if any list was newly created
-  //     let anyListCreated = false;
-
-  //     // Loop over each list for creation
-  //     for (let i = 0; i < totalLists; i++) {
-
-  //       const listName = listNames[i]; // Corrected list name assignment
-  //       const columns = ListLibraryColumnDetails[i].columns; // Retrieve columns for the current list
-
-  //       // Update current progress and list name
-  //       this.setState({
-  //         currentList: listName, // Dynamically update the list name being processed
-  //         progress: Math.round(((i + 1) / totalLists) * 100), // Calculate progress
-  //       });
-
-  //       // Check if the list exists; if not, create it
-  //       const listEnsureResult = await sp.web.lists.ensure(listName);
-
-  //       if (listEnsureResult.created) {
-  //         console.log(`List '${listName}' created successfully.`);
-  //         await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
-  //         anyListCreated = true;
-  //       } else {
-  //         await this.createSharePointColumns(listName, columns); // Create columns if the list was newly created
-  //         console.log(`List '${listName}' already exists.`);
-  //       }
-  //     }
-
-  //     // Final progress update
-  //     this.setState({
-  //       progress: 100,
-  //       isCreatingLists: false,
-  //       loadContent: true,
-  //     });
-
-  //     // Reset if no new lists were created
-  //     if (!anyListCreated) {
-  //       console.log("All lists already existed. No new lists were created.");
-  //       this.setState({
-  //         isCreatingLists: false,
-  //         loadContent: true,
-  //         progress: 0,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating lists:", error);
-
-  //     // Handle errors and reset the state
-  //     this.setState({
-  //       isCreatingLists: false,
-  //       currentList: null,
-  //       progress: 0,
-  //       loadContent: true,
-  //     });
-  //   }
-  // }
 
 
 
@@ -916,14 +799,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
   public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
-    $("#" + DOMID + "").show();
+    $("#" + DOMID + "").toggle();
     // this.setState({ isInitialscreen: false })
   }
 
   public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
     try {
       event.preventDefault();
-
       const position = key;
       // Update selected component for the position
       this.setState((prevState) => ({
@@ -1191,17 +1073,27 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   //   }
   // }
-  public Showclearbutton() {
+  public Showclearbutton(ID: any) {
+    debugger;
     var input = $("#SearchInput").val();
     if (input == "") {
       $(".clear_part").hide();
+      // $("." + ID + "").removeClass("active");
+      const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
+      if (inputElement) {
+        inputElement.classList.remove("active"); // Add the active class
+      }
     }
     else {
-      $(".clear_part").addClass("active");
-      $(".clear_part").show();
+      // $(".clear_part").addClass("active");
+      // $(".clear_part").show();
+      const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
+      if (inputElement) {
+        inputElement.classList.add("active"); // Add the active class
+      }
     }
   }
-  public Search(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     $(".search_button").show();
     var query: string = $.trim(($("#SearchInput") as any).val());
@@ -1213,7 +1105,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     })
   }
-  // public Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  // public clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   //   e.preventDefault();
   //   $("#SearchInput").val("");
   //   $(".clear_part").removeClass("active");
@@ -1266,12 +1158,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   // }
 
-  public async Clear(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
     // Clear the search input and reset any active state
     $("#SearchInput").val("");
-    $(".clear_part").removeClass("active");
+    // $(".clear_part").removeClass("active");
 
     try {
       // Fetch all components
@@ -1356,7 +1248,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
         <>
-          <button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button>
+          <button className= "Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
+            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" />Remove</button>
           <Component {...this.props} {...props} />
         </>
       );
@@ -1391,11 +1284,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       case "Manange Quick Links":
         return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName });
 
-      case "Events":
+      case "Events and Announcements":
         return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
-
-      case "Announcement":
-        return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
+      // case "Announcement":
+      //   return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
 
       case "Recent Files":
         return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
@@ -1410,46 +1302,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         return null;
     }
   }
-
-  // public renderComponent(position: number) {
-  //   const componentName = this.state.selectedComponents[position];
-  //   switch (componentName) {
-  //     case "Hero Banner":
-
-  //       return (
-
-  //         <>{this.state.isCurrentUserAdmin && this.state.editMode == true ? <button onClick={(e) => this.removeComponent(e, componentName, position)}>Remove</button> : null}
-  //           <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} /></>)
-  //     // <Climate siteurl={this.props.siteurl} context={this.props.context} description="" userid={this.props.userid} />;
-  //     case "CEO Message":
-  //       return <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
-  //     case "Quick Links":
-  //       return <RemoNavigations {...this.props} description="" createList={false} name="" onReadMoreClick={null} />
-  //     case "My Meetings":
-  //       return <RemoMyMeetings {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Birthday":
-  //       return <RemoBirthday {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "News":
-  //       return <RemoNews {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Climate":
-  //       return <RemoClimate {...this.props} description="" />
-  //     case "Manange Quick Links":
-  //       return <RemoQuickLinks {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Events":
-  //       return <RemoLatestEventsandAnnouncements {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Announcement":
-  //       return <RemoHeroBanner {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />;
-  //     case "Recent Files":
-  //       return <RemoRecentFiles {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Images and Videos":
-  //       return <RemoImagesandVideos {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     case "Social Media":
-  //       return <RemoSocialMedia {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-  //     // Add more cases for all components
-  //     default:
-  //       return null;
-  //   }
-  // }
 
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
     event.preventDefault();
@@ -1567,10 +1419,102 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
+    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any;}) => (
+      <>
+        {/* Button to toggle component visibility */}
+        <button id={ButtonId} onClick={(e) => handler.showcomponents(e, SelectID)} >
+          <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt="AddComponent" />
+        </button>
+
+        {/* Hidden component div, toggled dynamically */}
+        <div id={SelectID} style={{ display: "none" }}>
+          <div className="component-search">
+            <input type="text" className={`form-control ${DOMID}`} placeholder="Search for the contact here" id="SearchInput"
+              onChange={() => handler.Showclearbutton(DOMID)}  />
+            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e)} >
+              <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
+            </button>
+            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e)}>
+              <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
+            </button>
+          </div>
+
+          {/* List of available components */}
+          <ul>
+            {handler.state.AvailableComponents.map((component: any) => (
+              <li
+                key={component.Title} // Ensure unique key for each list item
+                className="li-search-wrap"
+                onClick={(e) => handler.setSelectedComponent(e,component.Title,SelectID,ComponentIndex)}
+              >
+                <p className="people_name">{component.Title}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
+    );
+
+    // const SearchElement = ({ DOMID }: { DOMID: string }) => (
+    //   <>
+    //     <button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>
+    //       <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt='AddComponent'></img>
+    //     </button>
+    //     <div id={item.selectId} style={{ display: "none" }}></div><div className="component-search">
+    //       <input
+    //         type="text"
+    //         className={`form-control ${DOMID}`}
+    //         placeholder="Search for the contact here"
+    //         id="SearchInput"
+    //         onChange={() => this.Showclearbutton(DOMID)} />
+    //       <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
+    //         <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
+    //       </button>
+    //       <button
+    //         className="form-control clear_part inp-search input-clear-onchange"
+    //         onClick={(e) => this.clearHandler(e)}
+    //       >
+    //         <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
+    //       </button>
+
+    //     </div>
+    //     <ul>
+    //       {handler.state.AvailableComponents.map((Items1) => {
+    //         return (
+    //           <li className='li-search-wrap' onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}>
+    //             <p className="people_name">{Items1.Title}</p>
+    //           </li>
+    //         );
+    //       }
+    //       )}
+    //     </ul>
+    //   </>
+    // );
+    // const addcomponent = ({ DOMID }: { DOMID: string }) => (
+    //   <div className="component-search">
+    //     <input
+    //       type="text"
+    //       className={`form-control ${DOMID}`}
+    //       placeholder="Search for the contact here"
+    //       id="SearchInput"
+    //       onChange={() => this.Showclearbutton(DOMID)}
+    //     />
+    //     <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
+    //       <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
+    //     </button>
+    //     <button
+    //       className="form-control clear_part inp-search input-clear-onchange"
+    //       onClick={(e) => this.clearHandler(e)}
+    //     >
+    //       <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
+    //     </button>
+
+    //   </div>
+    // );
+
 
     return (
       //Layout 1
-
       <>
         {this.state.showHomepage == true &&
           <div>
@@ -1582,9 +1526,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   currentWebUrl=""
                   CurrentPageserverRequestPath=""
                 />
-                {/* {this.state.isCurrentUserAdmin && this.state.editMode == "edit" && */}
                 <>
-                  <div>
+                  <li id='layout_button'>
                     <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
                       <option value="">Select Layout</option>
                       {this.state.layoutItems.map((item) => (
@@ -1593,14 +1536,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                         </option>
                       ))}
                     </select>
-                  </div>
+                  </li>
+
                   {this.state.editMode != "edit" &&
-                    <div>
-                      <button onClick={(e) => this.editHandler(e)}>Edit</button>
-                    </div>
+                    // <div>
+                    <li id='edit_button'>
+                      <button onClick={(e) => this.editHandler(e)}>
+                        <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                        <span> Edit </span></button>
+                      {/* </div> */}
+                    </li>
                   }
                 </>
-                {/* } */}
               </div>
               <section>
 
@@ -1612,562 +1559,211 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       <div className="banner-ceo-message">
                         <div className="row">
                           {this.state.isInitialscreen[0] == true ?
-                            <div className="col-md-8" >
-                              {Components.map((item) => {
+                            <div className="col-md-8">
+                              {Components.map((item, key) => {
                                 if (item.Position == 1) {
                                   return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
+                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                   )
                                 }
                               })}
                             </div>
                             :
-                            <>
+                            <div className="col-md-8" >
                               {this.state.selectedComponents[1] && this.renderComponent(1)}
-                            </>
+                            </div>
                           }
 
                           {this.state.isInitialscreen[1] == true ?
-                            <div className="col-md-8" >
-                              {Components.map((item) => {
+                            <div className="col-md-4">
+                              {Components.map((item,key) => {
                                 if (item.Position == 2) {
                                   return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
+                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                   )
                                 }
                               })}
                             </div>
                             :
-                            <>
+                            <div className="col-md-4" >
                               {this.state.selectedComponents[2] && this.renderComponent(2)}
-                            </>
-                            // <RemoCEOMessage {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} />
+                            </div>
                           }
                         </div>
+
                       </div>
+                      {/* //Quicklinks- remo navigation */}
                       {this.state.isInitialscreen[2] == true ?
-                        <div className="col-md-8" >
-                          {Components.map((item) => {
+                        <div className="col-md-12" >
+                          {Components.map((item,key) => {
                             if (item.Position == 3) {
                               return (
-                                <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                  <div id={item.selectId} style={{ display: "none" }}>
-                                    <div className="input-arap relative">
-                                      <input type="text" className="form-control"
-                                        placeholder="Search for the contact here"
-                                        id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                      <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                        {/* <img /> */}
-                                      </button>
-                                      <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                        {/* <img/> */}
-                                        <span>Clear</span>
-                                      </button>
-                                      <ul>
-                                        {handler.state.AvailableComponents.map((Items1) => {
-                                          return (
-                                            <li
-                                              className='li-search-wrap'
-                                              onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                            >
-                                              <p className="people_name">{Items1.Title}</p>
-                                            </li>
-                                          )
-                                        }
-                                        )}
-                                      </ul>
-                                    </div>
-                                  </div>
-
-                                </>
+                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                               )
                             }
                           })}
                         </div>
                         :
-                        <>
+                        <div className="col-md-12" >
                           {this.state.selectedComponents[3] && this.renderComponent(3)}
-                        </>
-
+                        </div>
                       }
 
-                      {/* Events Calendar and News Section */}
+                      {/* Events(Mymeetings) Calendar and News Section */}
                       <div className="row section_bottom">
-                        <div className="col-md-8">
+                        <div className="col-md-12">
                           <div className="events-calendar">
                             {this.state.isInitialscreen[3] == true ?
                               <div className="col-md-8" >
-                                {Components.map((item) => {
+                                {Components.map((item,key) => {
                                   if (item.Position == 4) {
                                     return (
-                                      <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                        <div id={item.selectId} style={{ display: "none" }}>
-                                          <div className="input-arap relative">
-                                            <input type="text" className="form-control"
-                                              placeholder="Search for the contact here"
-                                              id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                            <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                              {/* <img /> */}
-                                            </button>
-                                            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                              {/* <img/> */}
-                                              <span>Clear</span>
-                                            </button>
-                                            <ul>
-                                              {handler.state.AvailableComponents.map((Items1) => {
-                                                return (
-                                                  <li
-                                                    className='li-search-wrap'
-                                                    onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                  >
-                                                    <p className="people_name">{Items1.Title}</p>
-                                                  </li>
-                                                )
-                                              }
-                                              )}
-                                            </ul>
-                                          </div>
-                                        </div>
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <div className="col-md-8" >
+                                {this.state.selectedComponents[4] && this.renderComponent(4)}
+                              </div>
+                            }
+                            {/* News */}
+                            {this.state.isInitialscreen[4] == true ?
+                              <div className="col-md-8" >
+                                {Components.map((item,key) => {
+                                  if (item.Position == 5) {
+                                    return (
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <div className="col-md-8" >
+                                {this.state.selectedComponents[5] && this.renderComponent(5)}
+                              </div>
+                            }
+                          </div>
 
-                                      </>
+                          {/* Birthday, Climate, Quicklinks, Recentfile */}
+                          <div className="col-md-4">
+                            {this.state.isInitialscreen[5] == true ?
+                              <div>
+                                {Components.map((item,key) => {
+                                  if (item.Position == 6) {
+                                    return (
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                     )
                                   }
                                 })}
                               </div>
                               :
                               <>
-                                {this.state.selectedComponents[4] && this.renderComponent(4)}
+                                {this.state.selectedComponents[6] && this.renderComponent(6)}
                               </>
                             }
+                            {this.state.isInitialscreen[6] == true ?
+                              <div  >
+                                {Components.map((item,key) => {
+                                  if (item.Position == 7) {
+                                    return (
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <>
+                                {this.state.selectedComponents[7] && this.renderComponent(7)}
+                              </>
+                            }
+                            {this.state.isInitialscreen[7] == true ?
+                              <div >
+                                {Components.map((item,key) => {
+                                  if (item.Position == 8) {
+                                    return (
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <>
+                                {this.state.selectedComponents[8] && this.renderComponent(8)}
+                              </>
+                            }
+                            {this.state.isInitialscreen[8] == true ?
+                              <div className="col-md-6">
+                                {Components.map((item,key) => {
+                                  if (item.Position == 9) {
+                                    return (
+                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                    )
+                                  }
+                                })}
+                              </div>
+                              :
+                              <div className="col-md-6">
+                                {this.state.selectedComponents[9] && this.renderComponent(9)}
+                              </div>
+                            }
                           </div>
-                          {this.state.isInitialscreen[4] == true ?
-                            <div className="col-md-8" >
-                              {Components.map((item) => {
-                                if (item.Position == 5) {
-                                  return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <>
-                              {this.state.selectedComponents[5] && this.renderComponent(5)}
-                            </>
-
-                          }
-
                           <div className="latest-news-announcements" id="latest-news-announcements">
-                            <div className="row row-res">
-                              {this.state.isInitialscreen[5] == true ?
-                                <div className="col-md-8" >
-                                  {Components.map((item) => {
-                                    if (item.Position == 6) {
+                            {/* events and announcements */}
+                            <div>
+                              {this.state.isInitialscreen[9] == true ?
+                                // <>
+                                <div className="col-md-6">
+                                  {Components.map((item,key) => {
+                                    if (item.Position == 10) {
                                       return (
-                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                          <div id={item.selectId} style={{ display: "none" }}>
-                                            <div className="input-arap relative">
-                                              <input type="text" className="form-control"
-                                                placeholder="Search for the contact here"
-                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                                {/* <img /> */}
-                                              </button>
-                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                                {/* <img/> */}
-                                                <span>Clear</span>
-                                              </button>
-                                              <ul>
-                                                {handler.state.AvailableComponents.map((Items1) => {
-                                                  return (
-                                                    <li
-                                                      className='li-search-wrap'
-                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                    >
-                                                      <p className="people_name">{Items1.Title}</p>
-                                                    </li>
-                                                  )
-                                                }
-                                                )}
-                                              </ul>
-                                            </div>
-                                          </div>
-
-                                        </>
+                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                       )
                                     }
                                   })}
                                 </div>
                                 :
-                                <>
-                                  {this.state.selectedComponents[6] && this.renderComponent(6)}
-                                </>
+                                <div className="col-md-6">
+                                  {this.state.selectedComponents[10] && this.renderComponent(10)}
+                                </div>
                               }
                             </div>
                           </div>
-
                           <div id="social-and-gallery" className="images-social">
                             <div className="row row-res">
-                              {this.state.isInitialscreen[6] == true ?
-                                <div className="col-md-8" >
-                                  {Components.map((item) => {
-                                    if (item.Position == 7) {
+                              {this.state.isInitialscreen[10] == true ?
+                                <div className="col-md-6">
+                                  {Components.map((item,key) => {
+                                    if (item.Position == 11) {
                                       return (
-                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                          <div id={item.selectId} style={{ display: "none" }}>
-                                            <div className="input-arap relative">
-                                              <input type="text" className="form-control"
-                                                placeholder="Search for the contact here"
-                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                                {/* <img /> */}
-                                              </button>
-                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                                {/* <img/> */}
-                                                <span>Clear</span>
-                                              </button>
-                                              <ul>
-                                                {handler.state.AvailableComponents.map((Items1) => {
-                                                  return (
-                                                    <li
-                                                      className='li-search-wrap'
-                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                    >
-                                                      <p className="people_name">{Items1.Title}</p>
-                                                    </li>
-                                                  )
-                                                }
-                                                )}
-                                              </ul>
-                                            </div>
-                                          </div>
-
-                                        </>
+                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                       )
                                     }
                                   })}
                                 </div>
                                 :
-                                <>
-                                  {this.state.selectedComponents[7] && this.renderComponent(7)}
-                                </>
+                                <div className="col-md-6">
+                                  {this.state.selectedComponents[11] && this.renderComponent(11)}
+                                </div>
                               }
-                              {this.state.isInitialscreen[7] == true ?
-                                <div className="col-md-8" >
-                                  {Components.map((item) => {
-                                    if (item.Position == 8) {
+                              {this.state.isInitialscreen[11] == true ?
+                                <div className="col-md-6">
+                                  {Components.map((item,key) => {
+                                    if (item.Position == 12) {
                                       return (
-                                        <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                          <div id={item.selectId} style={{ display: "none" }}>
-                                            <div className="input-arap relative">
-                                              <input type="text" className="form-control"
-                                                placeholder="Search for the contact here"
-                                                id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                              <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                                {/* <img /> */}
-                                              </button>
-                                              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                                {/* <img/> */}
-                                                <span>Clear</span>
-                                              </button>
-                                              <ul>
-                                                {handler.state.AvailableComponents.map((Items1) => {
-                                                  return (
-                                                    <li
-                                                      className='li-search-wrap'
-                                                      onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                    >
-                                                      <p className="people_name">{Items1.Title}</p>
-                                                    </li>
-                                                  )
-                                                }
-                                                )}
-                                              </ul>
-                                            </div>
-                                          </div>
-
-                                        </>
+                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
                                       )
                                     }
                                   })}
                                 </div>
                                 :
-                                <>
-                                  {this.state.selectedComponents[8] && this.renderComponent(8)}
-                                </>
+                                <div className="col-md-6">
+                                  {this.state.selectedComponents[12] && this.renderComponent(12)}
+                                </div>
                               }
                             </div>
                           </div>
-                        </div>
-
-                        {/* Sidebar Components */}
-                        <div className="col-md-4">
-                          {this.state.isInitialscreen[8] == true ?
-                            <div className="col-md-4">
-
-                              {Components.map((item) => {
-                                if (item.Position == 8) {
-                                  return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <>
-                              {this.state.selectedComponents[9] && this.renderComponent(9)}
-                            </>
-                          }
-                          {this.state.isInitialscreen[9] == true ?
-                            // <>
-                            <div className="col-md-4">
-
-                              {Components.map((item) => {
-                                if (item.Position == 9) {
-                                  return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <>
-                              {this.state.selectedComponents[10] && this.renderComponent(10)}
-                            </>
-                          }
-                          {this.state.isInitialscreen[9] == true ?
-                            <div className="col-md-4">
-
-                              {Components.map((item) => {
-                                if (item.Position == 9) {
-                                  return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-                                    </>
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <>
-                              {this.state.selectedComponents[10] && this.renderComponent(10)}
-                            </>
-                          }
-                          {this.state.isInitialscreen[10] == true ?
-                            <div className="col-md-4">
-                              {Components.map((item) => {
-                                if (item.Position == 10) {
-                                  return (
-                                    <><button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>Add Component</button>
-                                      <div id={item.selectId} style={{ display: "none" }}>
-                                        <div className="input-arap relative">
-                                          <input type="text" className="form-control"
-                                            placeholder="Search for the contact here"
-                                            id="SearchInput" onChange={() => this.Showclearbutton()} />
-                                          <button className="form-control search_button" onClick={(e) => this.Search(e)}>
-                                            {/* <img /> */}
-                                          </button>
-                                          <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => this.Clear(e)}>
-                                            {/* <img/> */}
-                                            <span>Clear</span>
-                                          </button>
-                                          <ul>
-                                            {handler.state.AvailableComponents.map((Items1) => {
-                                              return (
-                                                <li
-                                                  className='li-search-wrap'
-                                                  onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}
-                                                >
-                                                  <p className="people_name">{Items1.Title}</p>
-                                                </li>
-                                              )
-                                            }
-                                            )}
-                                          </ul>
-                                        </div>
-                                      </div>
-
-                                    </>
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <>
-                              {this.state.selectedComponents[11] && this.renderComponent(11)}
-                            </>
-                          }
                         </div>
                       </div>
 

@@ -95,8 +95,10 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
     return result;
   }
 
-  public addImageVideo() {
-    const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${PictureGalleryLib}`; // Replace with your list URL
+  public addImageVideo(event:any) {
+    event.preventDefault();
+    const listUrl = `${this.props.siteurl}/Lists/${PictureGalleryLib}`;
+    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${PictureGalleryLib}`; // Replace with your list URL
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -218,58 +220,60 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
 
 
     return (
-      <div id="dept-gallery-home">
-        {this.state.isDataAvailable == true ?
-          <>
-            <div className="col-md-6" id="if-gallery-present">
-              <div className="sec event-cal image-videos">
-                <div className="heading clearfix">
-                  <h4> <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx`} data-interception="off">
-                    Images and Videos</a>
-                  </h4>
+      <div className='col-md-12 imagesandvideos'>
+        <div id="dept-gallery-home">
+          {this.state.isDataAvailable == true ?
+            <>
+              <div className="col-md-6" id="if-gallery-present">
+                <div className="sec event-cal image-videos">
+                  <div className="heading clearfix">
+                    <h4> <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx`} data-interception="off">
+                      Images and Videos</a>
+                    </h4>
 
-                  <div className='heading-right'>
+                    <div className='heading-right'>
 
-                    {/* <a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}> */}
-                    <a href={viewall}>
+                      {/* <a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}> */}
+                      <a href={viewall}>
 
-                      View All
+                        View All
 
-                    </a>
+                      </a>
+                    </div>
                   </div>
-                </div>
 
-                <div className="section-part clearfix">
-                  {/* latest-events-bck"> */}
-                  <ul className="clearfix img-block-area">
-                    {Images}
-                  </ul>
+                  <div className="section-part clearfix">
+                    {/* latest-events-bck"> */}
+                    <ul className="clearfix img-block-area">
+                      {Images}
+                    </ul>
 
-                  {/*<ul className="clearfix vdo-block-area" style={{display:"none"}}>
+                    {/*<ul className="clearfix vdo-block-area" style={{display:"none"}}>
                   </ul>*/}
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-6" id="if-no-gallery-present" style={{ display: "none" }}>
-              <div className="sec event-cal image-videos">
-                <div className="heading clearfix">
-                  <h3 className="images active">
-                    <a href="#" data-interception="off"> Gallery </a> </h3>
-                </div>
-                <div className="section-part clearfix latest-events-bck">
-                  <div className="clearfix img-block-area">
-                    <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-image-uploaded" />
                   </div>
                 </div>
               </div>
+
+              <div className="col-md-6" id="if-no-gallery-present" style={{ display: "none" }}>
+                <div className="sec event-cal image-videos">
+                  <div className="heading clearfix">
+                    <h3 className="images active">
+                      <a href="#" data-interception="off"> Gallery </a> </h3>
+                  </div>
+                  <div className="section-part clearfix latest-events-bck">
+                    <div className="clearfix img-block-area">
+                      <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-image-uploaded" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+            :
+            <div>
+              <button onClick={(e) => this.addImageVideo(e)}>addImage&Video</button>
             </div>
-          </>
-          :
-          <div>
-            <button onClick={() => this.addImageVideo()}>addImage&Video</button>
-          </div>
-        }
+          }
+        </div>
       </div>
     )
   }

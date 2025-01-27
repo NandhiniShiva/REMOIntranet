@@ -508,9 +508,9 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     this.setState({ TotalItem: total });
   }
 
-  public addData() {
+  public addData(event: any) {
+    event.preventDefault();
     // const listUrl = `${NewWeb}/Lists/${Hero_Bannerlist}`; // Replace with your list URL
-
     const listUrl = `${this.props.siteurl}/Lists/${Hero_Bannerlist}`;
     console.log(listUrl);
 
@@ -552,6 +552,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         var serverRelativeUrl = ImgObj.serverRelativeUrl || `${this.props.siteurl}/Lists/${Hero_Bannerlist}/Attachments/${ID}/${ImgObj.fileName}`;
 
         return (
+
           <div className={`item active ${resolutionClass}`} key={ID}>
             <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'>
               <div className="banner-parts">
@@ -584,8 +585,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     });
 
     return (
-      <div className="col-md-8 ">
-
+      <div className="col-md-12 herobanner ">
         {this.state.isDataAvailable == true ?
           <div id="myCarousel" className="carousel slide" data-ride="carousel">
             <div className="carousel-inner">
@@ -607,8 +607,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
           // <div id="myCarousel" className="carousel slide" data-ride="carousel">
           //   <div className="carousel-inner">
           <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
-            <button onClick={() => this.addData()}>Add Data</button>
-            <img src="https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/add_quick.png" alt="add icon" onClick={() => this.getComponent()} />
+            <button onClick={(e) => this.addData(e)}>Add Data</button>
             <div>
               {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
                 {this.state.componentMasterItems.map((item: any) => {

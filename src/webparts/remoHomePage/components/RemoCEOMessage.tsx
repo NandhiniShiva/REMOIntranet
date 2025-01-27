@@ -272,9 +272,9 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
       console.error("Error during column creation process:", error);
     }
   }
-  public addData() {
+  public addData(event: any) {
+    event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${CEO_Messagelist}`;
-
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -341,8 +341,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
     return (
 
-      <div className="col-md-4">
-
+      <div className="col-md-12">
         {this.state.isDataAvailable == true ?
           <>
             <div className="sec relative" id="if-ceo-msg-present">
@@ -360,7 +359,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
           </>
           :
           <div>
-            <button onClick={() => this.addData()}>Add Data</button>
+            <button onClick={(e) => this.addData(e)}>Add Data</button>
           </div>
         }
       </div>

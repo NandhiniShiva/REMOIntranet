@@ -143,10 +143,10 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
     }
   }
 
-  public addData() {
+  public addData(event:any) {
+    event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${UsersQuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${UsersQuickLinkslist}`;
-
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -162,34 +162,36 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
     ));
 
     return (
-      <div className={[styles.remoHomePage, "m-b-20 if-no-qlinks"].join(' ')} id="m-b-20-PQlink">
-        {this.state.isDataAvailable == true ?
-          <div className="quicklinks-wrap personal-qlinks-wrap m-b-20">
-            <div className="sec">
-              <div className="heading clearfix">
-                <div className="heading-left">
-                  Quick Links
-                </div>
-                <div className="heading-right">
-                  <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a>
+      <div className="col-md-12 Quicklinks">
+        <div className={[styles.remoHomePage, "m-b-20 if-no-qlinks"].join(' ')} id="m-b-20-PQlink">
+          {this.state.isDataAvailable == true ?
+            <div className="quicklinks-wrap personal-qlinks-wrap m-b-20">
+              <div className="sec">
+                <div className="heading clearfix">
+                  <div className="heading-left">
+                    Quick Links
+                  </div>
+                  <div className="heading-right">
+                    <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a>
+                  </div>
+
                 </div>
 
-              </div>
-
-              <div className="section-part clearfix">
-                <ul id="result">
-                  {QuickLinks}
-                </ul>
+                <div className="section-part clearfix">
+                  <ul id="result">
+                    {QuickLinks}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
-          :
+            :
 
-          <div>
-            <button onClick={() => this.addData()}>Add Data</button>
-          </div>
-        }
-      </div >
+            <div>
+              <button onClick={(e) => this.addData(e)}>Add Data</button>
+            </div>
+          }
+        </div>
+      </div>
     );
   }
 }

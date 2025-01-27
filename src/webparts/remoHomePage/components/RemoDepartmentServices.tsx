@@ -116,10 +116,9 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
       });
     });
   }
-  public addData() {
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Serviceslist}`; // Replace with your list URL
+  public addData(event:any) {
+    event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Serviceslist}`;
-
     window.open(listUrl, "_blank");
   }
 
@@ -191,7 +190,7 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
             </div>
             :
             <div>
-              <button onClick={() => this.addData()}>Add Data Services</button>
+              <button onClick={(e) => this.addData(e)}>Add Data Services</button>
             </div>
           }
         </div>

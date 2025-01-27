@@ -30,12 +30,15 @@ export const listNames: { [key: string]: string } = {
     PortalCssMaster: "PortalCSSConfigurationMaster",
     PortalFontMaster: "Portal Font Configuration Master",
     ComPonentAllocationMaster: "LayoutComponentsAllocationMaster",
-    LayoutMaster: "LayoutMaster"
+    LayoutMaster: "LayoutMaster",
+    // VersionMaster: "Version Master",
+
 
 };
 
 export const Configuration = {
     cssPath: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css?v=1.8",
+    Newcss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1",
     overRidingCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css/SP-NativeStyle-Overriding.css?v=3.3",
     respnsiveCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.cssresponsive.css?v=4.18"
 }

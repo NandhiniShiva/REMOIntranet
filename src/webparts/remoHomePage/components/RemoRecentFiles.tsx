@@ -177,17 +177,19 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
 
 
     return (
-      <div className={styles.remoHomePage}>
-        <div className="recent-file-wrap">
-          <div className="sec" id="dynamic-height-recentsfiles-1">
-            <div className="heading" style={{ cursor: "pointer" }} onClick={() => this.OpenRecentfiles("https://remodigital-my.sharepoint.com/personal/test_remodigital_in/_layouts/15/onedrive.aspx?view=1")}>
-              Recent Files
+      <div className='col-md-12 recentfiles'>
+        <div className={styles.remoHomePage}>
+          <div className="recent-file-wrap">
+            <div className="sec" id="dynamic-height-recentsfiles-1">
+              <div className="heading" style={{ cursor: "pointer" }} onClick={() => this.OpenRecentfiles("https://remodigital-my.sharepoint.com/personal/test_remodigital_in/_layouts/15/onedrive.aspx?view=1")}>
+                Recent Files
 
-            </div>
-            <div className="section-part clearfix" id="dynamic-height-recentsfiles">
-              <ul>
-                {OneDriveRecents}
-              </ul>
+              </div>
+              <div className="section-part clearfix" id="dynamic-height-recentsfiles">
+                <ul>
+                  {OneDriveRecents}
+                </ul>
+              </div>
             </div>
           </div>
         </div>

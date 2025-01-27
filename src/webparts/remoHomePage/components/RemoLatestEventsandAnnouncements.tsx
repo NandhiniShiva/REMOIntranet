@@ -231,13 +231,14 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
   //   // window.open(`/sites/SPTraineeBT/Lists/${listName}/AllItems.aspx`, '_blank');
   // }
 
-  public addDataEvenlist() {
+  public addDataEvenlist(event:any) {
+    event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Eventslist}`;
-
     window.open(listUrl, "_blank");
   }
 
-  public addDataAncc() {
+  public addDataAncc(event:any) {
+    event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Announcementlist}`;
 
@@ -296,48 +297,50 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     });
 
     return (
-      <div className={styles.remoHomePage} id="events-and-anncmnts">
-        <div className="latest-news-announcemnst">
-          <div >
-            {this.state.isDataAvailable == true ?
-              <div className="col-md-6">
-                <div className="sec event-cal" id="if-events-present">
-                  <div className="heading clearfix">
-                    <h4><a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}>
+      <div className='col-md-12 eventsandannouncements'>
+        <div className={styles.remoHomePage} id="events-and-anncmnts">
+          <div className="latest-news-announcemnst">
+            <div >
+              {this.state.isDataAvailable == true ?
+                <div className="col-md-6">
+                  <div className="sec event-cal" id="if-events-present">
+                    <div className="heading clearfix">
+                      <h4><a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}>
+                        Latest Events
+                      </a>
+                      </h4>
+
+                    </div>
+                    <div className="section-part clearfix latest-events-bck">
+                      <ul>
+                        {Events}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="sec event-cal" id="if-no-events-present" style={{ display: "none" }}>
+                    <div className="heading">
                       Latest Events
-                    </a>
-                    </h4>
-
-                  </div>
-                  <div className="section-part clearfix latest-events-bck">
-                    <ul>
-                      {Events}
-                    </ul>
+                    </div>
+                    <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
                   </div>
                 </div>
+                :
 
-                <div className="sec event-cal" id="if-no-events-present" style={{ display: "none" }}>
-                  <div className="heading">
-                    Latest Events
-                  </div>
-                  <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
+                <div>
+                  <button onClick={(e) => this.addDataEvenlist(e)}>Add Data In Events</button>
                 </div>
-              </div>
-              :
-
-              <div>
-                <button onClick={() => this.addDataEvenlist()}>Add Data In Events</button>
-              </div>
-            }
-            {this.state.isDataAvailableAnnc ?
-              <div className="col-md-6" id="if-annc-present">
-                {AnncItems}
-              </div>
-              :
-              <div>
-                <button onClick={() => this.addDataAncc()}>Add Data In Announcement List</button>
-              </div>
-            }
+              }
+              {this.state.isDataAvailableAnnc ?
+                <div className="col-md-6" id="if-annc-present">
+                  {AnncItems}
+                </div>
+                :
+                <div>
+                  <button onClick={(e) => this.addDataAncc(e)}>Add Data In Announcement List</button>
+                </div>
+              }
+            </div>
           </div>
         </div>
       </div>

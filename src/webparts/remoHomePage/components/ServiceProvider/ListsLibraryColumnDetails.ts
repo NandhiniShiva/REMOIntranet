@@ -110,7 +110,7 @@ export const ListLibraryColumnDetails = [
         name: "Content Editor Master",
         columns: [
             { columnName: "URL", type: "addUrl" },
-            { columnName: "Icon", type: "Image" },
+            { columnName: "Icon", type: "addImageField" },
             { columnName: "IsActive", type: "addBoolean" },
             { columnName: "AccessibleTo", type: "Person or Group" },
             {
@@ -364,8 +364,11 @@ export const ListLibraryColumnDetails = [
     {
         name: "Quick Links",
         columns: [
-            { columnName: "Image", type: "addImageField" },
-            { columnName: "ImageHover", type: "addImageField" },
+            { columnName: "Hover On Icon", type: "addImageField" },
+            { columnName: "Hover Off Icon", type: "addImageField" },
+            // { columnName: "Image", type: "addImageField" },
+            // { columnName: "ImageHover", type: "addImageField" },
+            {columnName:"AccessibleTo", type:"Person or Group"},
             { columnName: "URL", type: "addUrl" },
             { columnName: "IsActive", type: "addBoolean" },
             { columnName: "Order0", type: "addNumberField" },
@@ -373,8 +376,6 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
-
-
     {
         name: "TransactionViewsCount",
         columns: [
@@ -420,9 +421,6 @@ export const ListLibraryColumnDetails = [
             { columnName: "ContentPage", type: "addTextField" },
             { columnName: "ContentID", type: "addNumberField" },
             { columnName: "ViewedOn", type: "addDateField" },
-
-
-
         ]
     },
 
@@ -442,7 +440,54 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
+   
 
 
 
 ];
+
+export const DepartmentListDetails = [
+    {
+        name: "AboutDepartment",
+        columns: [
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "DepartmentBannerImage", type: "addImageField" },
+            { columnName: "Image URL", type: "addMultilineText" },
+            { columnName: "IsURLUpdated", type: "addBoolean" },
+        ]
+    },
+    {
+        name: "Logo Master",
+        columns: [
+            { columnName: "Logo", type: "addImageField" },
+            { columnName: "IsActive", type: "addBoolean" }
+        ]
+    },
+    {
+        name: "Quick Links",
+        columns: [
+            { columnName: "Image", type: "addImageField" },
+            { columnName: "ImageHover", type: "addImageField" },
+            { columnName: "URL", type: "addUrl" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "OpenInNewTab", type: "addBoolean" },
+
+        ]
+    },
+    {
+        name: "Services",
+        columns: [
+            { columnName: "Description", type: "addMultilineText" },
+            { columnName: "IsActive", type: "addBoolean" },
+            { columnName: "Order0", type: "addNumberField" },
+        ]
+    },
+    {
+        name: "Version Master",
+        columns: [
+
+        ]
+    },
+]

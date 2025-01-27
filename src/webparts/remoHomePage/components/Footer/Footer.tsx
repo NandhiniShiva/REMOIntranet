@@ -53,10 +53,10 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
             console.log("Unable to get VersionData due to: " + error);
         }
     }
-    public addData() {
+    public addData(event:any) {
+        event.preventDefault();
         // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
         const listUrl = `${this.props.siteurl}/Lists/${VersionMasterlist}`;
-
         window.open(listUrl, "_blank");
     }
 
@@ -89,7 +89,7 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
                     </footer>
                 ) : (
                     <div>
-                        <button onClick={this.addData}>Add Data</button>
+                        <button onClick={(e)=> this.addData(e)}>Add Data</button>
                     </div>
                 )}
             </>
