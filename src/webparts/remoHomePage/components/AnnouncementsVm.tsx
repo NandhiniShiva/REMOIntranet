@@ -164,7 +164,9 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
       pageCount: Math.ceil(filteredItems.length / 1) // Assuming 6 items per page
     });
   };
-
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
+  }
   public render(): React.ReactElement<IAnnouncementsVmProps> {
     const { currentPage, filteredItems } = this.state;
     const itemsPerPage = 6;
@@ -191,7 +193,9 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
           </div>
           <a href="#" className="tags" style={{ pointerEvents: "none" }} data-interception="off">{Dt}</a>
           <div className="ns-tag-duration">
-            <a href={`${this.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a>
+            {/* <a href={`${this.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a> */}
+            <a href='#' onClick={() => this.readMoreHandler("AnnouncementReadMore", item.ID)} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a>
+
           </div>
         </li>
       );
@@ -209,7 +213,8 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
                 <div className="inner-banner-contents">
                   <h1>Announcements</h1>
                   <ul className="breadcums">
-                    <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li>
+                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home", null)} data-interception="off"> Home </a> </li>
                     <li><a href="#" data-interception="off" style={{ pointerEvents: "none" }}>All Announcements</a></li>
                   </ul>
                 </div>

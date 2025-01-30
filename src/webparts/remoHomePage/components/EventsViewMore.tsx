@@ -8,7 +8,7 @@ import * as moment from 'moment';
 // import * as $ from 'jquery';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 // import { IWeb, Web } from "@pnp/sp/webs";
-import 'evo-calendar';
+// import 'evo-calendar';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
@@ -546,7 +546,9 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
   public checkSame(date1: moment.MomentInput, date2: moment.MomentInput) {
     return moment(date1).isSame(date2);
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IEventsViewMoreProps> {
     var handler = this;
     const EventsfromCalender: JSX.Element[] = this.state.Items.map(function (item: {
@@ -608,7 +610,10 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
               <div className="inner-banner-contents">
                 <h1> Events </h1>
                 <ul className="breadcums">
-                  <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                  {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                  <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
+
+                  <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                   <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Events </a> </li>
                 </ul>
               </div>

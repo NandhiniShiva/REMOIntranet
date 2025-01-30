@@ -517,6 +517,10 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Hero_Bannerlist}`; // Replace with your list URL
     window.open(listUrl, "_blank");
   }
+
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     const settings = {
       dots: true,
@@ -554,7 +558,9 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         return (
 
           <div className={`item active ${resolutionClass}`} key={ID}>
-            <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'>
+            {/* <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'> */}
+            <a href='#' onClick={() => this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
+
               <div className="banner-parts">
                 <img src={serverRelativeUrl} alt="image" />
                 <div className="overlay"></div>
@@ -569,7 +575,9 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
       } else {
         return (
           <div className={`item ${resolutionClass}`} key={ID}>
-            <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'>
+            {/* <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'> */}
+            <a href='#' onClick={() => this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
+
               <div className="banner-parts">
                 <img src={`${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`} alt="image" />
                 <div className="overlay"></div>
@@ -608,6 +616,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
           //   <div className="carousel-inner">
           <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
             <button onClick={(e) => this.addData(e)}>Add Data</button>
+            <img src="https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/add_quick.png" alt="add icon" onClick={() => this.getComponent()} />
             <div>
               {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
                 {this.state.componentMasterItems.map((item: any) => {

@@ -192,7 +192,7 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
           <div className="banner-ceo-message ">
             <div className="row">
               <div className="col-md-12">
-                <AboutDepartment siteurl={this.props.siteurl} context={this.props.context} PageName={this.props.PageName} userid={this.props.userid} homepage={this.props.homepage} />
+                <AboutDepartment siteurl={this.props.siteurl} context={this.props.context} PageName={this.props.PageName} userid={this.props.userid} homepage={this.props.homepage} onReadMoreClick={undefined} />
 
               </div>
             </div>
@@ -200,14 +200,14 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
             <div className="row">
               <div className="col-md-8">
 
-                <DepartmentServices siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} />
+                <DepartmentServices siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} onReadMoreClick={undefined} />
 
 
-                <DepartmentGallery siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} />
+                <DepartmentGallery siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} onReadMoreClick={undefined} />
 
               </div>
               <div className="col-md-4">
-                <DepartmentQuickLink siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} />
+                <DepartmentQuickLink siteurl={this.props.siteurl} context={this.props.context} PageName={''} userid={this.props.userid} homepage={''} onReadMoreClick={undefined} />
 
               </div>
             </div>

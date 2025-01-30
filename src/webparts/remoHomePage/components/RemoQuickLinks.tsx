@@ -143,14 +143,17 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
     }
   }
 
-  public addData(event:any) {
+  public addData(event: any) {
     event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${UsersQuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${UsersQuickLinkslist}`;
     window.open(listUrl, "_blank");
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
-    var reactHandler = this;
+    // var reactHandler = this;
     const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => (
       <li key={key}>
         <a href={item.URL} target="_blank" className="clearfix">
@@ -172,7 +175,9 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
                     Quick Links
                   </div>
                   <div className="heading-right">
-                    <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a>
+                    {/* <a href={`${reactHandler.props.siteurl}/SitePages/Manage-Quick-Links.aspx?`} data-interception="off"> Manage Quick Links</a> */}
+                    <a href='#' data-interception="off" onClick={() => this.readMoreHandler("ManageQuickLinks")} > Manage Quick Links</a>
+
                   </div>
 
                 </div>

@@ -102,7 +102,9 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
 
   // Optimized code
 
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
     var reactHandler = this;
     const AboutDept: JSX.Element[] = this.state.Items.map(function (item, key) {
@@ -143,7 +145,8 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
             <div className="inner-banner-contents">
               <h1> Department </h1>
               <ul className="breadcums">
-                <li>  <a href={`${this.props.homepage}/SitePages/HomePage.aspx`} data-interception="off" > Home </a> </li>
+                {/* <li>  <a href={`${this.props.homepage}/SitePages/HomePage.aspx`} data-interception="off" > Home </a> </li> */}
+                <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                 <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.props.PageName} </a> </li>
               </ul>
             </div>

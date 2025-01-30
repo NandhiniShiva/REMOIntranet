@@ -75,7 +75,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     // const url: any = new URL(window.location.href);
     // const ItemID = url.searchParams.get("ItemID");
 
-    const ItemID = this.props.id;
+    const ItemID = reactHandler.props.id;
     // reactHandler.getCurrentUser().then(() => {
     //   reactHandler.GetCeoMessage(ItemID);
     // })
@@ -145,8 +145,9 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   }
 
   public async GetCeoMessage(ItemID: any, Department: any, Designation: any) {
+    let itemID = this.props.id
     try {
-      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "Name", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
+      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "CEOName", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${itemID}`).getAll().then((items) => { // //orderby is false -> decending          
         // console.log(items);
 
         this.setState({
@@ -163,6 +164,10 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
       console.error('Error adding data:', error);
     }
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
+
   public render(): React.ReactElement<ICeoMessageReadMoreProps> {
     var handler = this;
     const CEOMessageDetails: JSX.Element[] = this.state.Items.map((item, key) => {
@@ -185,7 +190,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
             <img src={serverRelativeUrl} alt="image" />
           </div>
           <div className="ceo-radmore-right">
-            <h2 className="nw-list-main">{item.Name}</h2>
+            <h2 className="nw-list-main">{item.CEOName}</h2>
             <div className="ns-tag-duration">
               <a href="#" className="tags" style={{ pointerEvents: "none" }} data-interception="off">{Dte}</a>
             </div>
@@ -213,7 +218,8 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
                 <div className="inner-banner-contents">
                   <h1> CEO Read More </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> CEO Read More </a> </li>
                   </ul>
                 </div>

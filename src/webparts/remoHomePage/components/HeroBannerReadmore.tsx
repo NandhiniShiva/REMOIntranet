@@ -6,7 +6,7 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
+// import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
@@ -631,7 +631,9 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   //     });
   //   }
   // }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IHeroBannerReadMoreProps> {
     const HeroBannerDetails: JSX.Element[] = this.state.Items.map((item, key) => {
       const RawImageTxt = item.Image;
@@ -688,7 +690,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     return (
       <div className={styles.remoHomePage} id="heroBannerRm" >
         <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
+          {/* <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} /> */}
         </div>
         <section>
           <div className="container relative">
@@ -698,9 +700,15 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
                 <div className="inner-banner-contents">
                   <h1> Hero Banner </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
                     <li>  <a href={`${this.props.siteurl}/SitePages/Hero-Banner-VMore.aspx`} data-interception="off"> Hero Banner View More </a> </li>
+                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">Hero Banner Read More</a> </li> */}
+
+
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("HeroBannerViewMore")} data-interception="off"> Hero Banner View More </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">Hero Banner Read More</a> </li>
+
                   </ul>
                 </div>
               </div>

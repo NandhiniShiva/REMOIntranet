@@ -9,13 +9,11 @@ import * as moment from 'moment';
 import { listNames } from '../Configuration';
 import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
-// import { Items } from 'sp-pnp-js';
 
 let CEO_Messagelist = listNames.CEO_Message;
 
 export interface ICeoMessageState {
   Items: any[];
-  ceoTitle: string,
   isDataAvailable: boolean;
 }
 export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, ICeoMessageState, {}> {
@@ -23,7 +21,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     super(props);
     this.state = {
       Items: [],
-      ceoTitle: "", // Store CEO Title in state
       isDataAvailable: false
     };
   }
@@ -67,9 +64,8 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
   // }
 
-  public handleReadMoreClick(ItemID: any) {
-    let itemObj = { yesNo: "yes", id: ItemID }
-    this.props.onReadMoreClick(itemObj)
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
   // Updated 
   private async GetCEOMessage() {
@@ -89,10 +85,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
             Items: items,
             isDataAvailable: true
           });
-          items.forEach((item)=>{
-            reactHandler.setState({ceoTitle:item.Title})
-          })
-         
           // $("#if-no-ceo-msg-present").hide();
           // $("#if-ceo-msg-present").show();
 
@@ -284,25 +276,25 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     const listUrl = `${this.props.siteurl}/Lists/${CEO_Messagelist}`;
     window.open(listUrl, "_blank");
   }
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
+
     const CEOMessage: JSX.Element[] = this.state.Items.map((item, key) => {
-      debugger;
       const dummyElement = document.createElement("DIV");
       const date = moment(item.Created).format("DD/MM/YYYY");
       dummyElement.innerHTML = item.Description;
       const outputText = dummyElement.innerText;
 
-
       // $("#ceo-title-dynamic").html(`${item.Title}`);
 
-      // const ceoTitleElement = document.getElementById('ceo-title-dynamic');
+      const ceoTitleElement = document.getElementById('ceo-title-dynamic');
 
-      // // Check if the element exists before setting the HTML content
-      // if (ceoTitleElement) {
-      //   ceoTitleElement.innerHTML = `${item.Title}`;
-      // }
+      // Check if the element exists before setting the HTML content
+      if (ceoTitleElement) {
+        ceoTitleElement.innerHTML = `${item.Title}`;
+      }
       const RawImageTxt = item.Image;
 
       if (RawImageTxt && RawImageTxt !== "") {
@@ -316,7 +308,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <h6>{date}</h6>
               <p>{outputText}</p>
               {/* <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler()}> */}
-              <a href="#" data-interception="off" className="readmore transition" onClick={() => this.handleReadMoreClick(item.ID)}>
+              <a href="#" data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler("CEOReadMore", item.ID)}>
 
                 Read more
                 <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} className="transition" alt="image" />
@@ -334,7 +326,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <h4>{item.CEOName}</h4>
               <h6>{date}</h6>
               <p>{outputText}</p>
-              <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition">
+              <a href='#' onClick={() => this.readMoreHandler("CEOReadMore", item.ID)} data-interception="off" className="readmore transition">
                 Read more
                 <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} className="transition" alt="image" />
               </a>
@@ -354,7 +346,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
           <>
             <div className="sec relative" id="if-ceo-msg-present">
               <div className="heading" id="ceo-title-dynamic">
-                {this.state.ceoTitle}
                 {/* CEO's Message */}
               </div>
               {CEOMessage}

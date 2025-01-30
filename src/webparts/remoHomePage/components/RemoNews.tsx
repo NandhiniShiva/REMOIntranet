@@ -127,10 +127,13 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   previous() {
     this.slider.slickPrev();
   }
-  public addData(event:any) {
+  public addData(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Newslist}`;
     window.open(listUrl, "_blank");
+  }
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
 
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -144,7 +147,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
       slidesToScroll: 2,
 
     };
-    var viewall = `${this.props.siteurl}/SitePages/NewsViewMore.aspx?`;
+    // var viewall = `${this.props.siteurl}/SitePages/NewsViewMore.aspx?`;
     var reactHandler = this;
     var Dt = "";
     const Newsslider: JSX.Element[] = this.state.Items.map(function (item, key) {
@@ -160,9 +163,13 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
       }
       if (item.Dept != undefined) {
         depttitle = item.Dept.Title; // Define here
+        console.log("depttitle", depttitle);
+
       }
       if (item.SitePageID != undefined) {
         sitepageid = item.SitePageID.Id; // Define here
+        console.log("sitepageid", sitepageid);
+
       }
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
@@ -178,7 +185,9 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <img src={`${serverRelativeUrl}`} alt="image" />
             </div>
             <div className="news-whole-block-details">
-              <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4>
+              {/* <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4> */}
+              <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
+
               <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>
             </div>
           </div>
@@ -190,7 +199,9 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="no-image-uploaded" />
             </div>
             <div className="news-whole-block-details">
-              <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4>
+              {/* <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4> */}
+              <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
+
               <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>
             </div>
           </div>
@@ -208,7 +219,10 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <div className="sec event-cal">
                 <div className="heading clearfix ">
                   <h4>
-                    <a href={viewall}>
+                    {/* <a href={viewall}> */}
+                    <a href='#' onClick={() => this.readMoreHandler("NewsViewMore", null)}
+                    >
+
                       News
                     </a>
                   </h4>

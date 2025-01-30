@@ -493,7 +493,9 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
     this.setState({ SliderIsOpen: false, FolderItems: [] })
 
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IDeptGalleryViewMoreProps> {
     const settings = {
       dots: false,
@@ -571,7 +573,8 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                 <div className="inner-banner-contents">
                   <h1> Gallery </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Gallery Folders </a> </li>
                   </ul>
                 </div>

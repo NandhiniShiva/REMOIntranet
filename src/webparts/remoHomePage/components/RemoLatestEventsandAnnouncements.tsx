@@ -231,18 +231,21 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
   //   // window.open(`/sites/SPTraineeBT/Lists/${listName}/AllItems.aspx`, '_blank');
   // }
 
-  public addDataEvenlist(event:any) {
+  public addDataEvenlist(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Eventslist}`;
     window.open(listUrl, "_blank");
   }
 
-  public addDataAncc(event:any) {
+  public addDataAncc(event: any) {
     event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Announcementlist}`;
 
     window.open(listUrl, "_blank");
+  }
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
@@ -258,13 +261,17 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
       return (
         <div className="sec gradient" key={key}>
           <div className="annoy-heading">
-            <a href={`${handler.props.siteurl}/SitePages/Announcement-View-More.aspx?ItemID=${item.ID}&`} data-interception='off'>
+            {/* <a href={`${handler.props.siteurl}/SitePages/Announcement-View-More.aspx?ItemID=${item.ID}&`} data-interception='off'> */}
+            <a href='#' onClick={() => this.readMoreHandler("AnnouncementViewMore", item.ID)} data-interception='off'>
+
               <h4> Announcements </h4>
             </a>
             <p> {DateofPublish}  </p>
           </div>
           <div className="ann-detibck">
-            <a href={`${handler.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}&`} data-interception='off'>
+            {/* <a href={`${handler.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}&`} data-interception='off'> */}
+            <a href='#' onClick={() => this.readMoreHandler("AnnouncementReadMore", item.ID)} data-interception='off'>
+
               <h2>{item.Title} </h2>
             </a>
             <p> {outputText}</p>
@@ -289,7 +296,11 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
             <div className="inner-shaodw"> </div>
           </div>
           <div className="latest-eventsright" id="evocalendar">
-            <h4><a href={`${handler.props.siteurl}/SitePages/EventsViewMore.aspx?Mode=EvRM&ItemID=${item.ID}&SelectedDate=${moment(item.EventDate).format("YYYYMMDD")}&`} data-interception='off' >{item.Title}</a> </h4>
+            <h4>
+              {/* <a href={`${handler.props.siteurl}/SitePages/EventsViewMore.aspx?Mode=EvRM&ItemID=${item.ID}&SelectedDate=${moment(item.EventDate).format("YYYYMMDD")}&`} data-interception='off' >{item.Title}</a> */}
+              <a href='#' onClick={() => this.readMoreHandler("EventsViewMore", item.ID)} data-interception='off' >{item.Title}</a>
+
+            </h4>
             <p> {outputText}  </p>
           </div>
         </li>

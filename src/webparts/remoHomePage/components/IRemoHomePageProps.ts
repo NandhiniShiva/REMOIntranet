@@ -20,6 +20,7 @@ export interface IRemoHomePageProps {
   onReadMoreClick: any;
   id: any
 
+
 }
 export interface IWeatherCurrencyProps {
   description: string;
@@ -30,6 +31,7 @@ export interface IWeatherCurrencyProps {
 export interface IOrganizationChartProps {
   description: string;
   siteurl: string;
+  onReadMoreClick: any
 }
 
 export interface ICeoMessageReadMoreProps {
@@ -37,7 +39,9 @@ export interface ICeoMessageReadMoreProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
-  id: any
+  id: any;
+  onReadMoreClick: any;
+
 }
 export interface IAnnouncementsRmProps {
   description: string;
@@ -46,6 +50,8 @@ export interface IAnnouncementsRmProps {
   userid: any;
   useremail: any;
   createList: boolean;
+  onReadMoreClick: any;
+
 }
 
 export interface IAnnouncementsVmProps {
@@ -53,6 +59,8 @@ export interface IAnnouncementsVmProps {
   siteurl: string;
   context: WebPartContext;
   userid: string;
+  onReadMoreClick: any;
+
 }
 export interface IBirthdayRmProps {
   description: string;
@@ -60,6 +68,9 @@ export interface IBirthdayRmProps {
   context: WebPartContext;
   userid: any;
   useremail: any;
+  onReadMoreClick: any;
+  id: any
+
 }
 export interface IContentEditorProps {
   description: string;
@@ -72,7 +83,9 @@ export interface IDeptGalleryGridViewProps {
   siteurl: string;
   context: WebPartContext;
   homepage: string;
-  userid: any
+  userid: any;
+  onReadMoreClick: any;
+
 }
 export interface IDeptGalleryViewMoreProps {
   description: string;
@@ -80,26 +93,34 @@ export interface IDeptGalleryViewMoreProps {
   context: WebPartContext;
   homepage: string;
   userid: any;
+  onReadMoreClick: any;
+
 }
 export interface IEventsViewMoreProps {
   description: string;
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 export interface IGalleryGridViewProps {
   description: string;
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IGalleryViewMoreProps {
   description: string;
   siteurl: string;
-  spHttpClient: SPHttpClient;
+  // spHttpClient: SPHttpClient;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IHeroBannerReadMoreProps {
@@ -108,6 +129,8 @@ export interface IHeroBannerReadMoreProps {
   context: WebPartContext;
   userid: any;
   useremail: any;
+  onReadMoreClick: any;
+  id: any
 }
 
 export interface IHeroBannerViewMoreProps {
@@ -115,6 +138,8 @@ export interface IHeroBannerViewMoreProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IJobsMasterProps {
@@ -122,6 +147,8 @@ export interface IJobsMasterProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IJobsRmProps {
@@ -129,6 +156,8 @@ export interface IJobsRmProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IManageQuickLinksProps {
@@ -137,6 +166,7 @@ export interface IManageQuickLinksProps {
   userid: any;
   spHttpClient: SPHttpClient;
   context: WebPartContext;
+  onReadMoreClick: any;
 }
 
 export interface INewsCategoryBasedProps {
@@ -144,7 +174,9 @@ export interface INewsCategoryBasedProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
 }
+
 
 export interface INewsReadMoreProps {
   description: string;
@@ -153,6 +185,8 @@ export interface INewsReadMoreProps {
   userid: any;
   siteID: any;
   useremail: any;
+  onReadMoreClick: any;
+
 }
 
 export interface INewsViewMoreProps {
@@ -160,6 +194,8 @@ export interface INewsViewMoreProps {
   siteurl: string;
   context: WebPartContext;
   userid: any;
+  onReadMoreClick: any;
+
 }
 
 export interface IPoliciesProceduresProps {
@@ -167,6 +203,8 @@ export interface IPoliciesProceduresProps {
   siteurl: string;
   UserId: any;
   context: WebPartContext;
+  onReadMoreClick: any;
+
 }
 
 export interface IRemoDeptLandingPageProps {
@@ -175,4 +213,6 @@ export interface IRemoDeptLandingPageProps {
   userid: any;
   context: WebPartContext;
   homepage: string;
+  onReadMoreClick: any;
+
 }

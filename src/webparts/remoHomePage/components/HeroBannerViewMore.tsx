@@ -6,7 +6,7 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 // import * as $ from 'jquery';
 import * as moment from 'moment';
-import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
+// import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
@@ -164,6 +164,9 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
       pageCount: Math.ceil(filteredItems.length / 1), // Adjust items per page if needed
     });
   };
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
 
   public render(): React.ReactElement<IHeroBannerViewMoreProps> {
     const { currentPage, filteredItems, searchQuery } = this.state;
@@ -209,7 +212,7 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
     return (
       <div className={styles.remoHomePage} id="heroBannerVm">
         <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
+          {/* <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} /> */}
         </div>
         <section>
           <div className="container relative">
@@ -219,7 +222,8 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
                 <div className="inner-banner-contents">
                   <h1> Home Banner </h1>
                   <ul className="breadcums">
-                    <li> <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home</a> </li>
+                    {/* <li> <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home</a> </li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                     <li> <a href="#" style={{ pointerEvents: "none" }} data-interception="off">Hero Banner View More </a> </li>
                   </ul>
                 </div>

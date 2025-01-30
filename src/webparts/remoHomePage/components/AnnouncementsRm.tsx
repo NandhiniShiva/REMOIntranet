@@ -454,6 +454,9 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
 
     }
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
 
   public render(): React.ReactElement<IAnnouncementsRmProps> {
     const AnncDetails: JSX.Element[] = this.state.Items.map((item: any) => {
@@ -509,9 +512,14 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                 <div className="inner-banner-contents">
                   <h1>Announcements</h1>
                   <ul className="breadcums">
-                    <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li>
+                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li>
                     <li><a href={`${this.props.siteurl}/SitePages/Announcement-View-More.aspx`} data-interception="off">All Announcements</a></li>
+                    <li><a href="#" style={{ pointerEvents: "none" }} data-interception="off">Announcements Read More</a></li> */}
+
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
+                    <li><a href='#' onClick={() => this.readMoreHandler("AnnouncementViewMore")} data-interception="off">All Announcements</a></li>
                     <li><a href="#" style={{ pointerEvents: "none" }} data-interception="off">Announcements Read More</a></li>
+
                   </ul>
                 </div>
               </div>

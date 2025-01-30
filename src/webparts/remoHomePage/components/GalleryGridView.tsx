@@ -864,6 +864,9 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
     }
   }
 
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
 
   public render(): React.ReactElement<IGalleryGridViewProps> {
     var reactHandler = this;
@@ -1030,8 +1033,12 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                 <div className="inner-banner-contents">
                   <h1> Gallery Grid View </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx`} data-interception="off"> Gallery Folders </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    <li>  <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx`} data-interception="off"> Gallery Folders </a> </li> */}
+
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("GalleryViewMore")}> Gallery Folders </a> </li>
+
                     <li>  <a href="off" style={{ pointerEvents: "none" }}> Grid View </a> </li>
                   </ul>
                 </div>

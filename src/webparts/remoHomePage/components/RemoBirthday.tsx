@@ -404,6 +404,9 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
   // }
 
+  public readMoreHandler(compName: any, itemId: any) {
+    this.props.onReadMoreClick({ Name: compName, Id: itemId })
+  }
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var reactHandler = this;
@@ -445,7 +448,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
                 </div>
               </div>
               <div className="birthday-details">
-                <a href={`${reactHandler.props.siteurl}/SitePages/birthday.aspx?ItemID=${ItemId}`} data-interception="off">
+                <a href='#' onClick={() => this.readMoreHandler("BirthdayRm", ItemId)} data-interception="off">
                   <h4 data-tip data-for={`React-tooltip-title-today-${key}`} data-custom-class="tooltip-custom">{Name}</h4>
                 </a>
                 <p data-tip data-for={`React-tooltip-Desig-today-${key}`} data-custom-class="tooltip-custom">{item.Designation}</p>
@@ -487,7 +490,9 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
                 </div>
               </div>
               <div className="birthday-details">
-                <a href={`${reactHandler.props.siteurl}/SitePages/birthday.aspx?ItemID=${ItemId}`} data-interception="off">
+                {/* <a href={`${reactHandler.props.siteurl}/SitePages/birthday.aspx?ItemID=${ItemId}`} data-interception="off"> */}
+                <a href='#' onClick={() => this.readMoreHandler("BirthdayRm", ItemId)} data-interception="off">
+
                   <h4 data-tip data-for={`React-tooltip-title-today-${key}`} data-custom-class="tooltip-custom">{Name}</h4>
                 </a>
                 <p data-tip data-for={`React-tooltip-Desig-today-${key}`} data-custom-class="tooltip-custom">{item.Designation}</p>

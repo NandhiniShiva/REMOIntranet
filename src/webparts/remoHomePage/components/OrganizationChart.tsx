@@ -82,6 +82,9 @@ export default class OrganizationChart extends React.Component<IOrganizationChar
       }
     });
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
 
   public render(): React.ReactElement<IOrganizationChartProps> {
     return (
@@ -94,7 +97,8 @@ export default class OrganizationChart extends React.Component<IOrganizationChar
                 <div className="inner-banner-contents">
                   <h1>Organization Chart </h1>
                   <ul className="breadcums">
-                    <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li>
+                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li><a href="#" style={{ pointerEvents: "none" }} data-interception="off">Org.Chart</a></li>
                   </ul>
                 </div>

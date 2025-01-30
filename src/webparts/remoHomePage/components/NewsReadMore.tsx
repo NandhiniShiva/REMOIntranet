@@ -824,6 +824,10 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
     }
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
+
   public render(): React.ReactElement<INewsReadMoreProps> {
     var reactHandler = this;
     var Dt = "";
@@ -887,9 +891,13 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
       }
       if (item.Dept != undefined) {
         var depttitle = item.Dept.Title
+        console.log("depttitle", depttitle);
+
       }
       if (item.SitePageID != undefined) {
         var sitepageid = item.SitePageID.Id
+        console.log("sitepageid", sitepageid);
+
       }
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
@@ -912,7 +920,9 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
               <img src={`${serverRelativeUrl}`} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
-              <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
+              {/* /  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a> */}
+              <a href='#' data-interception="off" onClick={() => this.readMoreHandler("NewsReadMore", item.ID)} className="nw-list-main"> {item.Title} </a>
+
               <div className="ns-tag-duration ">
                 <p> {Dt} </p>
               </div>
@@ -926,7 +936,9 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
               <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
-              <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
+              {/* <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a> */}
+              <a href='#' data-interception="off" onClick={() => this.readMoreHandler("NewsReadMore", item.ID)} className="nw-list-main"> {item.Title} </a>
+
               <div className="ns-tag-duration ">
                 <p> {Dt} </p>
               </div>
@@ -972,8 +984,12 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                 <div className='inner-banner-contents'>
                   <h1> News </h1>
                   <ul className='breadcums'>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
                     <li>  <a href={`${this.props.siteurl}/SitePages/NewsViewMore.aspx?`} data-interception="off"> All News </a> </li>
+                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">News Read More </a> </li> */}
+
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("NewsViewMore")} data-interception="off"> All News </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">News Read More </a> </li>
                   </ul>
                 </div>

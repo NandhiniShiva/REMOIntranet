@@ -413,6 +413,9 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     }
     return result;
   }
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
 
   public render(): React.ReactElement<INewsViewMoreProps> {
     const settings = {
@@ -711,7 +714,8 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
                 <div className="inner-banner-contents">
                   <h1> News </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> All News </a> </li>
                   </ul>
                 </div>

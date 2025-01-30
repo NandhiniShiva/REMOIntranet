@@ -70,7 +70,7 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
 
   public async GetGalleryFilesFolder() {
     console.log(NewWeb);
-debugger;
+    debugger;
     try {
       const items = await NewWeb.lists
         .getByTitle(PictureGalleryLib)
@@ -117,7 +117,9 @@ debugger;
     }
     return result;
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
     var reactHandler = this;
     const Images: JSX.Element[] = this.state.Galleryitems
@@ -148,7 +150,9 @@ debugger;
             <div className="col-md-6-dummy" id="if-gallery-present">
               <div className="sec event-cal image-videos">
                 <div className="heading clearfix hr_gallery">
-                  <h3> <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx?`} data-interception="off"> Gallery </a> </h3>
+                  {/* <h3> <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx?`} data-interception="off"> Gallery </a> </h3> */}
+                  <h3> <a href='#' onClick={() => this.readMoreHandler("GalleryViewMore")} data-interception="off"> Gallery </a> </h3>
+
                   {/*<h3 className=""><a href="#" onClick={()=> this.ShowVideos()}>Videos</a> </h3>*/}
                 </div>
 

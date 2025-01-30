@@ -242,6 +242,11 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
     Swal.fire("User already applied for Job");
   }
 
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
+
+
   public render(): React.ReactElement<IJobsRmProps> {
     const JobsRM = this.state.Items.map((item, key) => {
       const { ID, Title, EmploymentType, ExperienceLevel, EmailID, DateOfSubmission, JobSummary } = item;
@@ -254,7 +259,8 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
             <div className="inner-banner-contents">
               <h1> We are hiring {Title} </h1>
               <ul className="breadcums">
-                <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a></li>
+                {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a></li> */}
+                <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                 <li><a href="#"> Jobs </a></li>
               </ul>
             </div>

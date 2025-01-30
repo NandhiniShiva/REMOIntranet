@@ -147,7 +147,9 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
             console.error("Error checking if user applied:", error);
         }
     }
-
+    public readMoreHandler(compName: any) {
+        this.props.onReadMoreClick({ Name: compName })
+    }
     public render(): React.ReactElement<IJobsMasterProps> {
         const JobsMaster: JSX.Element[] = this.state.Items.map((item, key) => {
             const { ID, Title, EmploymentType, ExperienceLevel, DateOfSubmission, Status } = item;
@@ -222,7 +224,8 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
                                 <div className="inner-banner-contents">
                                     <h1> We are hiring </h1>
                                     <ul className="breadcums">
-                                        <li> <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a> </li>
+                                        {/* <li> <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a> </li> */}
+                                        <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                                         <li> <a href="#"> Jobs </a> </li>
                                     </ul>
                                 </div>

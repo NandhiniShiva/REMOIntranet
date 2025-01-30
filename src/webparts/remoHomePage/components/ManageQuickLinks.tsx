@@ -409,7 +409,9 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
         }
       });
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IManageQuickLinksProps> {
     var reactHandler = this;
 
@@ -482,7 +484,9 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                 <div className="inner-banner-contents">
                   <h1> Manage Quick Links </h1>
                   <ul className="breadcums">
-                    <li> <a href={`${reactHandler.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li> <a href={`${reactHandler.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
+
                     <li> <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Manage Quick Links </a> </li>
                   </ul>
                 </div>

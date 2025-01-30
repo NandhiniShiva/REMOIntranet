@@ -42,7 +42,9 @@ export default class PoliciesProcedures extends React.Component<IPoliciesProcedu
       console.error('Error fetching data:', error);
     }
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<IPoliciesProceduresProps> {
     const { items } = this.state;
     return (
@@ -58,7 +60,9 @@ export default class PoliciesProcedures extends React.Component<IPoliciesProcedu
               <div className="inner-banner-contents">
                 <h1> Policy & Procedure </h1>
                 <ul className="breadcums">
-                  <li>  <a href={`${this.props.siteurl}/SitePages/Home.aspx`} data-interception="off"> Home </a> </li>
+                  {/* <li>  <a href={`${this.props.siteurl}/SitePages/Home.aspx`} data-interception="off"> Home </a> </li> */}
+
+                  <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                   <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Policy &amp; Procedure </a> </li>
                 </ul>
               </div>

@@ -438,7 +438,9 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     }
     return result;
   }
-
+  public readMoreHandler(compName: any) {
+    this.props.onReadMoreClick({ Name: compName })
+  }
   public render(): React.ReactElement<INewsCategoryBasedProps> {
     var reactHandler = this;
 
@@ -509,9 +511,14 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
                 <div className="inner-banner-contents">
                   <h1> News </h1>
                   <ul className="breadcums">
-                    <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
+                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
                     <li>  <a href={`${this.props.siteurl}/SitePages/NewsViewMore.aspx?`} data-interception="off"> All News </a> </li>
+                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.state.CurrentPage} </a> </li> */}
+
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
+                    <li>  <a href='#' onClick={() => this.readMoreHandler("NewsViewMore")} data-interception="off"> All News </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.state.CurrentPage} </a> </li>
+
                   </ul>
                 </div>
 
