@@ -9,11 +9,13 @@ import * as moment from 'moment';
 import { listNames } from '../Configuration';
 import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
+// import { Items } from 'sp-pnp-js';
 
 let CEO_Messagelist = listNames.CEO_Message;
 
 export interface ICeoMessageState {
   Items: any[];
+  ceoTitle: string,
   isDataAvailable: boolean;
 }
 export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, ICeoMessageState, {}> {
@@ -21,6 +23,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     super(props);
     this.state = {
       Items: [],
+      ceoTitle: "", // Store CEO Title in state
       isDataAvailable: false
     };
   }
@@ -86,6 +89,10 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
             Items: items,
             isDataAvailable: true
           });
+          items.forEach((item)=>{
+            reactHandler.setState({ceoTitle:item.Title})
+          })
+         
           // $("#if-no-ceo-msg-present").hide();
           // $("#if-ceo-msg-present").show();
 
@@ -280,21 +287,22 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
-
     const CEOMessage: JSX.Element[] = this.state.Items.map((item, key) => {
+      debugger;
       const dummyElement = document.createElement("DIV");
       const date = moment(item.Created).format("DD/MM/YYYY");
       dummyElement.innerHTML = item.Description;
       const outputText = dummyElement.innerText;
 
+
       // $("#ceo-title-dynamic").html(`${item.Title}`);
 
-      const ceoTitleElement = document.getElementById('ceo-title-dynamic');
+      // const ceoTitleElement = document.getElementById('ceo-title-dynamic');
 
-      // Check if the element exists before setting the HTML content
-      if (ceoTitleElement) {
-        ceoTitleElement.innerHTML = `${item.Title}`;
-      }
+      // // Check if the element exists before setting the HTML content
+      // if (ceoTitleElement) {
+      //   ceoTitleElement.innerHTML = `${item.Title}`;
+      // }
       const RawImageTxt = item.Image;
 
       if (RawImageTxt && RawImageTxt !== "") {
@@ -346,6 +354,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
           <>
             <div className="sec relative" id="if-ceo-msg-present">
               <div className="heading" id="ceo-title-dynamic">
+                {this.state.ceoTitle}
                 {/* CEO's Message */}
               </div>
               {CEOMessage}

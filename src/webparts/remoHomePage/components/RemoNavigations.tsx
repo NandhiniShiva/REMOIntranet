@@ -74,7 +74,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     await this.GetMainNavItems();
     await this.EnableContentEditorForSuperAdmins();
     await this.GetMyLinks();
-    // await this.GetDeptData();
+    await this.GetDeptData();
 
 
     document.querySelectorAll('#meetingroom').forEach(element => {
@@ -869,13 +869,14 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     // }
   }
 
-  public GetDeptData() {
-    setInterval(async () => {
+  public async GetDeptData() {
+    debugger;
+    // setInterval(async () => {
       var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
       // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
       if (response.length != 0) {
         response.forEach(async (item) => {
-          const newDeptTitle = item.Title; // Replace with actual logic to get this title
+          const newDeptTitle = item.Shortfield; // Replace with actual logic to get this title
           // Check if the subsite exists before creating it
           const subsiteExists = await this.checkSubsiteExists(newDeptTitle);
           if (!subsiteExists) {
@@ -903,7 +904,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
         // await this.Createalldepartmentlist(DepartmentItems)
       }
-    }, 500)
+    // }, 500)
   }
   public async createListInSubsite(subsiteUrl: any) {
     try {

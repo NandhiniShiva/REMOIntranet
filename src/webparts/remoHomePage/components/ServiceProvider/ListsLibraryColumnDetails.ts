@@ -147,10 +147,11 @@ export const ListLibraryColumnDetails = [
             { columnName: "URL", type: "addUrl" },
             { columnName: "Place Department Under", type: "addMultilineText" },
             { columnName: "Has Sub Department", type: "addBoolean" },
-            { columnName: " Place Department Under", type: "addMultilineText" }, //lookup
+            { columnName: "Place Department Under", type: "addMultilineText" }, //lookup
             { columnName: "IsActive", type: "addBoolean" },
             { columnName: "OpenInNewTab", type: "addBoolean" },
             { columnName: "Order", type: "addNumberField" },
+            { columnName: "Shortfield", type: "addTextField" },
         ]
     },
     {

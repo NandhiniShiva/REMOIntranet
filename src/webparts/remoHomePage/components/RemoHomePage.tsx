@@ -443,189 +443,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-
-
-  // // Updated function for creating columns in a SharePoint List
-  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-  //   try {
-  //     for (const column of columns) {
-  //       try {
-  //         // Check if the column already exists
-  //         await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-  //         console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
-  //       } catch (error) {
-  //         // If column does not exist, create it based on type
-  //         switch (column.type) {
-  //           case "addImageField":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
-  //             console.log(`Column '${column.columnName}' added as Image Field.`);
-  //             const view = await sp.web.lists.getByTitle(name).views.getByTitle("All Items").get();
-  //             console.log(view);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addBoolean":
-  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Boolean.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addTextField":
-  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Text Field.`);
-  //             break;
-
-  //           case "addNumberField":
-  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Number Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addDateField":
-  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Date Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addMultilineText":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as multiline Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "Person or Group":
-  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-  //             console.log(`Column '${column.columnName}' added as personorgroup Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addMultiChoice":
-  //             // await sp.web.lists.getByTitle(name).fields.addMultiChoice("My Field",  column.group,  false, "My Group" );
-  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(
-  //               column.columnName, // The title of the field
-  //               column.group, // The array of choices (["Midea", "Trosten", ...])
-  //               false, // Set to true if you want to allow custom user input
-  //               //  "My Group" // The group under which the field will appear (optional)
-  //             );
-  //             // const field2 = await sp.web.lists.getByTitle("My List").fields.addMultiChoice("My Field", { Choices: choices, FillInChoice: false, Group: "My Group" });
-  //             console.log(`Column '${column.columnName}' added as choice Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addLookup":
-  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
-  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-  //             console.log(`Column '${column.columnName}' added as lookup Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //             case "addUrl":
-  //               debugger;
-  //               await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink); // Or UrlFieldFormatType.Image
-  //               console.log(`Column '${column.columnName}' added as URL.`);
-  //               break;              
-  //           default:
-  //             console.log(`Unknown column type: ${column.type}`);
-
-  //         }
-
-  //         // Add the column to the "All Items" view
-  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during column creation process:", error);
-  //   }
-  // }
-
-
-  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-  //   try {
-  //     for (const column of columns) {
-  //       var columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-  //       if (!columnExist) {
-  //         // try {
-  //         //   // Check if the column already exists
-
-  //         //   console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
-  //         // } catch (error) {
-  //         // If column does not exist, create it based on type
-  //         switch (column.type) {
-  //           case "addImageField":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
-  //             console.log(`Column '${column.columnName}' added as Image Field.`);
-  //             break;
-
-  //           case "addBoolean":
-  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Boolean.`);
-  //             break;
-
-  //           case "addTextField":
-  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-  //             console.log(`Column '${column.columnName}' added as Text Field.`);
-  //             break;
-
-  //           case "addNumberField":
-  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Number Field.`);
-  //             break;
-
-  //           case "addDateField":
-  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Date Field.`);
-  //             break;
-
-  //           case "addMultilineText":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Multiline Field.`);
-  //             break;
-
-  //           case "Person or Group":
-  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-  //             console.log(`Column '${column.columnName}' added as Person or Group Field.`);
-  //             break;
-
-  //           case "addMultiChoice":
-  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
-  //             console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
-  //             break;
-
-  //           case "addLookup":
-  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
-  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-  //             console.log(`Column '${column.columnName}' added as Lookup Field.`);
-  //             break;
-
-  //           case "addUrl":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
-  //             console.log(`Column '${column.columnName}' added as URL Field.`);
-  //             break;
-
-  //           case "Icon":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
-  //             console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
-  //             break;
-  //           case "addChoice":
-  //             debugger;
-  //             await sp.web.lists.getByTitle(name).fields.addChoice(
-  //               column.columnName,
-  //               column.choices,
-  //               ChoiceFieldFormatType.Dropdown // Use Dropdown or RadioButtons
-  //             );
-  //             console.log(`Column '${column.columnName}' added as Choice Field.`);
-  //             break;
-  //           default:
-  //             console.log(`Unknown column type: ${column.type}`);
-  //         }
-
-  //         // Add the column to the "All Items" view
-  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during column creation process:", error);
-  //   }
-  // }
-
-
   public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
     try {
       for (const column of columns) {
@@ -797,11 +614,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       showDropdown: true,
     })
   }
-  public showcomponents(e: any, DOMID: string) {
-    e.preventDefault();
-    $("#" + DOMID + "").toggle();
-    // this.setState({ isInitialscreen: false })
-  }
+
 
   public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
     try {
@@ -1052,32 +865,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       console.error("Error in setActiveLayout:", error);
     }
   }
-
-
-  // public async setActiveLayout(selectedlayout: any) {
-  //   const response = await sp.web.lists.getByTitle(LayoutMasterList).items.get();
-  //   try {
-  //     response.forEach(async (item) => {
-  //       var ItemId = item.ID;
-  //       if (item.title == selectedlayout) {
-  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
-  //           IsActive: true
-  //         })
-  //       } else {
-  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
-  //           IsActive: false
-  //         })
-  //       }
-  //     })
-  //   } catch {
-
-  //   }
-  // }
-  public Showclearbutton(ID: any) {
-    debugger;
+  public showcomponents(e: any, DOMID: string) {
+    e.preventDefault();
+    $("#" + DOMID).toggle();
+    this.showSearchbtn();
+    // this.setState({ isInitialscreen: false })
+  }
+  public handleInputChange(ID: any, SelectID: string) {
     var input = $("#SearchInput").val();
+    $("#" + SelectID).show();
+    this.showSearchbtn();
     if (input == "") {
-      $(".clear_part").hide();
+      // $(".clear_part").hide();
       // $("." + ID + "").removeClass("active");
       const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
       if (inputElement) {
@@ -1093,78 +892,34 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     }
   }
-  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
+  public showSearchbtn(){
+    $(".clear_part").hide();
     $(".search_button").show();
+  }
+  public showClearbtn(){
+    $(".search_button").hide();
+    $(".clear_part").show();
+  }
+  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: string) {
+    e.preventDefault();
     var query: string = $.trim(($("#SearchInput") as any).val());
     sp.web.lists.getByTitle(ComponentConfigurationList).items.filter(`substringof('${query}',Title)`).top(5000).orderBy("Title", true).get().then((resp) => {
       if (resp.length != 0) {
         this.setState({
           AvailableComponents: resp
+        }, () => {
+          $("#" + SelectID).show();
+          this.showClearbtn();
         });
       }
     })
   }
-  // public clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  //   e.preventDefault();
-  //   $("#SearchInput").val("");
-  //   $(".clear_part").removeClass("active");
-  //   sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
 
-  //     if (resp.length != 0) {
-  //       sp.web.lists.getByTitle(ComponentallocationList).items.filter(`substringof('${this.state.selectedValue}',Title)`).top(5000).orderBy("Title", true).get().then((res) => {
-  //         if (res.length != 0) {
-  //           var updatedavailablecomponent = resp.find((item)=> item.ComponentId !== res.ComponentID)
-  //         }
-  //       })
-  //       this.setState({
-  //         AvailableComponents: updatedavailablecomponent
-  //       });
-  //     }
-  //   });
-  // }
-
-  // public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-  //   debugger;
-  //   event.preventDefault();
-  //   var data: any;
-  //   const existingItems = await sp.web.lists
-  //     .getByTitle(ComponentallocationList)
-  //     .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-  //     .get();
-  //   if (existingItems.length > 0) {
-  //     // If an item exists for the position, update it
-  //     const itemId = existingItems[0].Id; // Get the item ID
-  //     await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).delete();
-  //     sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
-  //       if (resp.length != 0) {
-  //         resp.forEach((items) => {
-  //           if (items.Title == value) {
-  //             data = items;
-  //           }
-  //         })
-  //       }
-  //       this.state.AvailableComponents.push(data)
-  //       const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
-  //         index === (Position - 1) ? true : item
-  //       );
-  //       this.setState({
-  //         // AvailableComponents: updatedAvailableComponents,
-  //         isInitialscreen: updatedIsInitialscreen,
-  //       });
-  //     });
-  //   }
-
-
-  // }
-
-  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>,SelectID:any) {
     e.preventDefault();
-
     // Clear the search input and reset any active state
     $("#SearchInput").val("");
     // $(".clear_part").removeClass("active");
-
     try {
       // Fetch all components
       const allComponents = await sp.web.lists
@@ -1191,6 +946,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         // Update the state with the filtered components
         this.setState({
           AvailableComponents: updatedAvailableComponents,
+        },()=>{
+          $("#" + SelectID).show();
+          this.showSearchbtn();
         });
       }
     } catch (error) {
@@ -1248,8 +1006,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
         <>
-          <button className= "Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" />Remove</button>
+          <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
+            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /></button>
           <Component {...this.props} {...props} />
         </>
       );
@@ -1419,7 +1177,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
-    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any;}) => (
+    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => (
       <>
         {/* Button to toggle component visibility */}
         <button id={ButtonId} onClick={(e) => handler.showcomponents(e, SelectID)} >
@@ -1428,13 +1186,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
         {/* Hidden component div, toggled dynamically */}
         <div id={SelectID} style={{ display: "none" }}>
-          <div className="component-search">
-            <input type="text" className={`form-control ${DOMID}`} placeholder="Search for the contact here" id="SearchInput"
-              onChange={() => handler.Showclearbutton(DOMID)}  />
-            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e)} >
+          <div className={`component-search ${DOMID}`}>
+            <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
+              onChange={() => handler.handleInputChange(DOMID, SelectID)} />
+            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
               <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
             </button>
-            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e)}>
+            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
               <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
             </button>
           </div>
@@ -1445,7 +1203,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               <li
                 key={component.Title} // Ensure unique key for each list item
                 className="li-search-wrap"
-                onClick={(e) => handler.setSelectedComponent(e,component.Title,SelectID,ComponentIndex)}
+                onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex)}
               >
                 <p className="people_name">{component.Title}</p>
               </li>
@@ -1454,64 +1212,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         </div>
       </>
     );
-
-    // const SearchElement = ({ DOMID }: { DOMID: string }) => (
-    //   <>
-    //     <button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt='AddComponent'></img>
-    //     </button>
-    //     <div id={item.selectId} style={{ display: "none" }}></div><div className="component-search">
-    //       <input
-    //         type="text"
-    //         className={`form-control ${DOMID}`}
-    //         placeholder="Search for the contact here"
-    //         id="SearchInput"
-    //         onChange={() => this.Showclearbutton(DOMID)} />
-    //       <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
-    //         <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
-    //       </button>
-    //       <button
-    //         className="form-control clear_part inp-search input-clear-onchange"
-    //         onClick={(e) => this.clearHandler(e)}
-    //       >
-    //         <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
-    //       </button>
-
-    //     </div>
-    //     <ul>
-    //       {handler.state.AvailableComponents.map((Items1) => {
-    //         return (
-    //           <li className='li-search-wrap' onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}>
-    //             <p className="people_name">{Items1.Title}</p>
-    //           </li>
-    //         );
-    //       }
-    //       )}
-    //     </ul>
-    //   </>
-    // );
-    // const addcomponent = ({ DOMID }: { DOMID: string }) => (
-    //   <div className="component-search">
-    //     <input
-    //       type="text"
-    //       className={`form-control ${DOMID}`}
-    //       placeholder="Search for the contact here"
-    //       id="SearchInput"
-    //       onChange={() => this.Showclearbutton(DOMID)}
-    //     />
-    //     <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
-    //     </button>
-    //     <button
-    //       className="form-control clear_part inp-search input-clear-onchange"
-    //       onClick={(e) => this.clearHandler(e)}
-    //     >
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
-    //     </button>
-
-    //   </div>
-    // );
-
 
     return (
       //Layout 1
@@ -1526,32 +1226,28 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   currentWebUrl=""
                   CurrentPageserverRequestPath=""
                 />
-                <>
-                  <li id='layout_button'>
-                    <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
-                      <option value="">Select Layout</option>
-                      {this.state.layoutItems.map((item) => (
-                        <option key={item.ID} value={item.ID}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
+              </div>
+              <div className='main-pages-nav'>
+                <li id='layout_button'>
+                  <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                    <option value="">Select Layout</option>
+                    {this.state.layoutItems.map((item) => (
+                      <option key={item.ID} value={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+                {this.state.editMode != "edit" &&
+                  <li id='edit_button'>
+                    <button onClick={(e) => this.editHandler(e)}>
+                      <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                      <span> Edit </span></button>
+                    {/* </div> */}
                   </li>
-
-                  {this.state.editMode != "edit" &&
-                    // <div>
-                    <li id='edit_button'>
-                      <button onClick={(e) => this.editHandler(e)}>
-                        <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
-                        <span> Edit </span></button>
-                      {/* </div> */}
-                    </li>
-                  }
-                </>
+                }
               </div>
               <section>
-
-
                 {this.state.isClicked != "yes" ?
                   <div className="container home_pg relative">
                     <div className="section-right">
@@ -1559,7 +1255,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       <div className="banner-ceo-message">
                         <div className="row">
                           {this.state.isInitialscreen[0] == true ?
-                            <div className="col-md-8">
+                            <div className="col-md-8 Location-1">
                               {Components.map((item, key) => {
                                 if (item.Position == 1) {
                                   return (
@@ -1569,14 +1265,14 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               })}
                             </div>
                             :
-                            <div className="col-md-8" >
+                            <div className="col-md-8 Location-1" >
                               {this.state.selectedComponents[1] && this.renderComponent(1)}
                             </div>
                           }
 
                           {this.state.isInitialscreen[1] == true ?
-                            <div className="col-md-4">
-                              {Components.map((item,key) => {
+                            <div className="col-md-4 Location-2">
+                              {Components.map((item, key) => {
                                 if (item.Position == 2) {
                                   return (
                                     <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1585,7 +1281,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               })}
                             </div>
                             :
-                            <div className="col-md-4" >
+                            <div className="col-md-4 Location-2" >
                               {this.state.selectedComponents[2] && this.renderComponent(2)}
                             </div>
                           }
@@ -1594,8 +1290,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       </div>
                       {/* //Quicklinks- remo navigation */}
                       {this.state.isInitialscreen[2] == true ?
-                        <div className="col-md-12" >
-                          {Components.map((item,key) => {
+                        <div className="col-md-12 Location-3" >
+                          {Components.map((item, key) => {
                             if (item.Position == 3) {
                               return (
                                 <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1604,7 +1300,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                           })}
                         </div>
                         :
-                        <div className="col-md-12" >
+                        <div className="col-md-12 Location-3" >
                           {this.state.selectedComponents[3] && this.renderComponent(3)}
                         </div>
                       }
@@ -1612,10 +1308,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       {/* Events(Mymeetings) Calendar and News Section */}
                       <div className="row section_bottom">
                         <div className="col-md-12">
-                          <div className="events-calendar">
+                          <div className="events-calendar col-md-8">
                             {this.state.isInitialscreen[3] == true ?
-                              <div className="col-md-8" >
-                                {Components.map((item,key) => {
+                              <div className="Location-4 col-md-12" >
+                                {Components.map((item, key) => {
                                   if (item.Position == 4) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1624,14 +1320,14 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-8" >
+                              <div className="Location-4 col-md-12" >
                                 {this.state.selectedComponents[4] && this.renderComponent(4)}
                               </div>
                             }
                             {/* News */}
                             {this.state.isInitialscreen[4] == true ?
-                              <div className="col-md-8" >
-                                {Components.map((item,key) => {
+                              <div className="Location-5 col-md-12" >
+                                {Components.map((item, key) => {
                                   if (item.Position == 5) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1640,17 +1336,74 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-8" >
+                              <div className="Location-5 col-md-12" >
                                 {this.state.selectedComponents[5] && this.renderComponent(5)}
                               </div>
                             }
+
+                            <div className="latest-news-announcements" id="latest-news-announcements">
+                              {/* events and announcements */}
+                              <div>
+                                {this.state.isInitialscreen[9] == true ?
+                                  // <>
+                                  <div className="col-md-12 Location-10">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 10) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-12 Location-10">
+                                    {this.state.selectedComponents[10] && this.renderComponent(10)}
+                                  </div>
+                                }
+                              </div>
+                            </div>
+
+                            <div id="social-and-gallery" className="images-social">
+                              <div className="row row-res">
+                                {this.state.isInitialscreen[10] == true ?
+                                  <div className="col-md-6 Location-11">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 11) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-6 Location-11">
+                                    {this.state.selectedComponents[11] && this.renderComponent(11)}
+                                  </div>
+                                }
+                                {this.state.isInitialscreen[11] == true ?
+                                  <div className="col-md-6 Location-12">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 12) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-6 Location-12">
+                                    {this.state.selectedComponents[12] && this.renderComponent(12)}
+                                  </div>
+                                }
+                              </div>
+                            </div>
                           </div>
 
                           {/* Birthday, Climate, Quicklinks, Recentfile */}
-                          <div className="col-md-4">
+                          <div className="col-md-4 ">
                             {this.state.isInitialscreen[5] == true ?
-                              <div>
-                                {Components.map((item,key) => {
+                              <div className='Location-6 col-md-12'>
+                                {Components.map((item, key) => {
                                   if (item.Position == 6) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1659,13 +1412,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-6 col-md-12'>
                                 {this.state.selectedComponents[6] && this.renderComponent(6)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[6] == true ?
-                              <div  >
-                                {Components.map((item,key) => {
+                              <div className='Location-7 col-md-12'>
+                                {Components.map((item, key) => {
                                   if (item.Position == 7) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1674,13 +1427,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-7 col-md-12'>
                                 {this.state.selectedComponents[7] && this.renderComponent(7)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[7] == true ?
-                              <div >
-                                {Components.map((item,key) => {
+                              <div className='Location-8 col-md-12' >
+                                {Components.map((item, key) => {
                                   if (item.Position == 8) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1689,13 +1442,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-8 col-md-12'>
                                 {this.state.selectedComponents[8] && this.renderComponent(8)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[8] == true ?
-                              <div className="col-md-6">
-                                {Components.map((item,key) => {
+                              <div className="col-md-12 Location-9">
+                                {Components.map((item, key) => {
                                   if (item.Position == 9) {
                                     return (
                                       <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
@@ -1704,66 +1457,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-6">
+                              <div className="col-md-6 Location-9">
                                 {this.state.selectedComponents[9] && this.renderComponent(9)}
                               </div>
                             }
                           </div>
-                          <div className="latest-news-announcements" id="latest-news-announcements">
-                            {/* events and announcements */}
-                            <div>
-                              {this.state.isInitialscreen[9] == true ?
-                                // <>
-                                <div className="col-md-6">
-                                  {Components.map((item,key) => {
-                                    if (item.Position == 10) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[10] && this.renderComponent(10)}
-                                </div>
-                              }
-                            </div>
-                          </div>
-                          <div id="social-and-gallery" className="images-social">
-                            <div className="row row-res">
-                              {this.state.isInitialscreen[10] == true ?
-                                <div className="col-md-6">
-                                  {Components.map((item,key) => {
-                                    if (item.Position == 11) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[11] && this.renderComponent(11)}
-                                </div>
-                              }
-                              {this.state.isInitialscreen[11] == true ?
-                                <div className="col-md-6">
-                                  {Components.map((item,key) => {
-                                    if (item.Position == 12) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[12] && this.renderComponent(12)}
-                                </div>
-                              }
-                            </div>
-                          </div>
+
                         </div>
                       </div>
 
