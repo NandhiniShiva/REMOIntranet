@@ -53,12 +53,12 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
             console.log("Unable to get VersionData due to: " + error);
         }
     }
-    public addData(event:any) {
-        event.preventDefault();
-        // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
-        const listUrl = `${this.props.siteurl}/Lists/${VersionMasterlist}`;
-        window.open(listUrl, "_blank");
-    }
+    // public addData(event:any) {
+    //     event.preventDefault();
+    //     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${VersionMasterlist}`; // Replace with your list URL
+    //     const listUrl = `${this.props.siteurl}/Lists/${VersionMasterlist}`;
+    //     window.open(listUrl, "_blank");
+    // }
 
 
     public render(): React.ReactElement<IRemoHomePageProps> {
@@ -74,7 +74,7 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
 
 
             <>
-                {this.state.isDataAvailable ? (
+                {/* {this.state.isDataAvailable ? ( */}
                     <footer>
                         <div style={{ position: "relative" }} className="footer-name">
                             <div style={{ position: "absolute", right: "-2px", bottom: "-25px" }} className="footer-head">
@@ -87,11 +87,12 @@ export default class Footer extends React.Component<IRemoHomePageProps, IFooterS
                             </div>
                         </div>
                     </footer>
-                ) : (
+                {/* )  */}
+                {/* : (
                     <div>
                         <button onClick={(e)=> this.addData(e)}>Add Data</button>
                     </div>
-                )}
+                )} */}
             </>
         );
     }

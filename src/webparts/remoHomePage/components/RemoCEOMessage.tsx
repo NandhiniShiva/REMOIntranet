@@ -11,6 +11,7 @@ import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDe
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let CEO_Messagelist = listNames.CEO_Message;
+let CEOName: any;
 
 export interface ICeoMessageState {
   Items: any[];
@@ -288,13 +289,13 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
       const outputText = dummyElement.innerText;
 
       // $("#ceo-title-dynamic").html(`${item.Title}`);
+      CEOName = item.Title;
+      // const ceoTitleElement = document.getElementById('ceo-title-dynamic');
 
-      const ceoTitleElement = document.getElementById('ceo-title-dynamic');
-
-      // Check if the element exists before setting the HTML content
-      if (ceoTitleElement) {
-        ceoTitleElement.innerHTML = `${item.Title}`;
-      }
+      // // Check if the element exists before setting the HTML content
+      // if (ceoTitleElement) {
+      //   ceoTitleElement.innerHTML = `${item.Title}`;
+      // }
       const RawImageTxt = item.Image;
 
       if (RawImageTxt && RawImageTxt !== "") {
@@ -347,6 +348,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
             <div className="sec relative" id="if-ceo-msg-present">
               <div className="heading" id="ceo-title-dynamic">
                 {/* CEO's Message */}
+                {CEOName}
               </div>
               {CEOMessage}
             </div>

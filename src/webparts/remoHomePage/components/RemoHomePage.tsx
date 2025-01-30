@@ -811,11 +811,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       showDropdown: true,
     })
   }
-  public showcomponents(e: any, DOMID: string) {
-    e.preventDefault();
-    $("#" + DOMID + "").toggle();
-    // this.setState({ isInitialscreen: false })
-  }
+
 
   public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
     try {
@@ -1123,14 +1119,54 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     }
   }
-  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+
+  public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
+    $("#" + DOMID).toggle();
+    this.showSearchbtn();
+    // this.setState({ isInitialscreen: false })
+  }
+  public handleInputChange(ID: any, SelectID: string) {
+    var input = $("#SearchInput").val();
+    $("#" + SelectID).show();
+    this.showSearchbtn();
+    if (input == "") {
+      // $(".clear_part").hide();
+      // $("." + ID + "").removeClass("active");
+      const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
+      if (inputElement) {
+        inputElement.classList.remove("active"); // Add the active class
+      }
+    }
+    else {
+      // $(".clear_part").addClass("active");
+      // $(".clear_part").show();
+      const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
+      if (inputElement) {
+        inputElement.classList.add("active"); // Add the active class
+      }
+    }
+  }
+  public showSearchbtn() {
+    $(".clear_part").hide();
     $(".search_button").show();
+  }
+  public showClearbtn() {
+    $(".search_button").hide();
+    $(".clear_part").show();
+  }
+  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: string) {
+    e.preventDefault();
     var query: string = $.trim(($("#SearchInput") as any).val());
     sp.web.lists.getByTitle(ComponentConfigurationList).items.filter(`substringof('${query}',Title)`).top(5000).orderBy("Title", true).get().then((resp) => {
       if (resp.length != 0) {
         this.setState({
           AvailableComponents: resp
+        }, () => {
+          $("#" + SelectID).show();
+          this.showClearbtn();
+          this.getAllocatedComponents()
+
         });
       }
     })
@@ -1188,13 +1224,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   // }
 
-  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: any) {
     e.preventDefault();
-
     // Clear the search input and reset any active state
     $("#SearchInput").val("");
     // $(".clear_part").removeClass("active");
-
     try {
       // Fetch all components
       const allComponents = await sp.web.lists
@@ -1221,6 +1255,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         // Update the state with the filtered components
         this.setState({
           AvailableComponents: updatedAvailableComponents,
+        }, () => {
+          $("#" + SelectID).show();
+          this.showSearchbtn();
         });
       }
     } catch (error) {
@@ -1279,7 +1316,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       return (
         <>
           <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" />Remove</button>
+            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /></button>
           <Component {...this.props} {...props} />
         </>
       );
@@ -1404,50 +1441,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   }
 
-  // public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
-  //   debugger;
-  //   event.preventDefault();
-  //   var value = event.target.value;
-  //   const PreviousLayout = this.state.selectedValue
-  //   try {
-  //     var IslayoutExist = await sp.web.lists
-  //       .getByTitle(ComponentallocationList)
-  //       .items.filter(`Title eq '${value}'`).get();
-  //     if (!IslayoutExist) {
-  //       // Fetch all existing items in the list
-  //       const existingItems = await sp.web.lists
-  //         .getByTitle(ComponentallocationList)
-  //         .items.filter(`Title eq '${PreviousLayout}'`).get();
-
-  //       if (existingItems.length === 0) {
-  //         console.log("No items found to duplicate.");
-  //         return;
-  //       }
-
-  //       // Loop through each existing item to create a duplicate with a new title
-  //       for (const item of existingItems) {
-  //         await sp.web.lists.getByTitle(ComponentallocationList).items.add({
-  //           Title: value, // Assign the new title
-  //           Component: item.Component, // Replace with your actual field names
-  //           ComponentID: item.ComponentID,
-  //           Position: item.Position,
-  //           // Add all other relevant fields here
-  //         });
-  //       }
-  //     }
-  //     this.setState({ selectedValue: value },
-  //       async () => {
-  //         await this.loaderInProgress();
-  //         await this.GetAllavailablecomponents();
-  //         await this.getAllocatedComponents();
-  //         await this.HideInProgress();
-  //       }
-  //     )
-
-  //   } catch (error) {
-  //     console.error("Error duplicating items:", error);
-  //   }
-  // }
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
@@ -1460,13 +1453,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
         {/* Hidden component div, toggled dynamically */}
         <div id={SelectID} style={{ display: "none" }}>
-          <div className="component-search">
-            <input type="text" className={`form-control ${DOMID}`} placeholder="Search for the contact here" id="SearchInput"
-              onChange={() => handler.Showclearbutton(DOMID)} />
-            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e)} >
+          <div className={`component-search ${DOMID}`}>
+            <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
+              onChange={() => handler.handleInputChange(DOMID, SelectID)} />
+            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
               <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
             </button>
-            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e)}>
+            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
               <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
             </button>
           </div>
@@ -1486,65 +1479,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         </div>
       </>
     );
-
-    // const SearchElement = ({ DOMID }: { DOMID: string }) => (
-    //   <>
-    //     <button id={item.buttonId} onClick={(e) => this.showcomponents(e, item.selectId)}>
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt='AddComponent'></img>
-    //     </button>
-    //     <div id={item.selectId} style={{ display: "none" }}></div><div className="component-search">
-    //       <input
-    //         type="text"
-    //         className={`form-control ${DOMID}`}
-    //         placeholder="Search for the contact here"
-    //         id="SearchInput"
-    //         onChange={() => this.Showclearbutton(DOMID)} />
-    //       <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
-    //         <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
-    //       </button>
-    //       <button
-    //         className="form-control clear_part inp-search input-clear-onchange"
-    //         onClick={(e) => this.clearHandler(e)}
-    //       >
-    //         <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
-    //       </button>
-
-    //     </div>
-    //     <ul>
-    //       {handler.state.AvailableComponents.map((Items1) => {
-    //         return (
-    //           <li className='li-search-wrap' onClick={(e) => handler.setSelectedComponent(e, Items1.Title, item.selectId, item.componentIndex)}>
-    //             <p className="people_name">{Items1.Title}</p>
-    //           </li>
-    //         );
-    //       }
-    //       )}
-    //     </ul>
-    //   </>
-    // );
-    // const addcomponent = ({ DOMID }: { DOMID: string }) => (
-    //   <div className="component-search">
-    //     <input
-    //       type="text"
-    //       className={`form-control ${DOMID}`}
-    //       placeholder="Search for the contact here"
-    //       id="SearchInput"
-    //       onChange={() => this.Showclearbutton(DOMID)}
-    //     />
-    //     <button className="form-control search_button" onClick={(e) => this.SearchHandler(e)}>
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
-    //     </button>
-    //     <button
-    //       className="form-control clear_part inp-search input-clear-onchange"
-    //       onClick={(e) => this.clearHandler(e)}
-    //     >
-    //       <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
-    //     </button>
-
-    //   </div>
-    // );
-
-
     return (
       //Layout 1
       <>
@@ -1592,7 +1526,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       <div className="banner-ceo-message">
                         <div className="row">
                           {this.state.isInitialscreen[0] == true ?
-                            <div className="col-md-8">
+                            <div className="col-md-8 Location-1">
                               {Components.map((item, key) => {
                                 if (item.Position == 1) {
                                   return (
@@ -1602,13 +1536,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               })}
                             </div>
                             :
-                            <div className="col-md-8" >
+                            <div className="col-md-8 Location-1" >
                               {this.state.selectedComponents[1] && this.renderComponent(1)}
                             </div>
                           }
 
                           {this.state.isInitialscreen[1] == true ?
-                            <div className="col-md-4">
+                            <div className="col-md-4 Location-2">
                               {Components.map((item, key) => {
                                 if (item.Position == 2) {
                                   return (
@@ -1618,7 +1552,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                               })}
                             </div>
                             :
-                            <div className="col-md-4" >
+                            <div className="col-md-4 Location-2" >
                               {this.state.selectedComponents[2] && this.renderComponent(2)}
                             </div>
                           }
@@ -1627,7 +1561,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       </div>
                       {/* //Quicklinks- remo navigation */}
                       {this.state.isInitialscreen[2] == true ?
-                        <div className="col-md-12" >
+                        <div className="col-md-12 Location-3" >
                           {Components.map((item, key) => {
                             if (item.Position == 3) {
                               return (
@@ -1637,7 +1571,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                           })}
                         </div>
                         :
-                        <div className="col-md-12" >
+                        <div className="col-md-12 Location-3" >
                           {this.state.selectedComponents[3] && this.renderComponent(3)}
                         </div>
                       }
@@ -1645,9 +1579,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       {/* Events(Mymeetings) Calendar and News Section */}
                       <div className="row section_bottom">
                         <div className="col-md-12">
-                          <div className="events-calendar">
+                          <div className="events-calendar col-md-8">
                             {this.state.isInitialscreen[3] == true ?
-                              <div className="col-md-8" >
+                              <div className="Location-4 col-md-12" >
                                 {Components.map((item, key) => {
                                   if (item.Position == 4) {
                                     return (
@@ -1657,13 +1591,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-8" >
+                              <div className="Location-4 col-md-12" >
                                 {this.state.selectedComponents[4] && this.renderComponent(4)}
                               </div>
                             }
                             {/* News */}
                             {this.state.isInitialscreen[4] == true ?
-                              <div className="col-md-8" >
+                              <div className="Location-5 col-md-12" >
                                 {Components.map((item, key) => {
                                   if (item.Position == 5) {
                                     return (
@@ -1673,16 +1607,73 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-8" >
+                              <div className="Location-5 col-md-12" >
                                 {this.state.selectedComponents[5] && this.renderComponent(5)}
                               </div>
                             }
+
+                            <div className="latest-news-announcements" id="latest-news-announcements">
+                              {/* events and announcements */}
+                              <div>
+                                {this.state.isInitialscreen[9] == true ?
+                                  // <>
+                                  <div className="col-md-12 Location-10">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 10) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-12 Location-10">
+                                    {this.state.selectedComponents[10] && this.renderComponent(10)}
+                                  </div>
+                                }
+                              </div>
+                            </div>
+
+                            <div id="social-and-gallery" className="images-social">
+                              <div className="row row-res">
+                                {this.state.isInitialscreen[10] == true ?
+                                  <div className="col-md-6 Location-11">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 11) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-6 Location-11">
+                                    {this.state.selectedComponents[11] && this.renderComponent(11)}
+                                  </div>
+                                }
+                                {this.state.isInitialscreen[11] == true ?
+                                  <div className="col-md-6 Location-12">
+                                    {Components.map((item, key) => {
+                                      if (item.Position == 12) {
+                                        return (
+                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
+                                        )
+                                      }
+                                    })}
+                                  </div>
+                                  :
+                                  <div className="col-md-6 Location-12">
+                                    {this.state.selectedComponents[12] && this.renderComponent(12)}
+                                  </div>
+                                }
+                              </div>
+                            </div>
                           </div>
 
                           {/* Birthday, Climate, Quicklinks, Recentfile */}
-                          <div className="col-md-4">
+                          <div className="col-md-4 ">
                             {this.state.isInitialscreen[5] == true ?
-                              <div>
+                              <div className='Location-6 col-md-12'>
                                 {Components.map((item, key) => {
                                   if (item.Position == 6) {
                                     return (
@@ -1692,12 +1683,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-6 col-md-12'>
                                 {this.state.selectedComponents[6] && this.renderComponent(6)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[6] == true ?
-                              <div  >
+                              <div className='Location-7 col-md-12'>
                                 {Components.map((item, key) => {
                                   if (item.Position == 7) {
                                     return (
@@ -1707,12 +1698,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-7 col-md-12'>
                                 {this.state.selectedComponents[7] && this.renderComponent(7)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[7] == true ?
-                              <div >
+                              <div className='Location-8 col-md-12' >
                                 {Components.map((item, key) => {
                                   if (item.Position == 8) {
                                     return (
@@ -1722,12 +1713,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <>
+                              <div className='Location-8 col-md-12'>
                                 {this.state.selectedComponents[8] && this.renderComponent(8)}
-                              </>
+                              </div>
                             }
                             {this.state.isInitialscreen[8] == true ?
-                              <div className="col-md-6">
+                              <div className="col-md-12 Location-9">
                                 {Components.map((item, key) => {
                                   if (item.Position == 9) {
                                     return (
@@ -1737,66 +1728,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                                 })}
                               </div>
                               :
-                              <div className="col-md-6">
+                              <div className="col-md-12 Location-9">
                                 {this.state.selectedComponents[9] && this.renderComponent(9)}
                               </div>
                             }
                           </div>
-                          <div className="latest-news-announcements" id="latest-news-announcements">
-                            {/* events and announcements */}
-                            <div>
-                              {this.state.isInitialscreen[9] == true ?
-                                // <>
-                                <div className="col-md-6">
-                                  {Components.map((item, key) => {
-                                    if (item.Position == 10) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[10] && this.renderComponent(10)}
-                                </div>
-                              }
-                            </div>
-                          </div>
-                          <div id="social-and-gallery" className="images-social">
-                            <div className="row row-res">
-                              {this.state.isInitialscreen[10] == true ?
-                                <div className="col-md-6">
-                                  {Components.map((item, key) => {
-                                    if (item.Position == 11) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[11] && this.renderComponent(11)}
-                                </div>
-                              }
-                              {this.state.isInitialscreen[11] == true ?
-                                <div className="col-md-6">
-                                  {Components.map((item, key) => {
-                                    if (item.Position == 12) {
-                                      return (
-                                        <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                      )
-                                    }
-                                  })}
-                                </div>
-                                :
-                                <div className="col-md-6">
-                                  {this.state.selectedComponents[12] && this.renderComponent(12)}
-                                </div>
-                              }
-                            </div>
-                          </div>
+
                         </div>
                       </div>
 

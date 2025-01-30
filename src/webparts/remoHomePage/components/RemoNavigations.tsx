@@ -875,7 +875,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
       if (response.length != 0) {
         response.forEach(async (item) => {
-          const newDeptTitle = item.Title; // Replace with actual logic to get this title
+          const newDeptTitle = item.Shortfield; // Replace with actual logic to get this title
           // Check if the subsite exists before creating it
           const subsiteExists = await this.checkSubsiteExists(newDeptTitle);
           if (!subsiteExists) {

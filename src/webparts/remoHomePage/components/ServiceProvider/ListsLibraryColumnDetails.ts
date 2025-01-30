@@ -151,6 +151,7 @@ export const ListLibraryColumnDetails = [
             { columnName: "IsActive", type: "addBoolean" },
             { columnName: "OpenInNewTab", type: "addBoolean" },
             { columnName: "Order", type: "addNumberField" },
+            { columnName: "Shortfield", type: "addTextField" },
         ]
     },
     {
