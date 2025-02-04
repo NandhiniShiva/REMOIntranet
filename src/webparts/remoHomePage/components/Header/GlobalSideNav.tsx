@@ -174,37 +174,41 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
     // Hide elements based on page URL
     if (
-      ActivePageUrl === `${siteurl}/sitepages/remointranethome.aspx` ||
+      ActivePageUrl === `${siteurl}/sitepages/RemoIntranetHome.aspx` ||
       ActivePageUrl === `${siteurl}/sitepages/HomePage.aspx#` ||
       ActivePageUrl === `${siteurl}/` ||
       ActivePageUrl === `${siteurl}#` ||
       ActivePageUrl === `${siteurl}/`
     ) {
-      // setTimeout(() => {
-      //   // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-      //   // $(".inner-pages-nav").hide();
-      //   // $('#master_footer_parent').hide();
-      //   // $('.ControlZone--control').attr('style', 'display: none !important');
-      //   document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
-      //     element.style.padding = '0px';
-      //     element.style.margin = '0px';
-      //   });
 
-      //   const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
-      //   if (innerPagesNav) {
-      //     innerPagesNav.style.display = 'none';
-      //   }
+      // document.querySelectorAll('#spLeftNav, #sp-appBar, #spSiteHeader, #SuiteNavWrapper').forEach(function (element: any) {
+      //   element.style.display = 'none';
+      // });
+      setTimeout(() => {
+        // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
+        $(".inner-pages-nav").hide();
+        // $('#master_footer_parent').hide();
+        // $('.ControlZone--control').attr('style', 'display: none !important');
+        document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
+          element.style.padding = '0px';
+          element.style.margin = '0px';
+        });
 
-      //   const masterFooter = document.getElementById('master_footer_parent');
-      //   if (masterFooter) {
-      //     masterFooter.style.display = 'none';
-      //   }
+        const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
+        if (innerPagesNav) {
+          innerPagesNav.style.display = 'none';
+        }
 
-      //   // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
-      //   // if (ControlZone) {
-      //   //   ControlZone.style.setProperty('display', 'none', 'important');
-      //   // }
-      // }, 500);
+        const masterFooter = document.getElementById('master_footer_parent');
+        if (masterFooter) {
+          masterFooter.style.display = 'none';
+        }
+
+        // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
+        // if (ControlZone) {
+        //   ControlZone.style.setProperty('display', 'none', 'important');
+        // }
+      }, 500);
     } else if (
       ActivePageUrl === `${siteurl}/eventsactivities/sitepages/HomePage.aspx` ||
       ActivePageUrl === `${siteurl}/eventsactivities/sitepages/HomePage.aspx#` ||

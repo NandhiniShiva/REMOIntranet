@@ -369,7 +369,7 @@ export const ListLibraryColumnDetails = [
             { columnName: "Hover Off Icon", type: "addImageField" },
             // { columnName: "Image", type: "addImageField" },
             // { columnName: "ImageHover", type: "addImageField" },
-            {columnName:"AccessibleTo", type:"Person or Group"},
+            { columnName: "AccessibleTo", type: "Person or Group" },
             { columnName: "URL", type: "addUrl" },
             { columnName: "IsActive", type: "addBoolean" },
             { columnName: "Order0", type: "addNumberField" },
@@ -392,6 +392,24 @@ export const ListLibraryColumnDetails = [
 
     {
         name: "UsersQuickLinks",
+        columns: [
+            {
+                columnName: "SelectedQuickLinks", type: "addLookup", targetListName: "Quick Links",
+                targetListColumn: "Title",
+            },
+            {
+                columnName: "SelectedQuickLinks_x003a_ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
+                targetListColumn: "ID", // Specify the target column
+            },
+            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "ImageSrc", type: "addMultilineText" },
+            { columnName: "URL", type: "addUrl" },
+            { columnName: "HoverImageSrc", type: "addMultilineText" },
+
+        ]
+    },
+    {
+        name: "UsersQuickLinksNew",
         columns: [
             {
                 columnName: "SelectedQuickLinks", type: "addLookup", targetListName: "Quick Links",
@@ -441,7 +459,7 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
-   
+
 
 
 

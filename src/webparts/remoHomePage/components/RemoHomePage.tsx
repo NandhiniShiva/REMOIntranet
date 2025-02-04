@@ -1310,6 +1310,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
+    console.log("componentName", componentName);
 
     // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
