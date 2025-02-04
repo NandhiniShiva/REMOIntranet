@@ -40,6 +40,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
 
 
   public async GetGalleryFilesFolder() {
+    debugger
     try {
       const items = await sp.web.lists.getByTitle(PictureGalleryLib)
         .items.expand("Folder", "File")
@@ -95,7 +96,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
     return result;
   }
 
-  public addImageVideo(event:any) {
+  public addImageVideo(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${PictureGalleryLib}`;
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${PictureGalleryLib}`; // Replace with your list URL
@@ -109,6 +110,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
     var reactHandler = this;
     let x: number = 1;
     const Images: JSX.Element[] = this.state.Galleryitems.map(function (item) {
+      debugger
       if (item.FileSystemObjectType == 1) {
       }
       if (item.FileSystemObjectType != 1) {
