@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
-// import * as $ from 'jquery';
+import * as $ from 'jquery';
 import GlobalSideNav from '../components/Header/GlobalSideNav';
 import RemoResponsive from '../components/Header/RemoResponsive';
 import RemoHeroBanner from './RemoHeroBanner';
@@ -181,7 +181,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     this.checkUserAdmin();
     // setTimeout(() => {
     // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-    // $(".inner-pages-nav").hide();
+    // $(".inner-pages-nav").hide();s
     // $('#master_footer_parent').hide();
     // $('.ControlZone--control').attr('style', 'display: none !important');
 

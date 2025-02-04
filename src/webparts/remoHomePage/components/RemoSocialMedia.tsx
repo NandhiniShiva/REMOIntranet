@@ -26,7 +26,7 @@ export default class RemoSocialMedia extends React.Component<IRemoHomePageProps,
   public render(): React.ReactElement<IRemoHomePageProps> {
     return (
       <div className='col-md-12 socialmedia'>
-        <div className="col-md-6">
+        <div>
           <div className="social-medial-wrap">
             <ul className="clearfix">
               <li className="facebook active"><a href="#" onClick={() => this.OpenSocialMedia("fb")}> <img src={`${this.props.siteurl}/SiteAssets/img/s1.svg`} alt="image" /></a> </li>

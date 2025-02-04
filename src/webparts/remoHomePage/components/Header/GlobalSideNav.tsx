@@ -167,37 +167,39 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public componentDidMount() {
-    const { siteurl } = this.props;
+    debugger;
+    const { siteurl } = (this.props);
     const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
+    const URL = siteurl.toLowerCase();
+
     // const ActivePageUrl = (window.location.href.split('?')[0]);
 
 
     // Hide elements based on page URL
     if (
-      ActivePageUrl === `${siteurl}/sitepages/RemoIntranetHome.aspx` ||
-      ActivePageUrl === `${siteurl}/sitepages/HomePage.aspx#` ||
-      ActivePageUrl === `${siteurl}/` ||
-      ActivePageUrl === `${siteurl}#` ||
-      ActivePageUrl === `${siteurl}/`
+      ActivePageUrl === `${URL}/sitepages/remoproducthome.aspx` ||
+      ActivePageUrl === `${URL}/sitepages/HomePage.aspx#` ||
+      ActivePageUrl === `${URL}/` ||
+      ActivePageUrl === `${URL}#` ||
+      ActivePageUrl === `${URL}/`
     ) {
-
-      // document.querySelectorAll('#spLeftNav, #sp-appBar, #spSiteHeader, #SuiteNavWrapper').forEach(function (element: any) {
-      //   element.style.display = 'none';
-      // });
       setTimeout(() => {
-        // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-        $(".inner-pages-nav").hide();
-        // $('#master_footer_parent').hide();
-        // $('.ControlZone--control').attr('style', 'display: none !important');
-        document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
-          element.style.padding = '0px';
-          element.style.margin = '0px';
-        });
+        //   // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
+        // $(".inner-pages-nav").hide();
+        //   // $('#master_footer_parent').hide();
+        //   // $('.ControlZone--control').attr('style', 'display: none !important');
+        //   document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
+        //     element.style.padding = '0px';
+        //     element.style.margin = '0px';
+        //   });
 
-        const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
-        if (innerPagesNav) {
-          innerPagesNav.style.display = 'none';
+        const innerPagesNav = document.getElementsByClassName('inner-pages-nav');
+        if (innerPagesNav.length > 0) {
+          for (let i = 0; i < innerPagesNav.length; i++) {
+            (innerPagesNav[i] as HTMLElement).style.display = 'none';
+          }
         }
+
 
         const masterFooter = document.getElementById('master_footer_parent');
         if (masterFooter) {
@@ -1129,6 +1131,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
             </div>
           </div>
         </header>
+        {/* hide in home page should visible only in inner pages style added directly */}
         <div className="inner-pages-nav">
           <div className="container">
             <nav>
