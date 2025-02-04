@@ -3,6 +3,7 @@ import { IRemoHomePageProps } from './IRemoHomePageProps';
 import { IWeb, Web } from "@pnp/sp/webs";
 import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
 import ReactTooltip from "react-tooltip";
+// import * as $ from 'jquery';
 import * as moment from 'moment';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../Configuration';
@@ -74,7 +75,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     await this.GetMainNavItems();
     await this.EnableContentEditorForSuperAdmins();
     await this.GetMyLinks();
-    // await this.GetDeptData();
+    await this.GetDeptData();
 
 
     document.querySelectorAll('#meetingroom').forEach(element => {
@@ -367,94 +368,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  // Updated code 
-
-  // public GetDepartments() {
-  //   try {
-  //     // Adding classes and showing elements
-  //     document.querySelectorAll('.floating-content-editor-home').forEach((element) => {
-  //       element.classList.add('active');
-  //     });
-
-  //     document.querySelectorAll('.clears-subnav').forEach((element) => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-
-  //     document.querySelectorAll('.breadcrum-block').forEach((element) => {
-  //       element.classList.add('open');
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-
-  //     const mainNavigationElements = document.querySelectorAll('.main-mavigation');
-  //     mainNavigationElements.forEach(function (element: any) {
-
-  //       const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //         (sibling: any) => sibling !== element
-  //       );
-  //       // Remove the "submenu" class from each sibling
-  //       siblings.forEach(function (sibling: any) {
-  //         sibling.classList.remove('submenu');
-  //       });
-  //     });
-  //     mainNavigationElements.forEach((element) => {
-  //       element.classList.add('submenu');
-  //     });
-
-  //     // Replace event listeners for the meeting room
-  //     const meetingRoom = document.querySelector('#meetingroom');
-  //     if (meetingRoom) {
-  //       meetingRoom.replaceWith(meetingRoom.cloneNode(true));
-  //     }
-
-  //     // Fetching data from SharePoint
-  //     sp.web.lists
-  //       .getByTitle(DepartmentsMasterlist)
-  //       .items.select(
-  //         "Title",
-  //         "ID",
-  //         "URL",
-  //         "HasSubDepartment",
-  //         "OpenInNewTab",
-  //         "PlaceDepartmentUnder/Title",
-  //         "PlaceDepartmentUnder/Id"
-  //       )
-  //       .filter("IsActive eq '1'")
-  //       .orderBy("Order0", true)
-  //       .expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder")
-  //       .get()
-  //       .then((items) => {
-  //         this.setState({
-  //           DeptandQuickLinksItems: items
-  //         });
-
-  //         items.forEach((item) => {
-  //           const { Id, Title, URL, OpenInNewTab, HasSubDepartment } = item;
-  //           const Url = URL.Url;
-  //           this.appendData(Id, Title, OpenInNewTab, HasSubDepartment, Url);
-  //         });
-
-  //         document.querySelectorAll('.submenu-clear-wrap').forEach((element) => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-
-  //         document.querySelectorAll('.submenu-wrap-lists ul li').forEach((item) => {
-  //           item.addEventListener('click', function () {
-  //             this.parentElement.querySelectorAll('li').forEach((sibling: any) => {
-  //               sibling.classList.remove('active');
-  //             });
-
-  //             this.classList.add('active');
-  //           });
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching departments data: ", error);
-  //       });
-
-  //   } catch (error) {
-  //     console.error("Error initializing departments: ", error);
-  //   }
-  // }
   public async GetQuickLinks() {
     const { siteurl } = this.props;
     try {
@@ -566,7 +479,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     else {
       reactHandler.displayData.push(<li>
         <button onClick={(e) => this.addDataInDepartmentMasterlist(e)}>Add Data</button>
-
       </li>);
     }
 
@@ -791,58 +703,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     firstChild?.classList.add('active');
   }
 
-  public quicklinks() {
-    const removeActiveClass = (selector: string) => {
-      document.querySelectorAll(selector).forEach(element => {
-        element.classList.remove('active');
-      });
-    };
-
-    const setDisplay = (selector: string, display: string) => {
-      document.querySelectorAll(selector).forEach(element => {
-        (element as HTMLElement).style.display = display;
-      });
-    };
-
-    // Update classes and display styles
-    removeActiveClass('.tab-1-data');
-    setDisplay('#contacts', 'none');
-    removeActiveClass('.tab-2-data');
-    setDisplay('#meetingroom', 'block');
-    setDisplay('.breadcrum-block', 'none');
-
-    // Remove "submenu" class from main navigation elements
-    document.querySelectorAll('.main-mavigation').forEach(element => {
-      element.classList.remove('submenu');
-    });
-
-    // Function to remove "active" class from siblings
-    const removeActiveFromSiblings = (element: HTMLElement) => {
-      const siblings = Array.prototype.slice.call(element.parentElement?.children || []).filter(
-        (sibling: HTMLElement) => sibling !== element
-      );
-      siblings.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
-    };
-
-    // Apply the removeActiveFromSiblings function
-    const mainNavigationElements = document.querySelectorAll('#root-nav-links ul li');
-    mainNavigationElements.forEach(element => {
-      removeActiveFromSiblings(element as HTMLElement);
-    });
-
-    const submenuWrapListsElements = document.querySelectorAll('.submenu-wrap-lists ul li');
-    submenuWrapListsElements.forEach(element => {
-      removeActiveFromSiblings(element as HTMLElement);
-    });
-
-    // Add "active" class to the first child of the specified list if needed
-    const firstChild = document.querySelector('#root-nav-links ul li:first-child');
-    if (firstChild) {
-      firstChild.classList.add('active');
-    }
-  }
-
-  public addData(event:any) {
+  public addData(event: any) {
     event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Navigationslist}`;
@@ -850,7 +711,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   }
 
   public async checkDeptData(event: any) {
-    debugger;
     event.preventDefault();
     var DepartmentItems: any[] = [];
     var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
@@ -869,41 +729,41 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     // }
   }
 
-  public GetDeptData() {
-    setInterval(async () => {
-      var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
-      // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
-      if (response.length != 0) {
-        response.forEach(async (item) => {
-          const newDeptTitle = item.Shortfield; // Replace with actual logic to get this title
-          // Check if the subsite exists before creating it
-          const subsiteExists = await this.checkSubsiteExists(newDeptTitle);
-          if (!subsiteExists) {
-            // Create a subsite if it doesn't exist
-            await this.createSubsite(newDeptTitle);
-            this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
-          } else {
-            console.log("Subsite already exists. No need to create.");
-          }
-        })
-        // for (let i = 0; i < DepartmentListDetails.length; i++) {
-        //   const listName = DepartmentListDetails[i].name; // Access the list name
-        //   const columns = DepartmentListDetails[i].columns; // Access the columns for the list
-        //   // Ensure the list exists or create it
-        //   const listEnsureResult = await sp.web.lists.ensure(listName);
-        //   if (listEnsureResult.created) {
-        //     console.log(`List '${listName}' created successfully.`);
-        //     await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
-        //   } else {
-        //     console.log(`List '${listName}' already exists.`);
-        //     await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
-        //   }
-        // }
+  public async GetDeptData() {
+    // setInterval(async () => {
+    var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id", "Shortfield").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
+    // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
+    if (response.length != 0) {
+      response.forEach(async (item) => {
+        const newDeptTitle = item.Shortfield; // Replace with actual logic to get this title
+        // Check if the subsite exists before creating it
+        const subsiteExists = await this.checkSubsiteExists(newDeptTitle);
+        if (!subsiteExists) {
+          // Create a subsite if it doesn't exist
+          await this.createSubsite(newDeptTitle);
+          this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
+        } else {
+          console.log("Subsite already exists. No need to create.");
+        }
+      })
+      // for (let i = 0; i < DepartmentListDetails.length; i++) {
+      //   const listName = DepartmentListDetails[i].name; // Access the list name
+      //   const columns = DepartmentListDetails[i].columns; // Access the columns for the list
+      //   // Ensure the list exists or create it
+      //   const listEnsureResult = await sp.web.lists.ensure(listName);
+      //   if (listEnsureResult.created) {
+      //     console.log(`List '${listName}' created successfully.`);
+      //     await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
+      //   } else {
+      //     console.log(`List '${listName}' already exists.`);
+      //     await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
+      //   }
+      // }
 
 
-        // await this.Createalldepartmentlist(DepartmentItems)
-      }
-    }, 500)
+      // await this.Createalldepartmentlist(DepartmentItems)
+    }
+    // }, 500)
   }
   public async createListInSubsite(subsiteUrl: any) {
     try {
@@ -1042,17 +902,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  public async addDeptData(event: any) {
-    event.preventDefault();
-    // Open the department list for adding a department
-    const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
-    window.open(listUrl, "_blank");
-
-    // Assuming you have a way to get the new department's title after it's added
-    // For demonstration, let's assume you have the department title (e.g. newDeptTitle)
-
-  }
-
   private async checkSubsiteExists(departmentName: string): Promise<boolean> {
     try {
       const subsites = await sp.web.webs();
@@ -1083,7 +932,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
 
   public Createalldepartmentlist(Navigationitems: any[]) {
-    debugger;
     Navigationitems.forEach((item) => {
       let AboutList = listNames.AboutDepartment;
       let LogoList = listNames.Logo;
@@ -1100,25 +948,29 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     })
 
   }
-  public addDataInLink(event:any) {
+  public addDataInLink(event: any) {
     event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${QuickLinkslist}`;
 
     window.open(listUrl, "_blank");
   }
-  public addDataInDepartmentMasterlist(event:any) {
+  public addDataInDepartmentMasterlist(event: any) {
     event.preventDefault();
     // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
     window.open(listUrl, "_blank");
   }
-
+  public async addDeptData(event: any) {
+    event.preventDefault();
+    // Open the department list for adding a department
+    const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
+    window.open(listUrl, "_blank");
+  }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
 
     const MainNavigations: JSX.Element[] = handler.state.MainNavItems.map(function (item) {
-      debugger;
       let RawImageTxtOn = item.HoverOnIcon;
       let RawImageTxtOff = item.HoverOffIcon;
       if (RawImageTxtOn != null || RawImageTxtOn != undefined && RawImageTxtOff != null || RawImageTxtOff != undefined) {
@@ -1187,7 +1039,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
             }
             else if (item.Title == "Department") {
               return (
-                <li id={DomID2}> <a href={`${item.URL}`} target="_blank" data-interception="off" onClick={(e) => { handler.checkDeptData(e) }}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
+                <li id={DomID2}> <a href={`${item.URL}`} target="_blank" data-interception="off" onClick={() => handler.GetDepartments()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a> </li>
               );
             } else {
               return (
@@ -1322,24 +1174,29 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                 {handler.state.isDataAvailableNav == true ?
                   <div className="main-mavigation m-b-20">
                     <nav className="sec" id="root-nav-links">
-                      {handler.state.IsDeptDataAvailable && handler.state.IsDeptClicked && (
-                        <div className="breadcrum-block">
-                          <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
-                            All Menu
+                      {/* {handler.state.IsDeptDataAvailable && handler.state.IsDeptClicked && ( */}
+                      <div className="breadcrum-block">
+                        <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
+                          All Menu
+                          <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
+                        </a>
+                        {/* <div > */}
+                          <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                        {/* </div> */}
+                        {BreadCrumb.map((item, key) => (
+                          <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
+                            {item.Title}
                             <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
                           </a>
-                          {BreadCrumb.map((item, key) => (
-                            <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
-                              {item.Title}
-                              <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                      {/* {handler.state.IsDeptDataAvailable === false && handler.state.IsDeptClicked === true && ( */}
-                      <div>
-                        <button onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                        ))}
+                        
                       </div>
+                      {/* // )} */}
+                      {/* {handler.state.IsDeptClicked === true && ( */}
+                      {/* <div className='department_btn'>
+                        <button onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                      </div> */}
+                      {/* )} */}
                       {/* )} */}
 
                       <ul className="clearfix">
@@ -1348,7 +1205,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                     </nav>
                   </div>
                   :
-                  <div>
+                  <div className='navigation_btn'>
                     <button onClick={(e) => this.addData(e)}>Add DataNavigation</button>
                   </div>
                 }
@@ -1365,7 +1222,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                   </div>
                 </div>
                 :
-                <div>
+                <div className='quicklink_btn'>
                   <button onClick={(e) => this.addDataInLink(e)}>Add DataInQuickLink</button>
                 </div>
               }

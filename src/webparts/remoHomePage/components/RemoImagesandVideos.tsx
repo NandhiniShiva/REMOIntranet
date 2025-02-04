@@ -103,7 +103,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
     var reactHandler = this;
-
+    FolderNamesExits = [];
     var viewall = `${this.props.siteurl}/SitePages/Gallery-View-More.aspx?`;
 
     var reactHandler = this;
