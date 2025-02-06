@@ -304,7 +304,7 @@ export const ListLibraryColumnDetails = [
             { columnName: "Is Active", type: "addBoolean" },
             { columnName: "URL", type: "addMultilineText" },
             {
-                columnName: "LinkMasterID", type: "addLookup", targetListName: "Quick Links",
+                columnName: "LinkMasterID", type: "addLookup", targetListName: "NavigationsIDMaster",
                 targetListColumn: "Title",
             }
 

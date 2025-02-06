@@ -456,7 +456,9 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         if (HasSubDept == true) {
           reactHandler.displayData.push(<li>
             <a href={Url} target="_blank" data-interception="off" role="button"> <span>{Title}</span></a>
-            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
+            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img>
+            </a>
           </li>);
         } else {
           reactHandler.displayData.push(<li>
@@ -1181,7 +1183,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                           <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
                         </a>
                         {/* <div > */}
-                          <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                        <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
                         {/* </div> */}
                         {BreadCrumb.map((item, key) => (
                           <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
@@ -1189,7 +1191,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                             <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
                           </a>
                         ))}
-                        
+
                       </div>
                       {/* // )} */}
                       {/* {handler.state.IsDeptClicked === true && ( */}

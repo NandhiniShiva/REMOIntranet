@@ -13,6 +13,7 @@ import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let Newslist = listNames.News;
+let Location : any= '';
 
 export interface INewsState {
   Items: any[];
@@ -25,6 +26,10 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   spfxContext: ISPFXContext;
   constructor(props: IRemoHomePageProps, state: INewsState) {
     super(props);
+    debugger;
+    Location = this.props.description;
+    console.log(this.props.description);
+    
     sp.setup({
       spfxContext: this.spfxContext
     });
@@ -41,8 +46,21 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
     const listCreation = new ListCreation();
     listCreation.createSharePointLists(Newslist);
     var reactHandler = this;
+    reactHandler.CheckLocation();
     reactHandler.GetNews();
 
+  }
+
+  public CheckLocation(){
+    if(Location === 1 || 5 || 10){
+      this.setState({ItemCount: 3})
+    }else if(Location === 2 || 11 || 12 || 6 || 7 ){
+      this.setState({ItemCount: 1})
+    }else if(Location === 3 ){
+      this.setState({ItemCount: 4})
+    }else{
+      this.setState({ItemCount: 2})
+    }
   }
   // private async GetNews() {
   //   var reactHandler = this;

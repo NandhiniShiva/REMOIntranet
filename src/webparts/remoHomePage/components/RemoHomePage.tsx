@@ -1310,6 +1310,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position];
+    // const locationID = `Location-${position}`
 
     // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
@@ -1345,7 +1346,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         });
 
       case "News":
-        return renderWithRemoveButton(RemoNews, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+        return renderWithRemoveButton(RemoNews, { description: position, createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
 
       case "Climate":
         return renderWithRemoveButton(RemoClimate, { description: "" });
@@ -1492,28 +1493,29 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   currentWebUrl=""
                   CurrentPageserverRequestPath=""
                 />
-                <>
-                  <li id='layout_button'>
-                    <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
-                      <option value="">Select Layout</option>
-                      {this.state.layoutItems.map((item) => (
-                        <option key={item.ID} value={item.ID}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </li>
-
-                  {this.state.editMode != "edit" &&
-                    // <div>
-                    <li id='edit_button'>
-                      <button onClick={(e) => this.editHandler(e)}>
-                        <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
-                        <span> Edit </span></button>
-                      {/* </div> */}
+                <div className='header_part'>
+                  <ul className='header_btn'>
+                    <li id='layout_button'>
+                      <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                        <option value="">Select Layout</option>
+                        {this.state.layoutItems.map((item) => (
+                          <option key={item.ID} value={item.ID}>
+                            {item.name}
+                          </option>
+                        ))}
+                      </select>
                     </li>
-                  }
-                </>
+                    {this.state.editMode != "edit" &&
+                      // <div>
+                      <li id='edit_button'>
+                        <button onClick={(e) => this.editHandler(e)}>
+                          <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                          <span> Edit </span></button>
+                        {/* </div> */}
+                      </li>
+                    }
+                  </ul>
+                </div>
               </div>
               <section>
 
