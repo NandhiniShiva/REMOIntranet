@@ -52,15 +52,17 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   }
 
   public CheckLocation(){
-    if(Location === 1 || 5 || 10){
-      this.setState({ItemCount: 3})
-    }else if(Location === 2 || 11 || 12 || 6 || 7 ){
-      this.setState({ItemCount: 1})
-    }else if(Location === 3 ){
-      this.setState({ItemCount: 4})
-    }else{
-      this.setState({ItemCount: 2})
+    debugger;
+    if (Location === 1 || Location === 5 || Location === 10) {
+      this.setState({ ItemCount: 3 });
+    } else if (Location === 2 || Location === 11 || Location === 12 || Location === 6 || Location === 7) {
+      this.setState({ ItemCount: 1 });
+    } else if (Location === 3) {
+      this.setState({ ItemCount: 4 });
+    } else {
+      this.setState({ ItemCount: 2 });
     }
+    
   }
   // private async GetNews() {
   //   var reactHandler = this;

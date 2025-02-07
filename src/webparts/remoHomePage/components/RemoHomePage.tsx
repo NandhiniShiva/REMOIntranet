@@ -221,6 +221,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async checkUserAdmin() {
+    debugger;
     try {
       // Fetch all site users
       // const profile = await pnp.sp.profiles.myProperties.get();
@@ -1316,8 +1317,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
         <>
-          <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-            <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /></button>
+          {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
+            <>
+              <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
+                <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" />
+              </button>
+            </>
+          }
           <Component {...this.props} {...props} />
         </>
       );
@@ -1432,54 +1438,63 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public editHandler(event: any) {
     event.preventDefault();
-    // alert("Edit Handler")
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
     window.location.href = url;
-    // this.setState({
-    //   editMode: true,
-    //   isEditFalse: false
-    // })
-
+  }
+  public draftHandler(event: any) {
+    event.preventDefault();
+    const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
+    window.location.href = url;
+  }
+  public publishHandler(event: any) {
+    event.preventDefault();
+    const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
+    window.location.href = url;
   }
 
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
-    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => (
-      <>
-        {/* Button to toggle component visibility */}
-        <button id={ButtonId} onClick={(e) => handler.showcomponents(e, SelectID)} >
-          <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt="AddComponent" />
-        </button>
+    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
+      if (!handler.state.isCurrentUserAdmin && handler.state.editMode !== "edit") {
+        return null;
+      }
+      return (
+        <>
+          {/* Button to toggle component visibility */}
+          <button id={ButtonId} onClick={(e) => handler.showcomponents(e, SelectID)} >
+            <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt="AddComponent" />
+          </button>
 
-        {/* Hidden component div, toggled dynamically */}
-        <div id={SelectID} style={{ display: "none" }}>
-          <div className={`component-search ${DOMID}`}>
-            <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
-              onChange={() => handler.handleInputChange(DOMID, SelectID)} />
-            <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
-              <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
-            </button>
-            <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
-              <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
-            </button>
+          {/* Hidden component div, toggled dynamically */}
+          <div id={SelectID} style={{ display: "none" }}>
+            <div className={`component-search ${DOMID}`}>
+              <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
+                onChange={() => handler.handleInputChange(DOMID, SelectID)} />
+              <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
+                <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
+              </button>
+              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
+                <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
+              </button>
+            </div>
+
+            {/* List of available components */}
+            <ul>
+              {handler.state.AvailableComponents.map((component: any) => (
+                <li
+                  key={component.Title} // Ensure unique key for each list item
+                  className="li-search-wrap"
+                  onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex)}
+                >
+                  <p className="people_name">{component.Title}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-
-          {/* List of available components */}
-          <ul>
-            {handler.state.AvailableComponents.map((component: any) => (
-              <li
-                key={component.Title} // Ensure unique key for each list item
-                className="li-search-wrap"
-                onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex)}
-              >
-                <p className="people_name">{component.Title}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </>
-    );
+        </>
+      )
+    };
     return (
       //Layout 1
       <>
@@ -1495,24 +1510,35 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 />
                 <div className='header_part'>
                   <ul className='header_btn'>
-                    <li id='layout_button'>
-                      <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
-                        <option value="">Select Layout</option>
-                        {this.state.layoutItems.map((item) => (
-                          <option key={item.ID} value={item.ID}>
-                            {item.name}
-                          </option>
-                        ))}
-                      </select>
-                    </li>
-                    {this.state.editMode != "edit" &&
-                      // <div>
+                    {this.state.isCurrentUserAdmin == true &&
+                      <li id='layout_button'>
+                        <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
+                          <option value="">Select Layout</option>
+                          {this.state.layoutItems.map((item) => (
+                            <option key={item.ID} value={item.ID}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                    }
+                    {this.state.editMode != "edit" ?
                       <li id='edit_button'>
                         <button onClick={(e) => this.editHandler(e)}>
                           <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
                           <span> Edit </span></button>
-                        {/* </div> */}
                       </li>
+                      :
+                      <><li id='draft_button'>
+                        <button onClick={(e) => this.draftHandler(e)}>
+                          <img className='draftimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                          <span> Draft </span></button>
+                      </li>
+                        <li id='publish_button'>
+                          <button onClick={(e) => this.publishHandler(e)}>
+                            <img className='publishimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                            <span> Publish </span></button>
+                        </li></>
                     }
                   </ul>
                 </div>

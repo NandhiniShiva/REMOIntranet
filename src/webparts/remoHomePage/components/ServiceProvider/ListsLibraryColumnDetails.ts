@@ -91,6 +91,17 @@ export const ListLibraryColumnDetails = [
             // { columnName: "Report_x0020_Description", type: "addTextField" },
         ]
     },
+    {
+        name: "DraftMaster",
+        columns: [
+            { columnName: "Title", type: "addTextField" },
+            { columnName: "Component", type: "addTextField" },
+            { columnName: "ComponentID", type: "addTextField" },
+            { columnName: "Position", type: "addTextField" },
+            // { columnName: "Target_x0020_Audiences", type: "addTextField" },
+            // { columnName: "Report_x0020_Description", type: "addTextField" },
+        ]
+    },
     // {
     //     name: "Content and Structure Reports",
     //     columns: [
