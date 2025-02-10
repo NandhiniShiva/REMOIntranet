@@ -456,7 +456,9 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         if (HasSubDept == true) {
           reactHandler.displayData.push(<li>
             <a href={Url} target="_blank" data-interception="off" role="button"> <span>{Title}</span></a>
-            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
+            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
+              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img>
+            </a>
           </li>);
         } else {
           reactHandler.displayData.push(<li>
@@ -1103,53 +1105,53 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       }
     })
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
-    const MyLinks: JSX.Element[] = handler.state.MyLinks.map(function (item) {
-      let RawImageTxtOn = item.ImageHover;
-      let RawImageTxtOff = item.Image;
-      if (RawImageTxtOn != null || RawImageTxtOn != undefined && RawImageTxtOff != null || RawImageTxtOff != undefined) {
-        var ImgObjforON = JSON.parse(RawImageTxtOn);
-        if (ImgObjforON.serverRelativeUrl == undefined) {
+    // const MyLinks: JSX.Element[] = handler.state.MyLinks.map(function (item) {
+    //   let RawImageTxtOn = item.ImageHover;
+    //   let RawImageTxtOff = item.Image;
+    //   if (RawImageTxtOn != null || RawImageTxtOn != undefined && RawImageTxtOff != null || RawImageTxtOff != undefined) {
+    //     var ImgObjforON = JSON.parse(RawImageTxtOn);
+    //     if (ImgObjforON.serverRelativeUrl == undefined) {
 
-          var serverRelativeUrl = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforON.fileName
+    //       var serverRelativeUrl = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforON.fileName
 
-        } else {
+    //     } else {
 
-          serverRelativeUrl = ImgObjforON.serverRelativeUrl
+    //       serverRelativeUrl = ImgObjforON.serverRelativeUrl
 
-        }
-        var ImgObjforOFF = JSON.parse(RawImageTxtOff);
+    //     }
+    //     var ImgObjforOFF = JSON.parse(RawImageTxtOff);
 
-        if (ImgObjforOFF.serverRelativeUrl == undefined) {
+    //     if (ImgObjforOFF.serverRelativeUrl == undefined) {
 
-          var serverRelativeUrl2 = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforOFF.fileName
+    //       var serverRelativeUrl2 = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforOFF.fileName
 
-        } else {
+    //     } else {
 
-          serverRelativeUrl2 = ImgObjforOFF.serverRelativeUrl
+    //       serverRelativeUrl2 = ImgObjforOFF.serverRelativeUrl
 
-        }
+    //     }
 
-        var str2 = item.Title;
-        var ContentEditorURL = item.URL.Url;
-        var conturl = ContentEditorURL.toLowerCase();
-        conturl = conturl.split("?");
-        var DomID2 = str2.replace(/[_\W]+/g, "_");
-        if (item.OpenInNewTab == true) {
-          return (
-            <li
-              id={DomID2}>
-              <a href={`${item.URL.Url}`} target="_blank" data-interception="off">
-                <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" />
-                <img src={`${serverRelativeUrl}`} alt="img" className="hhover" />
-                <p>{item.Title}</p>
-              </a>
-            </li>
-          );
+    //     var str2 = item.Title;
+    //     var ContentEditorURL = item.URL.Url;
+    //     var conturl = ContentEditorURL.toLowerCase();
+    //     conturl = conturl.split("?");
+    //     var DomID2 = str2.replace(/[_\W]+/g, "_");
+    //     if (item.OpenInNewTab == true) {
+    //       return (
+    //         <li
+    //           id={DomID2}>
+    //           <a href={`${item.URL.Url}`} target="_blank" data-interception="off">
+    //             <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" />
+    //             <img src={`${serverRelativeUrl}`} alt="img" className="hhover" />
+    //             <p>{item.Title}</p>
+    //           </a>
+    //         </li>
+    //       );
 
-        }
-      }
-    })
-      .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
+    //     }
+    //   }
+    // })
+    //   .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
 
     return (
       <div className="col-md-12 navigation">
@@ -1210,7 +1212,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                   </div>
                 }
               </div>
-              {this.state.isDataAvailableLink == true ?
+              {/* {this.state.isDataAvailableLink == true ?
                 <div className="nav-item tab-2-data" id="meetingroom">
                   <div className="main-mavigation quick m-b-20">
                     <nav className="sec" id="root-nav-links">
@@ -1225,7 +1227,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                 <div className='quicklink_btn'>
                   <button onClick={(e) => this.addDataInLink(e)}>Add DataInQuickLink</button>
                 </div>
-              }
+              } */}
             </div>
           </>
         </div>
