@@ -83,12 +83,20 @@ export class ListCreation {
                             });
                             break;
                         case "addImageField":
-                            await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
-                            console.log(`Column '${column.columnName}' added as Image Field.`);
-                            await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                                Required: column.isRequired,
-                                Indexed: column.isIndexed
+                            // await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
+                            // console.log(`Column '${column.columnName}' added as Image Field.`);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
 
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
+                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                                    Required: column.isRequired,
+                                    Indexed: column.isIndexed
+
+                                });
                             });
                             break;
 
@@ -107,16 +115,32 @@ export class ListCreation {
                                 });
                             });
                             console.log(`Column '${column.columnName}' added as Boolean.`);
+
+                            await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
+                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                                    Required: column.isRequired,
+                                    Indexed: column.isIndexed
+
+                                });
+                            });
                             break;
 
 
 
                         case "addNumberField":
-                            await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-                            await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                                Required: column.isRequired,
-                                Indexed: column.isIndexed
+                            // await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
 
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName).then(async () => {
+                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                                    Required: column.isRequired,
+                                    Indexed: column.isIndexed
+
+                                });
                             });
                             console.log(`Column '${column.columnName}' added as Number Field.`);
                             break;
@@ -132,37 +156,69 @@ export class ListCreation {
 
                             // });
 
-                            await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName).then(async () => {
+                            // await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName).then(async () => {
+                            //     await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                            //         Required: column.isRequired,
+                            //         Indexed: column.isIndexed
+
+                            //     });
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
                                     Required: column.isRequired,
                                     Indexed: column.isIndexed
 
                                 });
                             });
+
                             console.log(`Column '${column.columnName}' added as Date Field.`);
                             break;
 
                         case "addMultilineText":
-                            await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-                            await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                                Required: column.isRequired,
-                                Indexed: column.isIndexed
+                            // await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
 
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName).then(async () => {
+                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                                    Required: column.isRequired,
+                                    Indexed: column.isIndexed
+
+                                });
                             });
                             console.log(`Column '${column.columnName}' added as Multiline Field.`);
                             break;
 
                         case "Person or Group":
-                            await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-                            await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                                Required: column.isRequired,
-                                Indexed: column.isIndexed
+                            // await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
 
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly).then(async () => {
+                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                                    Required: column.isRequired,
+                                    Indexed: column.isIndexed
+
+                                });
                             });
                             console.log(`Column '${column.columnName}' added as Person or Group Field.`);
                             break;
 
                         case "addMultiChoice":
+                            await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
+
+                            // });
+
                             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
                                 Required: column.isRequired,
@@ -190,16 +246,29 @@ export class ListCreation {
                             break;
 
                         case "addUrl":
-                            await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink)
+                            // await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink)
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
+                            // });
+                            await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
                                 Required: column.isRequired,
                                 Indexed: column.isIndexed
+
                             });
                             console.log(`Column '${column.columnName}' added as URL Field.`);
                             break;
 
                         case "Icon":
-                            await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+                            // await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired,
+                            //     Indexed: column.isIndexed
+
+                            // });
+
+                            await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
                                 Required: column.isRequired,
                                 Indexed: column.isIndexed
@@ -209,13 +278,23 @@ export class ListCreation {
                             break;
 
                         case "addChoice":
+                            // await sp.web.lists.getByTitle(name).fields.addChoice(
+                            //     column.columnName,
+                            //     column.choices,
+                            //     ChoiceFieldFormatType.Dropdown
+                            // );
+                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
+                            //     Required: column.isRequired
+                            // });
                             await sp.web.lists.getByTitle(name).fields.addChoice(
                                 column.columnName,
                                 column.choices,
                                 ChoiceFieldFormatType.Dropdown
                             );
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                                Required: column.isRequired
+                                Required: column.isRequired,
+                                Indexed: column.isIndexed
+
                             });
                             console.log(`Column '${column.columnName}' added as Choice Field.`);
                             break;

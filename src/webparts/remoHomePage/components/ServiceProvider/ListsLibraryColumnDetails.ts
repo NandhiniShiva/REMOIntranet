@@ -6,13 +6,13 @@ export const ListLibraryColumnDetails = [
     {
         name: "Announcement",
         columns: [
-            { columnName: "Description", type: "addMultilineText", isRequired: true, isIndexed: true },
-            { columnName: "Image", type: "addImageField", update: "false", isRequired: true, isIndexed: true },
-            { columnName: "RMimage", type: "addImageField", isRequired: false, isIndexed: true },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
-            { columnName: "EnableLikes", type: "addBoolean", isRequired: false, isIndexed: true },
-            { columnName: "EnableComments", type: "addBoolean", isRequired: false, isIndexed: true },
-            { columnName: "ShareAsEmail", type: "addBoolean", isRequired: false, isIndexed: true },
+            { columnName: "Description", type: "addMultilineText", isRequired: true, isIndexed: false },
+            { columnName: "Image", type: "addImageField", update: "false", isRequired: false, isIndexed: false },
+            { columnName: "RMimage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "EnableLikes", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "EnableComments", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "ShareAsEmail", type: "addBoolean", isRequired: false, isIndexed: false },
         ]
     },
 
@@ -38,12 +38,12 @@ export const ListLibraryColumnDetails = [
     {
         name: "CEO Message",
         columns: [
-            { columnName: "CEOName", type: "addTextField", isRequired: true },
-            { columnName: "Description", type: "addMultilineText", isRequired: true },
-            { columnName: "Designation", type: "addTextField", isRequired: true },
-            { columnName: "Image", type: "addImageField", isRequired: false },
-            { columnName: "RMimage", type: "addImageField", isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
+            { columnName: "CEOName", type: "addTextField", isRequired: true, isIndexed: false },
+            { columnName: "Description", type: "addMultilineText", isRequired: true, isIndexed: false },
+            { columnName: "Designation", type: "addTextField", isRequired: true, isIndexed: false },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "RMimage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
 
         ]
     },
@@ -69,27 +69,27 @@ export const ListLibraryColumnDetails = [
         name: "ContactDirectoryMaster",
         columns: [
 
-            { columnName: "jobTitle", type: "addTextField", isRequired: false },
-            { columnName: "givenName", type: "addTextField", isRequired: false },
-            { columnName: "surname", type: "addTextField", isRequired: false },
-            { columnName: "employeeId", type: "addTextField", isRequired: false },
-            { columnName: "country", type: "addTextField", isRequired: false },
-            { columnName: "businessPhones", type: "addTextField", isRequired: false },
-            { columnName: "city", type: "addTextField", isRequired: false },
-            { columnName: "mobilePhone", type: "addTextField", isRequired: false },
-            { columnName: "mail", type: "addTextField", isRequired: false },
-            { columnName: "ProfileImage", type: "addImageField", isRequired: false },
-            { columnName: "department", type: "addTextField", isRequired: false },
-            { columnName: "ProfilePictureURL", type: "addMultilineText", isRequired: false },
+            { columnName: "jobTitle", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "givenName", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "surname", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "employeeId", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "country", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "businessPhones", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "city", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "mobilePhone", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "mail", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ProfileImage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "department", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ProfilePictureURL", type: "addMultilineText", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "LayoutComponentsAllocationMaster",
         columns: [
-            { columnName: "Title", type: "addTextField", isRequired: false },
-            { columnName: "Component", type: "addTextField", isRequired: false },
-            { columnName: "ComponentID", type: "addTextField", isRequired: false },
-            { columnName: "Position", type: "addTextField", isRequired: false },
+            { columnName: "Title", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
             // { columnName: "Target_x0020_Audiences", type: "addTextField" },
             // { columnName: "Report_x0020_Description", type: "addTextField" },
         ]
@@ -97,10 +97,10 @@ export const ListLibraryColumnDetails = [
     {
         name: "DraftMaster",
         columns: [
-            { columnName: "Title", type: "addTextField" },
-            { columnName: "Component", type: "addTextField" },
-            { columnName: "ComponentID", type: "addTextField" },
-            { columnName: "Position", type: "addTextField" },
+            { columnName: "Title", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
             // { columnName: "Target_x0020_Audiences", type: "addTextField" },
             // { columnName: "Report_x0020_Description", type: "addTextField" },
         ]
@@ -123,13 +123,14 @@ export const ListLibraryColumnDetails = [
     {
         name: "Content Editor Master",
         columns: [
-            { columnName: "URL", type: "addUrl", isRequired: false },
-            { columnName: "Icon", type: "addImageField", isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false },
+            { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "Icon", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
             {
                 columnName: "BelongsTo", type: "addLookup", targetListName: "Content Editor Master Category",
                 targetListColumn: "Title", isRequired: false
+                , isIndexed: false
             },
 
         ]
@@ -151,22 +152,22 @@ export const ListLibraryColumnDetails = [
     {
         name: "DefinitionsMaster",
         columns: [
-            { columnName: "Description", type: "addMultilineText", isRequired: false },
-            { columnName: "Department", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"], isRequired: false },
-            { columnName: "Division", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"], isRequired: false },
+            { columnName: "Description", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "Department", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"], isRequired: false, isIndexed: false },
+            { columnName: "Division", type: "addChoice", choices: ["Choice 1", "Choice 2", "Choice 3"], isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "DepartmentsMaster",
         columns: [
-            { columnName: "URL", type: "addUrl" },
-            { columnName: "Place Department Under", type: "addMultilineText", isRequired: false },
-            { columnName: "Has Sub Department", type: "addBoolean", isRequired: false },
-            { columnName: " Place Department Under", type: "addMultilineText", isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false },
-            { columnName: "Order", type: "addNumberField", isRequired: false },
-            { columnName: "Shortfield", type: "addTextField", isRequired: false },
+            { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "Place Department Under", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "Has Sub Department", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: " Place Department Under", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
+            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Order", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "Shortfield", type: "addTextField", isRequired: false, isIndexed: false },
         ]
     },
     {
@@ -236,11 +237,11 @@ export const ListLibraryColumnDetails = [
     {
         name: "Events",
         columns: [
-            { columnName: "Image", type: "addImageField", isRequired: false },
-            { columnName: "EndDate", type: "addDateField", isRequired: false },
-            { columnName: "Description", type: "addMultilineText", isRequired: false },
-            { columnName: "EventDate", type: "addDateField", isRequired: false },
-            { columnName: "Location", type: "addTextField", isRequired: false },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "EndDate", type: "addDateField", isRequired: false, isIndexed: true },
+            { columnName: "Description", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "EventDate", type: "addDateField", isRequired: false, isIndexed: true },
+            { columnName: "Location", type: "addTextField", isRequired: false, isIndexed: false },
 
         ]
     },
@@ -248,59 +249,59 @@ export const ListLibraryColumnDetails = [
     {
         name: "Hero Banner",
         columns: [
-            { columnName: "Description", type: "addMultilineText", isRequired: true },
-            { columnName: "ExpiresOn", type: "addDateField", isRequired: true },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "Image", type: "addImageField", isRequired: false },
-            { columnName: "RMimage", type: "addImageField", isRequired: false },
-            { columnName: "EnableLikes", type: "addBoolean", isRequired: false },
-            { columnName: "EnableComments", type: "addBoolean", isRequired: false },
-            { columnName: "ShareAsEmail", type: "addBoolean", isRequired: false },
-            { columnName: "RecipientEmail", type: "Person or Group", isRequired: false },
-            { columnName: "new", type: "addTextField", isRequired: false },
+            { columnName: "Description", type: "addMultilineText", isRequired: true, isIndexed: false },
+            { columnName: "ExpiresOn", type: "addDateField", isRequired: true, isIndexed: true },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "RMimage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "EnableLikes", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "EnableComments", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "ShareAsEmail", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "RecipientEmail", type: "Person or Group", isRequired: false, isIndexed: false },
+            { columnName: "new", type: "addTextField", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "JobsMaster",
         columns: [
-            { columnName: "JobSummary", type: "addMultilineText", isRequired: false },
-            { columnName: "Status", type: "Choice", isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "Image", type: "addImageField", isRequired: false },
-            { columnName: "DateOfSubmission", type: "addDateField", isRequired: false },
-            { columnName: "EmploymentType", type: "addTextField", isRequired: false },
-            { columnName: "ExperienceLevel", type: "addTextField", isRequired: false },
-            { columnName: "EmailID", type: "addTextField", isRequired: false },
+            { columnName: "JobSummary", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "Status", type: "Choice", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "DateOfSubmission", type: "addDateField", isRequired: false, isIndexed: false },
+            { columnName: "EmploymentType", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ExperienceLevel", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "EmailID", type: "addTextField", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "Job Application Master",
         columns: [
-            { columnName: "JobSummary", type: "addMultilineText", isRequired: false },
-            // { columnName: "Status", type: "Choice" , isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "Image", type: "addImageField", isRequired: false },
-            { columnName: "DateOfSubmission", type: "addDateField", isRequired: false },
-            { columnName: "EmploymentType", type: "addTextField", isRequired: false },
-            { columnName: "ExperienceLevel", type: "addTextField", isRequired: false },
-            { columnName: "EmailID", type: "addTextField", isRequired: false },
+            { columnName: "JobSummary", type: "addMultilineText", isRequired: false, isIndexed: false },
+            // { columnName: "Status", type: "Choice" , isRequired: false  ,isIndexed: false},
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "DateOfSubmission", type: "addDateField", isRequired: false, isIndexed: false },
+            { columnName: "EmploymentType", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ExperienceLevel", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "EmailID", type: "addTextField", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "LikesCountMaster",
         columns: [
-            { columnName: "EmployeeName", type: "Person or Group", isRequired: false },
-            { columnName: "LikedOn", type: "addDateField", isRequired: false },
-            { columnName: "EmployeeEmail", type: "addTextField", isRequired: false },
-            { columnName: "ContentPage", type: "addTextField", isRequired: false },
-            { columnName: "ContentID", type: "addNumberField", isRequired: false },
+            { columnName: "EmployeeName", type: "Person or Group", isRequired: false, isIndexed: false },
+            { columnName: "LikedOn", type: "addDateField", isRequired: false, isIndexed: false },
+            { columnName: "EmployeeEmail", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentPage", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentID", type: "addNumberField", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "Logo Master",
         columns: [
-            { columnName: "Logo", type: "addImageField", isRequired: false },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
+            { columnName: "Logo", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
         ]
     },
     {
@@ -312,15 +313,15 @@ export const ListLibraryColumnDetails = [
     {
         name: "Navigations",
         columns: [
-            { columnName: "HoverOnIcon", type: "addImageField", isRequired: true },
-            { columnName: "HoverOffIcon", type: "addImageField", isRequired: true },
-            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false },
-            { columnName: "Order0", type: "addNumberField", isRequired: false },
-            { columnName: "Is Active", type: "addBoolean", isRequired: false },
-            { columnName: "URL", type: "addMultilineText", isRequired: true },
+            { columnName: "HoverOnIcon", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "HoverOffIcon", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "Is Active", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "URL", type: "addMultilineText", isRequired: true, isIndexed: false },
             {
                 columnName: "LinkMasterID", type: "addLookup", targetListName: "Quick Links",
-                targetListColumn: "Title",
+                targetListColumn: "Title", isRequired: true, isIndexed: false
             }
 
         ]
@@ -329,24 +330,24 @@ export const ListLibraryColumnDetails = [
     {
         name: "NotificationTransactionMaster",
         columns: [
-            { columnName: "AssignedTo", type: "Person or Group", isRequired: false },
-            { columnName: "IsSeen", type: "addBoolean", isRequired: false },
-            { columnName: "ItemId", type: "addTextField", isRequired: false },
-            { columnName: "Catagory", type: "addTextField", isRequired: false },
-            { columnName: "TitleEnglish", type: "addTextField", isRequired: false },
-            { columnName: "TitleArabic", type: "addTextField", isRequired: false },
-            { columnName: "CatagoryArabic", type: "addTextField", isRequired: false },
-            { columnName: "SeenOn", type: "addDateField", isRequired: false },
-            { columnName: "CoverImage", type: "addImageField", isRequired: false },
-            { columnName: "Image", type: "addUrl", isRequired: false },
-            { columnName: "ListName", type: "addTextField", isRequired: false },
-            { columnName: "ItemLink", type: "addMultilineText", isRequired: false },
-            { columnName: "Checkoutuser", type: "Person or Group", isRequired: false },
-            // { columnName: "GeneralCatagory", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] },
-            { columnName: "Tag", type: "addTextField", isRequired: false },
-            { columnName: "Dept", type: "addTextField", isRequired: false },
-            { columnName: "EventDate", type: "addDateField", isRequired: false },
-            { columnName: "EndDate", type: "addDateField", isRequired: false },
+            { columnName: "AssignedTo", type: "Person or Group", isRequired: false, isIndexed: true },
+            { columnName: "IsSeen", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "ItemId", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Catagory", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "TitleEnglish", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "TitleArabic", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "CatagoryArabic", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "SeenOn", type: "addDateField", isRequired: false, isIndexed: false },
+            { columnName: "CoverImage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "Image", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "ListName", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ItemLink", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "Checkoutuser", type: "Person or Group", isRequired: false, isIndexed: false },
+            // { columnName: "GeneralCatagory", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] ,isIndexed: false},
+            { columnName: "Tag", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Dept", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "EventDate", type: "addDateField", isRequired: false, isIndexed: false },
+            { columnName: "EndDate", type: "addDateField", isRequired: false, isIndexed: false },
 
 
 
@@ -380,15 +381,15 @@ export const ListLibraryColumnDetails = [
     {
         name: "Quick Links",
         columns: [
-            { columnName: "Hover On Icon", type: "addImageField", isRequired: true },
-            { columnName: "Hover Off Icon", type: "addImageField", isRequired: true },
-            // { columnName: "Image", type: "addImageField" },
-            // { columnName: "ImageHover", type: "addImageField" },
-            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false },
-            { columnName: "URL", type: "addUrl", isRequired: true },
-            { columnName: "IsActive", type: "addBoolean", isRequired: false },
-            { columnName: "Order0", type: "addNumberField", isRequired: false },
-            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false },
+            { columnName: "Hover On Icon", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "Hover Off Icon", type: "addImageField", isRequired: true, isIndexed: false },
+            // { columnName: "Image", type: "addImageField" ,isIndexed: false},
+            // { columnName: "ImageHover", type: "addImageField" ,isIndexed: false},
+            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
+            { columnName: "URL", type: "addUrl", isRequired: true, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false },
 
         ]
     },
@@ -397,10 +398,10 @@ export const ListLibraryColumnDetails = [
         columns: [
             {
                 columnName: "ActualNewsItemID", type: "addLookup", targetListName: "News",
-                targetListColumn: "ID", isRequired: false
+                targetListColumn: "ID", isRequired: false, isIndexed: false
             },
-            { columnName: "ShortTitle", type: "addTextField", isRequired: false },
-            { columnName: "ViewCountofNews", type: "addNumberField", isRequired: false },
+            { columnName: "ShortTitle", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ViewCountofNews", type: "addNumberField", isRequired: false, isIndexed: false },
 
         ]
     },
@@ -410,16 +411,17 @@ export const ListLibraryColumnDetails = [
         columns: [
             {
                 columnName: "SelectedQuickLinks", type: "addLookup", targetListName: "Quick Links",
-                targetListColumn: "Title", isRequired: false
-            },
+                targetListColumn: "Title", isRequired: false, isIndexed: true
+            }
+            ,
             {
                 columnName: "SelectedQuickLinks_x003a_ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
-                targetListColumn: "ID", isRequired: false
+                targetListColumn: "ID", isRequired: false, isIndexed: false
             },
-            { columnName: "Order0", type: "addNumberField", isRequired: false },
-            { columnName: "ImageSrc", type: "addMultilineText", isRequired: false },
-            { columnName: "URL", type: "addUrl", isRequired: false },
-            { columnName: "HoverImageSrc", type: "addMultilineText", isRequired: false },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "ImageSrc", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "HoverImageSrc", type: "addMultilineText", isRequired: false, isIndexed: false },
 
         ]
     },
@@ -450,27 +452,27 @@ export const ListLibraryColumnDetails = [
     {
         name: "ViewsCountMaster",
         columns: [
-            { columnName: "EmployeeName", type: "Person or Group", isRequired: false },
-            { columnName: "EmployeeEmail", type: "addTextField", isRequired: false },
-            { columnName: "ContentPage", type: "addTextField", isRequired: false },
-            { columnName: "ContentID", type: "addNumberField", isRequired: false },
-            { columnName: "ViewedOn", type: "addDateField", isRequired: false },
+            { columnName: "EmployeeName", type: "Person or Group", isRequired: false, isIndexed: false },
+            { columnName: "EmployeeEmail", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentPage", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentID", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "ViewedOn", type: "addDateField", isRequired: false, isIndexed: false },
         ]
     },
 
     {
         name: "Component Configuration Master",
         columns: [
-            { columnName: "ComponentId", type: "addTextField", isRequired: false },
+            { columnName: "ComponentId", type: "addTextField", isRequired: false, isIndexed: false },
         ]
     },
 
     {
         name: "Portal CSS Configuration Master",
         columns: [
-            { columnName: "PrimaryColorCode", type: "addTextField", isRequired: false },
-            { columnName: "SecondaryColorCode", type: "addTextField", isRequired: false },
-            { columnName: "Custom", type: "addMultilineText", isRequired: false },
+            { columnName: "PrimaryColorCode", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "SecondaryColorCode", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Custom", type: "addMultilineText", isRequired: false, isIndexed: false },
 
         ]
     },
@@ -484,38 +486,38 @@ export const DepartmentListDetails = [
     {
         name: "AboutDepartment",
         columns: [
-            { columnName: "Description", type: "addMultilineText" },
-            { columnName: "IsActive", type: "addBoolean" },
-            { columnName: "DepartmentBannerImage", type: "addImageField" },
-            { columnName: "Image URL", type: "addMultilineText" },
-            { columnName: "IsURLUpdated", type: "addBoolean" },
+            { columnName: "Description", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "DepartmentBannerImage", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "Image URL", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "IsURLUpdated", type: "addBoolean", isRequired: false, isIndexed: false },
         ]
     },
     {
         name: "Logo Master",
         columns: [
-            { columnName: "Logo", type: "addImageField" },
-            { columnName: "IsActive", type: "addBoolean" }
+            { columnName: "Logo", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false }
         ]
     },
     {
         name: "Quick Links",
         columns: [
-            { columnName: "Image", type: "addImageField" },
-            { columnName: "ImageHover", type: "addImageField" },
-            { columnName: "URL", type: "addUrl" },
-            { columnName: "IsActive", type: "addBoolean" },
-            { columnName: "Order0", type: "addNumberField" },
-            { columnName: "OpenInNewTab", type: "addBoolean" },
+            { columnName: "Image", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "ImageHover", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false },
 
         ]
     },
     {
         name: "Services",
         columns: [
-            { columnName: "Description", type: "addMultilineText" },
-            { columnName: "IsActive", type: "addBoolean" },
-            { columnName: "Order0", type: "addNumberField" },
+            { columnName: "Description", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
         ]
     },
     {
