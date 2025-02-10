@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
-import { DepartmentListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
+// import { DepartmentListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 
 
 export interface INavigationsState {
@@ -741,7 +741,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         if (!subsiteExists) {
           // Create a subsite if it doesn't exist
           await this.createSubsite(newDeptTitle);
-          this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
+          // this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
         } else {
           console.log("Subsite already exists. No need to create.");
         }
@@ -765,29 +765,29 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
     // }, 500)
   }
-  public async createListInSubsite(subsiteUrl: any) {
-    try {
-      const subsite = Web(subsiteUrl);
-      for (let i = 0; i < DepartmentListDetails.length; i++) {
-        const listName = DepartmentListDetails[i].name; // Access the list name
-        const columns = DepartmentListDetails[i].columns; // Access the columns for the list
-        // Ensure the list exists or create it
-        const listEnsureResult = await subsite.lists.ensure(listName);
-        if (listEnsureResult.created) {
-          console.log(`List '${listName}' created successfully.`);
-          await this.createSharePointColumns(listName, columns, subsite); // Create columns for the newly created list
-        } else {
-          console.log(`List '${listName}' already exists.`);
-          await this.createSharePointColumns(listName, columns, subsite); // Ensure columns exist even if the list already exists
-        }
-        console.log(`List '${listName}' created in subsite: ${subsiteUrl}`);
-      }
-      // Create the list in the subsite      console.log(list)
-    } catch (error) {
-      console.error("Error creating list in subsite:", error);
-    }
+  // public async createListInSubsite(subsiteUrl: any) {
+  //   try {
+  //     const subsite = Web(subsiteUrl);
+  //     for (let i = 0; i < DepartmentListDetails.length; i++) {
+  //       const listName = DepartmentListDetails[i].name; // Access the list name
+  //       const columns = DepartmentListDetails[i].columns; // Access the columns for the list
+  //       // Ensure the list exists or create it
+  //       const listEnsureResult = await subsite.lists.ensure(listName);
+  //       if (listEnsureResult.created) {
+  //         console.log(`List '${listName}' created successfully.`);
+  //         await this.createSharePointColumns(listName, columns, subsite); // Create columns for the newly created list
+  //       } else {
+  //         console.log(`List '${listName}' already exists.`);
+  //         await this.createSharePointColumns(listName, columns, subsite); // Ensure columns exist even if the list already exists
+  //       }
+  //       console.log(`List '${listName}' created in subsite: ${subsiteUrl}`);
+  //     }
+  //     // Create the list in the subsite      console.log(list)
+  //   } catch (error) {
+  //     console.error("Error creating list in subsite:", error);
+  //   }
 
-  }
+  // }
 
   public async createSharePointColumns(name: string, columns: any[], subsite: IWeb & IInvokable<any>): Promise<void> {
     try {
@@ -1181,7 +1181,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                           <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
                         </a>
                         {/* <div > */}
-                          <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
+                        <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
                         {/* </div> */}
                         {BreadCrumb.map((item, key) => (
                           <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
@@ -1189,7 +1189,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                             <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
                           </a>
                         ))}
-                        
+
                       </div>
                       {/* // )} */}
                       {/* {handler.state.IsDeptClicked === true && ( */}
