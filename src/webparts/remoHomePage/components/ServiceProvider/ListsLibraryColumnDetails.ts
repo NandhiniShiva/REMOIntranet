@@ -4,7 +4,7 @@ export const ListLibraryColumnDetails = [
         columns: []
     },
     {
-        name: "Announcement",
+        name: "Announcements",
         columns: [
             { columnName: "Description", type: "addMultilineText", isRequired: true, isIndexed: false },
             { columnName: "Image", type: "addImageField", update: "false", isRequired: false, isIndexed: false },

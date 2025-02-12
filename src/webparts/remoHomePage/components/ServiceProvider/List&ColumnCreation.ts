@@ -91,7 +91,7 @@ export class ListCreation {
 
                             // });
 
-                            await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
+                            await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
                                     Required: column.isRequired,
                                     Indexed: column.isIndexed
@@ -116,13 +116,13 @@ export class ListCreation {
                             });
                             console.log(`Column '${column.columnName}' added as Boolean.`);
 
-                            await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
-                                await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
-                                    Required: column.isRequired,
-                                    Indexed: column.isIndexed
+                            // await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
+                            //     await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
+                            //         Required: column.isRequired,
+                            //         Indexed: column.isIndexed
 
-                                });
-                            });
+                            //     });
+                            // });
                             break;
 
 
@@ -164,7 +164,7 @@ export class ListCreation {
                             //     });
                             // });
 
-                            await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName).then(async () => {
+                            await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
                                     Required: column.isRequired,
                                     Indexed: column.isIndexed
@@ -212,7 +212,7 @@ export class ListCreation {
                             break;
 
                         case "addMultiChoice":
-                            await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+                            // await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
                             // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
                             //     Required: column.isRequired,
                             //     Indexed: column.isIndexed
