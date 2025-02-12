@@ -40,7 +40,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
 
 
   public async GetGalleryFilesFolder() {
-    debugger
     try {
       const items = await sp.web.lists.getByTitle(PictureGalleryLib)
         .items.expand("Folder", "File")
@@ -110,7 +109,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
     var reactHandler = this;
     let x: number = 1;
     const Images: JSX.Element[] = this.state.Galleryitems.map(function (item) {
-      debugger
       if (item.FileSystemObjectType == 1) {
       }
       if (item.FileSystemObjectType != 1) {

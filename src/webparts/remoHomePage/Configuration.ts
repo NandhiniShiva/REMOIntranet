@@ -31,6 +31,7 @@ export const listNames: { [key: string]: string } = {
     PortalFontMaster: "Portal Font Configuration Master",
     ComPonentAllocationMaster: "LayoutComponentsAllocationMaster",
     LayoutMaster: "LayoutMaster",
+    DraftMaster: "DraftMaster"
     // VersionMaster: "Version Master",
 
 
