@@ -70,7 +70,6 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
 
   public async GetGalleryFilesFolder() {
     console.log(NewWeb);
-    debugger;
     try {
       const items = await NewWeb.lists
         .getByTitle(PictureGalleryLib)

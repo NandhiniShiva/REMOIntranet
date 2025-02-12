@@ -226,7 +226,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async checkUserAdmin() {
-    debugger;
     try {
       // Fetch all site users
       // const profile = await pnp.sp.profiles.myProperties.get();
@@ -259,10 +258,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-  public async getAllocatedComponents() {
+  public async getAllocatedComponents() {    
     try {
+      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
-      const response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+      const response = await sp.web.lists.getByTitle(listName).items.filter(`Title eq '${this.state.selectedValue}'`).get();
       if (response.length === 0) {
         console.log("No items found in the SharePoint list.");
         return;
@@ -306,6 +306,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async GetAllavailablecomponents() {
     try {
       var allcomponents = [];
+      // const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
+
       // NewWeb = Web(this.props.siteurl)
       const response = await sp.web.lists.getByTitle(ComponentConfigurationList).items.get();
       console.log(response);
@@ -420,7 +422,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public async createSharePointLists() {
-    debugger;
     try {
       // Filter unmatched lists
       const unmatchedLists: any = ListLibraryColumnDetails.filter(
@@ -1136,7 +1137,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   //   }
   // }
   public Showclearbutton(ID: any) {
-    debugger;
     var input = $("#SearchInput").val();
     if (input == "") {
       $(".clear_part").hide();
@@ -1319,7 +1319,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       // If an item exists for the position, update it
       const itemId = existingItems[0].Id; // Get the item ID
       await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).delete();
-      sp.web.lists.getByTitle(Draftmaster).items.top(5000).orderBy("Title", true).get().then((resp) => {
+      sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
         if (resp.length != 0) {
           resp.forEach((items) => {
             if (items.Title == value) {

@@ -26,7 +26,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   spfxContext: ISPFXContext;
   constructor(props: IRemoHomePageProps, state: INewsState) {
     super(props);
-    debugger;
     Location = this.props.description;
     console.log(this.props.description);
     
@@ -52,7 +51,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   }
 
   public CheckLocation(){
-    debugger;
     if (Location === 1 || Location === 5 || Location === 10) {
       this.setState({ ItemCount: 3 });
     } else if (Location === 2 || Location === 11 || Location === 12 || Location === 6 || Location === 7) {
