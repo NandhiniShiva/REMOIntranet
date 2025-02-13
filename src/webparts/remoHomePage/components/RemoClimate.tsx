@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IWeatherCurrencyProps } from './IRemoHomePageProps';
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import Select from 'react-select';
 import { sp } from '@pnp/sp';
 import { listNames } from '../Configuration';
@@ -110,9 +109,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
 
         setTimeout(function () {
           if (PrayerDetails["Fajr"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Fajr"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Fajr"]);
-            // $("#prayer-type").html(`Fajr <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Fajr"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -123,9 +120,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
               prayerTypeElement.innerHTML = `Fajr <span>in</span> ${RemainingTime} Hrs`;
             }
           } else if (PrayerDetails["Sunrise"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Sunrise"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Sunrise"]);
-            // $("#prayer-type").html(`Sunrise <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Sunrise"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -136,9 +131,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
               prayerTypeElement.innerHTML = `Sunrise <span>in</span> ${RemainingTime} Hrs`;
             }
           } else if (PrayerDetails["Dhuhr"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Dhuhr"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Dhuhr"]);
-            // $("#prayer-type").html(`Dhuhr <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Dhuhr"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -149,9 +142,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
               prayerTypeElement.innerHTML = `Dhuhr <span>in</span> ${RemainingTime} Hrs`;
             }
           } else if (PrayerDetails["Asr"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Asr"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Asr"]);
-            // $("#prayer-type").html(`Asr <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Asr"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -162,9 +153,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
               prayerTypeElement.innerHTML = `Asr <span>in</span> ${RemainingTime} Hrs`;
             }
           } else if (PrayerDetails["Maghrib"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Maghrib"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Maghrib"]);
-            // $("#prayer-type").html(`Maghrib <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Maghrib"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -175,9 +164,7 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
               prayerTypeElement.innerHTML = `Maghrib <span>in</span> ${RemainingTime} Hrs`;
             }
           } else if (PrayerDetails["Isha"] > CurrentTime) {
-            // let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Isha"], CurrentTime);
-            // $("#prayer-time").html(PrayerDetails["Isha"]);
-            // $("#prayer-type").html(`Isha <span>in</span> ${RemainingTime} Hrs`);
+
             let RemainingTime = reactHandler.getDifferenceInhrsandmins(PrayerDetails["Isha"], CurrentTime);
             const prayerTimeElement = document.querySelector("#prayer-time");
             if (prayerTimeElement) {
@@ -192,26 +179,6 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
       });
   }
 
-
-
-  // public GetCurrencyValue() {
-  //   var myHeaders = new Headers();
-  //   myHeaders.append("apikey", "6RaCIlf1R8C4viHMAQATs6kbVKeU2LlQ");
-  //   var requestOptions: any = {
-  //     method: 'GET',
-  //     redirect: 'follow',
-  //     headers: myHeaders
-  //   };
-  //   fetch("https://api.apilayer.com/exchangerates_data/convert?to=USD&from=AED&amount=1", requestOptions)
-  //     .then(resp => resp.json())
-  //     .then((data) => {
-  //       var num = parseFloat(data.result);
-  //       var new_num = num.toFixed(2);
-  //       this.setState({
-  //         CurrencyValue: new_num
-  //       });
-  //     });
-  // }
 
   // Updated code
   public GetCurrencyValue() {
@@ -285,44 +252,44 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
     const { selectedOption } = this.state;
     return (
       <div className='col-md-12 climate'>
-      <div id="m-b-20-weather">
-        <div className="climate-wrap m-b-20">
-          <div className="sec climate-prayer-exchage m-b-20">
-            <ul className="clearfix">
-              <li >
-                <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c1.svg`} alt="img" />  Dubai, UAE </h4>
-                <h2> {this.state.temperature}°C </h2>
-                <p> {this.state.WeatherType} </p>
-              </li>
-              <li>
-                <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c2.svg`} alt="img" />  Next Prayer </h4>
-                <h2 id="prayer-time">  </h2>
-                <p id="prayer-type">  </p>
-              </li>
-              <li className="stocksxchange">
-                <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c3.svg`} alt="img" />  1.00 AED </h4>
-                <p> Equals to  </p>
-                <h2> {this.state.CurrencyValue} </h2>
-                <span className="ddl-currency">
+        <div id="m-b-20-weather">
+          <div className="climate-wrap m-b-20">
+            <div className="sec climate-prayer-exchage m-b-20">
+              <ul className="clearfix">
+                <li >
+                  <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c1.svg`} alt="img" />  Dubai, UAE </h4>
+                  <h2> {this.state.temperature}°C </h2>
+                  <p> {this.state.WeatherType} </p>
+                </li>
+                <li>
+                  <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c2.svg`} alt="img" />  Next Prayer </h4>
+                  <h2 id="prayer-time">  </h2>
+                  <p id="prayer-type">  </p>
+                </li>
+                <li className="stocksxchange">
+                  <h4> <img src={`${this.props.siteurl}/SiteAssets/img/c3.svg`} alt="img" />  1.00 AED </h4>
+                  <p> Equals to  </p>
+                  <h2> {this.state.CurrencyValue} </h2>
+                  <span className="ddl-currency">
 
-                  <Select
-                    id="combo-box-currency"
-                    value={selectedOption}
-                    onChange={this.handleChange}
-                    options={AvailableCurrencies}
-                    placeholder={'USD'}
-                    styles={{
-                      placeholder: (base: any) => ({
-                        ...base,
-                      }),
-                    }}
-                  />
-                </span>
-              </li>
-            </ul>
+                    <Select
+                      id="combo-box-currency"
+                      value={selectedOption}
+                      onChange={this.handleChange}
+                      options={AvailableCurrencies}
+                      placeholder={'USD'}
+                      styles={{
+                        placeholder: (base: any) => ({
+                          ...base,
+                        }),
+                      }}
+                    />
+                  </span>
+                </li>
+              </ul>
+            </div >
           </div >
-        </div >
-      </div>
+        </div>
       </div>
     )
   }

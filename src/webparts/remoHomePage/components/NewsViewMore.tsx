@@ -5,7 +5,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import Slider from "react-slick";
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
@@ -36,8 +35,7 @@ export interface INewsVmState {
 let NewsAvailableDepts: { ID: any; Title: any; URL: any; }[] = [];
 let DeptNames: any[] = [];
 let DeptNamesExitsUnique: any[] = [];
-// var Designation = "";
-// var Department = "";
+
 var User = "";
 var UserEmail = "";
 
@@ -59,52 +57,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     NewWeb = Web(this.props.siteurl)
   }
 
-  // public componentDidMount() {
-  //   setTimeout(function () {
-  //     // $('#spCommandBar').attr('style', 'display: none !important');
-  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
-  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-  //     // $('#RecommendedItems').attr('style', 'display: none !important');
-
-  //     const spCommandBar = document.getElementById('spCommandBar');
-  //     if (spCommandBar) {
-  //       spCommandBar.style.setProperty('display', 'none', 'important');
-  //     }
-  //     const commentsWrapper = document.getElementById('CommentsWrapper');
-  //     if (commentsWrapper) {
-  //       commentsWrapper.style.setProperty('display', 'none', 'important');
-  //     }
-  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-  //     pageHeaders.forEach((element: any) => {
-  //       element.style.setProperty('display', 'none', 'important');
-  //     });
-  //     const RecommendedItems = document.getElementById('RecommendedItems');
-  //     if (RecommendedItems) {
-  //       RecommendedItems.style.setProperty('display', 'none', 'important');
-  //     }
-
-
-
-
-  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
-
-
-
-  //   }, 2000);
-
-  //   var reactHandler = this;
-  //   // reactHandler.GetAllNews();
-  //   reactHandler.getCurrentUser().then(() => {
-  //     reactHandler.GetAllNews();
-
-  //     reactHandler.GetAllTopNews();
-  //     reactHandler.GetAllNewsAvailableDepartments();
-  //     reactHandler.GetWeekOldNews();
-  //   })
-  // }
-
-  // Optimized code
-
   public componentDidMount() {
     setTimeout(() => {
       ['spCommandBar', 'CommentsWrapper', 'RecommendedItems'].forEach(id => {
@@ -117,12 +69,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       });
     }, 2000);
 
-    // this.getCurrentUser().then(() => {
-    //   this.GetAllNews();
-    //   this.GetAllTopNews();
-    //   this.GetAllNewsAvailableDepartments();
-    //   this.GetWeekOldNews();
-    // });
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
@@ -165,31 +111,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       console.error('Error adding data:', error);
     }
   }
-
-  // public async getCurrentUser() {
-  //   var reacthandler = this;
-  //   User = reacthandler.props.userid;
-  //   try {
-
-
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     UserEmail = profile.Email;
-  //     Designation = profile.Title;
-
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log("Error in getCurrentUser", error);
-
-  //   }
-  // }
 
   private async GetAllNews(Department: any, Designation: any) {
 
@@ -594,8 +515,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       }
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
-        //     var RawPublishedDt = moment(item.Created).format("DD/MM/YYYY");
-        //  var tdaydt = moment().format("DD/MM/YYYY");
+
         if (ImgObj.serverRelativeUrl == undefined) {
 
           serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + item.ID + "/" + ImgObj.fileName

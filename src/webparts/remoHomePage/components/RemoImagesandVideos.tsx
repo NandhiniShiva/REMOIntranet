@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
-// import * as $ from 'jquery';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -37,8 +36,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
 
 
   }
-
-
   public async GetGalleryFilesFolder() {
     try {
       const items = await sp.web.lists.getByTitle(PictureGalleryLib)
@@ -51,8 +48,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
       const { length } = items;
 
       if (length !== 0) {
-        // $("#if-gallery-present").show();
-        // $("#if-no-gallery-present").hide();
 
         document.querySelectorAll('#if-gallery-present').forEach(element => {
           (element as HTMLElement).style.display = 'block';
@@ -65,8 +60,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
           isDataAvailable: true
         });
       } else {
-        // $("#if-gallery-present").hide();
-        // $("#if-no-gallery-present").show();
 
         document.querySelectorAll('#if-gallery-present').forEach(element => {
           (element as HTMLElement).style.display = 'none';
@@ -98,7 +91,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
   public addImageVideo(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${PictureGalleryLib}`;
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${PictureGalleryLib}`; // Replace with your list URL
     window.open(listUrl, "_blank");
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -118,14 +110,11 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
         var Dot = filename.lastIndexOf(".");
         var res = filename.substring(Dot + 1, Len);
         var ext = res.toLowerCase();
-
-
         var string = completeurl.split('/');
 
         var str2 = "Videos";
 
         if (string.indexOf(str2) != -1) {
-          // alert("video chk")
           var foldernameval = string[string.length - 2];
 
           var gFolderUrl = (completeurl).replace(filename, '');
@@ -138,7 +127,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
             if (ext == "mp4" || ext == "mov" || ext == "wmv" || ext == "flv" || ext == "mov" || ext == "avi" || ext == "avchd" || ext == "webm" && ext == "mkv") {
 
               if (x <= 1) {
-                // alert("true")
                 x = x + 1;
                 return (
 
@@ -233,7 +221,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
 
                     <div className='heading-right'>
 
-                      {/* <a href={`${this.props.siteurl}/SitePages/EventsViewMore.aspx?`}> */}
                       <a href={viewall}>
 
                         View All
@@ -243,13 +230,10 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
                   </div>
 
                   <div className="section-part clearfix">
-                    {/* latest-events-bck"> */}
                     <ul className="clearfix img-block-area">
                       {Images}
                     </ul>
 
-                    {/*<ul className="clearfix vdo-block-area" style={{display:"none"}}>
-                  </ul>*/}
                   </div>
                 </div>
               </div>

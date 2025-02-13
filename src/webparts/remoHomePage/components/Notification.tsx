@@ -92,68 +92,6 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
         }
     }
 
-    // public getNotification() {
-    //     var totalcount: any;
-    //     try {
-    //         newweb.lists.getByTitle(NotificationList).items.select("*").filter(`AssignedToId eq ${this.state.Userid} and IsSeen ne '1'`).orderBy('Created', false).top(8000).get().then((response: any) => {
-    //             totalcount = response.length;
-
-
-    //             console.log(response);
-    //             if (response.length != 0) {
-
-
-    //                 this.setState({
-    //                     NotificationItems: response,
-    //                 })
-    //             }
-    //             if (totalcount < 10) {
-    //                 totalcount = response.length;
-    //             }
-    //             else if (10 > totalcount && totalcount < 20) {
-    //                 totalcount = "10+";
-    //             }
-    //             else if (20 > totalcount && totalcount < 30) {
-    //                 totalcount = "20+";
-    //             }
-    //             else if (30 > totalcount && totalcount < 40) {
-    //                 totalcount = "30+";
-    //             }
-    //             else if (40 > totalcount && totalcount < 50) {
-    //                 totalcount = "40+";
-    //             }
-    //             else if (50 > totalcount && totalcount < 60) {
-    //                 totalcount = "50+";
-    //             }
-    //             else if (60 > totalcount && totalcount < 70) {
-    //                 totalcount = "60+";
-    //             }
-    //             else if (70 > totalcount && totalcount < 80) {
-    //                 totalcount = "70+";
-    //             }
-    //             else if (80 > totalcount && totalcount < 90) {
-    //                 totalcount = "80+";
-    //             }
-    //             else if (90 > totalcount && totalcount < 100) {
-    //                 totalcount = "90+";
-    //             }
-    //             else {
-    //                 totalcount = "99+";
-    //             }
-
-    //             this.setState({
-    //                 NotificationCount: totalcount
-    //             })
-
-    //         })
-    //     } catch (error) {
-    //         console.log("Error in getNotification", error);
-
-    //     }
-    // }
-
-    // Optimized code
-
     public async getNotification() {
         try {
             const response = await newweb.lists.getByTitle(NotificationList).items
@@ -195,13 +133,7 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
             newweb.lists.getByTitle(NotificationList).items.filter(`ItemId eq '${id}'and AuthorId eq ${User} and GUID eq '${guID}'`).getAll().then(async (items: any) => { // //orderby is false -> decending
                 if (items.length > 0) {
                     const itemId = items[0].Id;
-                    // newweb.lists.getByTitle(NotificationList).items.getById(itemId).update({
-                    //     SeenOn: currentdate,
-                    //     IsSeen: "true"
-                    // }).then(() => {
-                    //     this.getNotification();
-                    // })
-                    // alert(itemId)
+
                     await newweb.lists.getByTitle(NotificationList).items.getById(itemId).delete()
                         .then(async () => {
                             await this.getNotification();
@@ -209,8 +141,7 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
                         })
                 }
             }).then(() => {
-                // var href: string = `${this.props.siteurl}/SitePages/ECAVoice_RM.aspx?ItemID=${id}&List=${Listname}&Catagory=${Currentcatagory}`
-                // window.open(href, ' ')
+
             })
         } catch (error) {
             console.log("Error in IsItemSeen", error);
@@ -264,18 +195,6 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
                 url = `${reactHandler.props.siteurl}/SitePages/EventsViewMore.aspx?Mode=EvRM&ItemID=${item.ID}&SelectedDate=${moment(item.EventDate).format("YYYYMMDD")}&`;
             }
 
-            // else if (Catagory_En == "Leadership Corner" || Catagory_En == "ECA Voice" || Catagory_En == "Discovery Day" || Catagory_En == "Monday Mental Breaks" || Catagory_En == "Meet Free Fridays") {
-            //     var serverRelativeUrl = item.Image.Url;
-            //     url = `${reactHandler.props.siteurl}/SitePages/ECAVoice_RM.aspx?ItemID=${itemiD}&List=${ListName}&Catagory=${Catagory_En}`;
-            // }
-            // else if (Catagory_En == "Maintenance" || Catagory_En == "Communications") {
-            //     var serverRelativeUrl = item.Image.Url;
-            //     url = `${reactHandler.props.siteurl}/SitePages/ECAVoice_RM.aspx?ItemID=${itemiD}&List=${ListName}&Catagory=${Catagory_En}`;
-            // }
-            // else {
-            //     var serverRelativeUrl = item.Image.Url;
-            //     url = `#`;
-            // }
             return (
                 <>
                     <li id={itemiD} className="clearfix" onClick={() => reactHandler.IsItemSeen(itemiD, Catagory_En, ListName, guID)}>

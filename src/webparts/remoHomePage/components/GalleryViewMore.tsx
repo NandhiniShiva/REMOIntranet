@@ -63,9 +63,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
   public componentDidMount() {
 
     setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
+
 
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
@@ -86,12 +84,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       }
     }, 2000);
 
-    // this.getCurrentUser().then(() => {
-    //   this.GetGalleryFilesFolder();
-    //   // this.GetGalleryFilesFolderVideos();
-    // }).then(() => {
-    //   this.LandingPageAnalytics()
-    // })
+
 
     // Updated code
 
@@ -118,25 +111,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
     });
   }
 
-  // public async getCurrentUser() {
-  //   try {
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     Designation = profile.Title;
 
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   }
-  //   catch (error) {
-  //     console.error("An error occurred while fetching the user profile:", error);
-  //   }
-  // }
   public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
@@ -236,90 +211,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
     return result;
   }
 
-  // public GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
-  //   const FolderUrl = FolderURL.replace(/['"]+/g, '');
-  //   const reactHandler = this;
-  //   this.setState({ FolderURL: FolderUrl, SliderIsOpen: true, Mode: Mode });
-  //   try {
-  //     // Show or hide triggers based on mode
-  //     if (Mode === "Image") {
-  //       // $("#trigger-image").hide();
-  //       // $("#trigger-video").show();
-  //       document.querySelectorAll('#trigger-video').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('#trigger-image').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //     } else if (Mode === "Video") {
-  //       // $("#trigger-video").hide();
-  //       // $("#trigger-image").show();
-  //       document.querySelectorAll('#trigger-video').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       document.querySelectorAll('#trigger-image').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     }
-  //     // Fetch files from the specified folder URL
-  //     sp.web.getFolderByServerRelativeUrl(FolderUrl).files.get()
-  //       .then(async (items) => {
-  //         // Filter files based on mode (image or video)
-  //         const imageItems = items.filter((item) => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.Name));
-  //         const videoItems = items.filter((item) => /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(item.Name));
-
-  //         // If mode is "Image" and there are video files, hide image trigger
-  //         if (Mode === "Image" && videoItems.length === 0) {
-  //           // $("#trigger-video").hide();
-
-  //           document.querySelectorAll('#trigger-video').forEach(element => {
-  //             (element as HTMLElement).style.display = 'none';
-  //           });
-
-  //         }
-
-  //         // If mode is "Video" and there are no video files, hide video trigger
-  //         if (Mode === "Video" && imageItems.length === 0) {
-  //           // $("#trigger-image").hide();
-
-  //           document.querySelectorAll('#trigger-image').forEach(element => {
-  //             (element as HTMLElement).style.display = 'none';
-  //           });
-  //         }
-
-  //         // Set the folder items in the state and open the lightbox
-  //         reactHandler.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
-  //         // $(".lightbox").addClass("open");
-
-
-  //         const lightboxElement = document.querySelector('.lightbox');
-
-  //         // Add the "open" class to the selected element
-  //         if (lightboxElement) {
-  //           lightboxElement.classList.add('open');
-  //         }
-  //         // Navigate to the specified key in the slider
-  //         reactHandler.slider1.slickGoTo(key);
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error fetching folder items:', error);
-  //         // Handle error if needed
-  //         if (Mode === "Video") {
-  //           // $("#trigger-video").hide();
-
-  //           document.querySelectorAll('#trigger-video').forEach(element => {
-  //             (element as HTMLElement).style.display = 'none';
-  //           });
-  //         }
-  //       });
-  //   }
-  //   catch (error) {
-  //     console.error("An error occurred while fetching the images inside the folder:", error);
-  //   }
-  // }
-
-  // Optimized code 
-
   public async GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
     try {
       const FolderUrl = FolderURL.replace(/['"]+/g, '');
@@ -382,14 +273,12 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       // Update the component state with the folder URL and mode
       this.setState({ FolderURL: FolderURL, Mode: Mode });
       // Open the lightbox
-      // $(".lightbox").addClass("open");
       const lightboxElement = document.querySelector('.lightbox');
       // Add the "open" class to the selected element
       if (lightboxElement) {
         lightboxElement.classList.add('open');
       }
       // Hide the video trigger by default
-      // $("#trigger-video").hide();
       document.querySelectorAll('#trigger-video').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
@@ -423,7 +312,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       } catch (err) {
         console.error('Error fetching folder:', err);
         // Handle error if needed
-        // $("#trigger-video").hide();
 
         document.querySelectorAll('#trigger-video').forEach(element => {
           (element as HTMLElement).style.display = 'none';
@@ -436,7 +324,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
   }
   public CloseLightBox() {
 
-    // $(".lightbox").removeClass("open");
 
     const lightboxElement = document.querySelector('.lightbox');
 
@@ -574,73 +461,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
                   <li> <a href={this.props.siteurl + "/SitePages/Gallery-Grid-View.aspx?FolderName='" + this.state.FolderURL + "'&Type=Img"} data-interception="off"> Grid View  </a> </li>
                 </ul>
               </div>
-              {/* <div className="lightbox-contents-body">
-                {this.state.SliderIsOpen == true &&
-                  <Slider {...settings}
-                    asNavFor={this.state.nav2}
-                    ref={slider => (this.slider1 = slider)}
-                  >
-                    {this.state.FolderItems && this.state.FolderItems.map(function (item, key) {
-                      if (reactHandler.state.Mode == "Image") {
-                        var filename = item.Name;
-                        var completeurl = item.ServerRelativeUrl;
-                        console.log(item.ServerRelativeUrl)
-                        var Len = filename.length;
-                        var Dot = filename.lastIndexOf(".");
-                        var type = Len - Dot;
-                        var res = filename.substring(Dot + 1, Len);
-                        var ext = res.toLowerCase();
-                        if (ext != "mp4" && ext != "mov" && ext != "wmv" && ext != "flv" && ext != "mov" && ext != "avi" && ext != "avchd" && ext != "webm" && ext != "mkv") {
-                          if (ext.length == 0) {
-                            // return (
-                            //   <>
-                            //     <img src={`${item.ServerRelativeUrl}`} alt="image" style={{ width: '900px' }} />
-                            //     <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
-                            //   </>
-                            // );
-                            return (
-                                <>
-                                  <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="image" style={{ width: '900px' }} />
-                                  <h4 style={{ color: '#ffffff' }}>No Image Found</h4>
-                                </>
-                              );
-                          } else {
-                            // return (
-                            //   <>
-                            //     <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="image" style={{ width: '900px' }} />
-                            //     <h4 style={{ color: '#ffffff' }}>No Image Found</h4>
-                            //   </>
-                            // );
-                            return (
-                              <>
-                                <img src={`${item.ServerRelativeUrl}`} alt="image" style={{ width: '900px' }} />
-                                <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
-                              </>
-                            );
-                          }
-                        }
-                      } else if (reactHandler.state.Mode == "Video") {
-                        if (ext.lenght != 0) {
-                          return (
-                            <>
-                              <video className="lg-video-object lg-html5" src={`${item.ServerRelativeUrl}`} style={{ width: '810px' }} controls>
-                              </video>
-                              <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
-                            </>
-                          );
-                        } else {
-                          return (
-                            <>
-                              <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="image" style={{ width: '900px' }} />
-                              <h4 style={{ color: '#ffffff' }}>No Video Found</h4>
-                            </>
-                          );
-                        }
-                      }
-                    })}
-                  </Slider>
-                }
-              </div> */}
+
               <div className="lightbox-contents-body">
                 {this.state.SliderIsOpen && (
                   <Slider

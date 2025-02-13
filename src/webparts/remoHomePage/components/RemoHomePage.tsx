@@ -17,18 +17,12 @@ import RemoQuickLinks from './RemoQuickLinks';
 import RemoRecentFiles from './RemoRecentFiles';
 import RemoSocialMedia from './RemoSocialMedia';
 import Footer from './Footer/Footer'
-import pnp, { FieldUserSelectionMode } from 'sp-pnp-js';
-import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
+import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
-// import { sp } from '@pnp/sp';
-import { ChoiceFieldFormatType, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
-
-// import ProgressBar from 'react-bootstrap/ProgressBar';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import { sp, } from "@pnp/sp/presets/all";
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 import { LayoutsDetails } from './ServiceProvider/Layoutconfiguration';
 import { PositionDetails } from './ServiceProvider/PositionConfiguration';
-// import {listNameDetalis} from '../Configuration';
 import { listNames } from '../Configuration';
 import CeoMessageRm from './CeoMessageReadMore';
 import AnnouncementsRm from './AnnouncementsRm';
@@ -44,7 +38,6 @@ import HeroBannerViewMore from './HeroBannerViewMore';
 import NewsReadMore from './NewsReadMore';
 import NewsViewMore from './NewsViewMore';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-// import { PageAnalytics } from './ServiceProvider/LandingPageAnalytics';
 sp.setup({
   sp: {
     baseUrl: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct"
@@ -55,26 +48,18 @@ sp.setup({
 let spWeb: any;
 let fetchList: any;
 let IsListCreate: any;
-// const Analytics = listNames.Analytics;
 const PictureGalleryName = listNames.PictureGallery;
-// const docLibName = listNames.DocumentLibrary;
 var ComponentConfigurationList = listNames.ComponentMaster;
 var Draftmaster = listNames.DraftMaster;
 var ComponentallocationList = listNames.ComPonentAllocationMaster;
 var LayoutMasterList = listNames.LayoutMaster;
 var User: any;
 var UserEmail: any;
-var Designation: any;
-var Department: any;
+
 var Selectedcomponents: any = [];
 var Components = PositionDetails;
 console.log(Draftmaster);
 
-// var UserID: any;
-// var Dept: any
-// let libraryName: any = PictureLib
-
-// let totalLists = totalList;
 export interface IRemoHomePageState {
   progress: any,
   isCreatingLists: boolean,
@@ -87,7 +72,6 @@ export interface IRemoHomePageState {
   selectedDept: any,
   layoutItems: any[],
   AvailableComponents: any[],
-  // SelectedComponents: any[],
   isInitialscreen: any[];
   componentName: string;
   selectedComponents: any, // To store selected components by position
@@ -125,8 +109,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       componentName: "",
       landingPageComponentList: [],
       selectedComponents: {}, // To store selected components by position
-      // SelectedComponents: [],
-      // isInitialscreen: true,
       isInitialscreen: Array(12).fill(true), // Create an array of 10 `true` values
       isClicked: "Home",
       ceoMessegeID: null,
@@ -142,7 +124,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     console.log(spWeb, fetchList, IsListCreate);
   }
   public async componentDidMount() {
-    // this.GetAllavailablecomponents()
     const elements = document.querySelectorAll(".fui-FluentProvider.fui-FluentProvider6.___13yoiqc.f19n0e5.f3e3pzq.f1o700av.fk6fouc.fkhj508.figsok6.f1g96gwp");
 
     // Check if there are elements and hide the first one
@@ -155,7 +136,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       element.style.display = 'none';
     });
     this.checkEditMode();
-    // $(".ControlZone--control").show();
     const userDetails = new CurrentUserDetails();
     await userDetails
       .getCurrentUserDetails()
@@ -164,17 +144,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
           console.log("Current user details", data);
           console.log("data details", data?.Department, data?.Designation);
-          // Call LandingPageAnalytics if needed
-          // const pageAnalytics = new PageAnalytics(
-          //   "Landing Page",
-          //   User,
-          //   data?.Department ?? "NA",
-          //   data?.Designation ?? "NA",
-          //   "NA",
-          //   "NA",
-          //   UserEmail
-          // );
-          //  await  pageAnalytics.LandingPageAnalytics();
+
         } else {
           console.warn("No user details were fetched.");
         }
@@ -184,37 +154,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       });
 
     this.checkUserAdmin();
-    // setTimeout(() => {
-    // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-    // $(".inner-pages-nav").hide();s
-    // $('#master_footer_parent').hide();
-    // $('.ControlZone--control').attr('style', 'display: none !important');
-
-
-    // document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
-    //   element.style.padding = '0px';
-    //   element.style.margin = '0px';
-    // });
-
-    // const innerPagesNav: any = document.getElementsByClassName('innerpages-nav');
-    // if (innerPagesNav) {
-    //   innerPagesNav.style.display = 'none';
-    // }
-
-    // const masterFooter = document.getElementById('master_footer_parent');
-    // if (masterFooter) {
-    //   masterFooter.style.display = 'none';
-    // }
-
-    // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
-    // if (ControlZone) {
-    //   ControlZone.style.setProperty('display', 'none', 'important');
-    // }
-    // }, 500);
-
-    // this.setState({ showButton: true })
-
-
   }
 
   public checkEditMode() {
@@ -228,37 +167,19 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async checkUserAdmin() {
     try {
       // Fetch all site users
-      // const profile = await pnp.sp.profiles.myProperties.get();
 
-      // console.log("Profile data:", profile);
       const CurrentUserAdmin = await sp.web.currentUser.get()
         .then(user => user.IsSiteAdmin);
-
-      console.log("currentUser", CurrentUserAdmin);
-
-
-      // const users = await sp.web.siteUsers.get();
-      // const currentUser = "Mariam" //"eservice"
-      // console.log("All site users:", users);
-
-      // // Filter for users named "Mariam" who are also site admins
-      // const admins = users.filter(user => user.Title === currentUser && user.IsSiteAdmin);
-
-      // if (admins.length > 0) {
       this.setState({
         isCurrentUserAdmin: CurrentUserAdmin
       })
 
-      //   console.log("User 'Mariam' is a site admin:", admins);
-      // } else {
-      //   console.log("User 'Mariam' is not a site admin.");
-      // }
     } catch (error) {
       console.error("Error checking site admin status:", error);
     }
   }
 
-  public async getAllocatedComponents() {    
+  public async getAllocatedComponents() {
     try {
       const listName = (this.state.isCurrentUserAdmin  && this.state.editMode) ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
@@ -296,8 +217,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         isInitialscreen: updatedIsInitialscreen,
       });
 
-      console.log("Available Components:", updatedAvailableComponents);
-      console.log("Selected Components:", selectedComponents);
     } catch (error) {
       console.error("Error fetching allocated components:", error);
     }
@@ -307,8 +226,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     try {
       var allcomponents = [];
       // const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
-
-      // NewWeb = Web(this.props.siteurl)
       const response = await sp.web.lists.getByTitle(ComponentConfigurationList).items.get();
       console.log(response);
       if (response.length != 0) {
@@ -328,15 +245,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public async LandingPageAnalytics(Department: any, Designation: any) {
-    // NewWeb = Web(this.props.siteurl)
     if (!Department) {
       Department = "NA";
     }
     if (!Designation) {
       Designation = "NA";
     }
-    // console.log(this.state.Title);
-
     try {
       const response = await sp.web.lists.getByTitle("AnalyticsMasterList").items.add({
         Category: "Landing Page",
@@ -368,7 +282,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   }
   public HideInProgress() {
-    // setTimeout(() => {
     const loadContent = document.getElementById('load-content');
     const loaderIcon = document.getElementById('loader-Icon');
 
@@ -379,7 +292,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     if (loaderIcon) {
       loaderIcon.style.display = 'none';
     }
-    // }, 2000);
   }
 
 
@@ -390,369 +302,20 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
       const reactHandler = this;
       User = reactHandler.props.userid;
-
       const profile = await pnp.sp.profiles.myProperties.get();
-      console.log("hompage profile", profile);
-      console.log(Designation);
-      console.log(Department);
-
       UserEmail = profile.Email;
-      const Name = profile.DisplayName;
-      console.log("getCurrentUser", Name);
-      Designation = profile.Title;
 
       // Check if the UserProfileProperties collection exists and has the Department and Designation properties
       if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
         const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
         console.log(departmentProperty, designationProperty);
-        console.log("departmentProperty.Value", departmentProperty.Value);
-
-        if (departmentProperty) {
-          Department = departmentProperty.Value;
-        }
-
 
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
   }
-
-
-
-  public async createSharePointLists() {
-    try {
-      // Filter unmatched lists
-      const unmatchedLists: any = ListLibraryColumnDetails.filter(
-        listDetail => !this.state.landingPageComponentList.some(
-          component => component.Title.toLowerCase() === listDetail.name.toLowerCase()
-        )
-      );
-
-      console.log("Unmatched Lists:", unmatchedLists);
-
-      // Get the total number of unmatched lists
-      const totalLists: number = unmatchedLists.length;
-
-      // Track if any list was newly created
-      let anyListCreated = false;
-
-      // Loop through each unmatched list
-      for (let i = 0; i < totalLists; i++) {
-        const listName = unmatchedLists[i].name; // Access the list name
-        const columns = unmatchedLists[i].columns; // Access the columns for the list
-
-        // Ensure the list exists or create it
-        const listEnsureResult = await sp.web.lists.ensure(listName);
-
-        if (listEnsureResult.created) {
-          console.log(`List '${listName}' created successfully.`);
-          await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
-          anyListCreated = true;
-        } else {
-          console.log(`List '${listName}' already exists.`);
-          await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
-        }
-      }
-
-      // Log final status
-      if (!anyListCreated) {
-        console.log("All lists already existed. No new lists were created.");
-      }
-    } catch (error) {
-      console.error("Error creating lists:", error);
-    }
-  }
-
-  // // Updated function for creating columns in a SharePoint List
-  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-  //   try {
-  //     for (const column of columns) {
-  //       try {
-  //         // Check if the column already exists
-  //         await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-  //         console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
-  //       } catch (error) {
-  //         // If column does not exist, create it based on type
-  //         switch (column.type) {
-  //           case "addImageField":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
-  //             console.log(`Column '${column.columnName}' added as Image Field.`);
-  //             const view = await sp.web.lists.getByTitle(name).views.getByTitle("All Items").get();
-  //             console.log(view);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addBoolean":
-  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Boolean.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addTextField":
-  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Text Field.`);
-  //             break;
-
-  //           case "addNumberField":
-  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Number Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "addDateField":
-  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Date Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addMultilineText":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as multiline Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-
-  //           case "Person or Group":
-  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-  //             console.log(`Column '${column.columnName}' added as personorgroup Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addMultiChoice":
-  //             // await sp.web.lists.getByTitle(name).fields.addMultiChoice("My Field",  column.group,  false, "My Group" );
-  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(
-  //               column.columnName, // The title of the field
-  //               column.group, // The array of choices (["Midea", "Trosten", ...])
-  //               false, // Set to true if you want to allow custom user input
-  //               //  "My Group" // The group under which the field will appear (optional)
-  //             );
-  //             // const field2 = await sp.web.lists.getByTitle("My List").fields.addMultiChoice("My Field", { Choices: choices, FillInChoice: false, Group: "My Group" });
-  //             console.log(`Column '${column.columnName}' added as choice Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //           case "addLookup":
-  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
-  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-  //             console.log(`Column '${column.columnName}' added as lookup Field.`);
-  //             await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //             break;
-  //             case "addUrl":
-  //               debugger;
-  //               await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink); // Or UrlFieldFormatType.Image
-  //               console.log(`Column '${column.columnName}' added as URL.`);
-  //               break;              
-  //           default:
-  //             console.log(`Unknown column type: ${column.type}`);
-
-  //         }
-
-  //         // Add the column to the "All Items" view
-  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during column creation process:", error);
-  //   }
-  // }
-
-
-  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-  //   try {
-  //     for (const column of columns) {
-  //       var columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-  //       if (!columnExist) {
-  //         // try {
-  //         //   // Check if the column already exists
-
-  //         //   console.log(`Column '${column.columnName}' already exists in list '${name}'.`);
-  //         // } catch (error) {
-  //         // If column does not exist, create it based on type
-  //         switch (column.type) {
-  //           case "addImageField":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
-  //             console.log(`Column '${column.columnName}' added as Image Field.`);
-  //             break;
-
-  //           case "addBoolean":
-  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Boolean.`);
-  //             break;
-
-  //           case "addTextField":
-  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-  //             console.log(`Column '${column.columnName}' added as Text Field.`);
-  //             break;
-
-  //           case "addNumberField":
-  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Number Field.`);
-  //             break;
-
-  //           case "addDateField":
-  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Date Field.`);
-  //             break;
-
-  //           case "addMultilineText":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Multiline Field.`);
-  //             break;
-
-  //           case "Person or Group":
-  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-  //             console.log(`Column '${column.columnName}' added as Person or Group Field.`);
-  //             break;
-
-  //           case "addMultiChoice":
-  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
-  //             console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
-  //             break;
-
-  //           case "addLookup":
-  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).select("*").get();
-  //             await sp.web.lists.getByTitle(name).fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-  //             console.log(`Column '${column.columnName}' added as Lookup Field.`);
-  //             break;
-
-  //           case "addUrl":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
-  //             console.log(`Column '${column.columnName}' added as URL Field.`);
-  //             break;
-
-  //           case "Icon":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
-  //             console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
-  //             break;
-  //           case "addChoice":
-  //             debugger;
-  //             await sp.web.lists.getByTitle(name).fields.addChoice(
-  //               column.columnName,
-  //               column.choices,
-  //               ChoiceFieldFormatType.Dropdown // Use Dropdown or RadioButtons
-  //             );
-  //             console.log(`Column '${column.columnName}' added as Choice Field.`);
-  //             break;
-  //           default:
-  //             console.log(`Unknown column type: ${column.type}`);
-  //         }
-
-  //         // Add the column to the "All Items" view
-  //         await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during column creation process:", error);
-  //   }
-  // }
-
-
-  public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-    try {
-      for (const column of columns) {
-        if (!column.columnName || !column.type) {
-          console.error("Invalid column data:", column);
-          continue;
-        }
-
-        let columnExist = false;
-        try {
-          columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-        } catch {
-          columnExist = false; // Column does not exist
-        }
-
-        if (!columnExist) {
-          switch (column.type) {
-            case "addImageField":
-              await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
-              console.log(`Column '${column.columnName}' added as Image Field.`);
-              break;
-
-            case "addBoolean":
-              await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-              console.log(`Column '${column.columnName}' added as Boolean.`);
-              break;
-
-            case "addTextField":
-              await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-              console.log(`Column '${column.columnName}' added as Text Field.`);
-              break;
-
-            case "addNumberField":
-              await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-              console.log(`Column '${column.columnName}' added as Number Field.`);
-              break;
-
-            case "addDateField":
-              await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-              console.log(`Column '${column.columnName}' added as Date Field.`);
-              break;
-
-            case "addMultilineText":
-              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-              console.log(`Column '${column.columnName}' added as Multiline Field.`);
-              break;
-
-            case "Person or Group":
-              await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-              console.log(`Column '${column.columnName}' added as Person or Group Field.`);
-              break;
-
-            case "addMultiChoice":
-              await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
-              console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
-              break;
-
-            case "addLookup":
-              if (!column.targetListName || !column.targetListColumn) {
-                console.error("Missing target list or column for lookup field:", column);
-                break;
-              }
-              const targetList = await sp.web.lists.getByTitle(column.targetListName).get();
-              await sp.web.lists
-                .getByTitle(name)
-                .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-              console.log(`Column '${column.columnName}' added as Lookup Field.`);
-              break;
-
-            case "addUrl":
-              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
-              console.log(`Column '${column.columnName}' added as URL Field.`);
-              break;
-
-            case "Icon":
-              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
-              console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
-              break;
-
-            case "addChoice":
-              await sp.web.lists.getByTitle(name).fields.addChoice(
-                column.columnName,
-                column.choices,
-                ChoiceFieldFormatType.Dropdown
-              );
-              console.log(`Column '${column.columnName}' added as Choice Field.`);
-              break;
-
-            default:
-              console.log(`Unknown column type: ${column.type}`);
-          }
-
-          try {
-            await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-          } catch (viewError) {
-            console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error during column creation process:", error);
-    }
-  }
-
-
-
-
 
   public async createDocumentLibrary(docLibName: string): Promise<void> {
     if (!docLibName) {
@@ -797,7 +360,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       if (!ListExist) {
         const result = await spWeb.lists.add(PictureGalleryName, "Picture Library", 109, true, { OnQuickLaunch: true });
         console.log("Picture Library Created:", result);
-        // alert("Picture Library created successfully!");
       } else {
         console.log("Picture Library Created already");
         return;
@@ -805,7 +367,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
     } catch (error) {
       console.error("Error creating Picture Library:", error);
-      // alert("Failed to create Picture Library. Please check the console for more details.");
     }
   };
 
@@ -960,97 +521,31 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       this.setState({
         layoutItems: LayoutsDetails
       });
-      // Check if the "LayoutMaster" list exists
-      // const lists = await sp.web.lists.filter(`Title eq 'LayoutMaster'`).get();
 
-      // if (lists.length === 0) {
-      //   await sp.web.lists.add("LayoutMaster", "This list stores layout configurations.", 100, false); // 100 = Generic List
-      //   console.log("List 'LayoutMaster' created.");
-      //   await sp.web.lists.getByTitle("LayoutMaster").fields.addBoolean("IsActive", {
-      //     DefaultValue: "0", // Default to false
-      //     Title: "Is Active"
-      //   });
-      //   console.log("Field 'IsActive' added to the list.");
-      //   await sp.web.lists.getByTitle("LayoutMaster").items.add({
-      //     Title: "Layout1",
-      //     IsActive: true
-      //   });
-      //   console.log("Default item 'Layout1' added to 'LayoutMaster' list.");
-      //   // Add the default item to the list
-      // }
-
-
-      // // Fetch the active layouts from the list
-      // const items = await sp.web.lists
-      //   .getByTitle("LayoutMaster")
-      //   .items
-      //   .select("Title", "*")
-      //   .filter(`IsActive eq '1'`)
-      //   .getAll();
-
-      // console.log("Layout items", items);
-
-      // // Update the component state
-      // this.setState({
-      //   layoutItems: items
-      // });
     } catch (error) {
       console.log("Error in getLayout", error);
     }
   }
 
 
-  // public readMoreHandler(isReadMoreClick: any) {
-  //   console.log("isReadMoreClick", isReadMoreClick);
-  //   // this.props.onReadMoreClick()
-  //   // this.props.onReadMoreClick("yes", ItemID)
-  //   alert(`hi homePage ${isReadMoreClick.yesNo, isReadMoreClick.id}`)
-  //   this.setState({
-  //     isClicked: isReadMoreClick.yesNo,
-  //     ceoMessegeID: isReadMoreClick.id
-  //   })
-
-  // }
 
   public readMoreHandler(ReadMoreData: any) {
 
 
     console.log("Name", ReadMoreData.Name, "Id", ReadMoreData.Id);
 
-    // this.props.onReadMoreClick()
-    // this.props.onReadMoreClick("yes", ItemID)
+
     this.setState({
       isClicked: ReadMoreData.Name,
       itemID: ReadMoreData.Id,
-      // homePage: isReadMoreClick,
       showDropdown: false
     })
 
 
   }
-  // public async createLayoutMasterList() {
-  //   try {
-  //     const list = await sp.web.lists.add("LayoutMaster");
-  //     console.log("List 'LayoutMaster' created.");
-  //     await list.fields.addBoolean("IsActive", {
-  //       DefaultValue: false,
-  //       Title: "Is Active"
-  //     });
-  //     console.log("Field 'IsActive' added.");
-  //     await list.items.add({
-  //       Title: "Layout1",
-  //       IsActive: true
-  //     });
-  //     console.log("Default item added to the list.");
-  //   } catch (error) {
-  //     console.error("Error creating or updating 'LayoutMaster':", error);
-  //   }
-  // }
-
 
   public async handleSelectChange(event: any) {
     console.log("selected option", event.target.value);
-    // if (event.target.value == "layout_1") {
     this.setState(
       {
         showHomepage: true,
@@ -1061,7 +556,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         // await this.createLayoutMasterList();
         await this.loaderInProgress();
         await this.setActiveLayout(this.state.selectedValue);
-        // await this.createSharePointLists();
         await this.GetAllavailablecomponents();
         await this.getAllocatedComponents();
         await this.HideInProgress();
@@ -1124,39 +618,17 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-
-  // public async setActiveLayout(selectedlayout: any) {
-  //   const response = await sp.web.lists.getByTitle(LayoutMasterList).items.get();
-  //   try {
-  //     response.forEach(async (item) => {
-  //       var ItemId = item.ID;
-  //       if (item.title == selectedlayout) {
-  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
-  //           IsActive: true
-  //         })
-  //       } else {
-  //         await sp.web.lists.getByTitle(LayoutMasterList).items.getById(ItemId).update({
-  //           IsActive: false
-  //         })
-  //       }
-  //     })
-  //   } catch {
-
-  //   }
-  // }
   public Showclearbutton(ID: any) {
     var input = $("#SearchInput").val();
     if (input == "") {
       $(".clear_part").hide();
-      // $("." + ID + "").removeClass("active");
       const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
       if (inputElement) {
         inputElement.classList.remove("active"); // Add the active class
       }
     }
     else {
-      // $(".clear_part").addClass("active");
-      // $(".clear_part").show();
+
       const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
       if (inputElement) {
         inputElement.classList.add("active"); // Add the active class
@@ -1167,29 +639,24 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
     if (this.state.isCurrentUserAdmin === true && this.state.editMode === "edit") {
-      // if(this.state.isCurrentUserAdmin != true && this.state.editMode != "edit"){
-      //   return;
-      // }
+
       $("#" + DOMID).toggle();
       this.showSearchbtn();
     }
-    // this.setState({ isInitialscreen: false })
   }
   public handleInputChange(ID: any, SelectID: string) {
     var input = $("#SearchInput").val();
     $("#" + SelectID).show();
     this.showSearchbtn();
     if (input == "") {
-      // $(".clear_part").hide();
-      // $("." + ID + "").removeClass("active");
+
       const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
       if (inputElement) {
         inputElement.classList.remove("active"); // Add the active class
       }
     }
     else {
-      // $(".clear_part").addClass("active");
-      // $(".clear_part").show();
+
       const inputElement = document.querySelector(`.${ID}`); // Find the input by DOMID
       if (inputElement) {
         inputElement.classList.add("active"); // Add the active class
@@ -1220,64 +687,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     })
   }
-  // public clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  //   e.preventDefault();
-  //   $("#SearchInput").val("");
-  //   $(".clear_part").removeClass("active");
-  //   sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
 
-  //     if (resp.length != 0) {
-  //       sp.web.lists.getByTitle(ComponentallocationList).items.filter(`substringof('${this.state.selectedValue}',Title)`).top(5000).orderBy("Title", true).get().then((res) => {
-  //         if (res.length != 0) {
-  //           var updatedavailablecomponent = resp.find((item)=> item.ComponentId !== res.ComponentID)
-  //         }
-  //       })
-  //       this.setState({
-  //         AvailableComponents: updatedavailablecomponent
-  //       });
-  //     }
-  //   });
-  // }
-
-  // public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-  //   debugger;
-  //   event.preventDefault();
-  //   var data: any;
-  //   const existingItems = await sp.web.lists
-  //     .getByTitle(ComponentallocationList)
-  //     .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-  //     .get();
-  //   if (existingItems.length > 0) {
-  //     // If an item exists for the position, update it
-  //     const itemId = existingItems[0].Id; // Get the item ID
-  //     await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).delete();
-  //     sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
-  //       if (resp.length != 0) {
-  //         resp.forEach((items) => {
-  //           if (items.Title == value) {
-  //             data = items;
-  //           }
-  //         })
-  //       }
-  //       this.state.AvailableComponents.push(data)
-  //       const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
-  //         index === (Position - 1) ? true : item
-  //       );
-  //       this.setState({
-  //         // AvailableComponents: updatedAvailableComponents,
-  //         isInitialscreen: updatedIsInitialscreen,
-  //       });
-  //     });
-  //   }
-
-
-  // }
 
   public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: any) {
     e.preventDefault();
     // Clear the search input and reset any active state
     $("#SearchInput").val("");
-    // $(".clear_part").removeClass("active");
     try {
       // Fetch all components
       const allComponents = await sp.web.lists
@@ -1602,7 +1017,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
                   (<div className="container home_pg relative">
                     <div className="section-right">
-                      {/* Banner and CEO Message */}
                       <div className="banner-ceo-message">
                         <div className="row">
                           {this.state.isInitialscreen[0] == true ?
@@ -1824,33 +1238,27 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   :
                   this.state.isClicked == "AnnouncementReadMore" ?
                     (
-                      // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                       <AnnouncementsRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
                     ) :
 
                     this.state.isClicked == "AnnouncementViewMore" ?
                       (
-                        // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                         <AnnouncementsVm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
                       ) :
                       this.state.isClicked == "BirthdayRm" ?
                         (
-                          // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                           <BirthdayRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
                         ) :
                         this.state.isClicked == "CEOReadMore" ?
                           (
-                            // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                             <CeoMessageRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
                           ) :
                           this.state.isClicked == "DeptGalleryGridView" ?
                             (
-                              // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                               <DeptGalleryGridView description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
                             ) :
                             this.state.isClicked == "DeptGalleryViewMore" ?
                               (
-                                // <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}></NewsViewMore>
                                 <DeptGalleryViewMore description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
                               ) :
                               this.state.isClicked == "EventsViewMore" ?
@@ -1873,13 +1281,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
                                       this.state.isClicked == "HeroBannerViewMore" ?
                                         (
-                                          // <HeroBannerViewMore description={''} siteurl={''} context={this.props.context} userid={undefined}   onClickHome={(compName: any) => this.homeClickHandler(compName)} onViewMoreClick={null}></HeroBannerViewMore>
                                           <HeroBannerViewMore description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
                                         ) :
-                                        // this.state.isClicked == "JobsRM" ?
-                                        // (
-                                        //   <JobsRM description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={undefined}></JobsRM>
-                                        // ) :
 
 
                                         this.state.isClicked == "NewsReadMore" ?
@@ -1898,10 +1301,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
             </div>
             <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
               <h1>Loader</h1>
-              {/* <div id="progressContainer">
-                <p id="currentListName">Creating: {this.state.currentList}</p>
-                <ProgressBar now={this.state.progress} label={`${Math.round(this.state.progress)}%`} />
-              </div> */}
+
             </div>
             {/* )} */}
           </div>
@@ -1947,7 +1347,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
       </>
 
-      //layouts
     );
 
   }

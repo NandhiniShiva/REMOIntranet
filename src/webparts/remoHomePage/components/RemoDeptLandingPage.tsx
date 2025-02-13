@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IRemoDeptLandingPageProps } from './IRemoHomePageProps';
-// import * as $ from 'jquery'
 import AboutDepartment from './RemoAboutDepartment';
 import DepartmentServices from './RemoDepartmentServices';
 import DepartmentGallery from './RemoDepartmentGallery';
@@ -24,14 +23,6 @@ NewWeb = Web(WEB.NewWeb)
 export default class RemoHomePage extends React.Component<IRemoDeptLandingPageProps, {}> {
   public componentDidMount() {
     setTimeout(() => {
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#spLeftNav').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('.ms-CommandBar').attr('style', 'display: none !important');
-      // $("#Dept-Homepage").show();
-
-
 
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
@@ -95,46 +86,7 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
     }
   }
 
-  // public async getCurrentUser() {
-  //   const url: any = new URL(window.location.href);
 
-
-  //   const fullPath = url.pathname;
-
-  //   // Find the index of 'SitePages'
-  //   const segment = "SitePages";
-  //   const segmentIndex = fullPath.indexOf(`/${segment}`);
-
-  //   if (segmentIndex === -1) {
-  //     // If 'SitePages' is not found in the URL, return null
-  //     // return null;
-  //   }
-
-  //   // Extract the part of the URL before 'SitePages'
-  //   const relevantPart = fullPath.substring(0, segmentIndex);
-
-  //   // Find the last segment before 'SitePages'
-  //   const lastSegmentIndex = relevantPart.lastIndexOf('/');
-
-  //   // Extract the last segment
-  //   const lastSegment = relevantPart.substring(lastSegmentIndex + 1);
-  //   Dept = lastSegment;
-  //   var reacthandler = this;
-  //   User = reacthandler.props.userid;
-  //   const profile = await pnp.sp.profiles.myProperties.get();
-  //   UserEmail = profile.Email;
-  //   Designation = profile.Title;
-
-  //   // Check if the UserProfileProperties collection exists and has the Department property
-  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //     // Find the Department property in the profile
-  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     console.log(departmentProperty);
-  //     if (departmentProperty) {
-  //       Department = departmentProperty.Value;
-  //     }
-  //   }
-  // }
 
   // Updated code 
   public async getCurrentUser() {
@@ -185,9 +137,7 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
 
     return (
       <div id="Dept-Homepage" style={{ display: "none" }}>
-        {/* <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.homepage} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div> */}
+
         <div className="container home_pg relative" >
           <div className="banner-ceo-message ">
             <div className="row">

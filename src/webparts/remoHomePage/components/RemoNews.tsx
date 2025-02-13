@@ -6,14 +6,13 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import Slider from "react-slick";
 import { sp } from "@pnp/sp/presets/all";
 import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let Newslist = listNames.News;
-let Location : any= '';
+let Location: any = '';
 
 export interface INewsState {
   Items: any[];
@@ -28,7 +27,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
     super(props);
     Location = this.props.description;
     console.log(this.props.description);
-    
+
     sp.setup({
       spfxContext: this.spfxContext
     });
@@ -50,7 +49,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
 
   }
 
-  public CheckLocation(){
+  public CheckLocation() {
     if (Location === 1 || Location === 5 || Location === 10) {
       this.setState({ ItemCount: 3 });
     } else if (Location === 2 || Location === 11 || Location === 12 || Location === 6 || Location === 7) {
@@ -60,42 +59,9 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
     } else {
       this.setState({ ItemCount: 2 });
     }
-    
+
   }
-  // private async GetNews() {
-  //   var reactHandler = this;
-  //   await sp.web.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "*").filter("IsActive eq 1").orderBy("Created", false).expand("Dept", "SitePageID").get().then((items) => {
-  //     if (items.length == 0) {
-  //       // $("#if-news-present").hide();
-  //       // $("#if-no-news-present").show();
 
-  //       document.querySelectorAll('#if-news-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       document.querySelectorAll('#if-no-news-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     } else {
-  //       // $("#if-news-present").show();
-  //       // $("#if-no-news-present").hide();
-
-  //       document.querySelectorAll('#if-news-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('#if-no-news-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //     }
-  //     if (items.length <= 1) {
-  //       reactHandler.setState({ ItemCount: 1 });
-  //     } else {
-  //       reactHandler.setState({ ItemCount: 2 });
-  //     }
-  //     reactHandler.setState({
-  //       Items: items
-  //     });
-  //   });
-  // }
 
   // updated code 
   private async GetNews() {
@@ -203,7 +169,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <img src={`${serverRelativeUrl}`} alt="image" />
             </div>
             <div className="news-whole-block-details">
-              {/* <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4> */}
               <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
 
               <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>
@@ -217,7 +182,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="no-image-uploaded" />
             </div>
             <div className="news-whole-block-details">
-              {/* <h4>  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off">{item.Title}</a> </h4> */}
               <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
 
               <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>

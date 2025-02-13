@@ -53,9 +53,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
 
   public componentDidMount() {
     setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
+
 
       // Show the element with ID "ceoMessageReadMore"
 
@@ -74,15 +72,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
         commentsWrapper.style.setProperty('display', 'none', 'important');
       }
     }, 1000);
-    // this.getCurrentUser()
-    //   .then(() => {
-    //     this.getcurrentusersQuickLinksForEdit();
-    //     this.GetAllQuickLinks();
-    //     this.LandingPageAnalytics();
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error in loading user data or analytics:", error);
-    //   });
+
 
     // updated code
     const userDetails = new CurrentUserDetails();
@@ -101,36 +91,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
 
 
   }
-
-  // public async GetAllQuickLinks() {
-  //   var reactHandler = this;
-  //   var AllID = "";
-  //   for (var i = 0; i < ExistingQlinks.length; i++) {
-  //     if (ExistingQlinks.length != 0) {
-  //       let LastIndex = ExistingQlinks.length - 1;
-  //       if (i == LastIndex) {
-  //         AllID += "Id ne " + ExistingQlinks[i].ItemId + "";
-  //       } else {
-  //         AllID += "Id ne " + ExistingQlinks[i].ItemId + " and ";
-  //       }
-  //     }
-  //   }
-  //   if (ExistingQlinks.length != 0) {
-  //     await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1' and ${AllID}`).orderBy("Order0", true).get().then((items) => {
-  //       reactHandler.setState({
-  //         items: items
-  //       });
-  //     });
-  //   } else {
-  //     await sp.web.lists.getByTitle(QuickLinkslist).items.select("Title", "ID", "URL", "Image", "ImageHover", "*").filter(`IsActive eq '1'`).orderBy("Order0", true).get().then((items) => {
-  //       reactHandler.setState({
-  //         items: items
-  //       });
-  //     });
-  //   }
-  // }
-
-  // Optimized code
 
   public async GetAllQuickLinks() {
     try {
@@ -153,58 +113,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
       console.error('Error fetching quick links:', error);
     }
   }
-
-  // public async getcurrentusersQuickLinksForEdit() {
-  //   var reactHandler = this;
-  //   let UserID = this.props.userid;
-  //   ExistingQlinks = [];
-
-  //   await sp.web.lists.getByTitle(UsersQuickLinkslist).items.select("ID", "SelectedQuickLinks/Id", "SelectedQuickLinks/Title", "URL", "Order0", "ImageSrc", "HoverImageSrc").filter(`Author/Id eq '${UserID}'`).expand("SelectedQuickLinks").orderBy("Order0", true).get().then(async (items) => {
-  //     reactHandler.setState({
-  //       MyQuickLinksPrefference: items
-  //     });
-  //     if (this.state.IsEditModeisON == true) {
-  //       setTimeout(() => {
-  //         // $(".delete-quicklinks").addClass("open");
-
-  //         let allCommentsElements: any = document.querySelectorAll(".delete-quicklinks");
-  //         allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
-  //           element.add("open");
-  //         });
-
-  //       }, 1500);
-  //     }
-  //     if (items.length != 0) {
-  //       this.setState({
-  //         IsMyQuickLinksEmpty: false
-  //       });
-  //     } else {
-  //       this.setState({
-  //         IsMyQuickLinksEmpty: true
-  //       });
-  //     }
-
-  //     this.setState({ MyQLinksArray: items });
-
-  //     // Remove quick links that match the condition
-  //     let activeQuickLinks = await sp.web.lists.getByTitle(QuickLinkslist).items.select("ID").filter("IsActive eq '1'").get();
-  //     const activeQuickLinkIds = new Set(activeQuickLinks.map((link) => link.Id));
-  //     let updatedMyQLinksArray = items.filter((item) => activeQuickLinkIds.has(item.SelectedQuickLinks.Id));
-
-  //     // Update the state with the filtered quick links
-  //     this.setState({ MyQLinksArray: updatedMyQLinksArray });
-
-  //     for (var i = 0; i < updatedMyQLinksArray.length; i++) {
-  //       tempFavHolderArr.push(updatedMyQLinksArray[i].SelectedQuickLinks.Id);
-  //     }
-
-  //     let QlinkCount = ExistingQlinks.length;
-  //     reactHandler.setState({ AvailableSpaceCount: 5 - QlinkCount });
-  //     reactHandler.GetAllQuickLinks();
-  //   });
-  // }
-
-  // Optimized code
 
   public async getcurrentusersQuickLinksForEdit() {
     try {
@@ -254,24 +162,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
     }
   }
 
-  // public async getCurrentUser() {
-  //   try {
-  //     const profile = await sp.profiles.myProperties.get();
-  //     Designation = profile.Title;
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while fetching the user profile:", error);
-  //   }
-  // }
-
   public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {
@@ -303,7 +193,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public ShowDeletedBtn() {
-    // $(".delete-quicklinks").addClass("open");
 
     let allCommentsElements: any = document.querySelectorAll(".delete-quicklinks");
     allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
@@ -313,7 +202,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public HideDeletedBtn() {
-    // $(".delete-quicklinks").removeClass("open");
 
     let allCommentsElements: any = document.querySelectorAll(".delete-quicklinks");
     allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
@@ -323,7 +211,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public ShowAddBtn() {
-    // $(".add-quicklinks").addClass("open");
 
     let allCommentsElements: any = document.querySelectorAll(".add-quicklinks");
     allCommentsElements.forEach((element: { add: (arg0: string) => void; }) => {
@@ -333,7 +220,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
   }
 
   public HideAddBtn() {
-    // $(".add-quicklinks").removeClass("open");
 
     let allCommentsElements: any = document.querySelectorAll(".add-quicklinks");
     allCommentsElements.forEach((element: { remove: (arg0: string) => void; }) => {
@@ -349,7 +235,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
             this.setState({ MyQLinksArray: [] });
             this.getcurrentusersQuickLinksForEdit();
           } else {
-            // $("#bt-qlink-adder").prop("disabled", false);
 
             const buttonElement: any = document.getElementById('bt-qlink-adder');
             // Set the "disabled" property to false

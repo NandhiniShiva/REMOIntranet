@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-// import * as $ from 'jquery';
 
 import { ServiceProvider } from '../ServiceProvider/ServiceProvider';
 import { IWeb, Web } from "@pnp/sp/webs";
@@ -24,11 +23,6 @@ let Logolist = listNames.Logo;
 let Navigationslist = listNames.Navigations;
 let DepartmentsMasterlist = listNames.DepartmentsMaster;
 let QuickLinkslist = listNames.QuickLinks;
-
-// setTimeout(function () {
-//   $('html').css("visibility", "visible");
-//   $('html').addClass('loading-in-progress');
-// }, 1200);
 
 setTimeout(function () {
   document.documentElement.style.visibility = "visible"; // Set visibility to visible
@@ -115,22 +109,10 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       });
     });
 
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.8`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/Responsive.css?v=4.18`);
-
-
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/SP-NativeStyle-Overriding.css?v=3.3`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/style.css?v=1.8`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/AutoListCreation/Responsive.css?v=4.18`);
-
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
-    // SPComponentLoader.loadCss(Configuration.cssPath);
-    // SPComponentLoader.loadCss(Configuration.overRidingCss);
-    // SPComponentLoader.loadCss(Configuration.respnsiveCss);
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -171,10 +153,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
     const URL = siteurl.toLowerCase();
 
-    // const ActivePageUrl = (window.location.href.split('?')[0]);
-
-
-    // Hide elements based on page URL
     if (
       ActivePageUrl === `${URL}/sitepages/remoproducthome.aspx` ||
       ActivePageUrl === `${URL}/sitepages/HomePage.aspx#` ||
@@ -183,14 +161,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       ActivePageUrl === `${URL}/`
     ) {
       setTimeout(() => {
-        //   // $('div[data-automation-id="CanvasControl"]').css('padding', '0px').css('margin', '0px');
-        // $(".inner-pages-nav").hide();
-        //   // $('#master_footer_parent').hide();
-        //   // $('.ControlZone--control').attr('style', 'display: none !important');
-        //   document.querySelectorAll('div[data-automation-id="CanvasControl"]').forEach(function (element: any) {
-        //     element.style.padding = '0px';
-        //     element.style.margin = '0px';
-        //   });
 
         const innerPagesNav = document.getElementsByClassName('inner-pages-nav');
         if (innerPagesNav.length > 0) {
@@ -205,10 +175,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
           masterFooter.style.display = 'none';
         }
 
-        // const ControlZone: any = document.getElementsByClassName('ControlZone--control');
-        // if (ControlZone) {
-        //   ControlZone.style.setProperty('display', 'none', 'important');
-        // }
       }, 500);
     } else if (
       ActivePageUrl === `${siteurl}/eventsactivities/sitepages/HomePage.aspx` ||
@@ -218,7 +184,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       ActivePageUrl === `${siteurl}/eventsactivities/` ||
       ActivePageUrl === `${siteurl}/eventsactivities/#`
     ) {
-      // $('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper').hide();
       document.querySelectorAll('#spLeftNav, #sp-appBar, #spSiteHeader, #SuiteNavWrapper').forEach(function (element: any) {
         element.style.display = 'none';
       });
@@ -231,7 +196,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       ActivePageUrl === `${siteurl}/learningportal/` ||
       ActivePageUrl === `${siteurl}/learningportal/#`
     ) {
-      // $('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper').hide();
       document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper').forEach(function (element: any) {
         element.style.display = 'none';
       });
@@ -243,17 +207,11 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       ActivePageUrl === `${siteurl}/offerspromotions/` ||
       ActivePageUrl === `${siteurl}/offerspromotions/#`
     ) {
-      // $('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper').hide();
       document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper').forEach(function (element: any) {
         element.style.display = 'none';
       });
 
     }
-
-    // Hide elements initially
-    // $('#spLeftNav').hide();
-    // $('#spCommandBar').hide();
-    // $('#SuiteNavWrapper').hide();
 
     const spLeftNav = document.getElementById('spLeftNav');
     if (spLeftNav) {
@@ -270,8 +228,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       SuiteNavWrapper.style.display = 'none';
     }
 
-    // Other operations
-    // this.GetVersionData();
     this.getUnreadmailCount();
     this.getmymeetings();
     this.GetMainNavItems();
@@ -279,12 +235,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     this.GetCurrentUserDetails();
     this.EnableContentEditorForSuperAdmins();
     this.setState({ CurrentPageUrl: ActivePageUrl });
-
-    // Event listeners
-    // $('.globalleftmenu-fixed-area ul li').on('click', function () {
-    //   $(this).siblings().removeClass('active').removeClass('open');
-    //   $(this).addClass('active').toggleClass('open');
-    // });
 
 
     document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
@@ -305,21 +255,12 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       });
     });
 
-
-    // $(".reponsive-quick-wrap .main-menu ul li.submenu a img").on("click", function () {
-    //   $(this).parent().toggleClass("active");
-    // });
-
     document.querySelectorAll('.reponsive-quick-wrap .main-menu ul li.submenu a img').forEach(function (img) {
       img.addEventListener('click', function () {
         this.parentElement.classList.toggle('active');
       });
     });
 
-    // Timeout to remove loading class
-    // setTimeout(() => {
-    //   $('html').css("visibility", "visible").removeClass('loading-in-progress');
-    // }, 5000);
 
     setTimeout(function () {
       document.documentElement.style.visibility = 'visible';
@@ -333,28 +274,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     if (ref && ref.parentNode) {
       ref.parentNode.insertBefore(style, ref);
     }
-
-    // Click outside event listeners
-    // document.addEventListener("mousedown", (event) => {
-    //   const target = event.target as Element;
-    //   const container1 = $(".reponsive-quick-wrap");
-    //   if (!container1.is(target) && container1.has(target).length === 0) {
-    //     $(".responsive-menu-wrap ").removeClass("open");
-    //   }
-    //   const container2 = $(".search");
-    //   if (!container2.is(target) && container2.has(target).length === 0) {
-    //     $(".responsive-background").removeClass("open");
-    //     $(".search").removeClass("open");
-    //   }
-    //   const user = $(".user-images");
-    //   if (!$(target).closest(user).length) {
-    //     $(".user-profile-details").removeClass("open");
-    //   }
-    //   const submenuContainer = $(".submenu");
-    //   if (!$(target).closest(submenuContainer).length) {
-    //     $(".main-submenu").removeClass("open");
-    //   }
-    // });
 
     document.addEventListener("mousedown", function (event) {
       const target: any = event.target;
@@ -381,25 +300,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       }
     });
   }
-
-
-
-
-  //   public async GetVersionData() {
-  //     try {
-  //       await NewWeb.lists.getByTitle(VersionMasterlist).items.select("Title").orderBy("Created", false).top(1).get().then((items: string | any[]) => {
-
-  //         if (items.length != 0) {
-  //           this.setState({
-  //             VersionData: items[0].Title
-  //           });
-  //         }
-  //       });
-  //     }
-  //     catch (error) {
-  //       console.log("Unable to get VersionData due to : " + error);
-  //     }
-  //   }
 
   public async GetCurrentUserDetails() {
     try {
@@ -454,7 +354,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       if (mailcount > 0) {
         this.setState({ EmailCount: mailcount });
         if (mailcount > 999) {
-          // $(".count-email").addClass("more");
           document.querySelectorAll(".count-email").forEach(function (element) {
             element.classList.add("more");
           });
@@ -462,9 +361,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
         }
       } else {
         this.setState({ EmailCount: "0" });
-        // $("#Emails_count").hide();
-        // let elmailCoun: any = document.getElementById("Emails_count")
-        // elmailCoun.style.display = "none";
 
         let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
         if (elmailCoun) {
@@ -495,10 +391,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               }
             } else {
               this.setState({ MeetingsCount: "0" });
-              // $("#Meetings_count").hide();
-
-              // let elmailCoun: any = document.getElementById("Meetings_count")
-              // elmailCoun.style.display = "none";
 
               let elmailCoun: HTMLElement | null = document.getElementById("Meetings_count");
               if (elmailCoun) {
@@ -533,16 +425,12 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetMainNavItems() {
     var reactHandler = this;
     try {
-      //  / await NewWeb.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
       await sp.web.lists.getByTitle(Navigationslist).items.select("Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon").filter("IsActive eq 1").orderBy("Order0", true).top(10).expand("LinkMasterID").get().then((items: any) => {
 
         reactHandler.setState({
           MainNavItems: items
         });
-        // $('#root-nav-links ul li').on('click', function () {
-        //   $(this).siblings().removeClass('active');
-        //   $(this).addClass('active');
-        // });
+
         document.querySelectorAll('#root-nav-links ul li').forEach(function (item) {
           item.addEventListener('click', function () {
             // Remove 'active' class from all siblings
@@ -562,13 +450,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   }
 
   public async GetDepartments() {
-    //$(".global-qlink-main").hide();
-    //$(".global-dept-main").show();
-    // $(".responsi-inner-submenu").toggleClass("open");
-    // $(".resp-dept-submenu-mob").toggleClass("active");
-    // $(".resp-qlink-submenu").removeClass("active");
-    // $(".global-qlink-main").removeClass("open");
-    // $(".global-dept-main").toggleClass("open");
 
     document.querySelectorAll('.responsi-inner-submenu').forEach(function (element) {
       element.classList.toggle('open');
@@ -604,11 +485,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
         reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
       }
 
-      // $(".submenu-clear-wrap").show()
-      // $(".submenu-wrap-lists ul li").on("click", function () {
-      //   $(this).siblings().removeClass('active');
-      //   $(this).addClass('active');
-      // });
 
       document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
         (element as HTMLElement).style.display = 'block';
@@ -630,13 +506,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   }
 
   public async GetQuickLinks() {
-    //$(".global-dept-main").hide();
-    //$(".global-qlink-main").show();
-    // $(".resp-qlink-submenu").toggleClass("active");
-    // $(".resp-dept-submenu-mob").removeClass("active");
-    // $(".third-level-submenu").removeClass("open");
-    // $(".global-dept-main").removeClass("open");
-    // $(".global-qlink-main").toggleClass("open");
 
     document.querySelectorAll('.resp-qlink-submenu').forEach(function (element) {
       element.classList.toggle('active');
@@ -659,7 +528,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
     reactHandler.displayDataQlinkResponsive = [];
     try {
       NewWeb.lists.getByTitle(QuickLinkslist).items.select("Title", "Image", "ImageHover", "OpenInNewTab", "Order", "URL").filter(`IsActive eq 1`).orderBy("Order0", true).get().then((items: string | any[]) => {
-        //url: `${reactHandler.props.siteurl}/_api/web/lists/getbytitle('Quick Links')/items?$select=Title,OpenInNewPage,URL,Image,ImageHover,centernavigationicon&$filter=IsActive eq 1&$orderby=Order0 asc`,
         reactHandler.setState({
           QuickLinkItems: items
         });
@@ -678,8 +546,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   public async GetSubNodes(ID: string, Title: any, ClickFrom: string, key: string) {
     try {
 
-      // $("#" + ID + "-Dept-Child").empty();
-      // $("#" + ID + "-Dept-Child-parent").toggleClass("open");
       const element = document.getElementById(ID + "-Dept-Child");
       if (element) {
         element.innerHTML = '';
@@ -924,9 +790,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public OpenBurggerMainMenu() {
-    // $(".responsive-menu-wrap").addClass("open");
-    // $(".main-menu").show();
-    // $(".quicklink-menu").hide();
 
     document.querySelectorAll('.responsive-menu-wrap').forEach(function (element) {
       element.classList.add('open');
@@ -941,9 +804,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   }
 
   public OpenBurggerQuickLinkMenu() {
-    // $(".responsive-menu-wrap").addClass("open");
-    // $(".quicklink-menu").show();
-    // $(".main-menu").hide();
+
     document.querySelectorAll('.responsive-menu-wrap').forEach(function (element) {
       element.classList.add('open');
     });
@@ -956,21 +817,18 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
   }
 
   public OpenSearch() {
-    // $(".responsive-background, .search").addClass("open");
     document.querySelectorAll('.responsive-background, .search').forEach(function (element) {
       element.classList.add('open');
     });
   }
 
   public CloseSearch() {
-    // $(".search").removeClass("open");
     document.querySelectorAll('.search').forEach(function (element) {
       element.classList.remove('open');
     });
   }
 
   public ShowUserDetailBlock() {
-    // $(".user-profile-details").toggleClass("open");
     document.querySelectorAll('.user-profile-details').forEach(function (element) {
       element.classList.toggle('open');
     });
@@ -980,12 +838,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
 
   public render(): React.ReactElement<ISideNavProps> {
-    // $('.globalleftmenu-fixed-area ul li').on('click', function () {
-    //   $(this).siblings().removeClass('active');
-    //   $(this).siblings().removeClass('open');
-    //   $(this).addClass('active');
-    //   $(this).toggleClass('open');
-    // });
+
     document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
       item.addEventListener('click', function () {
         // Remove 'active' and 'open' classes from all siblings
@@ -1068,11 +921,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
             <div className="header-right">
               <div className="header-right-lists">
                 <ul>
-                  {/* <li>
-                    
-                    <Notification siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.state.Userid} />
 
-                  </li> */}
                   <li className="meet-count" data-tip data-for={"React-tooltip-calendar"} data-custom-class="tooltip-custom">
                     <a href="https://outlook.office.com/calendar/view/month" target="_blank" data-interception="off" className="notification relative" >
                       <img src={`${this.props.siteurl}/SiteAssets/img/calender.svg`} alt="images" />
@@ -1114,9 +963,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                     </div>
                   </a>
                   </li>
-                  {/* <li className="versn-data">
-                    {this.state.VersionData}
-                  </li> */}
+
                 </ul>
               </div>
 

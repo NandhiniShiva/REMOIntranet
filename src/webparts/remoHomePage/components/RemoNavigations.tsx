@@ -3,12 +3,10 @@ import { IRemoHomePageProps } from './IRemoHomePageProps';
 import { IWeb, Web } from "@pnp/sp/webs";
 import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
 import ReactTooltip from "react-tooltip";
-// import * as $ from 'jquery';
 import * as moment from 'moment';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
-// import { DepartmentListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 
 
 export interface INavigationsState {
@@ -101,41 +99,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
 
-  // async GetMainNavItems() {
-  //   const items = await sp.web.lists.getByTitle(Navigationslist).items
-  //     .select("*", "Title", "URL", "OpenInNewTab", "LinkMasterID/Title", "LinkMasterID/Id", "HoverOnIcon", "HoverOffIcon")
-  //     .filter("IsActive eq 1")
-  //     .orderBy("Order0", true)
-  //     .top(7)
-  //     .expand("LinkMasterID")
-  //     .get();
-
-  //   this.setState({ MainNavItems: items });
-  //   // $('#root-nav-links ul li').on('click', function () {
-  //   //   $(this).siblings().removeClass('active');
-  //   //   $(this).addClass('active');
-  //   // });
-
-  //   const navLinks = document.querySelectorAll('#root-nav-links ul li');
-
-  //   navLinks.forEach(function (link) {
-  //     link.addEventListener('click', function () {
-  //       // Remove "active" class from all siblings
-  //       navLinks.forEach(function (sibling) {
-  //         sibling.classList.remove('active');
-  //       });
-
-  //       // Add "active" class to the clicked item
-  //       link.classList.add('active');
-  //     });
-  //   });
-
-  // }
-
-  // Updated code 
-
-
-
   private async GetMainNavItems() {
     try {
       const items = await sp.web.lists
@@ -164,19 +127,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
       }
 
-      // const navLinks = document.querySelectorAll('#root-nav-links ul li');
-
-      // navLinks.forEach((link) => {
-      //   link.addEventListener('click', () => {
-      //     // Remove "active" class from all siblings
-      //     navLinks.forEach((sibling) => sibling.classList.remove('active'));
-      //     // Add "active" class to the clicked item
-      //     link.classList.add('active');
-      //   });
-      // });
-
-      // new code 
-
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
 
       if (navLinks.length > 0) {
@@ -196,41 +146,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       console.error("Error fetching navigation items: ", error);
     }
   }
-  // async GetMyLinks() {
-  //   try {
-  //     const items = await sp.web.lists.getByTitle(QuickLinkslist).items
-  //       .select("*", "Title", "Image", "ImageHover", "OpenInNewTab", "Order", "URL")
-  //       .filter(`IsActive eq 1`)
-  //       .orderBy("Order0", true)
-  //       .top(5)
-  //       .get();
-
-  //     this.setState({ MyLinks: items });
-  //     // $('#root-nav-links ul li').on('click', function () {
-  //     //   $(this).siblings().removeClass('active');
-  //     //   $(this).addClass('active');
-  //     // });
-
-  //     const navLinks = document.querySelectorAll('#root-nav-links ul li');
-
-  //     navLinks.forEach(function (link) {
-  //       link.addEventListener('click', function () {
-  //         // Remove "active" class from all siblings
-  //         navLinks.forEach(function (sibling) {
-  //           sibling.classList.remove('active');
-  //         });
-
-  //         // Add "active" class to the clicked item
-  //         link.classList.add('active');
-  //       });
-  //     });
-
-  //   } catch (err) {
-  //     console.log("Navigation Main Nav : " + err);
-  //   }
-  // }
-
-  // updated code 
 
   private async GetMyLinks() {
     try {
@@ -272,10 +187,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     }
   }
   public GetDepartments() {
-    // $('.clears-subnav').show();
-    // $('.floating-content-editor-home').addClass('active')
-    // $('.breadcrum-block').addClass('open');
-    // $(".breadcrum-block").show();
 
     document.querySelectorAll('.floating-content-editor-home').forEach(function (element) {
       element.classList.add('active');
@@ -295,9 +206,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     var reactHandler = this;
     reactHandler.displayData = [];
     BreadCrumb = [];
-    // $(".main-mavigation").siblings().removeClass("submenu");
-    // $(".main-mavigation").addClass("submenu");
-    // $('#meetingroom').off('click');
 
     const mainNavigationElements: any = document.querySelectorAll('.main-mavigation');
     mainNavigationElements.forEach(function (element: any) {
@@ -323,14 +231,10 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get().then((items) => {
         reactHandler.setState({
           DeptandQuickLinksItems: items,
-          // IsDeptDataAvailable: true,
           isSubNodeAvailable: items.length
 
         });
         for (var i = 0; i < items.length; i++) {
-
-
-          //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
           let ID = items[i].Id;
 
           var Title = items[i].Title;
@@ -340,11 +244,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
           //   }
         }
-        // $(".submenu-clear-wrap").show()
-        // $(".submenu-wrap-lists ul li").on("click", function () {
-        //   $(this).siblings().removeClass('active');
-        //   $(this).addClass('active');
-        // });
+
 
         document.querySelectorAll('.submenu-clear-wrap').forEach(element => {
           (element as HTMLElement).style.display = 'block';
@@ -356,7 +256,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
             this.parentElement.querySelectorAll('li').forEach(function (sibling: any) {
               sibling.classList.remove('active');
             });
-
             // Add "active" class to the clicked item
             this.classList.add('active');
           });
@@ -521,14 +420,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
   public ClearNavigation() {
     BreadCrumb = [];
-    // $('.breadcrum-block').removeClass('open');
-    // $('.clears-subnav-quick').hide();
-    // $('.clears-subnav').hide();
-    // $(".breadcrum-block").hide();
-    // $(".main-mavigation").removeClass("submenu");
-    // $('#root-nav-links ul li').siblings().removeClass('active');
-    // $(".submenu-wrap-lists ul li").siblings().removeClass('active');
-    // $('#root-nav-links ul li:first-child').addClass('active');
 
     document.querySelectorAll('.breadcrum-block').forEach(function (element) {
       element.classList.remove('open');
@@ -584,82 +475,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     this.displayData = [];
     this.displayDataQlink = [];
   }
-  // public mylinkss() {
-  //   $(".tab-2-data").removeClass("active");
-  //   $("#meetingroom").hide()
-  //   $(".tab-1-data").addClass("active");
-  //   $("#contacts").show()
-
-  //   $(".breadcrum-block").hide();
-  //   $(".main-mavigation").removeClass("submenu");
-  //   $('#root-nav-links ul li').siblings().removeClass('active');
-  //   $(".submenu-wrap-lists ul li").siblings().removeClass('active');
-  //   $('#root-nav-links ul li:first-child').addClass('active');
-  // }
-
-  // converted code
-  // public mylinks() {
-  //   // Remove "active" class from elements with the class "tab-2-data"
-  //   document.querySelectorAll('.tab-2-data').forEach(function (element) {
-  //     element.classList.remove('active');
-  //   });
-
-  //   // Hide the element with the ID "meetingroom"
-  //   document.querySelectorAll('#meetingroom').forEach(element => {
-  //     (element as HTMLElement).style.display = 'none';
-  //   });
-  //   // Add "active" class to elements with the class "tab-1-data"
-  //   document.querySelectorAll('.tab-1-data').forEach(function (element) {
-  //     element.classList.add('active');
-  //   });
-
-  //   // Show the element with the ID "contacts"
-  //   document.querySelectorAll('#contacts').forEach(element => {
-  //     (element as HTMLElement).style.display = 'block';
-  //   });
-  //   // Hide elements with the class "breadcrum-block"
-  //   document.querySelectorAll('.breadcrum-block').forEach(function (element) {
-  //     (element as HTMLElement).style.display = 'none';
-  //   });
-
-  //   // Remove "submenu" class from elements with the class "main-mavigation"
-  //   document.querySelectorAll('.main-mavigation').forEach(function (element) {
-  //     element.classList.remove('submenu');
-  //   });
-
-  //   // Remove "active" class from siblings of list items in "#root-nav-links ul"
-  //   const mainNavigationElements: any = document.querySelectorAll('#root-nav-links ul li');
-  //   mainNavigationElements.forEach(function (element: any) {
-
-  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //       (sibling: any) => sibling !== element
-  //     );
-  //     // Remove the "submenu" class from each sibling
-  //     siblings.forEach(function (sibling: any) {
-  //       sibling.classList.remove('active');
-  //     });
-  //   });
-  //   const submenuWrapListsElements: any = document.querySelectorAll('.submenu-wrap-lists ul li');
-  //   submenuWrapListsElements.forEach(function (element: any) {
-
-  //     const siblings = Array.prototype.slice.call(element.parentElement.children).filter(
-  //       (sibling: any) => sibling !== element
-  //     );
-  //     // Remove the "submenu" class from each sibling
-  //     siblings.forEach(function (sibling: any) {
-  //       sibling.classList.remove('active');
-  //     });
-  //   });
-
-  //   // Add "active" class to the first child of "#root-nav-links ul"
-  //   const firstChild = document.querySelector('#root-nav-links ul li:first-child');
-  //   if (firstChild) {
-  //     firstChild.classList.add('active');
-  //   }
-  // }
-
-  // optimized code
-
   public mylinks() {
     const toggleDisplay = (selector: string, displayValue: string) => {
       document.querySelectorAll(selector).forEach(element => {
@@ -716,7 +531,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
     event.preventDefault();
     var DepartmentItems: any[] = [];
     var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
-    // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
     if (response.length != 0) {
       this.setState({ IsDeptDataAvailable: true, IsDeptClicked: true })
       response.forEach((item) => {
@@ -724,17 +538,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           DepartmentItems.push(item.Title)
         }
       })
-      // await this.Createalldepartmentlist(DepartmentItems)
     }
-    //  else {
-    //   this.setState({ IsDeptDataAvailable: false, IsDeptClicked: true })
-    // }
+
   }
 
   public async GetDeptData() {
-    // setInterval(async () => {
     var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.select("Title", "ID", "URL", "HasSubDepartment", "OpenInNewTab", "PlaceDepartmentUnder/Title", "PlaceDepartmentUnder/Id", "Shortfield").filter(`IsActive eq '1'`).orderBy("Order0", true).expand("PlaceDepartmentUnder/Id", "PlaceDepartmentUnder").get();
-    // var response = await sp.web.lists.getByTitle(DepartmentsMasterlist).items.get();
     if (response.length != 0) {
       response.forEach(async (item) => {
         const newDeptTitle = item.Shortfield; // Replace with actual logic to get this title
@@ -748,48 +557,11 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           console.log("Subsite already exists. No need to create.");
         }
       })
-      // for (let i = 0; i < DepartmentListDetails.length; i++) {
-      //   const listName = DepartmentListDetails[i].name; // Access the list name
-      //   const columns = DepartmentListDetails[i].columns; // Access the columns for the list
-      //   // Ensure the list exists or create it
-      //   const listEnsureResult = await sp.web.lists.ensure(listName);
-      //   if (listEnsureResult.created) {
-      //     console.log(`List '${listName}' created successfully.`);
-      //     await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
-      //   } else {
-      //     console.log(`List '${listName}' already exists.`);
-      //     await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
-      //   }
-      // }
 
-
-      // await this.Createalldepartmentlist(DepartmentItems)
     }
     // }, 500)
   }
-  // public async createListInSubsite(subsiteUrl: any) {
-  //   try {
-  //     const subsite = Web(subsiteUrl);
-  //     for (let i = 0; i < DepartmentListDetails.length; i++) {
-  //       const listName = DepartmentListDetails[i].name; // Access the list name
-  //       const columns = DepartmentListDetails[i].columns; // Access the columns for the list
-  //       // Ensure the list exists or create it
-  //       const listEnsureResult = await subsite.lists.ensure(listName);
-  //       if (listEnsureResult.created) {
-  //         console.log(`List '${listName}' created successfully.`);
-  //         await this.createSharePointColumns(listName, columns, subsite); // Create columns for the newly created list
-  //       } else {
-  //         console.log(`List '${listName}' already exists.`);
-  //         await this.createSharePointColumns(listName, columns, subsite); // Ensure columns exist even if the list already exists
-  //       }
-  //       console.log(`List '${listName}' created in subsite: ${subsiteUrl}`);
-  //     }
-  //     // Create the list in the subsite      console.log(list)
-  //   } catch (error) {
-  //     console.error("Error creating list in subsite:", error);
-  //   }
 
-  // }
 
   public async createSharePointColumns(name: string, columns: any[], subsite: IWeb & IInvokable<any>): Promise<void> {
     try {
@@ -802,17 +574,11 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         let columnExist = false;
         try {
           columnExist = await subsite.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-          // const columnfield = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName == "Name" ? "FileLeafRef" : column.columnName).get();
-          // columnExist = !!columnfield.Id; // Check if the column object has a valid Id
-          // console.log(columnExist ? "Column exists." : "Column does not exist.");
+
         } catch {
           columnExist = false; // Column does not exist
         }
 
-        // if (columnExist == false && column.columnName.trim() === "Name" && column.type.trim() === "addTextField") {
-        //     await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
-        //     console.log("Text field 'Name' created.");
-        // }
 
         if (!columnExist) {
           switch (column.type) {
@@ -828,7 +594,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
             case "addTextField":
               await subsite.lists.getByTitle(name).fields.addText(column.columnName);
-              // await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
               console.log(`Column '${column.columnName}' added as Text Field.`);
               break;
 
@@ -952,14 +717,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
   }
   public addDataInLink(event: any) {
     event.preventDefault();
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${QuickLinkslist}`;
 
     window.open(listUrl, "_blank");
   }
   public addDataInDepartmentMasterlist(event: any) {
     event.preventDefault();
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${QuickLinkslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${DepartmentsMasterlist}`;
     window.open(listUrl, "_blank");
   }
@@ -1105,58 +868,10 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       }
     })
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
-    // const MyLinks: JSX.Element[] = handler.state.MyLinks.map(function (item) {
-    //   let RawImageTxtOn = item.ImageHover;
-    //   let RawImageTxtOff = item.Image;
-    //   if (RawImageTxtOn != null || RawImageTxtOn != undefined && RawImageTxtOff != null || RawImageTxtOff != undefined) {
-    //     var ImgObjforON = JSON.parse(RawImageTxtOn);
-    //     if (ImgObjforON.serverRelativeUrl == undefined) {
-
-    //       var serverRelativeUrl = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforON.fileName
-
-    //     } else {
-
-    //       serverRelativeUrl = ImgObjforON.serverRelativeUrl
-
-    //     }
-    //     var ImgObjforOFF = JSON.parse(RawImageTxtOff);
-
-    //     if (ImgObjforOFF.serverRelativeUrl == undefined) {
-
-    //       var serverRelativeUrl2 = `${handler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/` + item.ID + "/" + ImgObjforOFF.fileName
-
-    //     } else {
-
-    //       serverRelativeUrl2 = ImgObjforOFF.serverRelativeUrl
-
-    //     }
-
-    //     var str2 = item.Title;
-    //     var ContentEditorURL = item.URL.Url;
-    //     var conturl = ContentEditorURL.toLowerCase();
-    //     conturl = conturl.split("?");
-    //     var DomID2 = str2.replace(/[_\W]+/g, "_");
-    //     if (item.OpenInNewTab == true) {
-    //       return (
-    //         <li
-    //           id={DomID2}>
-    //           <a href={`${item.URL.Url}`} target="_blank" data-interception="off">
-    //             <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" />
-    //             <img src={`${serverRelativeUrl}`} alt="img" className="hhover" />
-    //             <p>{item.Title}</p>
-    //           </a>
-    //         </li>
-    //       );
-
-    //     }
-    //   }
-    // })
-    //   .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
 
     return (
       <div className="col-md-12 navigation">
         <div className='tab-view-content'>
-          {/* {this.state.isDataAvailable ? */}
           <>
             <div className="tab-view">
               <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -1164,10 +879,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                   <a className="nav-link active tab-1-data" onClick={this.mylinks} id="home-tab" data-toggle="tab" href="#contacts" role="tab"
                     aria-controls="contacts" aria-selected="true">Quick Links </a>
                 </li>
-                {/* <li className="nav-item tab-2-data" role="presentation">
-                <a className="nav-link tab-2-data" onClick={this.quicklinks} id="profile-tab" data-toggle="tab" href="#meetingroom" role="tab"
-                  aria-controls="meetingroom" aria-selected="false">My Links</a>
-              </li> */}
+
               </ul>
             </div>
 
@@ -1176,7 +888,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                 {handler.state.isDataAvailableNav == true ?
                   <div className="main-mavigation m-b-20">
                     <nav className="sec" id="root-nav-links">
-                      {/* {handler.state.IsDeptDataAvailable && handler.state.IsDeptClicked && ( */}
                       <div className="breadcrum-block">
                         <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
                           All Menu
@@ -1193,13 +904,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                         ))}
 
                       </div>
-                      {/* // )} */}
-                      {/* {handler.state.IsDeptClicked === true && ( */}
-                      {/* <div className='department_btn'>
-                        <button onClick={(e) => handler.addDeptData(e)}>Add Department</button>
-                      </div> */}
-                      {/* )} */}
-                      {/* )} */}
 
                       <ul className="clearfix">
                         {MainNavigations}
@@ -1212,22 +916,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                   </div>
                 }
               </div>
-              {/* {this.state.isDataAvailableLink == true ?
-                <div className="nav-item tab-2-data" id="meetingroom">
-                  <div className="main-mavigation quick m-b-20">
-                    <nav className="sec" id="root-nav-links">
-                      <ul className="clearfix">
-                        {MyLinks}
-                      </ul>
-                    </nav>
 
-                  </div>
-                </div>
-                :
-                <div className='quicklink_btn'>
-                  <button onClick={(e) => this.addDataInLink(e)}>Add DataInQuickLink</button>
-                </div>
-              } */}
             </div>
           </>
         </div>

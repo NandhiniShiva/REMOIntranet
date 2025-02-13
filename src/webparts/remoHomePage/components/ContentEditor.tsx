@@ -45,11 +45,6 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
 
   public async componentDidMount() {
     setTimeout(() => {
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('div[data-automation-id="CanvasControl"]').attr('style', 'padding: 0px !important; margin: 0px !important');
-      // $('#content-editor').show();
 
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
@@ -145,34 +140,6 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
   }
 
 
-  // public async CheckPermission() {
-  //   let groups = await sp.web.currentUser.groups();
-  //   let isContentEditorAdmin = false;
-
-  //   for (let group of groups) {
-  //     if (group.Title === "ContentPageEditors") {
-  //       isContentEditorAdmin = true;
-  //       break;
-  //     }
-  //   }
-
-  //   this.setState({ ContentEditorAdmin: isContentEditorAdmin });
-
-  //   if (isContentEditorAdmin) {
-  //     // $("#access-denied-block").hide();
-
-  //     document.querySelectorAll('#access-denied-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-
-  //     await Promise.all([this.GetContentEditorTabs(), this.GetContentEditorNavigations(1)]);
-  //   } else {
-  //     // $("#access-denied-block").show();
-  //     document.querySelectorAll('#access-denied-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //   }
-  // }
 
   public async GetContentEditorTabs() {
     try {
@@ -224,12 +191,7 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
   }
 
   public render(): React.ReactElement<IContentEditorProps> {
-    // $(document).ready(function () {
-    //   $("#accordion .card .card-header").on('click', function () {
-    //     $(".card-header").removeClass("active");
-    //     $(this).addClass("active");
-    //   });
-    // });
+
 
     document.addEventListener('DOMContentLoaded', function () {
       const cardHeaders = document.querySelectorAll('#accordion .card .card-header');

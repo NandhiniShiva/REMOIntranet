@@ -4,37 +4,6 @@ import { listNames } from '../../Configuration';
 const Analytics = listNames.Analytics;
 
 
-// export class PageAnalytics {
-
-//     public async LandingPageAnalytics() {
-//         // if (!Department) {
-//         //     Department = "NA";
-//         // }
-//         // if (!Designation) {
-//         //     Designation = "NA";
-//         // }
-//         // console.log(this.state.Title);
-
-//         try {
-//             const response = await sp.web.lists.getByTitle(Analytics).items.add({
-//                 Category: "Announcements Read-More",
-//                 UserId: User,
-//                 Department: Department,
-//                 Designation: Designation,
-//                 Title: this.state.Title,
-//                 ItemId: ItemID,
-//                 UserEmail: UserEmail,
-//             });
-
-//             // console.log('Data successfully added:', response);
-//         } catch (error) {
-//             console.error('Error adding data:', error);
-//         }
-//     }
-// }
-
-// new code
-
 export class PageAnalytics {
     private category: string;
     private user: string;

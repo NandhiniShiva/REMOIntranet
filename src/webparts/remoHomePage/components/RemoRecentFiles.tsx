@@ -5,7 +5,6 @@ import { ServiceProvider } from './ServiceProvider/ServiceProvider';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-// import * as $ from 'jquery';
 import "@pnp/sp/folders";
 import * as moment from 'moment';
 
@@ -30,19 +29,6 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
   }
 
 
-  // public GetMyOneDriveRecents() {
-  //   this.serviceProvider.
-  //     getMyDriveRecents()
-  //     .then(
-  //       (result: any[]): void => {
-  //         this.setState({ myonedriveRecentData: result });
-  //       }
-  //     )
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-
   // updated code 
   public async GetMyOneDriveRecents() {
     try {
@@ -65,11 +51,6 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
       let weatherHeight = document.getElementById('m-b-20-weather')?.offsetHeight || 0;
       let highlightsHeight = document.getElementById('bday-highlights')?.offsetHeight || 0;
 
-      // let nwsHeight = document.getElementById('m-b-20-news').offsetHeight;
-      // let socialHeight = document.getElementById('latest-news-announcemnst').offsetHeight;
-      // let videoHeight = document.getElementById('social-and-gallery').offsetHeight;
-      // let weatherHeight = document.getElementById('m-b-20-weather').offsetHeight;
-      // let highlightsHeight = document.getElementById('bday-highlights').offsetHeight;
       let pQlinkHeight = 0;
 
       const pQlinkElement = document.getElementById('m-b-20-PQlink');
@@ -81,7 +62,6 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
       let totalHeightRight = weatherHeight + highlightsHeight + pQlinkHeight;
       let totalCalculatedHeight = totalHeightLeft - totalHeightRight + 25;
 
-      // $("#dynamic-height-recentsfiles").css("height", `${totalCalculatedHeight}px`);
       const dynamicHeightElement = document.getElementById("dynamic-height-recentsfiles");
       if (dynamicHeightElement) {
         dynamicHeightElement.style.height = `${totalCalculatedHeight}px`;

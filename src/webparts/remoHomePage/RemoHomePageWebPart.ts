@@ -28,12 +28,8 @@ export default class RemoHomePageWebPart extends BaseClientSideWebPart<IRemoHome
   protected async onInit(): Promise<void> {
     await super.onInit();
 
-    // sp.setup({
-    //   spfxContext: this.context
-    // });
     return new Promise<void>((resolve, _reject) => {
 
-      // this.properties.listName = Newslist;
       this.properties.createList = true;
 
 

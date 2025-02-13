@@ -11,6 +11,7 @@ import "@pnp/sp/site-users/web";
 import * as moment from 'moment';
 import { listNames } from '../Configuration';
 import "@pnp/sp/clientside-pages/web";
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 // import { Web } from '@pnp/sp/webs';
 
 let Announcementlist = listNames.Announcement;
@@ -40,11 +41,16 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
 
   }
 
-  public componentDidMount() {
-
+  public async componentDidMount() {
+    debugger;
     var reactHandler = this;
-    reactHandler.GetAnnouncements();
-    reactHandler.GetEvents();
+    const listCreation = new ListCreation();
+    await listCreation.createSharePointLists(Announcementlist);
+    await listCreation.createSharePointLists(Eventslist);
+
+
+    await reactHandler.GetAnnouncements();
+    await reactHandler.GetEvents();
     if (this.props.createList) {
       // reactHandler.CreateList();
     }

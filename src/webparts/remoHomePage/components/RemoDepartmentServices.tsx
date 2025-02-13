@@ -3,7 +3,6 @@ import { IRemoDeptLandingPageProps } from './IRemoHomePageProps';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import { Markup } from 'interweave';
 import { IInvokable } from '@pnp/odata';
@@ -31,41 +30,8 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
   public componentDidMount() {
 
     this.GetDepartmentServices();
-
-
-
   }
 
-  // private GetDepartmentServices() {
-  //   var reactHandler = this;
-  //   NewWeb.lists.getByTitle(Serviceslist).items.select("ID", "Title", "Description").filter(`IsActive eq 1`).orderBy("Order0", true).get().then((items) => {
-  //     if (items.length == 0) {
-  //       // $("#if-service-present").hide();
-  //       // $("#if-no-service-present").show();
-
-  //       document.querySelectorAll('#if-service-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       document.querySelectorAll('$("#if-no-service-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     } else {
-  //       // $("#if-service-present").show();
-  //       // $("#if-no-service-present").hide();
-
-  //       document.querySelectorAll('#if-service-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('#if-no-service-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       reactHandler.setState({
-  //         Items: items,
-  //         ServiceDescription: items[0].Description
-  //       });
-  //     }
-  //   });
-  // }
 
   // Updated code 
   private async GetDepartmentServices() {
@@ -116,20 +82,13 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
       });
     });
   }
-  public addData(event:any) {
+  public addData(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Serviceslist}`;
     window.open(listUrl, "_blank");
   }
 
   public render(): React.ReactElement<IRemoDeptLandingPageProps> {
-    // $(document).ready(function () {
-    //   $("#service-main li").on("click", function () {
-    //     $(this).siblings().removeClass("active");
-    //     $(this).addClass("active");
-
-    //   });
-    // })
 
     document.addEventListener("DOMContentLoaded", function () {
       const listItems = document.querySelectorAll("#service-main li");

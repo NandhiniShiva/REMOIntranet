@@ -31,8 +31,6 @@ var likes: number;
 var commentscount: number;
 var views: number;
 var CurrentDate = new Date();
-// var Designation = "";
-// var Department = "";
 
 let ViewsCountMasterlist = listNames.ViewsCountMaster;
 let Newslist = listNames.News;
@@ -91,11 +89,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
   public componentDidMount() {
     setTimeout(() => {
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#spLeftNav').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('#newsRm').show();
 
 
       const commentsWrapper = document.getElementById('CommentsWrapper');
@@ -128,9 +121,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
     }, 1000);
 
     var reactHandler = this;
-    // reactHandler.getCurrentUser().then(() => {
-    //   reactHandler.GetNews(ItemID);
-    // })
 
     // updated code
 
@@ -172,11 +162,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                     element.remove();
                   }
                 });
-                // $('.notification_part ul li').each(function () {
-                //   if ($(this).attr('id') === id) {
-                //     $(this).remove();
-                //   }
-                // })
+
               }
             }).then(() => {
               this.getNotication(id, Currentcatagory);
@@ -237,8 +223,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
           if (headerElement) {
             headerElement.innerHTML = totalcount + " Unread";
           }
-          // document.querySelector(".notification_banner a span").innerHTML = totalcount;
-          // document.querySelector(".noti_header p").innerHTML = totalcount + " Unread";        
         }
       })
     } catch (error) {
@@ -247,11 +231,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
     }
   }
 
-  // public async GetCurrentUser() {
 
-  //   User = this.props.userid;
-  //   UserEmail = this.props.useremail;
-  // }
   public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
@@ -278,30 +258,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
     }
   }
 
-  // public async getCurrentUser() {
-  //   var reacthandler = this;
-  //   User = reacthandler.props.userid;
-  //   try {
-
-
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     UserEmail = profile.Email;
-  //     Designation = profile.Title;
-
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log("Error in getCurrentUser", error);
-
-  //   }
-  // }
   public AddViews() {
     // const url: any = new URL(window.location.href);
     // const mode = url.searchParams.get("mode");
@@ -356,8 +312,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
             IsCommentEnabled: true
           })
         } else {
-          // $(".all-commets").remove();
-          // $("#commentedpost").remove();
 
           let allCommentsElements = document.querySelectorAll(".all-comments");
           allCommentsElements.forEach(element => {
@@ -367,20 +321,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
             element.remove();
           });
         }
-        // reactHandler.AddViews();
-        // reactHandler.checkUserAlreadyLiked();
-        // reactHandler.checkUserAlreadyCommented();
-        // reactHandler.viewsCount();
-        // reactHandler.likesCount();
-        // reactHandler.commentsCount();
-        // var TransID = items[0].TransactionItemID.Id;
-        //reactHandler.GetNewsViewCount(temp, TransID);
-
-
-
-
-
-
 
         const viewsCount = new ViewsCount();
         viewsCount.viewsCount(ID).then((data) => {
@@ -901,8 +841,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
       }
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
-        //   var RawPublishedDt = moment(item.Created).format("DD/MM/YYYY");
-        //  var tdaydt = moment().format("DD/MM/YYYY");
+
         if (ImgObj.serverRelativeUrl == undefined) {
 
           serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + item.ID + "/" + ImgObj.fileName
@@ -973,9 +912,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
         <div id="Global-Top-Header-Navigation">
           <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
         </div>
-        {/* <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div> */}
+
         <section>
           <div className='container relative'>
             <div className='section-rigth'>
@@ -984,9 +921,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                 <div className='inner-banner-contents'>
                   <h1> News </h1>
                   <ul className='breadcums'>
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/NewsViewMore.aspx?`} data-interception="off"> All News </a> </li>
-                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">News Read More </a> </li> */}
 
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href='#' onClick={() => this.readMoreHandler("NewsViewMore")} data-interception="off"> All News </a> </li>

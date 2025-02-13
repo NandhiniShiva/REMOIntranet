@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ServiceProvider } from '../ServiceProvider/ServiceProvider';
-// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import "@pnp/sp/profiles";
 import "@pnp/sp/lists";
@@ -95,21 +94,12 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             });
         });
 
-        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3`);
-        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.8`);
-        // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/Responsive.css?v=4.18`);
-
         // Updated code
 
         SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
         SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
         SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
         SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
-        // SPComponentLoader.loadCss(Configuration.cssPath);
-        // SPComponentLoader.loadCss(Configuration.overRidingCss);
-        // SPComponentLoader.loadCss(Configuration.respnsiveCss);
-
-
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -145,11 +135,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
     public componentDidMount() {
 
-        // Hide SharePoint left navigation, command bar, and SuiteNavWrapper
-        // $('#spLeftNav, #spCommandBar').css('display', 'none !important');
-        // $('#SuiteNavWrapper').hide();
-        // $('.ControlZone--control').attr('style', 'display: none !important');
-
         document.querySelectorAll('#spLeftNav, #spCommandBar').forEach(function (element: any) {
             element.style.setProperty('display', 'none', 'important');
         });
@@ -159,9 +144,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             SuiteNavWrapper.style.display = 'none';
         }
 
-        // document.querySelectorAll('.ControlZone--control').forEach(function (element: any) {
-        //     element.style.setProperty('display', 'none', 'important');
-        // });
 
         // Get the active page URL
         const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
@@ -174,11 +156,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
         this.GetCurrentUserDetails();
         this.EnableContentEditorForSuperAdmins();
 
-        // Add click event listener to left menu items
-        // $('.globalleftmenu-fixed-area ul li').on('click', function () {
-        //     $('.globalleftmenu-fixed-area ul li').removeClass('active open');
-        //     $(this).addClass('active open');
-        // });
+
 
         document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
             item.addEventListener('click', function () {
@@ -192,10 +170,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             });
         });
 
-        // Add click event listener to quick link menu items
-        // $(".reponsive-quick-wrap .main-menu ul li.submenu a img").on("click", function () {
-        //     $(this).parent().toggleClass("active");
-        // });
 
         document.querySelectorAll('.reponsive-quick-wrap .main-menu ul li.submenu a img').forEach(function (img) {
             img.addEventListener('click', function () {
@@ -273,14 +247,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 reactHandler.setState({
                     MainNavItems: items
                 });
-                // $('#root-nav-links ul li').on('click', function () {
-                //     $(this).siblings().removeClass('active');
-                //     $(this).addClass('active');
-                // });
-                // $('.main-menu ul li').on('click', function () {
-                //     $(this).siblings().removeClass('active');
-                //     $(this).addClass('active');
-                // });
+
                 document.querySelectorAll('#root-nav-links ul li').forEach(function (item) {
                     item.addEventListener('click', function () {
                         // Remove the 'active' class from all sibling elements
@@ -309,17 +276,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
     }
 
     public async GetDepartments() {
-        //$(".global-qlink-main").hide();
-        //$(".global-dept-main").show();
-        // $(".dep-res").removeClass("active-submenu");
-        // $(".resp-dept-submenu-mob").toggleClass("active");
-        // $(".responsi-inner-submenu").toggleClass("open");
-        // $(".resp-dept-submenu-mob").toggleClass("active");
-        // $(".resp-qlink-submenu").removeClass("active");
-        // $(".global-qlink-main").removeClass("open");
-        // $(".global-dept-main").toggleClass("open");
 
-        // converted code
 
         document.querySelectorAll('.dep-res').forEach(function (element) {
             element.classList.remove('active-submenu');
@@ -371,14 +328,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 element.style.display = 'block'; // Show the element
             });
 
-            // $(".submenu-wrap-lists ul li").on("click", function () {
-            //     $(this).siblings().removeClass('active');
-            //     $(this).addClass('active');
-            // });
-            // $(".dep-res").on("click", function () {
-            //     $(this).siblings().removeClass("active-submenu");
-            //     $(this).addClass("active-submenu");
-            // });
 
             document.querySelectorAll('.submenu-wrap-lists ul li').forEach(function (item) {
                 item.addEventListener('click', function () {
@@ -413,11 +362,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
     }
 
     public async GetQuickLinks() {
-        // $(".resp-qlink-submenu").toggleClass("active");
-        // $(".resp-dept-submenu-mob").removeClass("active");
-        // $(".third-level-submenu").removeClass("open");
-        // $(".global-dept-main").removeClass("open");
-        // $(".global-qlink-main").toggleClass("open");
+
 
         document.querySelectorAll('.resp-qlink-submenu').forEach(function (element) {
             element.classList.toggle('active');
@@ -446,10 +391,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 QuickLinkItems: items
             });
 
-            // $('.quicklink-menu ul li').on('click', function () {
-            //     $(this).siblings().removeClass('active');
-            //     $(this).addClass('active');
-            // });
+
 
             document.querySelectorAll('.quicklink-menu ul li').forEach(function (item) {
                 item.addEventListener('click', function () {
@@ -475,8 +417,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
 
     public async GetSubNodes(ID: string, Title: any, ClickFrom: string, key: string) {
-        // $("#" + ID + "-Dept-Child").empty();
-        // $("#" + ID + "-Dept-Child-parent").toggleClass("open");
+
         const deptChild = document.getElementById(ID + "-Dept-Child");
         if (deptChild) {
             deptChild.innerHTML = "";
@@ -659,10 +600,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
     public CloseBurggerMenu() {
 
-        // $(".responsive-menu-wrap").removeClass("open");
-        // $(".dep-res").removeClass("active-submenu");
-        // $(".resp-dept-submenu-mob").removeClass("active");
-        // $(".responsi-inner-submenu").removeClass("open");
 
         document.querySelectorAll('.responsive-menu-wrap').forEach(function (element) {
             element.classList.remove('open');
@@ -680,12 +617,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
 
     public render(): React.ReactElement<IResponsiveProps> {
-        // $('.globalleftmenu-fixed-area ul li').on('click', function () {
-        //     $(this).siblings().removeClass('active');
-        //     $(this).siblings().removeClass('open');
-        //     $(this).addClass('active');
-        //     $(this).toggleClass('open');
-        // });
+
 
         document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
             item.addEventListener('click', function () {
