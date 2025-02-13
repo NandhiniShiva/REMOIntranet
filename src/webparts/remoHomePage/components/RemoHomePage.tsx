@@ -181,13 +181,17 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async getAllocatedComponents() {
     try {
-      const listName = (this.state.isCurrentUserAdmin  && this.state.editMode) ? Draftmaster : ComponentallocationList;
+      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
-      const response = await sp.web.lists.getByTitle(listName).items.filter(`Title eq '${this.state.selectedValue}'`).get();
-      if (response.length === 0) {
+      let response = await sp.web.lists.getByTitle(listName).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+      if (listName === ComponentallocationList && response.length === 0) {
         console.log("No items found in the SharePoint list.");
         return;
+      } else if (listName === Draftmaster && response.length === 0) {
+        // Fetch from ComponentallocationList if no items found in Draftmaster
+        response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
       }
+
 
       const selectedComponents: { [key: number]: string } = {};
       let updatedIsInitialscreen = [...this.state.isInitialscreen];
@@ -416,7 +420,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 .map((item) => [item.Title, item]) // Use ComponentName as key
             ).values()
           );
-          
+
 
           const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
             index === (key - 1) ? false : item
@@ -734,7 +738,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     event.preventDefault();
     var data: any;
     let updatedAvailableComponents: any[] = [];
-    const existingItems = await sp.web.lists
+    let existingItems = await sp.web.lists
       .getByTitle(Draftmaster)
       .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
       .get();
@@ -742,32 +746,42 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       // If an item exists for the position, update it
       const itemId = existingItems[0].Id; // Get the item ID
       await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
-      sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
-        if (resp.length != 0) {
-          resp.forEach((items) => {
-            if (items.Title == value) {
-              data = items;
-            }
-          })
-        }
-        if (data) {
-          updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
-          updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
-          if (Selectedcomponents.includes(data.ComponentId)) {
-            Selectedcomponents = Selectedcomponents.filter((id: any) => id !== data.ComponentId);
-            console.log("Item removed from Selectedcomponents:", data.ComponentId);
-          }
-
-        }
-        const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
-          index === (Position - 1) ? true : item
-        );
-        this.setState({
-          AvailableComponents: updatedAvailableComponents,
-          isInitialscreen: updatedIsInitialscreen,
-        });
-      });
+      
+    }else{
+       existingItems = await sp.web.lists
+      .getByTitle(ComponentallocationList)
+      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+      .get();
+      if (existingItems.length > 0) { // Ensure the item exists before accessing it
+      const itemId = existingItems[0].Id; // Get the item ID
+      await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
+      }
     }
+    sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+      if (resp.length != 0) {
+        resp.forEach((items) => {
+          if (items.Title == value) {
+            data = items;
+          }
+        })
+      }
+      if (data) {
+        updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
+        updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
+        if (Selectedcomponents.includes(data.ComponentId)) {
+          Selectedcomponents = Selectedcomponents.filter((id: any) => id !== data.ComponentId);
+          console.log("Item removed from Selectedcomponents:", data.ComponentId);
+        }
+
+      }
+      const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+        index === (Position - 1) ? true : item
+      );
+      this.setState({
+        AvailableComponents: updatedAvailableComponents,
+        isInitialscreen: updatedIsInitialscreen,
+      });
+    });
 
 
   }
@@ -849,18 +863,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     if (previousLayout == value) {
       return;
     }
-
     try {
+      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
       // Check if the new layout already exists
       const isLayoutExist = await sp.web.lists
-        .getByTitle(ComponentallocationList)
+        .getByTitle(listName)
         .items.filter(`Title eq '${value}'`)
         .get();
 
       if (!isLayoutExist || isLayoutExist.length === 0) {
         // Fetch all existing items from the previous layout
         const existingItems = await sp.web.lists
-          .getByTitle(ComponentallocationList)
+          .getByTitle(listName)
           .items.filter(`Title eq '${previousLayout}'`)
           .get();
 
@@ -872,7 +886,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         // Duplicate each existing item with the new layout title
         await Promise.all(
           existingItems.map((item) =>
-            sp.web.lists.getByTitle(ComponentallocationList).items.add({
+            sp.web.lists.getByTitle(listName).items.add({
               Title: value,
               Component: item.Component,
               ComponentID: item.ComponentID,
@@ -977,7 +991,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 />
                 <div className='header_part'>
                   <ul className='header_btn'>
-                    {this.state.isCurrentUserAdmin == true &&
+                    {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
                       <li id='layout_button'>
                         <select value={this.state.selectedValue} onChange={(e) => this.handleChangeLayout(e)}>
                           <option value="">Select Layout</option>
