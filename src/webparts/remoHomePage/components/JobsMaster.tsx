@@ -5,7 +5,6 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/fields";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import { sp } from 'sp-pnp-js';
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
@@ -20,8 +19,7 @@ export interface IJobsMasterState {
     AppliedJobIds: number[];
 }
 var Appliedjobs: any;
-// var Designation: any;
-// var Department: any;
+
 
 
 export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsMasterState, {}> {
@@ -35,9 +33,6 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
     }
 
     public async componentDidMount() {
-        // $('#spCommandBar').attr('style', 'display: none !important');
-        // $('#CommentsWrapper').attr('style', 'display: none !important');
-        // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
 
         const commentsWrapper = document.getElementById('CommentsWrapper');
         if (commentsWrapper) {
@@ -56,11 +51,7 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
         if (spCommandBar) {
             spCommandBar.style.setProperty('display', 'none', 'important');
         }
-        // this.getCurrentUser().then(() => {
-        //     this.isuserAlreadyApplied()
-        // }).then(() => {
-        //     this.LandingPageAnalytics()
-        // });
+
 
         // updated code
 
@@ -81,24 +72,6 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
 
     }
 
-    // public async getCurrentUser() {
-    //     try {
-    //         const profile = await pnp.sp.profiles.myProperties.get();
-    //         Designation = profile.Title;
-    //         // Check if the UserProfileProperties collection exists and has the Department property
-    //         if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-    //             // Find the Department property in the profile
-    //             const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-    //             console.log(departmentProperty);
-    //             if (departmentProperty) {
-    //                 Department = departmentProperty.Value;
-    //             }
-    //         }
-    //     }
-    //     catch (error) {
-    //         console.error("An error occurred while fetching the user profile:", error);
-    //     }
-    // }
     public async LandingPageAnalytics(Department: any, Designation: any) {
         try {
             if (!Department) {
@@ -113,18 +86,6 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
         }
     }
 
-    // public async Getcurrentuserid() {
-    //     try {
-    //         const user = await sp.web.currentUser.get();
-    //         console.log("Current user:", user);
-    //         CurrentUserID = user.Id;
-    //         await this.isuserAlreadyApplied();
-
-
-    //     } catch (error) {
-    //         console.error("Error getting current user:", error);
-    //     }
-    // }
 
     public async GetJobs() {
         var reactHandler = this
@@ -156,17 +117,7 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
             const dateOfSubmissionFormatted = moment(DateOfSubmission).format("DD/MMM/YYYY");
 
             var isavailabe = false;
-            // if (Status === "Open") {
-            //     statusElement = <td className="status approved"><span>Open</span></td>;
-            //     if (this.state.AppliedJobIds.indexOf(ID) !== -1) {
-            //         actionElement = <td title='Already Applied for this JOB'><a className="apply">Applied</a></td>;
-            //     } else {
-            //         actionElement = <td><a href={`${this.props.siteurl}/SitePages/Jobs-Read-More.aspx?ItemID=${ID}`} className="apply">Apply Now</a></td>;
-            //     }
-            // } else {
-            //     statusElement = <td className="status expired"><span>Expired</span></td>;
-            //     actionElement = <td>...</td>;
-            // }
+
             var count = 0
             var action = "";
             var reacthadler = this
@@ -205,8 +156,7 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
                             <td className="status expired"><span>Expired</span></td>
                             <td>...</td>
                         </>}
-                    {/* {statusElement}
-                    {actionElement} */}
+
                 </tr>
             );
         });

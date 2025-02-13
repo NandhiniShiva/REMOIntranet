@@ -90,8 +90,7 @@ export const ListLibraryColumnDetails = [
             { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
-            // { columnName: "Target_x0020_Audiences", type: "addTextField" },
-            // { columnName: "Report_x0020_Description", type: "addTextField" },
+
         ]
     },
     {
@@ -101,25 +100,10 @@ export const ListLibraryColumnDetails = [
             { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
-            // { columnName: "Target_x0020_Audiences", type: "addTextField" },
-            // { columnName: "Report_x0020_Description", type: "addTextField" },
+
         ]
     },
-    // {
-    //     name: "Content and Structure Reports",
-    //     columns: [
-    //         // { columnName: "Image", type: "addImageField", },
-    //         // { columnName: "IsActive", type: "addBoolean" },
-    //         { columnName: "Title", type: "addMultilineText" },
-    //         { columnName: "_x0024_Resources_x003a_cmscore_x", type: "addTextField" },
-    //         { columnName: "_x0024_Resources_x003a_cmscore_x1", type: "addTextField" },
-    //         { columnName: "_x0024_Resources_x003a_cmscore_x2", type: "addTextField" },
-    //         { columnName: "Target_x0020_Audiences", type: "addTextField" },
-    //         { columnName: "Report_x0020_Description", type: "addTextField" },
 
-
-    //     ]
-    // },
     {
         name: "Content Editor Master",
         columns: [
@@ -343,7 +327,6 @@ export const ListLibraryColumnDetails = [
             { columnName: "ListName", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "ItemLink", type: "addMultilineText", isRequired: false, isIndexed: false },
             { columnName: "Checkoutuser", type: "Person or Group", isRequired: false, isIndexed: false },
-            // { columnName: "GeneralCatagory", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] ,isIndexed: false},
             { columnName: "Tag", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "Dept", type: "addTextField", isRequired: false, isIndexed: false },
             { columnName: "EventDate", type: "addDateField", isRequired: false, isIndexed: false },
@@ -360,31 +343,14 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
-    // {
-    //     name: "OrgChartMaster",
-    //     columns: [
-    //     ]
-    // },
 
-    // {
-    //     name: "ProductSegmentation",
-    //     columns: [
-    //         // { columnName: "Description", type: "addMultilineText" },
-    //         // { columnName: "ProductImage", type: "addImageField" },
-    //         // { columnName: "Group", type: "addChoice" },
-    //         // { columnName: "ProductType", type: "addChoice" },
-    //         // { columnName: "ProductVariants", type: "addChoice" },
-    //         { columnName: "Category", type: "addMultiChoice", choice: ["Midea", "Trosten", "Clivet", "Clint", "Novair"] },
-    //     ]
-    // },
 
     {
         name: "Quick Links",
         columns: [
             { columnName: "Hover On Icon", type: "addImageField", isRequired: true, isIndexed: false },
             { columnName: "Hover Off Icon", type: "addImageField", isRequired: true, isIndexed: false },
-            // { columnName: "Image", type: "addImageField" ,isIndexed: false},
-            // { columnName: "ImageHover", type: "addImageField" ,isIndexed: false},
+
             { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
             { columnName: "URL", type: "addUrl", isRequired: true, isIndexed: false },
             { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true },
@@ -425,24 +391,7 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
-    // {
-    //     name: "UsersQuickLinksNew",
-    //     columns: [
-    //         {
-    //             columnName: "SelectedQuickLinks", type: "addLookup", targetListName: "Quick Links",
-    //             targetListColumn: "Title",
-    //         },
-    //         {
-    //             columnName: "SelectedQuickLinks_x003a_ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
-    //             targetListColumn: "ID", // Specify the target column
-    //         },
-    //         { columnName: "Order0", type: "addNumberField" },
-    //         { columnName: "ImageSrc", type: "addMultilineText" },
-    //         { columnName: "URL", type: "addUrl" },
-    //         { columnName: "HoverImageSrc", type: "addMultilineText" },
 
-    //     ]
-    // },
     {
         name: "Version Master",
         columns: [

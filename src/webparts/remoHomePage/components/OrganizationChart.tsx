@@ -6,9 +6,6 @@ import { Configuration } from '../Configuration';
 
 export default class OrganizationChart extends React.Component<IOrganizationChartProps> {
   public componentDidMount() {
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/Remo%20Portal%20Assets/css/OrgChartStyle.css`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/style.css?v=1.2`);
-    // SPComponentLoader.loadCss(`${this.props.siteurl}/SiteAssets/css/responsive.css`);
 
     SPComponentLoader.loadCss(Configuration.cssPath);
     SPComponentLoader.loadCss(Configuration.overRidingCss);

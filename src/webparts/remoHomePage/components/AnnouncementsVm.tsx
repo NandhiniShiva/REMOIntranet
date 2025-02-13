@@ -51,11 +51,7 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
   public async componentDidMount() {
     // Hide elements after 2 seconds (adjust as needed)
     this.hideElements();
-    // setTimeout(() => {
-    //   $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-    //   $('#spCommandBar').attr('style', 'display: none !important');
-    //   $('#CommentsWrapper').attr('style', 'display: none !important');
-    // }, 2000);
+
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
@@ -88,27 +84,6 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
     });
   }
 
-  // private async getCurrentUser() {
-  //   try {
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     console.log('User Profile:', profile); // Debug log
-
-  //     const userEmail = profile.Email || "No Email";
-  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     const department = departmentProperty && departmentProperty.Value !== "" ? departmentProperty.Value : "NA";
-  //     const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Title');
-  //     const designation = designationProperty ? designationProperty.Value : "NA";
-
-  //     this.setState({
-  //       currentUser: this.props.userid,
-  //       UserEmail: userEmail,
-  //       Department: department,
-  //       Designation: designation
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching user profile:", error);
-  //   }
-  // }
 
   private async GetAllAnnouncements() {
     try {

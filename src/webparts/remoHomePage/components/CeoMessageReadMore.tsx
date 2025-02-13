@@ -91,44 +91,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
       console.error("Error fetching current user details:", error);
     });
   }
-  // public async getCurrentUser() {
-  //   try {
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     if (!profile || !profile.Title) {
-  //       throw new Error("Profile data is incomplete or missing.");
-  //     }
-  //     Designation = profile.Title;
-  //     if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       } else {
-  //         console.warn("Department property not found in user profile.");
-  //       }
-  //     } else {
-  //       console.warn("UserProfileProperties is empty or undefined.");
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while fetching the user profile:", error);
-  //   }
-  // }
 
-
-  // public async getCurrentUser() {
-  //   const profile = await pnp.sp.profiles.myProperties.get();
-  //   Designation = profile.Title;
-
-  //   // Check if the UserProfileProperties collection exists and has the Department property
-  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //     // Find the Department property in the profile
-  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     console.log(departmentProperty);
-  //     if (departmentProperty) {
-  //       Department = departmentProperty.Value;
-  //     }
-  //   }
-  // }
   public async LandingPageAnalytics(Department: any, Designation: any) {
     try {
       if (!Department) {

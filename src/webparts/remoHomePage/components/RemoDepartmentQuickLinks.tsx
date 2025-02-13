@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IRemoDeptLandingPageProps } from './IRemoHomePageProps';
-// import * as $ from 'jquery';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -30,35 +29,6 @@ export default class DepartmentQuickLink extends React.Component<IRemoDeptLandin
 
   }
 
-  // public getcurrentusersQuickLinks() {
-  //   var reactHandler = this;
-  //   NewWeb.lists.getByTitle(QuickLinkslist).items.select("ID", "Title", "URL", "HoverOffIcon", "HoverOnIcon", "OpenInNewTab", "*").filter(`IsActive eq 1`).top(5).orderBy("Order0", true).get().then((items) => {
-  //     reactHandler.setState({
-  //       QuickLinkData: items
-  //     });
-  //     if (items.length == 0) {
-  //       // $(".if-no-qlinks-present").show();
-  //       // $(".if-qlinks-present").hide();
-
-  //       document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('.if-qlinks-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //     } else {
-  //       // $(".if-no-qlinks-present").hide();
-  //       // $(".if-qlinks-present").show();
-
-  //       document.querySelectorAll('.if-no-qlinks-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       document.querySelectorAll('.if-qlinks-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     }
-  //   });
-  // }
 
   // Updated code
   public async getcurrentusersQuickLinks() {

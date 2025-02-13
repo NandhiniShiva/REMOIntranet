@@ -69,9 +69,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
   public componentDidMount() {
     this.hideElements();
-    // this.getCurrentUser().then(() => {
-    //   this.getItemID();
-    // });
+
 
     // updated code
 
@@ -95,10 +93,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     });
   }
 
-  // private async getCurrentUser() {
-  //   User = this.props.userid;
-  //   UserEmail = this.props.useremail;
-  // }
+
   public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
@@ -185,14 +180,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
             element.remove();
           });
         }
-        // this.addViews();
-        // this.checkUserAlreadyLiked();
-        // this.checkUserAlreadyCommented();
-        // this.viewsCount();
-        // this.likesCount();
-        // this.commentsCount();
-
-
         const viewsCount = new ViewsCount();
         viewsCount.viewsCount(ID).then((data) => {
           console.log("Current user details", data);
@@ -250,10 +237,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
             console.error("Failed to add view:", error);
           });
 
-
-
         const checkUserAlreadyCommented = new CheckUserAlreadyCommented();
-
         checkUserAlreadyCommented
           .checkUserAlreadyCommented(ID, User)
           .then((isCommented) => {
@@ -274,49 +258,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     }
   }
 
-  // private addViews() {
-  //   sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
-  //     EmployeeNameId: User,
-  //     ViewedOn: CurrentDate,
-  //     EmployeeEmail: UserEmail,
-  //     ContentPage: "Hero-Banner",
-  //     Title: title,
-  //     ContentID: ID,
-  //   });
-  // }
-
-  // private viewsCount() {
-  //   try {
-  //     sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-  //       views = items.length || 0;
-  //     });
-  //   }
-  //   catch (error) {
-  //     console.error("An error occurred while fetching the viewsCount:", error);
-  //   }
-  // }
-
-  // private checkUserAlreadyLiked() {
-  //   try {
-  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
-  //       if (items.length > 0) {
-  //         // $(".like-selected").show();
-  //         // $(".like-default").hide();
-
-  //         document.querySelectorAll('.like-selected').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //         document.querySelectorAll('.like-default').forEach(element => {
-  //           (element as HTMLElement).style.display = 'none';
-  //         });
-
-  //         this.setState({ IsUserAlreadyLiked: true });
-  //       }
-  //     });
-  //   } catch (error) {
-  //     console.error("An error occurred while checking if the user already liked:", error);
-  //   }
-  // }
 
   private checkUserAlreadyCommented() {
     try {
@@ -336,16 +277,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
   }
 
-  // private likesCount() {
-  //   try {
-  //     sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get().then((items) => {
-  //       likes = items.length || 0;
-  //     });
-  //   }
-  //   catch (error) {
-  //     console.error("An error occurred while checking if the user already liked:", error);
-  //   }
-  // }
 
   private commentsCount() {
     try {
@@ -370,68 +301,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
       console.error("An error occurred while checking if the user already commented:", error);
     }
   }
-
-  // private async liked(mode: string) {
-  //   try {
-  //     // Ensure required variables are defined
-  //     if (!ID || !User || !UserEmail) {
-  //       console.warn("ID, User, or UserEmail is undefined. Cannot proceed with the like operation.");
-  //       return;
-  //     }
-  //     if (mode === "like") {
-  //       // Add a like to the list
-  //       await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
-  //         EmployeeNameId: User,
-  //         LikedOn: CurrentDate,
-  //         EmployeeEmail: UserEmail,
-  //         ContentPage: "Hero-Banner",
-  //         Title: title,
-  //         ContentID: ID,
-  //       });
-  //       // Hide the default like button and show the selected one
-  //       document.querySelectorAll('.like-default').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       document.querySelectorAll('.like-selected').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       // Get the updated like count
-  //       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-  //       // Update the likes count display
-  //       const likesCountElement = document.getElementById('likescount');
-  //       if (likesCountElement) {
-  //         likesCountElement.textContent = items.length.toString();
-  //       }
-  //     } else {
-  //       // If mode is "unlike"
-  //       document.querySelectorAll('.like-default').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('.like-selected').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       // Find the user's like entry and delete it
-  //       const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
-  //       if (data.length > 0) {
-  //         await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
-  //       }
-  //       // Get the updated like count after removing the like
-  //       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //         .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-  //       // Update the likes count display
-  //       const likesCountElement = document.getElementById('likescount');
-  //       if (likesCountElement) {
-  //         likesCountElement.textContent = items.length.toString();
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while processing the like/unlike action:", error);
-  //   }
-  // }
-
-  // Optimze this code
 
   private async liked(mode: string) {
     try {
@@ -500,50 +369,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
   }
 
 
-  // private async liked(mode: string) {
-  //   if (mode === "like") {
-  //     await sp.web.lists.getByTitle(LikesCountMasterlist).items.add({
-  //       EmployeeNameId: User,
-  //       LikedOn: CurrentDate,
-  //       EmployeeEmail: UserEmail,
-  //       ContentPage: "Hero-Banner",
-  //       Title: title,
-  //       ContentID: ID,
-  //     });
-  //     document.querySelectorAll('.like-default').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-  //     document.querySelectorAll('.like-selected').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //     const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-  //     // $("#likescount").text(items.length.toString());
-  //     const likesCountElement = document.getElementById('likescount');
-  //     if (likesCountElement) {
-  //       likesCountElement.textContent = items.length.toString();
-  //     }
-  //   } else {
-  //     document.querySelectorAll('.like-default').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //     document.querySelectorAll('.like-selected').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-  //     const data = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get();
-  //     await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
-  //     const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items
-  //       .filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID}`).top(5000).get();
-  //     // $("#likescount").text(items.length.toString());
-  //     // Select the element with the ID "likescount"
-  //     const likesCountElement = document.getElementById('likescount');
-  //     if (likesCountElement) {
-  //       likesCountElement.textContent = items.length.toString();
-  //     }
-  //   }
-  // }
-
   private showComments() {
     // $(".all-commets").toggle();
 
@@ -599,38 +424,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     }
   }
 
-
-  // private saveComments(e: any) {
-  //   // const comments = $("#comments").val();
-  //   const comments = e.target.value
-
-  //   if (comments && comments.toString().length === 0) {
-  //     Swal.fire({ title: "Minimum 1 character is required!", icon: "warning" });
-  //   } else {
-  //     sp.web.lists.getByTitle(CommentsCountMasterlist).items.add({
-  //       EmployeeNameId: User,
-  //       CommentedOn: CurrentDate,
-  //       EmployeeEmail: UserEmail,
-  //       ContentPage: "Hero-Banner",
-  //       Title: title,
-  //       ContentID: ID,
-  //       UserComments: comments,
-  //     }).then(() => {
-  //       // $("#commentedpost").hide();
-  //       // $(".reply-tothe-post").hide();
-
-  //       document.querySelectorAll('#commentedpost').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-
-  //       document.querySelectorAll('.reply-tothe-post').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-
-  //       this.commentsCount();
-  //     });
-  //   }
-  // }
   public readMoreHandler(compName: any) {
     this.props.onReadMoreClick({ Name: compName })
   }
@@ -700,10 +493,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
                 <div className="inner-banner-contents">
                   <h1> Hero Banner </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/Hero-Banner-VMore.aspx`} data-interception="off"> Hero Banner View More </a> </li>
-                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off">Hero Banner Read More</a> </li> */}
-
 
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href='#' onClick={() => this.readMoreHandler("HeroBannerViewMore")} data-interception="off"> Hero Banner View More </a> </li>

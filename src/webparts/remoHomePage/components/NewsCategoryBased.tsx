@@ -5,7 +5,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/fields";
-// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
@@ -13,7 +12,6 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-// import pnp from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let Newslist = listNames.News;
@@ -43,8 +41,7 @@ let DeptNames: any[] = [];
 let DeptNamesExitsUnique: any[] = [];
 var User = "";
 var UserEmail = "";
-// var Designation = "";
-// var Department = "";
+
 var NewWeb: IWeb & IInvokable<any>;
 export default class NewsCategoryBased extends React.Component<INewsCategoryBasedProps, INewsCategoryBasedState, {}> {
   constructor(props: INewsCategoryBasedProps) {
@@ -80,11 +77,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
   public componentDidMount() {
 
     setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('#RecommendedItems').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-
 
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
@@ -118,19 +110,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     const SitePageID = url.searchParams.get("SitePageID");
     const Mode = url.searchParams.get("Mode");
     reactHandler.setState({ Tag: "" + AppliedTage + "", Department: "" + Dept + "", SitePageID: SitePageID, ActiveMainNewsID: ItemID, Mode: Mode });
-
-    // reactHandler.getCurrentUser().then(() => {
-
-    //   if (Mode == "TagBased") {
-    //     reactHandler.GetAvailableTags();
-    //   } else {
-    //     reactHandler.GetAvailableDepts();
-    //   }
-    // }).then(() => {
-    //   reactHandler.LandingPageAnalytics();
-    // });
-
-
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
       console.log("Current user details", data);
@@ -174,26 +153,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     }
   }
 
-  // public async getCurrentUser() {
-  //   try {
-  //     var reacthandler = this;
-  //     User = reacthandler.props.userid;
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     UserEmail = profile.Email;
-  //     Designation = profile.Title;
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while fetching the user profile:", error);
-  //   }
-  // }
   public async GetAvailableTags() {
     var handler = this;
     try {
@@ -270,75 +229,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     reactHandler.setState({ TotalPageCount: PageCount });
   }
 
-
-
-  // public async GetAllOtherRelatedNews(ReleventCategory: any, Mode: string) {
-  //   var reactHandler = this;
-  //   try {
-  //     if (Mode === 'TagBased') {
-  //       for (var i = 0; i < reactHandler.state.AvailableTags.length; i++) {
-  //         try {
-  //           const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
-  //             .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
-  //             .filter(`IsActive eq '1' and Tag eq '${reactHandler.state.AvailableTags[i]}'`)
-  //             .orderBy("Created", false)
-  //             .expand("Dept", "SitePageID", "TransactionItemID")
-  //             .get();
-  //           if (items.length > 0 && items[0].Tag !== reactHandler.state.Tag) {
-  //             reactHandler.setState({ TagBasedNews: items });
-  //             $('.available-depts-or-tags').append(`
-  //                           <li>
-  //                               <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${items[0].Tag}" data-interception='off' class="clearfix">
-  //                                   <div class="vategory-news-left pull-left">
-  //                                       ${items[0].Tag}
-  //                                   </div>     
-  //                                   <div class="vategory-news-right pull-right">
-  //                                       ${items.length}
-  //                                   </div>     
-  //                               </a>
-  //                           </li>
-  //                       `);
-  //           }
-  //         } catch (error) {
-  //           console.error("Error fetching Tag-based news:", error);
-  //         }
-  //       }
-  //     } else { // DeptBased
-  //       for (var j = 0; j < reactHandler.state.AvailableDepts.length; j++) {
-  //         try {
-  //           const items: any[] = await NewWeb.lists.getByTitle(Newslist).items
-  //             .select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id")
-  //             .filter(`IsActive eq '1' and Dept/Id eq '${reactHandler.state.AvailableDepts[j].ID}'`)
-  //             .orderBy("Created", false)
-  //             .expand("Dept", "SitePageID", "TransactionItemID")
-  //             .get();
-  //           if (items.length > 0 && items[0].Dept.Title !== reactHandler.state.Department) {
-  //             reactHandler.setState({ DeptBasedNews: items });
-  //             $('.available-depts-or-tags').append(`
-  //                           <li>
-  //                               <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=DeptBased&Dept=${items[0].Dept.Title}" data-interception='off' class="clearfix">
-  //                                   <div class="vategory-news-left pull-left">
-  //                                       ${items[0].Dept.Title}
-  //                                   </div>     
-  //                                   <div class="vategory-news-right pull-right">
-  //                                       ${items.length}
-  //                                   </div>     
-  //                               </a>
-  //                           </li>
-  //                       `);
-  //           }
-  //         } catch (error) {
-  //           console.error("Error fetching Dept-based news:", error);
-  //         }
-  //       }
-  //     }
-  //   } catch (globalError) {
-  //     console.error("An error occurred in GetAllOtherRelatedNews:", globalError);
-  //   }
-  // }
-
-  // Optimized Code
-
   public async GetAllOtherRelatedNews(ReleventCategory: any, Mode: string) {
     try {
       const { AvailableTags, AvailableDepts, Tag, Department } = this.state;
@@ -385,48 +275,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     }
   }
 
-
-  // public async GetAllOtherRelatedNews(ReleventCategory: any, Mode: string) {
-  //   var reactHandler = this;
-  //   if (Mode == 'TagBased') {
-  //     for (var i = 0; i < reactHandler.state.AvailableTags.length; i++) {
-  //       await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id").filter(`IsActive eq '1' and Tag eq '${reactHandler.state.AvailableTags[i]}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").get().then((items: any[]) => {
-  //         if (items.length != 0 && items[0].Tag != "" + reactHandler.state.Tag + "") {
-  //           reactHandler.setState({ TagBasedNews: items });
-  //           $('.available-depts-or-tags').append(`<li>
-  //                 <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${items[0].Tag}" data-interception='off' className="clearfix">  
-  //                 <div class="vategory-news-left pull-left">
-  //                     ${items[0].Tag}
-  //                 </div>     
-  //                 <div class="vategory-news-right pull-right">
-  //                     ${items.length}
-  //                 </div>     
-  //                 </a>
-  //               </li>`);
-  //         }
-  //       });
-  //     }
-  //   } else {
-  //     for (var j = 0; j < reactHandler.state.AvailableDepts.length; j++) {
-  //       await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id").filter(`IsActive eq '1' and Dept/Id eq '${reactHandler.state.AvailableDepts[j].ID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").get().then((items: any[]) => {
-  //         if (items.length != 0 && items[0].Dept.Title != "" + reactHandler.state.Department + "") {
-  //           reactHandler.setState({ DeptBasedNews: items });
-  //           $('.available-depts-or-tags').append(`<li>
-  //                 <a href="${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=DeptBased&Dept=${items[0].Dept.Title}" data-interception='off' class="clearfix">  
-  //                   <div class="vategory-news-left pull-left">
-  //                       ${items[0].Dept.Title}
-  //                   </div>     
-  //                   <div class="vategory-news-right pull-right">
-  //                       ${items.length}
-  //                   </div>     
-  //                 </a>
-  //               </li>`);
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
-
   public findValueInArray(value: any, arr: string | any[]) {
     var result = false;
     for (var i = 0; i < arr.length; i++) {
@@ -462,7 +310,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
             <div className="top-img-wrap">
               <img src={serverRelativeUrl} alt="image" />
             </div>
-            {/* <a href={`${item.DetailsPageUrl}?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a> */}
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a>
 
             <div className="ns-tag-duration">
@@ -478,7 +325,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
             <div className="top-img-wrap">
               <img src={serverRelativeUrl} alt="image" />
             </div>
-            {/* <a href={`${item.DetailsPageUrl}?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a> */}
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a>
 
             <div className="ns-tag-duration">
@@ -511,9 +357,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
                 <div className="inner-banner-contents">
                   <h1> News </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/NewsViewMore.aspx?`} data-interception="off"> All News </a> </li>
-                    <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.state.CurrentPage} </a> </li> */}
 
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href='#' onClick={() => this.readMoreHandler("NewsViewMore")} data-interception="off"> All News </a> </li>

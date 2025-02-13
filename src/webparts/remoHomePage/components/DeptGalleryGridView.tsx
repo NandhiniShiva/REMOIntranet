@@ -100,137 +100,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
   }
 
-  // public componentDidMount() {
-  //   setTimeout(() => {
-  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-  //     // $('#spCommandBar').attr('style', 'display: none !important');
-  //     // $('#webPartContainer').attr('style', 'display: none !important');
-  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
-
-  //     const commentsWrapper = document.getElementById('CommentsWrapper');
-  //     if (commentsWrapper) {
-  //       commentsWrapper.style.setProperty('display', 'none', 'important');
-  //     }
-
-  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
-  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-  //     pageHeaders.forEach((element: any) => {
-  //       element.style.setProperty('display', 'none', 'important');
-  //     });
-
-  //     // Show the element with ID "ceoMessageReadMore"
-  //     const webPartContainer = document.getElementById('webPartContainer');
-  //     if (webPartContainer) {
-  //       webPartContainer.style.display = 'none';
-  //     }
-
-  //     const spCommandBar = document.getElementById('spCommandBar');
-  //     if (spCommandBar) {
-  //       spCommandBar.style.setProperty('display', 'none', 'important');
-  //     }
-  //   }, 2000);
-  //   const url: any = new URL(window.location.href);
-  //   const FolderUrl = url.searchParams.get("FolderName");
-  //   // console.log(FolderUrl);
-  //   const Type = url.searchParams.get("Type");
-  //   Global_Type = Type;
-  //   if (Type == "Img") {
-  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-
-  //     // $(".image-gallery-allimg-block").show();
-  //     // $(".video-gallery-allimg-block").hide();
-  //   } else {
-  //     // $(".image-gallery-allimg-block").hide();
-  //     // $(".video-gallery-allimg-block").show();
-
-  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //   }
-  //   var folderurl = FolderUrl.replace(/['"]+/g, '');
-  //   // Remove trailing slash if it exists
-  //   folderurl = folderurl.replace(/\/$/, '');
-  //   // Split the URL to get the segments
-  //   const segments = folderurl.split('/');
-  //   // Get the last segment which is the folder name
-  //   const folderName = segments[segments.length - 1];
-  //   console.log(folderName); // Output: Test
-  //   this.setState({
-  //     nav1: this.slider1,
-  //     nav2: this.slider2,
-  //     Type: Type,
-  //     type: Type,
-  //     MyFolderName: folderName
-  //   });
-  //   this.getCurrentUser().then(() => {
-  //     this.GetSubFolder(folderurl, Type, "")
-  //   }).then(() => {
-  //     this.LandingPageAnalytics();
-  //   });
-
-  //   GlobalUrl = folderurl
-  //   // this.GetGalleryFilesFolder("Main");
-  //   if (Type == "Img") {
-  //     // $(".vdo-block-cntnt").removeClass("active");
-  //     // $(".img-block-cntnt").addClass("active");
-
-  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-  //     vdoBlockElements.forEach(element => {
-  //       element.classList.remove('active');
-  //     });
-
-  //     // Add the "active" class to all elements with the class "img-block-cntnt"
-  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-  //     imgBlockElements.forEach(element => {
-  //       element.classList.add('active');
-  //     });
-  //   } else {
-  //     this.ShowVideos()
-  //     // $(".img-block-cntnt").removeClass("active");
-  //     // $(".vdo-block-cntnt").addClass("active");
-
-  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-  //     vdoBlockElements.forEach(element => {
-  //       element.classList.add('active');
-  //     });
-
-  //     // Add the "active" class to all elements with the class "img-block-cntnt"
-  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-  //     imgBlockElements.forEach(element => {
-  //       element.classList.remove('active');
-  //     });
-  //   }
-  //   // $(".img-galler-section-cls ul li").on("click", function () {
-  //   //   $(this).siblings().removeClass("active");
-  //   //   $(this).addClass("active");
-  //   // });
-  //   // Select the parent <ul> element under ".img-galler-section-cls"
-  //   const ulElement: any = document.querySelector('.img-galler-section-cls ul');
-
-  //   // Attach a single click event listener to the <ul> element
-  //   ulElement.addEventListener('click', function (event: any) {
-  //     // Check if the clicked target is an <li> element
-  //     if (event.target.tagName === 'LI') {
-  //       // Remove the "active" class from all sibling <li> elements
-  //       const listItems = ulElement.querySelectorAll('li');
-  //       listItems.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
-
-  //       // Add the "active" class to the clicked <li> element
-  //       event.target.classList.add('active');
-  //     }
-  //   });
-
-  // }
-
-  // Optimized code
 
   public componentDidMount() {
     setTimeout(() => {
@@ -314,8 +183,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
         (element as HTMLElement).style.display = 'none';
       });
 
-      // $('#load-content').show()
-      // $('#loader-Icon').hide()
+
     }, 2000);
   }
 
@@ -386,49 +254,10 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
   }
 
 
-  // public async getCurrentUser() {
-  //   const url: any = new URL(window.location.href);
-  //   const fullPath = url.pathname;
-  //   // Find the index of 'SitePages'
-  //   const segment = "SitePages";
-  //   const segmentIndex = fullPath.indexOf(`/${segment}`);
-  //   if (segmentIndex === -1) {
-  //     // If 'SitePages' is not found in the URL, return null
-  //     // return null;
-  //   }
-  //   // Extract the part of the URL before 'SitePages'
-  //   const relevantPart = fullPath.substring(0, segmentIndex);
-  //   // Find the last segment before 'SitePages'
-  //   const lastSegmentIndex = relevantPart.lastIndexOf('/');
-  //   // Extract the last segment
-  //   const lastSegment = relevantPart.substring(lastSegmentIndex + 1);
-  //   Dept = lastSegment;
-  //   var reacthandler = this;
-  //   User = reacthandler.props.userid;
-  //   const profile = await pnp.sp.profiles.myProperties.get();
-  //   UserEmail = profile.Email;
-  //   Designation = profile.Title;
-  //   // Check if the UserProfileProperties collection exists and has the Department property
-  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //     // Find the Department property in the profile
-  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     console.log(departmentProperty);
-  //     if (departmentProperty) {
-  //       Department = departmentProperty.Value;
-  //     }
-  //   }
-  // }
+
 
   public async GetSubFolder(FolderURL: any, type: any, foldername: any) {
-    // $("#no-img").hide();
-    // $("#no-video").hide();
 
-    // document.querySelectorAll('#no-img').forEach(element => {
-    //   (element as HTMLElement).style.display = 'none';
-    // });
-    // document.querySelectorAll('#no-video').forEach(element => {
-    //   (element as HTMLElement).style.display = 'block';
-    // });
     this.setState({
       Subfolderurl: FolderURL,
       Images: [],
@@ -488,13 +317,11 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
           if (noVdoElement) {
             noVdoElement.style.display = images.length === 0 && videos.length === 0 ? 'block' : 'none';
           }
-          // $("#no-img").toggle(images.length === 0);
-          // $("#no-video").toggle(images.length === 0 && videos.length === 0);
+
         } else {
 
 
-          // $("#no-video").toggle(videos.length === 0);
-          // $("#no-img").toggle(images.length === 0 && videos.length === 0);
+
 
           const noImgElement = document.getElementById('no-video');
           // Toggle visibility based on the condition
@@ -515,8 +342,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
       }
 
       if (folders.length !== 0) {
-        // $("#no-img").hide();
-        // $("#no-video").hide();
 
         document.querySelectorAll('#no-img').forEach(element => {
           (element as HTMLElement).style.display = 'none';
@@ -574,8 +399,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
       (element as HTMLElement).style.display = 'none';
     });
 
-    // $(".image-gallery-allimg-block").show();
-    // $(".video-gallery-allimg-block").hide();
+
     const url: any = new URL(window.location.href);
 
     const FolderUrl = url.searchParams.get("FolderName");
@@ -603,8 +427,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
       (element as HTMLElement).style.display = 'block';
     });
-    // $(".image-gallery-allimg-block").hide();
-    // $(".video-gallery-allimg-block").show();
+
     const url: any = new URL(window.location.href);
 
     const FolderUrl = url.searchParams.get("FolderName");
@@ -623,8 +446,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
     // Show or hide triggers based on mode
     if (Mode === "Image") {
-      // $("#trigger-image").hide();
-      // $("#trigger-video").show();
+
 
       document.querySelectorAll('#trigger-image').forEach(element => {
         (element as HTMLElement).style.display = 'none';
@@ -633,8 +455,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
         (element as HTMLElement).style.display = 'block';
       });
     } else if (Mode === "Video") {
-      // $("#trigger-video").hide();
-      // $("#trigger-image").show();
+
       document.querySelectorAll('#trigger-video').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
@@ -653,7 +474,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
           // If mode is "Image" and there are video files, hide image trigger
           if (Mode === "Image" && videoItems.length === 0) {
-            // $("#trigger-video").hide();
             document.querySelectorAll('#trigger-video').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -661,7 +481,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
           // If mode is "Video" and there are no video files, hide video trigger
           if (Mode === "Video" && imageItems.length === 0) {
-            // $("#trigger-image").hide();
             document.querySelectorAll('#trigger-image').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -669,7 +488,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
           // Set the folder items in the state and open the lightbox
           reactHandler.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
-          // $(".lightbox").addClass("open");
 
           const lightboxElement = document.querySelector('.lightbox');
 
@@ -684,7 +502,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
           console.error('Error fetching folder items:', error);
           // Handle error if needed
           if (Mode === "Video") {
-            // $("#trigger-video").hide();
             document.querySelectorAll('#trigger-video').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -721,7 +538,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
           // If there are video files, show the video trigger
           if (hasVideos) {
-            // $("#trigger-video").show();
             document.querySelectorAll('#trigger-video').forEach(element => {
               (element as HTMLElement).style.display = 'block';
             });
@@ -729,8 +545,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
         })
         .catch((error) => {
           console.error('Error fetching folder items:', error);
-          // Handle error if needed
-          // $("#trigger-video").hide();
+          ;
 
           document.querySelectorAll('#trigger-video').forEach(element => {
             (element as HTMLElement).style.display = 'none';
@@ -739,7 +554,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
     } catch (err) {
       console.error('Error fetching folder:', err);
       // Handle error if needed
-      // $("#trigger-video").hide();
 
       document.querySelectorAll('#trigger-video').forEach(element => {
         (element as HTMLElement).style.display = 'none';
@@ -748,7 +562,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
   }
 
   public CloseLightBox() {
-    // $(".lightbox").removeClass("open");
     const lightboxElement = document.querySelector('.lightbox');
 
     // Add the "open" class to the selected element
@@ -810,7 +623,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
         return (
           <li key={key} className="li-img-area" data-value={key} onClick={() => reactHandler.GetImagesInsideFolder(reactHandler.state.Subfolderurl, "Image", key)}>
             <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = `${this.props.siteurl}/Site%20Asset/Remo%20Portal%20Assets/img/Error%20Handling%20Images/other_images_not_found.png`} />
-            {/* <img src={finalThumbnailURL} alt="Image" /> */}
 
           </li>
         );
@@ -822,7 +634,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
           return (
             <li className="li-img-area" data-value={key} onClick={() => reactHandler.GetSubFolder(item.ServerRelativeUrl, Global_Type, item.Name)}>
 
-              {/* <img src={`${item.recentImage}`} alt="Image" id={`mythumb-${key}`} /> */}
               {Global_Type === "Img" ? (
                 // Render image if Global_Type is "Img"
                 <img src={item.recentImage} alt="Image" id={`mythumb-${key}`} />
@@ -903,8 +714,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                 <div className="inner-banner-contents">
                   <h1> Gallery Grid View </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                    <li>  <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx`} data-interception="off"> Gallery Folders </a> </li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href='#' onClick={() => this.readMoreHandler("GalleryViewMore")}> Gallery Folders </a> </li>
                     <li>  <a href="off" style={{ pointerEvents: "none" }}> Grid View </a> </li>
@@ -973,7 +782,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                   <ul>
                     <li id="trigger-image" className={this.state.Mode == "Image" ? "imageblock" : ""} > <a href="#" onClick={() => this.GetImagesInsideFolder(this.state.FolderURL, "Image", 0)}> Images  </a> </li>
                     <li id="trigger-video" className={this.state.Mode == "Video" ? "videoblock" : ""} > <a href="#" onClick={() => this.GetImagesInsideFolder(this.state.FolderURL, "Video", 0)}> Videos  </a> </li>
-                    {/*<li> <a href={this.props.siteurl+"/SitePages/Gallery-Grid-View.aspx?FolderName='"+this.state.FolderURL+"'&Type=Img&env=WebViewList"} data-interception="off"> Grid View  </a> </li>*/}
                   </ul>
                 </div>
                 <div className="lightbox-contents-body">

@@ -1,4 +1,3 @@
-// import { sp, FieldUserSelectionMode, UrlFieldFormatType, ChoiceFieldFormatType } from "sp-pnp-js";
 import { FieldUserSelectionMode } from 'sp-pnp-js';
 
 import { ChoiceFieldFormatType, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
@@ -52,27 +51,17 @@ export class ListCreation {
                 let columnExist = false;
                 try {
                     columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-                    // const columnfield = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName == "Name" ? "FileLeafRef" : column.columnName).get();
-                    // columnExist = !!columnfield.Id; // Check if the column object has a valid Id
-                    // console.log(columnExist ? "Column exists." : "Column does not exist.");
+
                 } catch {
                     columnExist = false; // Column does not exist
                 }
 
-                // if (columnExist == false && column.columnName.trim() === "Name" && column.type.trim() === "addTextField") {
-                //     await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
-                //     console.log("Text field 'Name' created.");
-                // }
+
 
                 if (!columnExist) {
                     switch (column.type) {
                         case "addTextField":
-                            // await sp.web.lists.getByTitle(name).fields.addText(column.columnName);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
                             console.log(`Column '${column.columnName}' added as Text Field.`);
 
                             await sp.web.lists.getByTitle(name).fields.addText(column.columnName).then(async () => {
@@ -83,13 +72,7 @@ export class ListCreation {
                             });
                             break;
                         case "addImageField":
-                            // await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName);
-                            // console.log(`Column '${column.columnName}' added as Image Field.`);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addImageField(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
@@ -101,12 +84,7 @@ export class ListCreation {
                             break;
 
                         case "addBoolean":
-                            // await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
                             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
                                     Required: column.isRequired,
@@ -116,24 +94,13 @@ export class ListCreation {
                             });
                             console.log(`Column '${column.columnName}' added as Boolean.`);
 
-                            // await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
-                            //     await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
-                            //         Required: column.isRequired,
-                            //         Indexed: column.isIndexed
 
-                            //     });
-                            // });
                             break;
 
 
 
                         case "addNumberField":
-                            // await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
@@ -146,23 +113,7 @@ export class ListCreation {
                             break;
 
                         case "addDateField":
-                            // await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
 
-                            // });
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Indexed: column.isIndexed
-
-                            // });
-
-                            // await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName).then(async () => {
-                            //     await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
-                            //         Required: column.isRequired,
-                            //         Indexed: column.isIndexed
-
-                            //     });
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
@@ -176,12 +127,7 @@ export class ListCreation {
                             break;
 
                         case "addMultilineText":
-                            // await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
@@ -194,12 +140,7 @@ export class ListCreation {
                             break;
 
                         case "Person or Group":
-                            // await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
@@ -212,12 +153,7 @@ export class ListCreation {
                             break;
 
                         case "addMultiChoice":
-                            // await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
@@ -246,11 +182,7 @@ export class ListCreation {
                             break;
 
                         case "addUrl":
-                            // await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink)
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
-                            // });
+
                             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
                                 Required: column.isRequired,
@@ -261,12 +193,7 @@ export class ListCreation {
                             break;
 
                         case "Icon":
-                            // await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired,
-                            //     Indexed: column.isIndexed
 
-                            // });
 
                             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
                             await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
@@ -278,14 +205,7 @@ export class ListCreation {
                             break;
 
                         case "addChoice":
-                            // await sp.web.lists.getByTitle(name).fields.addChoice(
-                            //     column.columnName,
-                            //     column.choices,
-                            //     ChoiceFieldFormatType.Dropdown
-                            // );
-                            // await sp.web.lists.getByTitle(name).fields.getByInternalNameOrTitle(column.columnName).update({
-                            //     Required: column.isRequired
-                            // });
+
                             await sp.web.lists.getByTitle(name).fields.addChoice(
                                 column.columnName,
                                 column.choices,

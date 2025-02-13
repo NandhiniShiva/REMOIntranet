@@ -21,8 +21,7 @@ import { CommentsCount } from './ServiceProvider/CommentsCount';
 import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
 import { AddViews } from './ServiceProvider/AddViews';
 import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
-// import pnp from 'sp-pnp-js';
-// import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
+
 
 let User = "";
 let UserEmail = "";
@@ -83,9 +82,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       const pageAnalytics = new PageAnalytics("Announcements Read-More", User, Department, Designation, this.state.Title, ItemID, UserEmail);
       pageAnalytics.LandingPageAnalytics();
 
-      // const userdetails = new CurrentUserDetails();
-      // let currentUser = userdetails.getCurrentUserDetails()
-      // console.log("Current user details", currentUser);
+
     } else {
       console.error("ItemID is not present in the URL");
     }
@@ -130,54 +127,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     }
   }
 
-  // old code
-  // public async getCurrentUser() {
-  //   var reacthandler = this;
-  //   User = reacthandler.props.userid;
-  //   const profile = await pnp.sp.profiles.myProperties.get();
-  //   UserEmail = profile.Email;
-  //   Designation = profile.Title;
-
-  //   // Check if the UserProfileProperties collection exists and has the Department property
-  //   if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //     // Find the Department property in the profile
-  //     const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     console.log(departmentProperty);
-  //     if (departmentProperty) {
-  //       Department = departmentProperty.Value;
-  //     }
-  //   }
-  // }
-
-  // converted code
-  // public async getCurrentUser() {
-  //   try {
-  //     // const { userid } = this.props;
-  //     const profile = await pnp.sp.profiles.myProperties.get();
-  //     const departmentProperty = profile.UserProfileProperties?.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //     // const Department = departmentProperty?.Value ?? null;
-  //     console.log(departmentProperty);
-  //   }
-  //   catch (error) {
-  //     console.error('Error Feching current User Details:', error);
-  //   }
-  // }
-
-  // private async addViews() {
-  //   await sp.web.lists.getByTitle(ViewsCountMasterlist).items.add({
-  //     EmployeeNameId: User,
-  //     ViewedOn: CurrentDate,
-  //     EmployeeEmail: UserEmail,
-  //     ContentPage: "Announcements",
-  //     Title: this.state.Title,
-  //     ContentID: ID,
-  //   });
-  // }
-
-  // private async viewsCount() {
-  //   const items = await sp.web.lists.getByTitle(ViewsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-  //   views = items.length !== 0 ? items.length : 0;
-  // }
 
   private async getAnnouncementsDetails(itemID: string) {
     const items = await sp.web.lists.getByTitle(Announcementlist).items.select("*").filter(`IsActive eq '1' and ID eq '${itemID}'`).getAll();
@@ -197,13 +146,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         });
 
       }
-      // this.addViews();
-      // this.checkUserAlreadyLiked();
-      // this.checkUserAlreadyCommented();
-      // this.viewsCount();
-      // this.likesCount();
-      // this.commentsCount();
-      // New code
 
       const viewsCount = new ViewsCount();
       viewsCount.viewsCount(ID).then((data) => {
@@ -512,9 +454,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                 <div className="inner-banner-contents">
                   <h1>Announcements</h1>
                   <ul className="breadcums">
-                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li>
-                    <li><a href={`${this.props.siteurl}/SitePages/Announcement-View-More.aspx`} data-interception="off">All Announcements</a></li>
-                    <li><a href="#" style={{ pointerEvents: "none" }} data-interception="off">Announcements Read More</a></li> */}
 
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                     <li><a href='#' onClick={() => this.readMoreHandler("AnnouncementViewMore")} data-interception="off">All Announcements</a></li>
@@ -544,12 +483,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                               } /> <span id="commentscount">{commentscount}</span>
                             </li>
 
-                            // <li>
-                            //   <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={
-                            //      const showCommentsInstance= new ShowComments();
-                            //   showCommentsInstance.showComments(this.state.ItemID);
-                            // } /> <span id="commentscount">{commentscount}</span>
-                            // </li>
+
                           )}
                           <li>
                             <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span>{views}</span>

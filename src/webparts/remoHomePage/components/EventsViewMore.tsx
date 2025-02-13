@@ -55,75 +55,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     NewWeb = new Web(this.props.siteurl)
   }
 
-  // public componentDidMount() {
-  //   setTimeout(() => {
-  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-  //     // $('#spCommandBar').attr('style', 'display: none !important');
-  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
-  //     // $('#RecommendedItems').attr('style', 'display: none !important');
-  //     // $('.ms-CommandBar').attr('style', 'display: none !important');
-  //     // $('#eventsvm').show();
-
-  //     const commentsWrapper = document.getElementById('CommentsWrapper');
-  //     if (commentsWrapper) {
-  //       commentsWrapper.style.setProperty('display', 'none', 'important');
-  //     }
-
-  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
-  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-  //     pageHeaders.forEach((element: any) => {
-  //       element.style.setProperty('display', 'none', 'important');
-  //     });
-
-  //     // Show the element with ID "ceoMessageReadMore"
-  //     const webPartContainer = document.getElementById('ms-CommandBar');
-  //     if (webPartContainer) {
-  //       webPartContainer.style.display = 'none';
-  //     }
-
-  //     const spCommandBar = document.getElementById('spCommandBar');
-  //     if (spCommandBar) {
-  //       spCommandBar.style.setProperty('display', 'none', 'important');
-  //     }
-
-  //     const RecommendedItems = document.getElementById('RecommendedItems');
-  //     if (RecommendedItems) {
-  //       RecommendedItems.style.setProperty('display', 'none', 'important');
-  //     }
-
-  //     document.querySelectorAll('#eventsvm').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-
-  //   }, 1000)
-  //   var handler = this;
-  //   $('#calendar').on('selectDate', function (event, newDate) {
-  //     let SelectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY")
-  //     handler.getCurrentUser().then(() => {
-  //       handler.GetEventsofSelectedDate(SelectedDate)
-  //       // .then(()=>{
-
-  //       //   handler.LandingPageAnalytics();
-  //       // })
-  //     })
-  //   });
-
-  //   const url: any = new URL(window.location.href);
-  //   const Date = url.searchParams.get("SelectedDate");
-  //   const Mode = url.searchParams.get("Mode");
-  //   if (Mode == "EvRM") {
-  //     this.setState({ Mode: "EvRM", Date: moment(Date, "YYYYMMDD").format('MMMM DD, YYYY') });
-  //     var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
-  //     handler.GetEvents(tdaydateAdd, 'EvRM');
-  //   } else {
-  //     this.setState({ Mode: "EvVM", Date: moment().format('MMMM DD, YYYY') });
-  //     var tdaydateAdd = moment(Date, "YYYYMMDD").format('YYYY-MM-DD');
-  //     handler.GetEvents(tdaydateAdd, 'EvVM');
-  //   }
-  // }
-
-  // Optimized code 
-
   public componentDidMount() {
     setTimeout(() => {
       // Elements and their corresponding IDs/attributes for hiding
@@ -160,27 +91,13 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
 
     // Event handler for calendar date selection
     const handler = this;
-    // $('#calendar').on('selectDate', (event, newDate) => {
-    //   console.log("calendar event", newDate);
 
-    //   const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
-    //   handler.getCurrentUser().then(() => {
-    //     handler.GetEventsofSelectedDate(selectedDate);
-    //   });
-
-
-    // });
     const calendarElement = document.getElementById('calendar');
 
     if (calendarElement) {
       calendarElement.addEventListener('selectDate', (newDate: any) => {
         // const newDate = event.detail; // Assuming newDate is passed in event.detail
         const selectedDate = moment(newDate, "MM/DD/YYYY").format("DD/MM/YYYY");
-
-        // handler.getCurrentUser().then(() => {
-        //   handler.GetEventsofSelectedDate(selectedDate);
-        // });
-
         // Updated code
 
         const userDetails = new CurrentUserDetails();
@@ -215,78 +132,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     handler.GetEvents(formattedDate, mode);
   }
 
-  //   public async getCurrentUser() {
-  //     var reacthandler = this;
-  //     User = reacthandler.props.userid;
-  //     const profile = await pnp.sp.profiles.myProperties.get().then(async(profile)=>{
-  //     UserEmail = profile.Email;
-  //     var Name = profile.DisplayName;
-  //     Designation = profile.Title;
-  // console.log(profile);
-
-  //     // const currentUser = await sp.web.currentUser.get();
-  //     // UserID = currentUser.Id;
-
-  //     // Check if the UserProfileProperties collection exists and has the Department property
-  //     if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //       // Find the Department property in the profile
-  //       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //       const DesignationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
-  //       console.log(departmentProperty);
-  //       if (departmentProperty) {
-  //         Department = departmentProperty.Value;
-  //       }
-  //     }
-  //   })
-  //   }
-  // public async getCurrentUser() {
-  //   var reacthandler = this
-  //   let curruser = await NewWeb.currentUser.get().then(function (res:any) {
-
-  // console.log(res);
-
-  //     const UserEmail = res.Email
-  //     UserID.push(res.Id)
-  //     const CurrentUserID = res.Id
-
-  //   });
-  // }
-
-
-  // public async getCurrentUser() {
-  //   var reacthandler = this;
-  //   try {
-  //     $.ajax({
-  //       url: `${reacthandler.props.siteurl}/_api/SP.UserProfiles.PeopleManager/GetMyProperties`,
-  //       type: "GET",
-  //       headers: { Accept: "application/json; odata=verbose;" },
-  //       success: function (profile) {
-  //         console.log(profile);
-  //         Designation = profile.d.Title;
-  //         if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-  //           // Find the Department property in the profile
-  //           const departmentProperty = profile.d.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-  //           console.log(departmentProperty);
-  //           if (departmentProperty) {
-  //             Department = departmentProperty.Value;
-  //           }
-  //         }
-  //         // reacthandler.setState({
-  //         // //  CurrentUserName: Name,
-  //         //  // CurrentuserEmail: resultData.d.Email,
-  //         // });
-
-
-  //       },
-  //       error: function () { },
-  //     });
-  //   }
-  //   catch (error) {
-  //     console.error("An error occurred while fetching the user profile:", error);
-  //   }
-  // }
-
-
   public async LandingPageAnalytics(Department: any, Designation: any) {
     if (!Department) {
       Department = "NA";
@@ -303,49 +148,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
       console.error('Error adding data:', error);
     }
   }
-
-  // private async GetEvents(Date: string, Mode: string) {
-  //   var reactHandler = this;
-  //   var result
-  //   if (Mode == "EvRM") {
-
-  //     result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${Date}'`).get()
-  //   } else {
-
-  //     result = await NewWeb.lists.getByTitle(Eventslist).items.select("ID", "Title", "Image", "Description", "EventDate", "Location", "EndDate").orderBy("EventDate", true).filter(`EndDate gt '${moment().format('YYYY-MM-DD')}'`).get()
-  //   }
-  //   this.GetEventsForDots(Date, Mode);
-  //   if (result.length != 0) {
-  //     reactHandler.setState({
-  //       Items: result,
-
-  //     });
-
-  //     // $("#if-event-present").show();
-  //     // $("#if-no-event-present").hide();
-
-  //     document.querySelectorAll('#if-event-present').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //     document.querySelectorAll('#if-no-event-present').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-
-  //   } else {
-
-  //     document.querySelectorAll('#if-event-present').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-  //     document.querySelectorAll('#if-no-event-present').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-
-  //     // $("#if-event-present").hide();
-  //     // $("#if-no-event-present").show();
-  //   }
-  // }
-
-  // Optimize thsi code
 
   private async GetEvents(date: string, mode: string) {
     try {
@@ -386,57 +188,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
       element.style.display = isEventPresent ? 'none' : 'block';
     });
   }
-
-  // private async GetEventsForDots(Date: moment.MomentInput, Mode: string) {
-  //   if (Mode == "EvVM") {
-  //     await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
-
-  //       for (var i = 0; i < items.length; i++) {
-  //         eventList.push(
-  //           { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
-  //         );
-  //       }
-
-  //       ($('#calendar') as any).evoCalendar({
-  //         calendarEvents: eventList,
-  //         'todayHighlight': true,
-  //         'eventListToggler': false,
-  //         'eventDisplayDefault': false,
-  //         'sidebarDisplayDefault': false
-  //       });
-  //     }).catch((err: any) => {
-  //       console.log(err);
-  //     });
-  //   } else {
-
-  //     await NewWeb.lists.getByTitle(Eventslist).items.select("Title", "Description", "Location", "Image", "Location", "EventDate", "EndDate", "ID").orderBy("Created", false).getAll().then((items: string | any[]) => { // //orderby is false -> decending                  
-  //       for (var i = 0; i < items.length; i++) {
-
-
-  //         eventList.push(
-  //           { id: "" + items[i].ID + "", name: "" + items[i].Title + "", date: "" + moment(items[i].EventDate).format("MMMM/D/YYYY") + "", type: "holiday", description: "" + items[i].Description + "" }
-  //         );
-  //       }
-  //       const DateFormat = moment(Date).format("MMMM DD,YYYY");
-  //       ($('#calendar') as any).evoCalendar({
-  //         calendarEvents: eventList,
-  //         'todayHighlight': true,
-  //         'eventListToggler': false,
-  //         'eventDisplayDefault': false,
-  //         'sidebarDisplayDefault': false,
-  //         'selectDate': "07/09/2021"//this.state.Date
-  //       });
-  //       ($("#calendar") as any).evoCalendar('selectDate', "" + DateFormat + "");
-
-
-  //     }).catch((err: any) => {
-  //       console.log(err);
-  //     });
-  //   }
-
-  // }
-
-  // Optimized code
 
   private async GetEventsForDots(Date: moment.MomentInput, Mode: string) {
     try {
@@ -599,9 +350,7 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     return (
       <div className={styles.remoHomePage} id="eventsvm" style={{ display: "none" }}>
 
-        {/* <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div> */}
+
 
         <div className="container relative">
           <div className="section-rigth">
@@ -610,8 +359,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
               <div className="inner-banner-contents">
                 <h1> Events </h1>
                 <ul className="breadcums">
-                  {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li>
-                  <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
 
                   <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                   <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Events </a> </li>

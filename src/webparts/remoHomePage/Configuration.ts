@@ -43,13 +43,9 @@ export const Configuration = {
     overRidingCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.css/SP-NativeStyle-Overriding.css?v=3.3",
     respnsiveCss: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/Remo%20Portal%20Assets/css/style.cssresponsive.css?v=4.18"
 }
-// export const PictureLib: { [key: string]: string } = {
-//     PictureGallery: "Picture Gallery",
 
-// }
 export const WEB: { [key: string]: string } = {
     NewWeb: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct/",
-    // NewWeb: "https://6z0l7v.sharepoint.com/sites/SPTraineeBT/"
 
 }
 

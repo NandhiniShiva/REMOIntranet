@@ -4,16 +4,11 @@ import { IRemoHomePageProps } from './IRemoHomePageProps';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-// import * as $ from 'jquery';
 import Slider from 'react-slick';
 import { sp } from '@pnp/sp'
 import * as moment from 'moment';
 import { listNames } from '../Configuration';
-// import { ChoiceFieldFormatType, FieldUserSelectionMode, UrlFieldFormatType } from 'sp-pnp-js';
-// import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
-// import { ListCreation } from './ServiceProvider/ListCreation';
-// import { Web } from '@pnp/sp/webs';
 
 let Birthdaylist = listNames.Birthday;
 
@@ -43,9 +38,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       Dates: [],
       TotalBirthday: 0
     };
-    // spWeb = Web(this.props.siteurl);
-
-
   }
 
   public async componentDidMount() {
@@ -55,184 +47,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
 
   }
-
-  // public async GetBirthday() {
-  //   var reactHandler = this;
-
-  //   await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created").
-  //     orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
-
-  //       if (items.length != 0) {
-  //         // $("#today-bday").show();
-  //         document.querySelectorAll('#today-bday').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-
-  //         reactHandler.setState({
-  //           TodayBirthday: items,
-  //         });
-
-  //         for (var i = 0; i < items.length; i++) {
-
-  //           var tdaydate = moment().format('MM/DD');
-  //           var bdaydates = moment(items[i].DOB).format('MM/DD')
-
-  //           if (tdaydate == bdaydates) {
-  //             this.setState({ TotalBirthday: items.length })
-  //           }
-  //         }
-  //       } else {
-  //         // $("#today-bday").hide();
-  //         // $("#upcoming-bday").show();
-
-  //         document.querySelectorAll('#today-bday').forEach(element => {
-  //           (element as HTMLElement).style.display = 'none';
-  //         }); document.querySelectorAll('#upcoming-bday').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //       }
-
-  //     });
-  //   reactHandler.GetUpcomingBirthday();
-  // }
-
-  // public async createSharePointLists(componentListName: string) {
-  //   try {
-  //     console.log("List creation process started...");
-
-  //     // Find the list details based on the provided name
-  //     const listDetails = ListLibraryColumnDetails.find(
-  //       (list) => list.name.toLowerCase() === componentListName.toLowerCase()
-  //     );
-
-  //     if (!listDetails) {
-  //       console.error(`List details for '${componentListName}' not found.`);
-  //       return;
-  //     }
-
-  //     // Ensure the list exists; create it if it doesn't
-  //     const listEnsureResult = await sp.web.lists.ensure(componentListName);
-
-  //     if (listEnsureResult.created) {
-  //       console.log(`List '${componentListName}' created successfully.`);
-  //       // alert(`List '${componentListName}' created successfully.`);
-  //     } else {
-  //       console.log(`List '${componentListName}' already exists.`);
-  //       // alert(`List '${componentListName}' already exists.`);
-  //     }
-
-  //     // Create columns for the list
-  //     console.log(`Adding columns to '${componentListName}'...`);
-  //     await this.createSharePointColumns(componentListName, listDetails.columns);
-  //     console.log(`Columns for '${componentListName}' created successfully.`);
-  //   } catch (error) {
-  //     console.error("Error creating lists or columns:", error);
-  //   }
-  // }
-  // public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
-  //   try {
-  //     for (const column of columns) {
-  //       if (!column.columnName || !column.type) {
-  //         console.error("Invalid column data:", column);
-  //         continue;
-  //       }
-
-  //       let columnExist = false;
-  //       try {
-  //         columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
-  //       } catch {
-  //         columnExist = false; // Column does not exist
-  //       }
-
-  //       if (!columnExist) {
-  //         switch (column.type) {
-  //           case "addImageField":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
-  //             console.log(`Column '${column.columnName}' added as Image Field.`);
-  //             break;
-
-  //           case "addBoolean":
-  //             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Boolean.`);
-  //             break;
-
-  //           case "addTextField":
-  //             await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
-  //             console.log(`Column '${column.columnName}' added as Text Field.`);
-  //             break;
-
-  //           case "addNumberField":
-  //             await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Number Field.`);
-  //             break;
-
-  //           case "addDateField":
-  //             await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Date Field.`);
-  //             break;
-
-  //           case "addMultilineText":
-  //             await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
-  //             console.log(`Column '${column.columnName}' added as Multiline Field.`);
-  //             break;
-
-  //           case "Person or Group":
-  //             await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
-  //             console.log(`Column '${column.columnName}' added as Person or Group Field.`);
-  //             break;
-
-  //           case "addMultiChoice":
-  //             await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
-  //             console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
-  //             break;
-
-  //           case "addLookup":
-  //             if (!column.targetListName || !column.targetListColumn) {
-  //               console.error("Missing target list or column for lookup field:", column);
-  //               break;
-  //             }
-  //             const targetList = await sp.web.lists.getByTitle(column.targetListName).get();
-  //             await sp.web.lists
-  //               .getByTitle(name)
-  //               .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
-  //             console.log(`Column '${column.columnName}' added as Lookup Field.`);
-  //             break;
-
-  //           case "addUrl":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
-  //             console.log(`Column '${column.columnName}' added as URL Field.`);
-  //             break;
-
-  //           case "Icon":
-  //             await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
-  //             console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
-  //             break;
-
-  //           case "addChoice":
-  //             await sp.web.lists.getByTitle(name).fields.addChoice(
-  //               column.columnName,
-  //               column.choices,
-  //               ChoiceFieldFormatType.Dropdown
-  //             );
-  //             console.log(`Column '${column.columnName}' added as Choice Field.`);
-  //             break;
-
-  //           default:
-  //             console.log(`Unknown column type: ${column.type}`);
-  //         }
-
-  //         try {
-  //           await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
-  //         } catch (viewError) {
-  //           console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during column creation process:", error);
-  //   }
-  // }
-  // Updated code 
 
   public async GetBirthday() {
     try {
@@ -270,37 +84,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       console.error("Error fetching birthday data: ", error);
     }
   }
-
-  // public async GetUpcomingBirthday() {
-  //   var reactHandler = this;
-  //   var FutureDate1 = moment().add(1, "days").format('MM/DD');
-  //   var FutureDate2 = moment().add(2, "days").format('MM/DD');
-  //   var FutureDate3 = moment().add(3, "days").format('MM/DD');
-
-  //   reactHandler.setState({
-  //     FirstBdayDate: moment(FutureDate1, 'MM/DD'),
-  //     LastBdayDate: moment(FutureDate3, 'MM/DD'),
-  //   });
-  //   await sp.web.lists.getByTitle(Birthdaylist).items.select("Title", "DOB", "Name", "Picture", "Designation", "Description", "ID", "Created",).top(1000).
-  //     orderBy("DOB", true).filter(`IsActive eq '1'`).get().then((items) => {
-
-  //       reactHandler.setState({
-  //         UpcomingBirthday: items,
-  //       });
-  //       for (var i = 0; i < items.length; i++) {
-  //         var bdaydates = moment(items[i].DOB).format('MM/DD');
-
-  //         if (FutureDate1 == bdaydates || FutureDate2 == bdaydates || FutureDate3 == bdaydates) {
-  //           reactHandler.setState({
-  //             TotalBirthday: reactHandler.state.TotalBirthday + items.length
-  //           });
-  //         }
-  //       }
-  //       reactHandler.checkBirthdayAvailability();
-  //     });
-  // }
-
-  // Updated code 
 
   public async GetUpcomingBirthday() {
     try {
@@ -345,9 +128,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
     if (this.state.TotalBirthday == 0) {
 
-      // $("#if-birthdays-present").hide();
-      // $("#if-no-birthdays-present").show();
-
       document.querySelectorAll('#if-birthdays-present').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       }); document.querySelectorAll('#if-no-birthdays-present').forEach(element => {
@@ -355,8 +135,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       });
     } else {
 
-      // $("#if-birthdays-present").show();
-      // $("#if-no-birthdays-present").hide();
       document.querySelectorAll('#if-birthdays-present').forEach(element => {
         (element as HTMLElement).style.display = 'block';
       }); document.querySelectorAll('#if-no-birthdays-present').forEach(element => {
@@ -364,44 +142,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       });
     }
   }
-
-  // New code autolistcreation
-
-  // public CreateList = async () => {
-  //   //  spWeb = Web(this.props.siteurl);
-  //   let listEnsureResult = await spWeb.lists.ensure(this.props.name);
-  //   // debugger;
-  //   if (listEnsureResult.created === true) {
-
-  //     await this.createColumn();
-
-
-  //     await this.addData();
-
-  //   } else {
-
-  //   }
-
-  // }
-
-  // public async createColumn() {
-
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
-
-  // }
-
-  // private async addData() {
-  //   sp.web.lists.getByTitle(this.props.name).items.add({
-  //     Title: "Sajjad",
-  //     IsActive: true,
-  //     Image: "",
-
-  //   }).catch((error: any) => {
-  //     console.log("Error: ", error);
-  //   });
-
-  // }
 
   public readMoreHandler(compName: any, itemId: any) {
     this.props.onReadMoreClick({ Name: compName, Id: itemId })

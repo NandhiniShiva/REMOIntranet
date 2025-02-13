@@ -4,7 +4,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/sites";
-// import * as $ from 'jquery';
 import { IWeb, Web } from "@pnp/sp/webs";
 import { Markup } from 'interweave';
 import pnp from 'sp-pnp-js';
@@ -35,35 +34,6 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
     this.GetDepartmentAbout();
 
   }
-
-  // private GetDepartmentAbout() {
-  //   var reactHandler = this;
-  //   NewWeb.lists.getByTitle(AboutDepartmentlist).items.select("ID", "Title", "Description", "DepartmentBannerImage", "*").filter(`IsActive eq 1`).orderBy("Created", false).top(1).get().then((items) => {
-  //     if (items.length == 0) {
-  //       // $("#if-about-present").hide();
-  //       // $("#if-no-about-present").show();
-
-  //       document.querySelectorAll('#if-about-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       }); document.querySelectorAll('#if-no-about-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     } else {
-  //       // $("#if-about-present").show();
-  //       // $("#if-no-about-present").hide();
-
-  //       document.querySelectorAll('#if-about-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       }); document.querySelectorAll('#if-no-about-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       reactHandler.setState({
-  //         Items: items
-  //       });
-  //     }
-  //   });
-  // }
-  // Updated code 
 
   private async GetDepartmentAbout() {
     try {
@@ -145,7 +115,6 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
             <div className="inner-banner-contents">
               <h1> Department </h1>
               <ul className="breadcums">
-                {/* <li>  <a href={`${this.props.homepage}/SitePages/HomePage.aspx`} data-interception="off" > Home </a> </li> */}
                 <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                 <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.props.PageName} </a> </li>
               </ul>

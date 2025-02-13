@@ -35,35 +35,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
 
   }
-  // private async GetCEOMessage() {
-  //   var reactHandler = this;
-  //   await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "Name", "Image", "Designation", "Name", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
 
-  //     if (items.length == 0) {
-  //       // $("#if-no-ceo-msg-present").show();
-  //       // $("#if-ceo-msg-present").hide();
-  //       document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //     } else {
-  //       reactHandler.setState({
-  //         Items: items
-  //       });
-  //       // $("#if-no-ceo-msg-present").hide();
-  //       // $("#if-ceo-msg-present").show();
-
-  //       document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //     }
-
-  //   });
-
-  // }
 
   public readMoreHandler(compName: any, itemId: any) {
     this.props.onReadMoreClick({ Name: compName, Id: itemId })
@@ -74,8 +46,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
     try {
       await sp.web.lists.getByTitle(CEO_Messagelist).items.select("ID", "Title", "Description", "Created", "CEOName", "Image", "Designation", "*").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending        
         if (items.length == 0) {
-          // $("#if-no-ceo-msg-present").show();
-          // $("#if-ceo-msg-present").hide();
+
           document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
             (element as HTMLElement).style.display = 'block';
           }); document.querySelectorAll('#if-ceo-msg-present').forEach(element => {
@@ -86,8 +57,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
             Items: items,
             isDataAvailable: true
           });
-          // $("#if-no-ceo-msg-present").hide();
-          // $("#if-ceo-msg-present").show();
 
           document.querySelectorAll('#if-no-ceo-msg-present').forEach(element => {
             (element as HTMLElement).style.display = 'none';
@@ -103,17 +72,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
 
   }
 
-  // public DynamicHeight() {
-  //   setTimeout(() => {
-  //     var ceotitleheight = $("#ceo-title-dynamic").height();
-  //     var herobannerheight = $("#myCarousel").height();
-  //     if(ceotitleheight != undefined && herobannerheight != undefined){
-  //       var total = ceotitleheight - herobannerheight + 109;
-  //       var pheight = Math.round(Math.abs(total));
-  //       $(".ceo-message-left p").css("height", "" + pheight + "")
-  //     }
-  //   }, 2000);
-  // }
 
   DynamicHeight() {
     setTimeout(() => {
@@ -287,15 +245,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
       const date = moment(item.Created).format("DD/MM/YYYY");
       dummyElement.innerHTML = item.Description;
       const outputText = dummyElement.innerText;
-
-      // $("#ceo-title-dynamic").html(`${item.Title}`);
       CEOName = item.Title;
-      // const ceoTitleElement = document.getElementById('ceo-title-dynamic');
-
-      // // Check if the element exists before setting the HTML content
-      // if (ceoTitleElement) {
-      //   ceoTitleElement.innerHTML = `${item.Title}`;
-      // }
       const RawImageTxt = item.Image;
 
       if (RawImageTxt && RawImageTxt !== "") {
@@ -308,7 +258,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <h4>{item.CEOName}</h4>
               <h6>{date}</h6>
               <p>{outputText}</p>
-              {/* <a href={`${handler.props.siteurl}/SitePages/CEO-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler()}> */}
               <a href="#" data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler("CEOReadMore", item.ID)}>
 
                 Read more
@@ -347,7 +296,6 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
           <>
             <div className="sec relative" id="if-ceo-msg-present">
               <div className="heading" id="ceo-title-dynamic">
-                {/* CEO's Message */}
                 {CEOName}
               </div>
               {CEOMessage}
