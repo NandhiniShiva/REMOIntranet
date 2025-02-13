@@ -260,7 +260,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async getAllocatedComponents() {    
     try {
-      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
+      const listName = (this.state.isCurrentUserAdmin  && this.state.editMode) ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
       const response = await sp.web.lists.getByTitle(listName).items.filter(`Title eq '${this.state.selectedValue}'`).get();
       if (response.length === 0) {
@@ -845,9 +845,17 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           Selectedcomponents.push(selectedComponent.ComponentId);
 
           // Update available components and screen states
-          const updatedAvailableComponents = this.state.AvailableComponents.filter(
-            (item) => item.ComponentId !== selectedComponent.ComponentId
+          // const updatedAvailableComponents = this.state.AvailableComponents.filter(
+          //   (item) => item.ComponentId !== selectedComponent.ComponentId
+          // );
+          const updatedAvailableComponents = Array.from(
+            new Map(
+              this.state.AvailableComponents
+                .filter((item) => item.ComponentId !== selectedComponent.ComponentId)
+                .map((item) => [item.Title, item]) // Use ComponentName as key
+            ).values()
           );
+          
 
           const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
             index === (key - 1) ? false : item
@@ -935,7 +943,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         });
 
         // Delete the item from Draftmaster after successfully copying
-        await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).delete();
+        await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle();
       }
 
       console.log("All items published successfully.");
@@ -1318,7 +1326,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     if (existingItems.length > 0) {
       // If an item exists for the position, update it
       const itemId = existingItems[0].Id; // Get the item ID
-      await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).delete();
+      await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
       sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
         if (resp.length != 0) {
           resp.forEach((items) => {
