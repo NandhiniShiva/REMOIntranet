@@ -181,7 +181,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async getAllocatedComponents() {
     try {
-      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
+      const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
       let response = await sp.web.lists.getByTitle(listName).items.filter(`Title eq '${this.state.selectedValue}'`).get();
       if (listName === ComponentallocationList && response.length === 0) {
@@ -191,16 +191,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         // Fetch from ComponentallocationList if no items found in Draftmaster
         response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
       }
-
-
-      const selectedComponents: { [key: number]: string } = {};
+      const selectedComponents: { [key: number]: { name: string; id: number } } = {};
       let updatedIsInitialscreen = [...this.state.isInitialscreen];
       let updatedAvailableComponents = [...this.state.AvailableComponents];
 
       response.forEach((item) => {
         if (item.Position != null && item.Component != null) {
           // Update selectedComponents by position
-          selectedComponents[item.Position] = item.Component;
+          selectedComponents[item.Position] = {
+            name: item.Component,
+            id: item.ComponentID
+          };
+          // selectedComponents[item.Position] = {name: item.Component, id:item.ComponentID};
 
           // Update isInitialscreen to mark the position as not initial
           updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
@@ -384,42 +386,45 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
-  public async setSelectedComponent(event: any, value: string, DOMID: string, key: number) {
+  public async setSelectedComponent(event: any, ComponentName: string, DOMID: string, key: number, ComponentId: number) {
     try {
       event.preventDefault();
       const position = key;
-      // Update selected component for the position
+      
       this.setState((prevState) => ({
         selectedComponents: {
           ...prevState.selectedComponents,
-          [position]: value,
-        },
+          [position]: {
+            name: ComponentName,
+            id: ComponentId
+          }
+        }
       }));
 
       this.setState({
         componentName: event.target.value
       });
 
-      if (value != null) {
+      if (ComponentName != null) {
         const selectedComponent = this.state.AvailableComponents.find(
-          (item) => item.Title === value
+          (item) => item.Title === ComponentName
         );
 
         if (selectedComponent && !Selectedcomponents.includes(selectedComponent.ComponentId)) {
           // Add to global selected list
           Selectedcomponents.push(selectedComponent.ComponentId);
 
-          // Update available components and screen states
-          // const updatedAvailableComponents = this.state.AvailableComponents.filter(
-          //   (item) => item.ComponentId !== selectedComponent.ComponentId
-          // );
-          const updatedAvailableComponents = Array.from(
-            new Map(
-              this.state.AvailableComponents
-                .filter((item) => item.ComponentId !== selectedComponent.ComponentId)
-                .map((item) => [item.Title, item]) // Use ComponentName as key
-            ).values()
+          //Update available components and screen states
+          const updatedAvailableComponents = this.state.AvailableComponents.filter(
+            (item) => item.ComponentId !== selectedComponent.ComponentId
           );
+          // const updatedAvailableComponents = Array.from(
+          //   new Map(
+          //     this.state.AvailableComponents
+          //       .filter((item) => item.ComponentId !== selectedComponent.ComponentId)
+          //       .map((item) => [item.Title, item]) // Use ComponentName as key
+          //   ).values()
+          // );
 
 
           const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
@@ -443,7 +448,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         } else {
           console.log(`List '${ComponentallocationList}' already exists.`);
         }
-        await this.handleComponentAllocation(value, selectedComponent.ComponentId, position);
+        await this.handleComponentAllocation(ComponentName, selectedComponent.ComponentId, position);
 
         console.log("Item successfully added to the list.");
       } else {
@@ -496,6 +501,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       if (draftItems.length === 0) {
         console.log("No items to publish.");
         return;
+      }
+      const existingItems = await sp.web.lists.getByTitle(ComponentallocationList)
+        .items.filter(`Title eq '${this.state.selectedValue}'`)
+        .get();
+
+      for (const item of existingItems) {
+        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(item.Id).recycle();
       }
 
       // Loop through each draft item and copy it to PublishedList
@@ -746,15 +758,15 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       // If an item exists for the position, update it
       const itemId = existingItems[0].Id; // Get the item ID
       await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
-      
-    }else{
-       existingItems = await sp.web.lists
-      .getByTitle(ComponentallocationList)
-      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-      .get();
+
+    } else {
+      existingItems = await sp.web.lists
+        .getByTitle(ComponentallocationList)
+        .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+        .get();
       if (existingItems.length > 0) { // Ensure the item exists before accessing it
-      const itemId = existingItems[0].Id; // Get the item ID
-      await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
+        const itemId = existingItems[0].Id; // Get the item ID
+        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
       }
     }
     sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
@@ -787,7 +799,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public renderComponent(position: number) {
-    const componentName = this.state.selectedComponents[position];
+    const componentName = this.state.selectedComponents[position]?.name;
     // const locationID = `Location-${position}`
 
     // Define a function to render components dynamically
@@ -864,7 +876,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       return;
     }
     try {
-      const listName = (this.state.isCurrentUserAdmin && this.state.editMode) ? Draftmaster : ComponentallocationList;
+      const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
       // Check if the new layout already exists
       const isLayoutExist = await sp.web.lists
         .getByTitle(listName)
@@ -918,8 +930,60 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
     window.location.href = url;
   }
-  public draftHandler(event: any) {
+ 
+
+  public async handleDraft() {
+    try {
+      if (!this.state.selectedValue || !this.state.selectedComponents) {
+        console.warn("No selected value or components available.");
+        return;
+      }
+
+      console.log("Fetching existing items in DraftMaster...");
+      const draftMasterItems = await sp.web.lists.getByTitle("DraftMaster")
+        .items.filter(`Title eq '${this.state.selectedValue}'`)
+        .get();
+
+      // Store existing ComponentIDs as strings
+      const existingComponentIDs = new Set(draftMasterItems.map(item => String(item.ComponentID)));
+
+      console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
+
+      for (const key in this.state.selectedComponents) {
+        if (this.state.selectedComponents.hasOwnProperty(key)) {
+          const item = this.state.selectedComponents[key];
+          const position = parseInt(key, 10); // Convert key to integer
+          const componentID = String(item.id); // Ensure it's a string
+
+          // Check if ComponentID already exists in DraftMaster
+          if (!existingComponentIDs.has(componentID)) {
+            console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
+            try {
+              await sp.web.lists.getByTitle(Draftmaster).items.add({
+                Title: String(this.state.selectedValue), // Ensure string
+                Component: String(item.name), // Ensure string
+                ComponentID: String(item.id), // Ensure string (if expected as text)
+                Position: String(position) // Ensure number (if expected as number)
+              });
+              console.log(`Successfully added ${item.name}`);
+            } catch (addError) {
+              console.error(`Failed to add component: ${item.name}`, addError);
+            }
+          } else {
+            console.log(`Component ${item.name} (ID: ${componentID}) already exists. Skipping.`);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error while handling the Draft Master:", error);
+    }
+  }
+
+
+  public async draftHandler(event: any) {
     event.preventDefault();
+    await this.handleDraft();
+    console.log(this.state.selectedComponents);
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
     window.location.href = url;
   }
@@ -966,7 +1030,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 <li
                   key={component.Title} // Ensure unique key for each list item
                   className="li-search-wrap"
-                  onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex)}
+                  onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex, component.ComponentId)}
                 >
                   <p className="people_name">{component.Title}</p>
                 </li>
@@ -1013,7 +1077,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       <><li id='draft_button'>
                         <button onClick={(e) => this.draftHandler(e)}>
                           <img className='draftimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
-                          <span> Draft </span></button>
+                          <span> Save As Draft </span></button>
                       </li>
                         <li id='publish_button'>
                           <button onClick={(e) => this.publishHandler(e)}>
