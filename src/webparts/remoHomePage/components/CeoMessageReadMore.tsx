@@ -108,9 +108,9 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   }
 
   public async GetCeoMessage(ItemID: any, Department: any, Designation: any) {
-    let itemID = this.props.id
+    // let itemID = this.props.id
     try {
-      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "CEOName", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${itemID}`).getAll().then((items) => { // //orderby is false -> decending          
+      await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "CEOName", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
         // console.log(items);
 
         this.setState({

@@ -58,7 +58,7 @@ var UserEmail: any;
 
 var Selectedcomponents: any = [];
 var Components = PositionDetails;
-console.log(Draftmaster);
+// console.log(Draftmaster);
 
 export interface IRemoHomePageState {
   progress: any,
@@ -136,6 +136,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       element.style.display = 'none';
     });
     this.checkEditMode();
+    this.CheckalreadyConfigured();
     const userDetails = new CurrentUserDetails();
     await userDetails
       .getCurrentUserDetails()
@@ -162,6 +163,42 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     this.setState({
       editMode: mode
     })
+  }
+  public async CheckalreadyConfigured() {
+    try {
+      // Check if the new layout already exists
+      // debugger;
+      await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
+        if (response.length != 0) {
+          response.forEach(item => {
+            if (item.IsActive == true) {
+              this.setState(
+                {
+                  selectedValue: item.Title,
+                  showButton: false,
+                  showDropdown: false,
+                  showHomepage: true,
+                },
+                async () => {
+                  await this.loaderInProgress();
+                  await this.getLayout();
+                  await this.setActiveLayout(this.state.selectedValue);
+                  await this.GetAllavailablecomponents();
+                  await this.getAllocatedComponents();
+                  await this.HideInProgress();
+                }
+              );
+            }
+
+          });
+
+        }
+
+      })
+    } catch (error) {
+      console.error("Error handling layout change:", error);
+    }
+
   }
 
   public async checkUserAdmin() {
@@ -387,10 +424,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public async setSelectedComponent(event: any, ComponentName: string, DOMID: string, key: number, ComponentId: number) {
+    // debugger;
     try {
       event.preventDefault();
       const position = key;
-      
+
       this.setState((prevState) => ({
         selectedComponents: {
           ...prevState.selectedComponents,
@@ -454,6 +492,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       } else {
         console.log("No value selected. Skipping addition to the list.");
       }
+
+      // this.handleDraft();
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -494,6 +534,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async handlePublish() {
+    // debugger;
     try {
       // Fetch all items from the Draftmaster list
       const draftItems = await sp.web.lists.getByTitle(Draftmaster).items.filter(`Title eq '${this.state.selectedValue}'`).get();
@@ -581,6 +622,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   };
 
   public async setActiveLayout(selectedLayout: string) {
+    // debugger;
     try {
       const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
       const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
@@ -750,6 +792,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     event.preventDefault();
     var data: any;
     let updatedAvailableComponents: any[] = [];
+    let updatedSelectedComponent: any = [];
     let existingItems = await sp.web.lists
       .getByTitle(Draftmaster)
       .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
@@ -757,18 +800,26 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     if (existingItems.length > 0) {
       // If an item exists for the position, update it
       const itemId = existingItems[0].Id; // Get the item ID
+      const itemName = existingItems[0].Component;
       await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
 
-    } else {
-      existingItems = await sp.web.lists
-        .getByTitle(ComponentallocationList)
-        .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-        .get();
-      if (existingItems.length > 0) { // Ensure the item exists before accessing it
-        const itemId = existingItems[0].Id; // Get the item ID
-        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
-      }
+      updatedSelectedComponent = Object.fromEntries(
+        Object.entries(this.state.selectedComponents).filter(
+          ([, item]: [string, { name: string; id: string }]) => item.name !== itemName)
+        // ([key, item]) => item.name !== itemName)
+      );
+
     }
+    // else {
+    //   existingItems = await sp.web.lists
+    //     .getByTitle(ComponentallocationList)
+    //     .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+    //     .get();
+    //   if (existingItems.length > 0) { // Ensure the item exists before accessing it
+    //     const itemId = existingItems[0].Id; // Get the item ID
+    //     await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
+    //   }
+    // }
     sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
       if (resp.length != 0) {
         resp.forEach((items) => {
@@ -791,6 +842,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       );
       this.setState({
         AvailableComponents: updatedAvailableComponents,
+        selectedComponents: updatedSelectedComponent,
         isInitialscreen: updatedIsInitialscreen,
       });
     });
@@ -930,7 +982,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
     window.location.href = url;
   }
- 
+
 
   public async handleDraft() {
     try {
@@ -939,7 +991,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         return;
       }
 
-      console.log("Fetching existing items in DraftMaster...");
+      // console.log("Fetching existing items in DraftMaster...");
       const draftMasterItems = await sp.web.lists.getByTitle("DraftMaster")
         .items.filter(`Title eq '${this.state.selectedValue}'`)
         .get();
@@ -947,8 +999,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       // Store existing ComponentIDs as strings
       const existingComponentIDs = new Set(draftMasterItems.map(item => String(item.ComponentID)));
 
-      console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
-
+      // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
+      // debugger;
       for (const key in this.state.selectedComponents) {
         if (this.state.selectedComponents.hasOwnProperty(key)) {
           const item = this.state.selectedComponents[key];
@@ -957,7 +1009,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
           // Check if ComponentID already exists in DraftMaster
           if (!existingComponentIDs.has(componentID)) {
-            console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
+            // console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
             try {
               await sp.web.lists.getByTitle(Draftmaster).items.add({
                 Title: String(this.state.selectedValue), // Ensure string
@@ -965,7 +1017,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 ComponentID: String(item.id), // Ensure string (if expected as text)
                 Position: String(position) // Ensure number (if expected as number)
               });
-              console.log(`Successfully added ${item.name}`);
+              // console.log(`Successfully added ${item.name}`);
             } catch (addError) {
               console.error(`Failed to add component: ${item.name}`, addError);
             }
@@ -983,7 +1035,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async draftHandler(event: any) {
     event.preventDefault();
     await this.handleDraft();
-    console.log(this.state.selectedComponents);
+    // console.log(this.state.selectedComponents);
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
     window.location.href = url;
   }
