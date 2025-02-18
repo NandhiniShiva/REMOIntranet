@@ -38,6 +38,7 @@ import HeroBannerViewMore from './HeroBannerViewMore';
 import NewsReadMore from './NewsReadMore';
 import NewsViewMore from './NewsViewMore';
 import { SPComponentLoader } from '@microsoft/sp-loader';
+import Swal from 'sweetalert2';
 sp.setup({
   sp: {
     baseUrl: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct"
@@ -227,6 +228,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       } else if (listName === Draftmaster && response.length === 0) {
         // Fetch from ComponentallocationList if no items found in Draftmaster
         response = await sp.web.lists.getByTitle(ComponentallocationList).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+        if (response.length === 0) {
+          console.log("No items found in the SharePoint list.");
+          return;
+        }
       }
       const selectedComponents: { [key: number]: { name: string; id: number } } = {};
       let updatedIsInitialscreen = [...this.state.isInitialscreen];
@@ -622,7 +627,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   };
 
   public async setActiveLayout(selectedLayout: string) {
-    // debugger;
+    debugger;
     try {
       const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
       const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
@@ -946,19 +951,34 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           console.log("No items found to duplicate.");
           return;
         }
+        // Use SweetAlert2 to prompt the user
+        const userChoice = await Swal.fire({
+          title: `Layout "${value}" does not exist!`,
+          text: `Do you want to start fresh or duplicate components from "${previousLayout}"?`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Duplicate Components",
+          cancelButtonText: "Start Fresh",
+        });
+        if (userChoice.isConfirmed) {
+          // Duplicate each existing item with the new layout title
+          await Promise.all(
+            existingItems.map((item) =>
+              sp.web.lists.getByTitle(listName).items.add({
+                Title: value,
+                Component: item.Component,
+                ComponentID: item.ComponentID,
+                Position: item.Position,
+                // Add all other relevant fields here
+              })
+            )
+          );
+        } 
+        // else {
+        //   console.log(this.state.selectedComponents);
 
-        // Duplicate each existing item with the new layout title
-        await Promise.all(
-          existingItems.map((item) =>
-            sp.web.lists.getByTitle(listName).items.add({
-              Title: value,
-              Component: item.Component,
-              ComponentID: item.ComponentID,
-              Position: item.Position,
-              // Add all other relevant fields here
-            })
-          )
-        );
+        //   this.setState({ selectedComponents: {} })
+        // }
       }
 
       // Update state and trigger dependent actions
@@ -1470,8 +1490,15 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         }
 
         {this.state.showButton == true &&
-          <div>
-            <button onClick={() => this.showDropDown()}>Configure</button>
+          <div className="config-banner">
+            <img src="https://remodigital.sharepoint.com/:i:/r/sites/RemoIntranetProduct/SiteAssets/img/banner%20remo%20product.jpg?csf=1&web=1&e=R1h0Lq" alt="Expert Consulting" data-themekey="#" className="config-image" />
+            <div className="config-banner-content">
+              <div className="config-left-side"><img src="https://remodigital.sharepoint.com/:i:/r/sites/RemoIntranetProduct/SiteAssets/img/logo%20(1).png?csf=1&web=1&e=BJJeh1" className="config-logo" data-themekey="#" /></div>
+              <div className="config-right-side">
+                <h2 className="config-head">Expert Consulting</h2><p className="config-subhead">From the world’s tallest building, The Burj Khalifa, to the HSBC tower in Hong Kong, and from the New Delhi Metro to Manchester Airport, Ducab is changing the way that energy is distributed around the</p>
+                <button onClick={() => this.showDropDown()}>Configure</button>
+              </div>
+            </div>
           </div>
         }
 
