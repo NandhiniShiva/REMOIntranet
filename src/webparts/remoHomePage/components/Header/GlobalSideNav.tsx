@@ -909,8 +909,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
           <div className="container">
             <div className="header-left">
               <div className="logo">
-
-                <a className="logo-anchor" href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">  <img src={this.state.SiteLogo} alt="image" /> </a>
+                <a className="logo-anchor" href={`${this.props.siteurl}/SitePages/RemoProductHome.aspx`} data-interception="off">  <img src={this.state.SiteLogo} alt="image" /> </a>
               </div>
               <div className="search relative">
                 <img src={`${this.props.siteurl}/SiteAssets/img/search.png`} alt="image" />

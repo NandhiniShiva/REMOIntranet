@@ -259,7 +259,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                 setTimeout(() => {
                     // Show future event details
                     document.querySelectorAll('.fut-dt').forEach(element => {
-                        (element as HTMLElement).style.display = 'block';
+                        (element as HTMLElement).style.display = 'inline-block';
                     });
                 }, 200);
             }

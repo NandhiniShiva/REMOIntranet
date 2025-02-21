@@ -19,10 +19,12 @@ import RemoSocialMedia from './RemoSocialMedia';
 import Footer from './Footer/Footer'
 import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
-import { sp, } from "@pnp/sp/presets/all";
+import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
+// import { sp, } from "@pnp/sp/presets/all";
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 import { LayoutsDetails } from './ServiceProvider/Layoutconfiguration';
 import { PositionDetails } from './ServiceProvider/PositionConfiguration';
+import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { listNames } from '../Configuration';
 import CeoMessageRm from './CeoMessageReadMore';
 import AnnouncementsRm from './AnnouncementsRm';
@@ -38,6 +40,7 @@ import HeroBannerViewMore from './HeroBannerViewMore';
 import NewsReadMore from './NewsReadMore';
 import NewsViewMore from './NewsViewMore';
 import { SPComponentLoader } from '@microsoft/sp-loader';
+import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 import Swal from 'sweetalert2';
 sp.setup({
   sp: {
@@ -54,6 +57,7 @@ var ComponentConfigurationList = listNames.ComponentMaster;
 var Draftmaster = listNames.DraftMaster;
 var ComponentallocationList = listNames.ComPonentAllocationMaster;
 var LayoutMasterList = listNames.LayoutMaster;
+let Logolist = listNames.Logo;
 var User: any;
 var UserEmail: any;
 
@@ -84,7 +88,9 @@ export interface IRemoHomePageState {
   editMode: any
   isEditFalse: boolean,
   isSearchActive: boolean,
-  itemID: any
+  itemID: any,
+  SiteLogo: string;
+
 }
 
 
@@ -117,7 +123,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       editMode: "",
       isEditFalse: true,
       isSearchActive: false,
-      itemID: null
+      itemID: null,
+      SiteLogo: "",
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
@@ -154,7 +161,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       .catch((err) => {
         console.error("Error fetching current user details:", err);
       });
-
+    await this.BindPlaceholderLogo();
+    await this.loaderInProgress();
     this.checkUserAdmin();
   }
 
@@ -181,7 +189,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   showHomepage: true,
                 },
                 async () => {
-                  await this.loaderInProgress();
+                  // await this.loaderInProgress();
                   await this.getLayout();
                   await this.setActiveLayout(this.state.selectedValue);
                   await this.GetAllavailablecomponents();
@@ -216,8 +224,29 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       console.error("Error checking site admin status:", error);
     }
   }
+  public BindPlaceholderLogo() {
+    const { siteurl } = this.props;
+    const reacthandler = this;
 
+    sp.web.lists.getByTitle(Logolist)
+      .items.select("Logo", "*")
+      .filter("IsActive eq 1")
+      .orderBy("Created", false)
+      .top(1)
+      .get()
+      .then((items) => {
+        if (items.length > 0) {
+          const { Logo } = items[0];
+          if (Logo) {
+            const ImgObj = JSON.parse(Logo);
+            const serverRelativeUrl = ImgObj.serverRelativeUrl || `${siteurl}/Lists/${Logolist}/Attachments/${items[0].ID}/${ImgObj.fileName}`;
+            reacthandler.setState({ SiteLogo: serverRelativeUrl });
+          }
+        }
+      });
+  }
   public async getAllocatedComponents() {
+    debugger;
     try {
       const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
@@ -330,16 +359,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   }
   public HideInProgress() {
-    const loadContent = document.getElementById('load-content');
-    const loaderIcon = document.getElementById('loader-Icon');
+    setTimeout(() => {
+      const loadContent = document.getElementById('load-content');
+      const loaderIcon = document.getElementById('loader-Icon');
 
-    if (loadContent) {
-      loadContent.style.display = 'block';
-    }
+      if (loadContent) {
+        loadContent.style.display = 'block';
+      }
 
-    if (loaderIcon) {
-      loaderIcon.style.display = 'none';
-    }
+      if (loaderIcon) {
+        loaderIcon.style.display = 'none';
+      }
+    }, 5000);
   }
 
 
@@ -478,8 +509,14 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
             AvailableComponents: updatedAvailableComponents,
             isInitialscreen: updatedIsInitialscreen,
           });
-
           $("#" + DOMID).hide();
+
+          Swal.fire({
+            title: 'Components was added successfully',
+            icon: "success",
+            showConfirmButton: true,
+          })
+
 
           console.log("Updated Available Components:", updatedAvailableComponents);
         }
@@ -606,18 +643,21 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   }
 
-  public async handleSelectChange(event: any) {
-    console.log("selected option", event.target.value);
+  public async handleSelectChange(event: any, LayoutId: any) {
+    debugger;
+
+    // console.log("selected option", event.target.value);
     this.setState(
       {
         showHomepage: true,
         showDropdown: false,
-        selectedValue: event.target.value
+        selectedValue: LayoutId
       },
       async () => {
         // await this.createLayoutMasterList();
         await this.loaderInProgress();
         await this.setActiveLayout(this.state.selectedValue);
+        await this.getcreateLists();
         await this.GetAllavailablecomponents();
         await this.getAllocatedComponents();
         await this.HideInProgress();
@@ -678,6 +718,152 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
     } catch (error) {
       console.error("Error in setActiveLayout:", error);
+    }
+  }
+
+  public async getcreateLists() {
+    try {
+      debugger;
+      // Filter unmatched lists
+      const unmatchedLists: any = ListLibraryColumnDetails.filter(
+        listDetail => !this.state.landingPageComponentList.some(
+          component => component.Title.toLowerCase() === listDetail.name.toLowerCase()
+        )
+      );
+      console.log("Unmatched Lists:", unmatchedLists);
+      // Get the total number of unmatched lists
+      const totalLists: number = unmatchedLists.length;
+      // Track if any list was newly created
+      let anyListCreated = false;
+      // Loop through each unmatched list
+      for (let i = 0; i < totalLists; i++) {
+        const listName = unmatchedLists[i].name; // Access the list name
+        // const columns = unmatchedLists[i].columns; // Access the columns for the list
+        const listCreation = new ListCreation();
+        await listCreation.createSharePointLists(listName);
+        // // Ensure the list exists or create it
+        // const listEnsureResult = await sp.web.lists.ensure(listName);
+
+        // if (listEnsureResult.created) {
+        //   console.log(`List '${listName}' created successfully.`);
+        //   await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
+        //   anyListCreated = true;
+        // } else {
+        //   console.log(`List '${listName}' already exists.`);
+        //   await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
+        // }
+      }
+
+      // Log final status
+      if (!anyListCreated) {
+        console.log("All lists already existed. No new lists were created.");
+      }
+    } catch (error) {
+      console.error("Error creating lists:", error);
+    }
+  }
+
+  public async createSharePointColumns(name: string, columns: any[]): Promise<void> {
+    try {
+      for (const column of columns) {
+        if (!column.columnName || !column.type) {
+          console.error("Invalid column data:", column);
+          continue;
+        }
+
+        let columnExist = false;
+        try {
+          columnExist = await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).get();
+        } catch {
+          columnExist = false; // Column does not exist
+        }
+
+        if (!columnExist) {
+          switch (column.type) {
+            case "addImageField":
+              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName, 6, false);
+              console.log(`Column '${column.columnName}' added as Image Field.`);
+              break;
+
+            case "addBoolean":
+              await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName);
+              console.log(`Column '${column.columnName}' added as Boolean.`);
+              break;
+
+            case "addTextField":
+              await sp.web.lists.getByTitle(name).fields.addText(column.columnName, 255);
+              console.log(`Column '${column.columnName}' added as Text Field.`);
+              break;
+
+            case "addNumberField":
+              await sp.web.lists.getByTitle(name).fields.addNumber(column.columnName);
+              console.log(`Column '${column.columnName}' added as Number Field.`);
+              break;
+
+            case "addDateField":
+              await sp.web.lists.getByTitle(name).fields.addDateTime(column.columnName);
+              console.log(`Column '${column.columnName}' added as Date Field.`);
+              break;
+
+            case "addMultilineText":
+              await sp.web.lists.getByTitle(name).fields.addMultilineText(column.columnName);
+              console.log(`Column '${column.columnName}' added as Multiline Field.`);
+              break;
+
+            case "Person or Group":
+              await sp.web.lists.getByTitle(name).fields.addUser(column.columnName, FieldUserSelectionMode.PeopleOnly);
+              console.log(`Column '${column.columnName}' added as Person or Group Field.`);
+              break;
+
+            case "addMultiChoice":
+              await sp.web.lists.getByTitle(name).fields.addMultiChoice(column.columnName, column.group, false);
+              console.log(`Column '${column.columnName}' added as MultiChoice Field.`);
+              break;
+
+            case "addLookup":
+              if (!column.targetListName || !column.targetListColumn) {
+                console.error("Missing target list or column for lookup field:", column);
+                break;
+              }
+              const targetList = await sp.web.lists.getByTitle(column.targetListName).get();
+              await sp.web.lists
+                .getByTitle(name)
+                .fields.addLookup(column.columnName, targetList.Id, column.targetListColumn);
+              console.log(`Column '${column.columnName}' added as Lookup Field.`);
+              break;
+
+            case "addUrl":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Hyperlink);
+              console.log(`Column '${column.columnName}' added as URL Field.`);
+              break;
+
+            case "Icon":
+              await sp.web.lists.getByTitle(name).fields.addUrl(column.columnName, UrlFieldFormatType.Image);
+              console.log(`Column '${column.columnName}' added as Icon (URL field with Image format).`);
+              break;
+
+            case "addChoice":
+              await sp.web.lists.getByTitle(name).fields.addChoice(
+                column.columnName,
+                column.choices,
+                ChoiceFieldFormatType.Dropdown
+              );
+              console.log(`Column '${column.columnName}' added as Choice Field.`);
+              break;
+
+            default:
+              console.log(`Unknown column type: ${column.type}`);
+          }
+
+          try {
+            await sp.web.lists.getByTitle(name).views.getByTitle("All Items").fields.add(column.columnName);
+          } catch (viewError) {
+            console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error during column creation process:", error);
     }
   }
 
@@ -815,17 +1001,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       );
 
     }
-    // else {
-    //   existingItems = await sp.web.lists
-    //     .getByTitle(ComponentallocationList)
-    //     .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-    //     .get();
-    //   if (existingItems.length > 0) { // Ensure the item exists before accessing it
-    //     const itemId = existingItems[0].Id; // Get the item ID
-    //     await sp.web.lists.getByTitle(ComponentallocationList).items.getById(itemId).recycle();
-    //   }
-    // }
-    sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+
+    await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
       if (resp.length != 0) {
         resp.forEach((items) => {
           if (items.Title == value) {
@@ -851,6 +1028,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         isInitialscreen: updatedIsInitialscreen,
       });
     });
+
+    Swal.fire({
+      title: 'Components removed successfully',
+      icon: "success",
+      showConfirmButton: true,
+    })
 
 
   }
@@ -953,7 +1136,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         }
         // Use SweetAlert2 to prompt the user
         const userChoice = await Swal.fire({
-          title: `Layout "${value}" does not exist!`,
+          title: `"${value}" does not exist!`,
           text: `Do you want to start fresh or duplicate components from "${previousLayout}"?`,
           icon: "question",
           showCancelButton: true,
@@ -973,12 +1156,14 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               })
             )
           );
-        } 
-        // else {
-        //   console.log(this.state.selectedComponents);
-
-        //   this.setState({ selectedComponents: {} })
-        // }
+        }
+        else {
+          console.log(this.state.selectedComponents);
+          this.setState({
+            selectedComponents: {},
+            isInitialscreen: Array(12).fill(true), // Create an array of 10 `true` values
+          })
+        }
       }
 
       // Update state and trigger dependent actions
@@ -1059,12 +1244,72 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
     window.location.href = url;
   }
+
   public async publishHandler(event: any) {
     event.preventDefault();
-    await this.handlePublish();
-    const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
-    window.location.href = url;
+    const length = Object.keys(this.state.selectedComponents || {}).length;
+    if (length !== 0) {
+      // Show processing Swal
+      Swal.fire({
+        title: "Processing...",
+        text: "Please wait while we publish the components.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading(); // Show loading spinner
+        }
+      });
+
+      try {
+        await this.handlePublish(); // Wait for the function to complete
+        // Close processing Swal and show success message
+        Swal.fire({
+          title: `Components were added in '${this.state.selectedValue}'`,
+          icon: "success",
+          showConfirmButton: true,
+        }).then(() => {
+          // Redirect after user acknowledges success
+          window.location.href = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx';
+        });
+
+      } catch (error) {
+        // Handle any errors (optional)
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong while publishing.",
+          icon: "error",
+          showConfirmButton: true,
+        });
+      }
+
+    } else {
+      // Show warning message when no components are added
+      Swal.fire({
+        title: `None of the Components were added in '${this.state.selectedValue}'`,
+        icon: "warning",
+        showConfirmButton: true,
+      });
+    }
   }
+
+
+  // public async publishHandler(event: any) {
+  //   event.preventDefault();
+  //   const length = Object.keys(this.state.selectedComponents).length;
+  //   console.log(length);
+  //   if (length != 0) {
+  //     await this.handlePublish();
+  //     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
+  //     window.location.href = url;
+  //   } else {
+  //     Swal.fire({
+  //       title: `None of the Components were added in '${this.state.selectedValue}'`,
+  //       icon: "warning",
+  //       showConfirmButton: true,
+  //     })
+  //   }
+
+  // }
 
 
   public render(): React.ReactElement<IRemoHomePageProps> {
@@ -1148,12 +1393,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       :
                       <><li id='draft_button'>
                         <button onClick={(e) => this.draftHandler(e)}>
-                          <img className='draftimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                          <img className='draftimage' src={`${this.props.siteurl}/SiteAssets/img/draft.svg`} alt="draft-img" />
                           <span> Save As Draft </span></button>
                       </li>
                         <li id='publish_button'>
                           <button onClick={(e) => this.publishHandler(e)}>
-                            <img className='publishimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                            <img className='publishimage' src={`${this.props.siteurl}/SiteAssets/img/publish.svg`} alt="publish-img" />
                             <span> Publish </span></button>
                         </li></>
                     }
@@ -1388,61 +1633,61 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   :
                   this.state.isClicked == "AnnouncementReadMore" ?
                     (
-                      <AnnouncementsRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
+                      <AnnouncementsRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
                     ) :
 
                     this.state.isClicked == "AnnouncementViewMore" ?
                       (
-                        <AnnouncementsVm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
+                        <AnnouncementsVm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
                       ) :
                       this.state.isClicked == "BirthdayRm" ?
                         (
-                          <BirthdayRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
+                          <BirthdayRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
                         ) :
                         this.state.isClicked == "CEOReadMore" ?
                           (
-                            <CeoMessageRm description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
+                            <CeoMessageRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
                           ) :
                           this.state.isClicked == "DeptGalleryGridView" ?
                             (
-                              <DeptGalleryGridView description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
+                              <DeptGalleryGridView description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
                             ) :
                             this.state.isClicked == "DeptGalleryViewMore" ?
                               (
-                                <DeptGalleryViewMore description={''} siteurl={''} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
+                                <DeptGalleryViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
                               ) :
                               this.state.isClicked == "EventsViewMore" ?
                                 (
-                                  <EventsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></EventsViewMore>
+                                  <EventsViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></EventsViewMore>
                                 ) :
                                 this.state.isClicked == "GalleryGridView" ?
                                   (
-                                    <GalleryGridView description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></GalleryGridView>
+                                    <GalleryGridView description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></GalleryGridView>
                                   ) :
                                   this.state.isClicked == "GalleryViewMore" ?
                                     (
-                                      <GalleryViewMore description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}   ></GalleryViewMore>
+                                      <GalleryViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}   ></GalleryViewMore>
                                     ) :
 
                                     this.state.isClicked == "HeroBannerReadMore" ?
                                       (
-                                        <HeroBannerRm description={''} siteurl={''} context={this.props.context} userid={undefined} useremail={null} id={this.state.itemID} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></HeroBannerRm>
+                                        <HeroBannerRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} useremail={null} id={this.state.itemID} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></HeroBannerRm>
                                       ) :
 
                                       this.state.isClicked == "HeroBannerViewMore" ?
                                         (
-                                          <HeroBannerViewMore description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
+                                          <HeroBannerViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
                                         ) :
 
 
                                         this.state.isClicked == "NewsReadMore" ?
                                           (
-                                            <NewsReadMore description={''} siteurl={''} context={this.props.context} userid={undefined} siteID={undefined} useremail={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></NewsReadMore>
+                                            <NewsReadMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} siteID={undefined} useremail={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></NewsReadMore>
                                           ) :
 
                                           this.state.isClicked == "NewsViewMore" ?
                                             (
-                                              <NewsViewMore description={''} siteurl={''} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></NewsViewMore>
+                                              <NewsViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></NewsViewMore>
                                             ) :
 
                                             null
@@ -1450,8 +1695,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               </section>
             </div>
             <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
-              <h1>Loader</h1>
-
+              <img src={`${this.props.siteurl}/SiteAssets/img/loader.gif`} alt="loader" />
+              {/* <h1>Loader</h1> */}
             </div>
             {/* )} */}
           </div>
@@ -1459,11 +1704,23 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
         {this.state.showDropdown == true &&
           <>
-            <header className='layout_header'></header>
+            <header className='layout_header'>
+              <div>
+                <a className="logo-anchor" href={`${this.props.siteurl}/SitePages/RemoProductHome.aspx`} data-interception="off">  <img src={this.state.SiteLogo} alt="image" /> </a>
+              </div>
+            </header>
             <div className="selectLayers">
               <div className="selectYours"> Select Your Layout</div>
               <div className="Layout-content">
-                <div className="SelectLayout cont-1">
+                {this.state.layoutItems.map((item, key) => (
+                  <div className={`SelectLayout cont-${key + 1}`} onClick={(e) => this.handleSelectChange(e, item.ID)}>
+                    <div className="SElect-Layout-img">
+                      <img src={`${this.props.siteurl}/SiteAssets/img/layout%201.PNG`} data-themekey="#" />
+                    </div>
+                    <div className="LayoutText">{item.name}</div>
+                  </div>
+                ))}
+                {/* <div className="SelectLayout cont-1">
                   <div className="SElect-Layout-img">
                     <img src={`${this.props.siteurl}/SiteAssets/img/layout%201.PNG`} data-themekey="#" />
                   </div>
@@ -1474,10 +1731,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                     <img src="#" data-themekey="#" />
                   </div>
                   <div className="LayoutText">Layout 2</div>
-                </div>
+                </div> */}
               </div>
             </div>
-            <div>
+            {/* <div>
               <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
                 <option value="">Select Layout</option>
                 {this.state.layoutItems.map((item) => (
@@ -1486,7 +1743,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   </option>
                 ))}
               </select>
-            </div></>
+            </div> */}
+          </>
         }
 
         {this.state.showButton == true &&
