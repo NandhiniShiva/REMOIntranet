@@ -29,10 +29,10 @@ export default class RemoSocialMedia extends React.Component<IRemoHomePageProps,
         <div>
           <div className="social-medial-wrap">
             <ul className="clearfix">
-              <li className="facebook active"><a href="#" onClick={() => this.OpenSocialMedia("fb")}> <img src={`${this.props.siteurl}/SiteAssets/img/s1.svg`} alt="image" /></a> </li>
-              <li className="instagram"><a href="#" onClick={() => this.OpenSocialMedia("insta")}>  <img src={`${this.props.siteurl}/SiteAssets/img/s2.svg`} alt="image" /></a> </li>
-              <li className="twitter"><a href="#" onClick={() => this.OpenSocialMedia("twitter")}> <img src={`${this.props.siteurl}/SiteAssets/img/s3.svg`} alt="image" /></a> </li>
-              <li className="linkedin"><a href="#" onClick={() => this.OpenSocialMedia("linkedin")}> <img src={`${this.props.siteurl}/SiteAssets/img/s4.svg`} alt="image" /> </a></li>
+              <li className="facebook active"><a href="#" onClick={() => this.OpenSocialMedia("fb")}> <img src={require("./ServiceProvider/Assets/Img/s1.svg")} alt="image" /></a> </li>
+              <li className="instagram"><a href="#" onClick={() => this.OpenSocialMedia("insta")}>  <img src={require("./ServiceProvider/Assets/Img/s2.svg")} alt="image" /></a> </li>
+              <li className="twitter"><a href="#" onClick={() => this.OpenSocialMedia("twitter")}> <img src={require("./ServiceProvider/Assets/Img/s3.svg")} alt="image" /></a> </li>
+              <li className="linkedin"><a href="#" onClick={() => this.OpenSocialMedia("linkedin")}> <img src={require("./ServiceProvider/Assets/Img/s4.svg")} alt="image" /> </a></li>
             </ul>
             <div className="main-social-media-block sec" id="LINKEDIN">
               <iframe src='https://www.sociablekit.com/app/embed/64771' width='100%' height='290'></iframe>

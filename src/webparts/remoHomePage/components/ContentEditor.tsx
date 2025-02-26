@@ -293,7 +293,7 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
           <section id="access-denied-block" style={{ display: "none" }}>
             <div className="result-succ-mess">
               <h3>Access Denied</h3>
-              <img src={`${this.props.siteurl}/SiteAssets/img/Not_sync.png`} alt="image" data-themekey="#" />
+              <img src={require("./ServiceProvider/Assets/Img/Not_sync.png")} alt="image" data-themekey="#" />
               <h4> You don't have enough permission to access this!</h4>{" "}
               <p>Please contact your Administrator</p>
               <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Go Back</a>

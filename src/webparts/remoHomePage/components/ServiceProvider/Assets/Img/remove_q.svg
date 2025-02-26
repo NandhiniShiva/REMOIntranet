@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.667" height="28" viewBox="0 0 25.667 28">
+  <g id="trash" transform="translate(-21.334)">
+    <g id="Group_533" data-name="Group 533" transform="translate(21.334)">
+      <g id="Group_532" data-name="Group 532" transform="translate(0)">
+        <path id="Path_557" data-name="Path 557" d="M45.834,4.667H40v-3.5A1.166,1.166,0,0,0,38.834,0H29.5a1.166,1.166,0,0,0-1.167,1.167v3.5H22.5A1.167,1.167,0,0,0,22.5,7h1.167V24.5a3.5,3.5,0,0,0,3.5,3.5h14a3.5,3.5,0,0,0,3.5-3.5V7h1.167a1.167,1.167,0,0,0,0-2.333ZM30.667,2.333h7V4.667h-7ZM42.334,24.5a1.168,1.168,0,0,1-1.167,1.167h-14A1.168,1.168,0,0,1,26,24.5V7H42.334V24.5Z" transform="translate(-21.334)" fill="#f44336"/>
+      </g>
+    </g>
+    <g id="Group_535" data-name="Group 535" transform="translate(29.501 9.333)">
+      <g id="Group_534" data-name="Group 534" transform="translate(0)">
+        <path id="Path_558" data-name="Path 558" d="M171.834,170.667a1.166,1.166,0,0,0-1.167,1.167v10.5a1.167,1.167,0,0,0,2.333,0v-10.5A1.166,1.166,0,0,0,171.834,170.667Z" transform="translate(-170.667 -170.667)" fill="#f44336"/>
+      </g>
+    </g>
+    <g id="Group_537" data-name="Group 537" transform="translate(36.501 9.333)">
+      <g id="Group_536" data-name="Group 536">
+        <path id="Path_559" data-name="Path 559" d="M299.834,170.667a1.166,1.166,0,0,0-1.167,1.167v10.5a1.167,1.167,0,0,0,2.333,0v-10.5A1.166,1.166,0,0,0,299.834,170.667Z" transform="translate(-298.667 -170.667)" fill="#f44336"/>
+      </g>
+    </g>
+  </g>
+</svg>

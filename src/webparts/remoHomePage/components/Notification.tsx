@@ -234,7 +234,7 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
             <div>
                 <div className="li_profile user-image-block left_notification">
                     <div className="notification_banner">
-                        <a href="#"> <img id='Bell-img' className='notification_bell' src={`${this.props.siteurl}/SiteAssets/ECAImage/notification_img.svg`} /> <span id='Bell-img'> {reactHandler.state.NotificationCount} </span> </a>
+                        <a href="#"> <img id='Bell-img' className='notification_bell' src={require("./ServiceProvider/Assets/Img/notification_img.svg")} /> <span id='Bell-img'> {reactHandler.state.NotificationCount} </span> </a>
                         <div className="notification_part">
                             <div className="noti_header clearfix">
                                 <h3>Notification </h3>

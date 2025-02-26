@@ -259,9 +259,8 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <h6>{date}</h6>
               <p>{outputText}</p>
               <a href="#" data-interception="off" className="readmore transition" onClick={() => this.readMoreHandler("CEOReadMore", item.ID)}>
-
                 Read more
-                <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} className="transition" alt="image" />
+                <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} className="transition" alt="image" />
               </a>
             </div>
             <div className="ceo-message-right">
@@ -278,11 +277,11 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <p>{outputText}</p>
               <a href='#' onClick={() => this.readMoreHandler("CEOReadMore", item.ID)} data-interception="off" className="readmore transition">
                 Read more
-                <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} className="transition" alt="image" />
+                <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} className="transition" alt="image" />
               </a>
             </div>
             <div className="ceo-message-right">
-              <img src={`${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ceo_no_found.png`} alt="img" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ceo_no_found.png")}  alt="img" />
             </div>
           </div>
         );
@@ -304,7 +303,7 @@ export default class RemoCEOMessage extends React.Component<IRemoHomePageProps, 
               <div className="heading">
                 CEO's Message
               </div>
-              <img className="err-img" src={`${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
+              <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}  alt="ceoimg"></img>
             </div>
           </>
           :

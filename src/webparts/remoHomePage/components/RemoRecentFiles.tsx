@@ -84,22 +84,22 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
       switch (extension) {
         case "docx":
         case "doc":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/WordFluent.png`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/WordFluent.png");
           break;
         case "pdf":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/pdf.svg`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/pdf.svg"); 
           break;
         case "xlsx":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/ExcelFluent.png`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/ExcelFluent.png"); 
           break;
         case "pptx":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/PPTFluent.png`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/PPTFluent.png");
           break;
         case "url":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/URL.png`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/URL.png");
           break;
         case "txt":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/txt.svg`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/txt.svg");
           break;
         case "css":
         case "sppkg":
@@ -112,18 +112,18 @@ export default class RemoRecentFiles extends React.Component<IRemoHomePageProps,
         case "php":
         case "json":
         case "xml":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/Code.svg`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/Code.svg");
           break;
         case "png":
         case "jpg":
         case "jpeg":
         case "gif":
         case "svg":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/photo.svg`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/photo.svg");
           break;
         case "zip":
         case "rar":
-          fileTypeImg = `${reactHandler.props.siteurl}/SiteAssets/img/FluentIcons/zip.svg`;
+          fileTypeImg = require("./ServiceProvider/Assets/Img/FluentIcons/zip.svg");
           break;
         default:
           break;

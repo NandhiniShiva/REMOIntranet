@@ -1,0 +1,82 @@
+.spAppAndPropertyPanelContainer{
+    margin-left: 50px;
+  }
+  #spSiteHeader{
+    display: none;
+  }
+  .Files-leftNav{
+    display:none;
+  }
+  #mectrl_viewAccount , #mectrl_ShellAboutMe{
+    display: none;
+  }
+  #HeaderButtonRegion{
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #O365_NavHeader , #O365_MainLink_NavMenu , #O365_HeaderRightRegion , #O365_SuiteBranding_container{
+    background-color: #ffffff;
+    color: #1c2e4b;
+  }
+  #O365_SuiteBranding_container{
+    visibility: hidden;
+    pointer-events: none;
+  }
+  #O365_MainLink_Me{
+    background-color: #ffffff;
+    color: #1c2e4b;
+  }
+  /*#spCommandBar{
+    display: none;
+  }*/
+  .o365cs-base .o365sx-button :focus {
+    color: #1c2e4b !important;
+    background-color: #f1f2f4 !important;
+  }
+  #sbcId{
+    background-color: #ffffff !important;
+  }
+  #sbcId button[title="Search"]{
+    background-color: #a66644 !important;
+  }
+  div[data-automation-id="CanvasZone"] > div{
+    max-width: 100% !important;    
+  }
+  #O365_HeaderLeftRegion{
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .od-Files-topBar{
+    display: none;
+  }
+  #sp-appBar{
+    display: none;
+  }
+  /*div[data-automation-id="pageHeader"] {
+    display: none;    
+  }*/
+  /*#CommentsWrapper{
+    display:none;
+  }*/
+  .od-ListTitle-heading
+  {
+    width:100%;
+  }
+  .Files-mainColumn
+  {
+        margin-left: 40px;
+  }
+  .ms-DetailsList-headerWrapper:first-child
+  {
+    margin-bottom: 23px;
+  }
+  .od-ListTitle-menuButton
+  {
+    width: 100%;
+      background: #f1f1f3;
+      text-align: left;
+  }
+  div[data-automation-id="CanvasControl"]{
+    padding: 0px !important; 
+    margin: 0px !important;
+  }

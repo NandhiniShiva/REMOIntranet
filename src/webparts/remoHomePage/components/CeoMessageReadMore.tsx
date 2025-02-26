@@ -144,7 +144,8 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
         const ImgObj = JSON.parse(RawImageTxt);
         serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${handler.props.siteurl}/Lists/${CEO_Messagelist}/Attachments/${item.ID}/${ImgObj.fileName}`;
       } else {
-        serverRelativeUrl = `${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ceo_no_found.png`;
+        serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ceo_no_found.png")
+        // serverRelativeUrl = `${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ceo_no_found.png`;
       }
 
       return (

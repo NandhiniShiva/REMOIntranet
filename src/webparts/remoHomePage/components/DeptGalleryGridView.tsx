@@ -622,8 +622,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
 
         return (
           <li key={key} className="li-img-area" data-value={key} onClick={() => reactHandler.GetImagesInsideFolder(reactHandler.state.Subfolderurl, "Image", key)}>
-            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = `${this.props.siteurl}/Site%20Asset/Remo%20Portal%20Assets/img/Error%20Handling%20Images/other_images_not_found.png`} />
-
+            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/other_images_not_found.png")} />
           </li>
         );
       });
@@ -642,7 +641,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                   <video src={item.recentImage} controls id={`mythumb-${key}`} />
                 ) : (
                   // Render default image if there is no video
-                  <img src={`${reactHandler.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`} alt="Default Image" id={`mythumb-${key}`} />
+                  <img src={require("./ServiceProvider/Assets/Img/empty_folder_v2.svg")} alt="Default Image" id={`mythumb-${key}`} />
                 )
               )}
               {item.Name}
@@ -745,12 +744,12 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                             </div>
                             <div className="section-part clearfix latest-events-bck" id="no-video" style={{ display: "none" }}>
                               <div className="clearfix img-block-area">
-                                <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-Video-uploaded" />
+                                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-Video-uploaded" />
                               </div>
                             </div>
                             <div className="section-part clearfix latest-events-bck" id="no-img" style={{ display: "none" }}>
                               <div className="clearfix img-block-area">
-                                <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-image-uploaded" />
+                                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
                               </div>
                             </div>
                           </ul>
@@ -846,7 +845,8 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                       ) : (
                         <div style={{ textAlign: 'center' }}>
                           <img
-                            src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
+                            src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
+                            // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                             alt="No Content Found"
                             style={{ width: '900px' }}
                           />
@@ -892,7 +892,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                   </ul>
                 </div>
                 <div className="lightbox-close">
-                  <img src={`${this.props.siteurl}/SiteAssets/img/close.svg`} alt="close" onClick={() => this.CloseLightBox()} />
+                  <img src={require("./ServiceProvider/Assets/Img/close.svg")}  alt="close" onClick={() => this.CloseLightBox()} />
                 </div>
               </div>
             </div>

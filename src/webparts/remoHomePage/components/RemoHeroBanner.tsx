@@ -231,7 +231,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
             <a href='#' onClick={() => this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
 
               <div className="banner-parts">
-                <img src={`${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`} alt="image" />
+                <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png")} alt="image" />
                 <div className="overlay"></div>
                 <div className="banner-impot-contents">
                   <h4>{Title}</h4>
@@ -255,7 +255,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
                 </Slider>
               </div>
               <div id="if-Banner-not-Exist" className="background" style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}>
-                <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/If_no_Content_to_show.png`} alt="no-image-uploaded" />
+                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/If_no_Content_to_show.png")} alt="no-image-uploaded" />
               </div>
             </div>
           </div>
@@ -268,7 +268,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
           //   <div className="carousel-inner">
           <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
             <button onClick={(e) => this.addData(e)}>Add Data</button>
-            <img src="https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/add_quick.png" alt="add icon" onClick={() => this.getComponent()} />
             <div>
               {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
                 {this.state.componentMasterItems.map((item: any) => {

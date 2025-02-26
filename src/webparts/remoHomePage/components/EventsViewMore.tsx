@@ -321,7 +321,7 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
           var ImgObj = JSON.parse(RawImageTxt);
           serverRelativeUrl = ImgObj.serverRelativeUrl || `${handler.props.siteurl}/Lists/${Eventslist}/Attachments/` + item.ID + "/" + ImgObj.fileName;
         } else {
-          serverRelativeUrl = `${handler.props.siteurl}/SiteAssets/img/No-Events-Image.svg`;
+          serverRelativeUrl = require("./ServiceProvider/Assets/Img/No-Events-Image.svg");
         }
 
         return (
@@ -332,10 +332,10 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
             <div className="inner-event-body-right">
               <div className="event-location-duration clearfix">
                 <div className="event-location-duration-left">
-                  <img src={`${handler.props.siteurl}/SiteAssets/img/duration.svg`} /> {StartDate} to {EndDate}
+                  <img src={require("./ServiceProvider/Assets/Img/duration.svg")} /> {StartDate} to {EndDate}
                 </div>
                 <div className="event-location-duration-right">
-                  <img src={`${handler.props.siteurl}/SiteAssets/img/location.svg`} /> {Location}
+                  <img src={require("./ServiceProvider/Assets/Img/location.svg")} /> {Location}
                 </div>
               </div>
               <h4>{Title}</h4>

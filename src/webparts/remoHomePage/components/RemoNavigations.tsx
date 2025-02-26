@@ -356,7 +356,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           reactHandler.displayData.push(<li>
             <a href={Url} target="_blank" data-interception="off" role="button"> <span>{Title}</span></a>
             <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img>
+              <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} alt="nav"></img>
             </a>
           </li>);
         } else {
@@ -368,7 +368,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         if (HasSubDept == true) {
           reactHandler.displayData.push(<li>
             <a href={Url} data-interception="off" role="button"> <span>{Title}</span></a>
-            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={`${reactHandler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav"></img></a>
+            <a className={"deptdropdown-" + ID + ""} href="#" onClick={() => reactHandler.GetSubNodes(ID, Title, "NavMain", " ")} data-interception="off"><img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} alt="nav"></img></a>
           </li>);
         } else {
           reactHandler.displayData.push(<li>
@@ -772,7 +772,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                 <a href="#" onClick={() => handler.GetQuickLinks()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
                 <div className="submenu-wrap-lists q-links-dpt">
                   <div className="submenu-clear-wrap" >
-                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()}>   <img src={`${handler.props.siteurl}/SiteAssets/img/clear.svg`} alt="image" />  </a>
+                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()}>   <img src={require("./ServiceProvider/Assets/Img/clear.svg")} alt="image" />  </a>
                     <ReactTooltip id={"React-tooltip-clear"} place="right" type="dark" effect="solid">
                       <span>Clear</span>
                     </ReactTooltip>
@@ -830,7 +830,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
               <li> <a href="#" onClick={() => handler.GetQuickLinks()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
                 <div className="submenu-wrap-lists q-links-dpt">
                   <div className="submenu-clear-wrap">
-                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()} data-interception="off">   <img src={`${handler.props.siteurl}/SiteAssets/img/clear.svg`} alt="image" />  </a>
+                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()} data-interception="off">   <img src={require("./ServiceProvider/Assets/Img/clear.svg")}  alt="image" />  </a>
                     <ReactTooltip id={"React-tooltip-clear"} place="right" type="dark" effect="solid">
                       <span>Clear</span>
                     </ReactTooltip>
@@ -891,7 +891,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                       <div className="breadcrum-block">
                         <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
                           All Menu
-                          <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
+                          <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")}  alt="nav" data-interception="off" />
                         </a>
                         {/* <div > */}
                         <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
@@ -899,7 +899,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                         {BreadCrumb.map((item, key) => (
                           <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
                             {item.Title}
-                            <img src={`${handler.props.siteurl}/SiteAssets/img/right_arrow.svg`} alt="nav" data-interception="off" />
+                            <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} alt="nav" data-interception="off" />
                           </a>
                         ))}
 

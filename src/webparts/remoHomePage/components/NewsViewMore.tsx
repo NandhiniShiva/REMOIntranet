@@ -312,14 +312,14 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
   public SampleNextArrow(props: { className: any; style: any; onClick: any; }) {
     const { className, onClick } = props;
     return (
-      <a href="#" className={className} onClick={onClick}> <img src={`${this.props.siteurl}/SiteAssets/img/right.svg`} alt="image" data-interception="off" /> </a>
+      <a href="#" className={className} onClick={onClick}> <img src={require("./ServiceProvider/Assets/Img/right.svg")} alt="image" data-interception="off" /> </a>
     );
   }
 
   public SamplePrevArrow(props: { className: any; style: any; onClick: any; }) {
     const { className, onClick } = props;
     return (
-      <a href="#" className={className} onClick={onClick}> <img src={`${this.props.siteurl}/SiteAssets/img/left.svg`} alt="image" data-interception="off" /> </a>
+      <a href="#" className={className} onClick={onClick}> <img src={require("./ServiceProvider/Assets/Img/left.svg")}  alt="image" data-interception="off" /> </a>
     );
   }
 
@@ -410,7 +410,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
                 <a href={`${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${item.Tag}`} data-interception='off' className="tags"> {item.Tag} </a>
               </div>
               <div className="pull-right">
-                <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="image" />  {Dt}
+                <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="image" />  {Dt}
               </div>
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
@@ -420,14 +420,14 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <div className="view-all-news-recent-left">
             <div className="view-all-news-recent-img-cont">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
             </div>
             <div className="ns-tag-duration clearfix">
               <div className="pull-left">
                 <a href={`${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${item.Tag}`} data-interception='off' className="tags"> {item.Tag} </a>
               </div>
               <div className="pull-right">
-                <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="image" />  {Dt}
+                <img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="image" />  {Dt}
               </div>
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
@@ -484,7 +484,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li className="clearfix">
             <div className="list-li-recent-news-img">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
               <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
@@ -542,7 +542,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li>
             <div className="top-img-wrap">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a"> {item.Title} </a>
             <div className="ns-tag-duration ">
@@ -590,7 +590,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li>
             <div className="top-img-wrap">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a"> {item.Title} </a>
             <div className="ns-tag-duration ">

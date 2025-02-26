@@ -1,15 +1,15 @@
 import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IOrganizationChartProps } from './IRemoHomePageProps';
-import { SPComponentLoader } from '@microsoft/sp-loader';
-import { Configuration } from '../Configuration';
+// import { SPComponentLoader } from '@microsoft/sp-loader';
+// import { Configuration } from '../Configuration';
 
 export default class OrganizationChart extends React.Component<IOrganizationChartProps> {
   public componentDidMount() {
 
-    SPComponentLoader.loadCss(Configuration.cssPath);
-    SPComponentLoader.loadCss(Configuration.overRidingCss);
-    SPComponentLoader.loadCss(Configuration.respnsiveCss);
+    // SPComponentLoader.loadCss(Configuration.cssPath);
+    // SPComponentLoader.loadCss(Configuration.overRidingCss);
+    // SPComponentLoader.loadCss(Configuration.respnsiveCss);
     this.getGraphDataFromList();
     this.saveData();
   }

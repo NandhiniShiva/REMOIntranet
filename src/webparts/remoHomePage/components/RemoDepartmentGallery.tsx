@@ -140,7 +140,7 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
                 </div>
                 <div className="section-part clearfix latest-events-bck">
                   <div className="clearfix img-block-area">
-                    <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-image-uploaded" />
+                    <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
                   </div>
                 </div>
               </div>

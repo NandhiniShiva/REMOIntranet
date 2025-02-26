@@ -171,7 +171,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
             <div className="news-whole-block-details">
               <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
 
-              <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>
+              <h5> <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time"></img> {Dt} </h5>
             </div>
           </div>
         );
@@ -179,12 +179,12 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
         return (
           <div className="news-section-block clearfix">
             <div className="news-whole-block-img">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="no-image-uploaded" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="no-image-uploaded" />
             </div>
             <div className="news-whole-block-details">
               <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
 
-              <h5> <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {Dt} </h5>
+              <h5> <img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time"></img> {Dt} </h5>
             </div>
           </div>
         );
@@ -209,8 +209,8 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
                     </a>
                   </h4>
                   <div className="prev-next">
-                    <a href="#" onClick={this.previous} ><img src={`${this.props.siteurl}/SiteAssets/img/previous.svg`} alt="image" className="prev-img" /> </a>
-                    <a href="#" onClick={this.next}><img src={`${this.props.siteurl}/SiteAssets/img/next-2.svg`} alt="image" className="next-img" /> </a>
+                    <a href="#" onClick={this.previous} ><img src={require("./ServiceProvider/Assets/Img/previous.svg")}  alt="image" className="prev-img" /> </a>
+                    <a href="#" onClick={this.next}><img src={require("./ServiceProvider/Assets/Img/next-2.svg")} alt="image" className="next-img" /> </a>
                   </div>
                 </div>
                 <div className="section-part clearfix">

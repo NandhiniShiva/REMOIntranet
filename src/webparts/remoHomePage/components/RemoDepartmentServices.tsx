@@ -142,7 +142,7 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
                 </div>
                 <div className="row" style={{ display: "none" }} id="if-no-service-present">
                   <div className="col-md-12 m-b-0 clearfix">
-                    <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-content"></img>
+                    <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-content"></img>
                   </div>
                 </div>
               </div>

@@ -163,7 +163,7 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
         const ImgObj = JSON.parse(Image);
         serverRelativeUrl = ImgObj.serverRelativeUrl || `${this.props.siteurl}/Lists/${Hero_Bannerlist}/Attachments/${ID}/${ImgObj.fileName}`;
       } else {
-        serverRelativeUrl = `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
+        serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png");
       }
 
       return (
@@ -199,7 +199,7 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
               <div className="inner-page-contents banner-viewall">
                 <div className="search-bar">
                   <label>
-                    <img src={`${this.props.siteurl}/SiteAssets/img/search-solid.svg`} />
+                    <img src={require("./ServiceProvider/Assets/Img/search-solid.svg")}  />
                     <input
                       type="text"
                       id="searchText"

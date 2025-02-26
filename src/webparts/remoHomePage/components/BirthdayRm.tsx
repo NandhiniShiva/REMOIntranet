@@ -658,7 +658,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
           <>
             <div className="people-highlights">
               <img src={`${serverRelativeUrl}`} alt="image" className="people-img" />
-              <img src={`${handler.props.siteurl}/SiteAssets/img/highlight.svg`} alt="image" className="highlight-img" />
+              <img src={require("./ServiceProvider/Assets/Img/highlight.svg")} alt="image" className="highlight-img" />
             </div>
             <div className="row home-detail-banner people-detail">
               <div className="col-md-12">
@@ -679,9 +679,9 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
         return (
           <>
             <div className="people-highlights">
-              <img src={`${handler.props.siteurl}/SiteAssets/img/userphoto.jpg`} alt="image" className="people-img" />
+              <img  src={require("./ServiceProvider/Assets/Img/userphoto.jpg")}  alt="image" className="people-img" />
 
-              <img src={`${handler.props.siteurl}/SiteAssets/img/highlight.svg`} alt="image" className="highlight-img" />
+              <img src={require("./ServiceProvider/Assets/Img/highlight.svg")} alt="image" className="highlight-img" />
             </div>
             <div className="row home-detail-banner people-detail">
               <div className="col-md-12">
@@ -705,7 +705,7 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
       const EmpName = item.EmployeeName.Title;
       const dated = moment(item.CommentedOn).format("DD/MM/YYYY");
       const comment = item.UserComments;
-      const imageUrl = `${handler.props.siteurl}/SiteAssets/test/img/userphoto.jpg`;
+      const imageUrl = require("./ServiceProvider/Assets/Img/userphoto.jpg");
 
       return (
         <li key={key}>
@@ -752,19 +752,19 @@ export default class BirthdayRm extends React.Component<IBirthdayRmProps, IBirth
                         <ul className="comments-like-view-block">
                           {this.state.IsLikeEnabled == true ?
                             <li>
-                              <img className="like-selected" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like_selected.svg`} alt="image" onClick={() => this.liked("dislike")} />
-                              <img className="like-default" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like.svg`} alt="image" onClick={() => this.liked("like")} />
+                              <img className="like-selected"  src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")} alt="image" onClick={() => this.liked("dislike")} />
+                              <img className="like-default"  src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                               <span id="likescount"> {likes} </span>
                             </li>
                             : <></>
                           }
                           {this.state.IsCommentEnabled == true &&
                             <li>
-                              <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
+                              <img  src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
                             </li>
                           }
                           <li>
-                            <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span> {views} </span>
+                            <img className="nopointer"  src={require("./ServiceProvider/Assets/Img/bannerremoproduct.jpg")}  alt="image" /> <span> {views} </span>
                           </li>
                         </ul>
                       </div>

@@ -154,7 +154,9 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
       const tdaydt = moment().format("DD/MM/YYYY");
       const Dt = RawPublishedDt === tdaydt ? "Today" : moment(RawPublishedDt, "DD/MM/YYYY").format("MMM Do, YYYY");
 
-      let serverRelativeUrl = `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
+      // let serverRelativeUrl = `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
+      let serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png")
+
 
       if (RawImageTxt && RawImageTxt !== "") {
         const ImgObj = JSON.parse(RawImageTxt);
@@ -197,7 +199,7 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
               <div className="inner-page-contents banner-viewall">
                 <div className="search-bar">
                   <label>
-                    <img src={`${this.props.siteurl}/SiteAssets/img/search-solid.svg`} alt="Search Icon" />
+                    <img src={require("./ServiceProvider/Assets/Img/search-solid.svg")} alt="Search Icon" />
                     <input
                       type="text"
                       id="searchText"

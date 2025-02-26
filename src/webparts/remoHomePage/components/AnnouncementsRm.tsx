@@ -406,7 +406,8 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       const RawPublishedDt = moment(item.Created).format("DD/MM/YYYY");
       const tdaydt = moment().format("DD/MM/YYYY");
       const Dte = RawPublishedDt === tdaydt ? "Today" : moment(RawPublishedDt, "DD/MM/YYYY").format("MMM Do, YYYY");
-      const serverRelativeUrl = RawImageTxt !== "" && RawImageTxt !== null ? (JSON.parse(RawImageTxt).serverRelativeUrl !== undefined ? JSON.parse(RawImageTxt).serverRelativeUrl : `${this.props.siteurl}/Lists/${Announcementlist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}`) : `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
+      const defaultImage = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png");
+      const serverRelativeUrl = RawImageTxt !== "" && RawImageTxt !== null ? (JSON.parse(RawImageTxt).serverRelativeUrl !== undefined ? JSON.parse(RawImageTxt).serverRelativeUrl : `${this.props.siteurl}/Lists/${Announcementlist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}`) : defaultImage;
       return (
         <div className="col-md-12 view-all-news-l-col home-detail-banner" key={item.ID}>
           <div className="view-all-news-recent-left">
@@ -431,7 +432,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       <li key={item.ID}>
         <div className="commentor-desc clearfix">
           <div className="commentor-image">
-            <img src={`${this.props.siteurl}/SiteAssets/test/img/userphoto.jpg`} alt="image" />
+            <img src={require("./ServiceProvider/Assets/Img/userphoto.jpg")}  alt="image" />
           </div>
           <div className="commentor-details-desc">
             <h3>{item.EmployeeName.Title}</h3><span>{moment(item.CommentedOn).format("DD/MM/YYYY")}</span>
@@ -471,14 +472,14 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                         <ul className="comments-like-view-block">
                           {this.state.IsLikeEnabled && (
                             <li>
-                              <img className="like-selected" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like_selected.svg`} alt="image" onClick={() => this.liked("dislike")} />
-                              <img className="like-default" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like.svg`} alt="image" onClick={() => this.liked("like")} />
+                              <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")}  alt="image" onClick={() => this.liked("dislike")} />
+                              <img className="like-default" src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                               <span id="likescount">{likes}</span>
                             </li>
                           )}
                           {this.state.IsCommentEnabled && (
                             <li>
-                              <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={
+                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={
                                 () => this.showComments()
                               } /> <span id="commentscount">{commentscount}</span>
                             </li>
@@ -486,7 +487,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
 
                           )}
                           <li>
-                            <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span>{views}</span>
+                            <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")} alt="image" /> <span>{views}</span>
                           </li>
                         </ul>
                       </div>

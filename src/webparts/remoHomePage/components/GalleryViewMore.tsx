@@ -146,8 +146,9 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
               const result = await sp.web.getFolderByServerRelativeUrl(folderUrl)
                 .files.select("ID", "Name", "ServerRelativeUrl", "TimeCreated")
                 .orderBy("TimeCreated", false).top(1).get();
+                const defaultImage = require("./ServiceProvider/Assets/Img/empty_folder_v2.svg");
 
-              const folderImage = result.length > 0 ? result[0].ServerRelativeUrl : `${reactHandler.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`;
+              const folderImage = result.length > 0 ? result[0].ServerRelativeUrl : defaultImage;
 
               // Append only root folders to the display
               reactHandler.appendRootFolder(folderName, folderUrl, folderImage, "", index);
@@ -182,7 +183,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
                   Your browser does not support the video tag.
                 </video>
               )}
-              {!isImage && !isVideo && <img src={`${reactHandler.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`} alt={altText} data-interception="off" />}
+              {!isImage && !isVideo && <img src={require("./ServiceProvider/Assets/Img/empty_folder_v2.svg")} alt={altText} data-interception="off" />}
             </div>
             <p>{folderName}</p>
           </a>
@@ -523,7 +524,8 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
                     ) : (
                       <div style={{ textAlign: 'center' }}>
                         <img
-                          src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
+                          src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
+                          // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                           alt="No Content Found"
                           style={{ width: '900px' }}
                         />
@@ -569,7 +571,7 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
                 </ul>
               </div>
               <div className="lightbox-close">
-                <img src={`${reactHandler.props.siteurl}/SiteAssets/img/close.svg`} alt="close" onClick={() => this.CloseLightBox()} />
+                <img src={require("./ServiceProvider/Assets/Img/close.svg")} alt="close" onClick={() => this.CloseLightBox()} />
 
               </div>
             </div>

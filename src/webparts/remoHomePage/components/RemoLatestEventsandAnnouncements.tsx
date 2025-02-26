@@ -42,7 +42,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
   }
 
   public async componentDidMount() {
-    debugger;
     var reactHandler = this;
     const listCreation = new ListCreation();
     await listCreation.createSharePointLists(Announcementlist);
@@ -339,7 +338,7 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
                     <div className="heading">
                       Latest Events
                     </div>
-                    <img className="err-img" src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="ceoimg"></img>
+                    <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="ceoimg"></img>
                   </div>
                 </div>
                 :

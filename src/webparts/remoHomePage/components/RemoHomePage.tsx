@@ -39,9 +39,19 @@ import HeroBannerRm from './HeroBannerReadmore';
 import HeroBannerViewMore from './HeroBannerViewMore';
 import NewsReadMore from './NewsReadMore';
 import NewsViewMore from './NewsViewMore';
-import { SPComponentLoader } from '@microsoft/sp-loader';
+// import { SPComponentLoader } from '@microsoft/sp-loader';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 import Swal from 'sweetalert2';
+import "../components/ServiceProvider/Styles/newStyle.css"
+import "../components/ServiceProvider/Styles/Responsive.css"
+import '../components/ServiceProvider/Styles/SPNativeStyleOverriding.css'
+import '../components/ServiceProvider/Styles/Style.css'
+// import {Images} from '../components/ServiceProvider/Images';
+
+
+// console.log(Images);
+
+
 sp.setup({
   sp: {
     baseUrl: "https://remodigital.sharepoint.com/sites/RemoIntranetProduct"
@@ -63,7 +73,7 @@ var UserEmail: any;
 
 var Selectedcomponents: any = [];
 var Components = PositionDetails;
-// console.log(Draftmaster);
+
 
 export interface IRemoHomePageState {
   progress: any,
@@ -99,7 +109,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   constructor(props: IRemoHomePageProps, _state: IRemoHomePageState) {
     super(props);
-    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
+    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
 
     this.state = {
       progress: 0,
@@ -246,7 +256,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       });
   }
   public async getAllocatedComponents() {
-    debugger;
     try {
       const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
@@ -644,8 +653,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async handleSelectChange(event: any, LayoutId: any) {
-    debugger;
-
     // console.log("selected option", event.target.value);
     this.setState(
       {
@@ -667,7 +674,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   };
 
   public async setActiveLayout(selectedLayout: string) {
-    debugger;
     try {
       const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
       const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
@@ -716,6 +722,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           });
         }
       }
+      this.setState({isInitialscreen: Array(12).fill(true)})
+
     } catch (error) {
       console.error("Error in setActiveLayout:", error);
     }
@@ -723,7 +731,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async getcreateLists() {
     try {
-      debugger;
       // Filter unmatched lists
       const unmatchedLists: any = ListLibraryColumnDetails.filter(
         listDetail => !this.state.landingPageComponentList.some(
@@ -1049,7 +1056,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
             <>
               <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-                <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" />
+                {/* <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /> */}
+                <img src={require("./ServiceProvider/Assets/Img/remove.svg")}  alt="remove-btn" />
+
               </button>
             </>
           }
@@ -1324,7 +1333,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           <button id={ButtonId}
             onClick={(e) => handler.showcomponents(e, SelectID)}
           >
-            <img src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} alt="AddComponent" />
+            <img src={require("./ServiceProvider/Assets/Img/addcomponent.svg")}  alt="AddComponent" />  
+           {/* src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} */}
           </button>
 
 
@@ -1334,10 +1344,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
                 onChange={() => handler.handleInputChange(DOMID, SelectID)} />
               <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
-                <img src={`${this.props.siteurl}/SiteAssets/img/search-fill.svg`} alt="search-img" />
+                <img src={require("./ServiceProvider/Assets/Img/search-fill.svg")}  alt="search-img" />
               </button>
               <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
-                <img src={`${this.props.siteurl}/SiteAssets/img/close-icon.svg`} alt="clear-img" />
+                <img src={require("./ServiceProvider/Assets/Img/close-icon.svg")}  alt="clear-img" />
               </button>
             </div>
 
@@ -1387,18 +1397,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                     {this.state.editMode != "edit" ?
                       <li id='edit_button'>
                         <button onClick={(e) => this.editHandler(e)}>
-                          <img className='editimage' src={`${this.props.siteurl}/SiteAssets/img/EditNew.svg`} alt="Edit-img" />
+                          <img className='editimage' src={require("./ServiceProvider/Assets/Img/EditNew.svg")} alt="Edit-img" />
                           <span> Edit </span></button>
                       </li>
                       :
                       <><li id='draft_button'>
                         <button onClick={(e) => this.draftHandler(e)}>
-                          <img className='draftimage' src={`${this.props.siteurl}/SiteAssets/img/draft.svg`} alt="draft-img" />
+                          <img className='draftimage' src={require("./ServiceProvider/Assets/Img/draft.svg")} alt="draft-img" />
                           <span> Save As Draft </span></button>
                       </li>
                         <li id='publish_button'>
                           <button onClick={(e) => this.publishHandler(e)}>
-                            <img className='publishimage' src={`${this.props.siteurl}/SiteAssets/img/publish.svg`} alt="publish-img" />
+                            <img className='publishimage' src={require("./ServiceProvider/Assets/Img/publish.svg")}  alt="publish-img" />
                             <span> Publish </span></button>
                         </li></>
                     }
@@ -1633,61 +1643,61 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                   :
                   this.state.isClicked == "AnnouncementReadMore" ?
                     (
-                      <AnnouncementsRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
+                      <AnnouncementsRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
                     ) :
 
                     this.state.isClicked == "AnnouncementViewMore" ?
                       (
-                        <AnnouncementsVm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
+                        <AnnouncementsVm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
                       ) :
                       this.state.isClicked == "BirthdayRm" ?
                         (
-                          <BirthdayRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
+                          <BirthdayRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
                         ) :
                         this.state.isClicked == "CEOReadMore" ?
                           (
-                            <CeoMessageRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
+                            <CeoMessageRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
                           ) :
                           this.state.isClicked == "DeptGalleryGridView" ?
                             (
-                              <DeptGalleryGridView description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
+                              <DeptGalleryGridView description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
                             ) :
                             this.state.isClicked == "DeptGalleryViewMore" ?
                               (
-                                <DeptGalleryViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
+                                <DeptGalleryViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
                               ) :
                               this.state.isClicked == "EventsViewMore" ?
                                 (
-                                  <EventsViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></EventsViewMore>
+                                  <EventsViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></EventsViewMore>
                                 ) :
                                 this.state.isClicked == "GalleryGridView" ?
                                   (
-                                    <GalleryGridView description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></GalleryGridView>
+                                    <GalleryGridView description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></GalleryGridView>
                                   ) :
                                   this.state.isClicked == "GalleryViewMore" ?
                                     (
-                                      <GalleryViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}   ></GalleryViewMore>
+                                      <GalleryViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}   ></GalleryViewMore>
                                     ) :
 
                                     this.state.isClicked == "HeroBannerReadMore" ?
                                       (
-                                        <HeroBannerRm description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} useremail={null} id={this.state.itemID} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></HeroBannerRm>
+                                        <HeroBannerRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} useremail={null} id={this.state.itemID} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></HeroBannerRm>
                                       ) :
 
                                       this.state.isClicked == "HeroBannerViewMore" ?
                                         (
-                                          <HeroBannerViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
+                                          <HeroBannerViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
                                         ) :
 
 
                                         this.state.isClicked == "NewsReadMore" ?
                                           (
-                                            <NewsReadMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} siteID={undefined} useremail={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></NewsReadMore>
+                                            <NewsReadMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} siteID={undefined} useremail={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></NewsReadMore>
                                           ) :
 
                                           this.state.isClicked == "NewsViewMore" ?
                                             (
-                                              <NewsViewMore description={''} siteurl={`${this.props.siteurl}`} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></NewsViewMore>
+                                              <NewsViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></NewsViewMore>
                                             ) :
 
                                             null
@@ -1695,7 +1705,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               </section>
             </div>
             <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
-              <img src={`${this.props.siteurl}/SiteAssets/img/loader.gif`} alt="loader" />
+              <img  src={require("./ServiceProvider/Assets/Img/loader.gif")}  alt="loader" />
               {/* <h1>Loader</h1> */}
             </div>
             {/* )} */}
@@ -1715,7 +1725,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 {this.state.layoutItems.map((item, key) => (
                   <div className={`SelectLayout cont-${key + 1}`} onClick={(e) => this.handleSelectChange(e, item.ID)}>
                     <div className="SElect-Layout-img">
-                      <img src={`${this.props.siteurl}/SiteAssets/img/layout%201.PNG`} data-themekey="#" />
+                      <img  src={item.layoutimg}   data-themekey="#" />
                     </div>
                     <div className="LayoutText">{item.name}</div>
                   </div>
@@ -1749,9 +1759,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
         {this.state.showButton == true &&
           <div className="config-banner">
-            <img src="https://remodigital.sharepoint.com/:i:/r/sites/RemoIntranetProduct/SiteAssets/img/banner%20remo%20product.jpg?csf=1&web=1&e=R1h0Lq" alt="Expert Consulting" data-themekey="#" className="config-image" />
+            <img  src={require("./ServiceProvider/Assets/Img/bannerremoproduct.jpg")}   alt="Expert Consulting" data-themekey="#" className="config-image" />
             <div className="config-banner-content">
-              <div className="config-left-side"><img src="https://remodigital.sharepoint.com/:i:/r/sites/RemoIntranetProduct/SiteAssets/img/logo%20(1).png?csf=1&web=1&e=BJJeh1" className="config-logo" data-themekey="#" /></div>
+              <div className="config-left-side"><img  src={require("./ServiceProvider/Assets/Img/logo.png")}   className="config-logo" data-themekey="#" /></div>
               <div className="config-right-side">
                 <h2 className="config-head">Expert Consulting</h2><p className="config-subhead">From the world’s tallest building, The Burj Khalifa, to the HSBC tower in Hong Kong, and from the New Delhi Metro to Manchester Airport, Ducab is changing the way that energy is distributed around the</p>
                 <button onClick={() => this.showDropDown()}>Configure</button>

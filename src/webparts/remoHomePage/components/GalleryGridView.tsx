@@ -529,7 +529,8 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
               folderFiles.sort((a: any, b: any) => new Date(b.TimeCreated).getTime() - new Date(a.TimeCreated).getTime());
               const images = folderFiles.filter((file: any) => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(file.Name));
               const videos = folderFiles.filter((file: any) => /\.(mp4|avi|mov|wmv|flv|avchd|webm|mkv)$/i.test(file.Name));
-              const recentMedia = type === "Img" ? (images.length > 0 ? images[0].ServerRelativeUrl : `${this.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`) : (videos.length > 0 ? videos[0].ServerRelativeUrl : "");
+              const defaultimage = require("./ServiceProvider/Assets/Img/empty_folder_v2.svg")
+              const recentMedia = type === "Img" ? (images.length > 0 ? images[0].ServerRelativeUrl : defaultimage) : (videos.length > 0 ? videos[0].ServerRelativeUrl : "");
 
               return {
                 ...folderItem,
@@ -802,12 +803,13 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       })
       .map((item, key) => {
         const finalThumbnailURL = getThumbnailUrl(item.ServerRelativeUrl);
+        const defaultImage = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/other_images_not_found.png");
         console.log("Original URL:", item.ServerRelativeUrl);
         console.log("Thumbnail URL:", finalThumbnailURL);
 
         return (
           <li key={key} className="li-img-area" data-value={key} onClick={() => reactHandler.GetImagesInsideFolder(reactHandler.state.Subfolderurl, "Image", key)}>
-            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = `${this.props.siteurl}/Site%20Asset/Remo%20Portal%20Assets/img/Error%20Handling%20Images/other_images_not_found.png`} />
+            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = defaultImage } />
             {/* <img src={finalThumbnailURL} alt="Image" /> */}
 
           </li>
@@ -829,7 +831,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                 <video src={item.recentImage} controls id={`mythumb-${key}`} />
               ) : (
                 // Render default image if there is no video
-                <img src={`${reactHandler.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`} alt="Default Image" id={`mythumb-${key}`} />
+                <img src={require("./ServiceProvider/Assets/Img/empty_folder_v2.svg")} alt="Default Image" id={`mythumb-${key}`} />
               )
             )}
             {item.Name}
@@ -934,7 +936,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                                   <li className='folder' id={`${key}-folder`} key={key}>
                                     <a className="O" id="b-d-crumb" data-index={key} onClick={(e) => this.handleClick(item.Title, key, "Breadcrumb", e, item.Url)}>
                                       {item.Title && (
-                                        <img src={`${this.props.siteurl}/SiteAssets/Workspace/img/arrow%20(1).png`} alt="nav" />
+                                        <img  src={require("./ServiceProvider/Assets/Img/arrow.png")} alt="nav" />
                                       )}
                                       <span>{item.Title}</span>
                                     </a>
@@ -944,12 +946,12 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                             </div>
                             <div className="section-part clearfix latest-events-bck" id="no-video" style={{ display: "none" }}>
                               <div className="clearfix img-block-area">
-                                <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-Video-uploaded" />
+                                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-Video-uploaded" />
                               </div>
                             </div>
                             <div className="section-part clearfix latest-events-bck" id="no-img" style={{ display: "none" }}>
                               <div className="clearfix img-block-area">
-                                <img className="err-img" src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-image-uploaded" />
+                                <img className="err-img"  src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
                               </div>
                             </div>
                           </ul>
@@ -1045,7 +1047,8 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                       ) : (
                         <div style={{ textAlign: 'center' }}>
                           <img
-                            src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
+                            src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
+                            // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                             alt="No Content Found"
                             style={{ width: '900px' }}
                           />
@@ -1090,7 +1093,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                   </ul>
                 </div>
                 <div className="lightbox-close">
-                  <img src={`${this.props.siteurl}/SiteAssets/img/close.svg`} alt="close" onClick={() => this.CloseLightBox()} />
+                  <img src={require("./ServiceProvider/Assets/Img/close.svg")} alt="close" onClick={() => this.CloseLightBox()} />
                 </div>
               </div>
             </div>

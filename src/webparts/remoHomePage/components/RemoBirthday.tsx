@@ -168,11 +168,11 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
       if (Tday1Bday === Bdaydate) {
         const Name = item.EmployeeName;
+        const defaultImage = require("./ServiceProvider/Assets/Img/userphoto.jpg");
         const imgSrc = (RawImageTxt && RawImageTxt !== "") ?
           ((JSON.parse(RawImageTxt).serverRelativeUrl === undefined) ?
             `${reactHandler.props.siteurl}/Lists/${Birthdaylist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}` :
-            JSON.parse(RawImageTxt).serverRelativeUrl) :
-          `${reactHandler.props.siteurl}/SiteAssets/img/userphoto.jpg`;
+            JSON.parse(RawImageTxt).serverRelativeUrl) : defaultImage;
 
         return (
           <div key={key}>
@@ -183,7 +183,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
               <div className="birthday-image relative">
                 <img src={imgSrc} alt="image" />
                 <div className="birday-icons">
-                  <img src={`${reactHandler.props.siteurl}/SiteAssets/img/birthday.svg`} alt="image" />
+                  <img src={require("./ServiceProvider/Assets/Img/birthday.svg")} alt="image" />
                 </div>
               </div>
               <div className="birthday-details">
@@ -211,11 +211,9 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
 
       if (item.EmployeeName && Bdaydate > Tday1Bday && moment(Bdaydate, 'MM/DD').isBetween(moment(reactHandler.state.FirstBdayDate, 'MM/DD'), moment(reactHandler.state.LastBdayDate, 'MM/DD'), undefined, '[]')) {
         Name = item.EmployeeName;
-
+        const defaultImage = require("./ServiceProvider/Assets/Img/userphoto.jpg");
         const imgSrc = RawImageTxt && RawImageTxt !== "" ?
-          JSON.parse(RawImageTxt).serverRelativeUrl ?? `${reactHandler.props.siteurl}/Lists/${Birthdaylist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}` :
-          `${reactHandler.props.siteurl}/SiteAssets/img/userphoto.jpg`;
-
+          JSON.parse(RawImageTxt).serverRelativeUrl ?? `${reactHandler.props.siteurl}/Lists/${Birthdaylist}/Attachments/${item.ID}/${JSON.parse(RawImageTxt).fileName}` : defaultImage;
         return (
           <div key={key}>
             <div className="heading" id="spotlight-title">
@@ -225,7 +223,7 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
               <div className="birthday-image relative">
                 <img src={imgSrc} alt="image" />
                 <div className="birday-icons">
-                  <img src={`${reactHandler.props.siteurl}/SiteAssets/img/birthday.svg`} alt="image" />
+                  <img src={require("./ServiceProvider/Assets/Img/birthday.svg")} alt="image" />
                 </div>
               </div>
               <div className="birthday-details">

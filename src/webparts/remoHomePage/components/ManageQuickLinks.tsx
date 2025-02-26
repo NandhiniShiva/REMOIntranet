@@ -315,7 +315,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
             <h5>{Title}</h5>
           </a>
           <div className="delete-quicklinks" onClick={handleDeleteQuickLink}>
-            <img src={`${reactHandler.props.siteurl}/SiteAssets/img/remove_q.svg`} alt="image" />
+            <img src={require("./ServiceProvider/Assets/Img/remove_q.svg")} alt="image" />
           </div>
         </li>
       );
@@ -346,7 +346,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
           </a>
           {!isQuickLinkAdded && (
             <div className="add-quicklinks" id={item.ID}>
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/add_quick.png`} alt="image" onClick={handleAddQuickLink} />
+              <img src={require("./ServiceProvider/Assets/Img/add_quick.png")}  alt="image" onClick={handleAddQuickLink} />
             </div>
           )}
         </li>
@@ -381,17 +381,17 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                   <div className="added-quickis-part">
                     <div className="heading clearfix"><div className="header-left">Added Quicklinks</div>
                       <div className="dragnddrop_text" >
-                        <img src={`${reactHandler.props.siteurl}/SiteAssets/img/drap_drop.png`} alt="image" data-themekey="#" />
+                        <img src={require("./ServiceProvider/Assets/Img/drap_drop.png")} alt="image" data-themekey="#" />
                         You can drag and drop to change position
                       </div>
                       <div className="header-right drap-drop-p">
                         {this.state.IsEditModeisON == false ?
                           <a href="#" className='editor-mode-enabler mode-edit-on' onClick={() => this.EnableEditMode(this.state.CurrentlyOpened)} >
-                            <img src={`${this.props.siteurl}/SiteAssets/img/add_quick.png`} alt="image" data-themekey="#" />
+                            <img src={require("./ServiceProvider/Assets/Img/add_quick.png")} alt="image" data-themekey="#" />
                             Edit Mode</a>
                           :
                           <a href="#" className='editor-mode-enabler mode-edit-off' onClick={() => this.ExitEditMode(this.state.CurrentlyOpened)}>
-                            <img src={`${this.props.siteurl}/SiteAssets/img/newdrap_drop.png`} alt="image" data-themekey="#" />
+                            <img src={require("./ServiceProvider/Assets/Img/newdrap_drop.png")}  alt="image" data-themekey="#" />
                             Exit</a>
                         }
                       </div>
@@ -402,7 +402,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                           MyQuickLinks
                           :
                           <div className='no-fav-records if-favtab-empty if-tab-empty'>
-                            <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/error-icon.svg`} alt="no-fav" />
+                            <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/error-icon.svg")}  alt="no-fav" />
                             <h3> No Quicklinks Added </h3>
                             <p> In Aswaq you mark as quicklinks are shown here </p>
                           </div>

@@ -3,7 +3,7 @@
   "solution": {
     "name": "remo-product-single-page-client-side-solution",
     "id": "18023aff-dcce-4072-9519-9da91c9efe8c",
-    "version": "1.0.0.1",
+    "version": "1.0.0.2",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

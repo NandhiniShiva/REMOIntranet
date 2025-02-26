@@ -108,7 +108,7 @@ export default class DepartmentQuickLink extends React.Component<IRemoDeptLandin
               </div>
 
               <div className="section-part clearfix if-no-qlinks-present" style={{ display: "none" }}>
-                <img src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`} alt="no-content"></img>
+                <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-content"></img>
               </div>
             </div>
           </div>

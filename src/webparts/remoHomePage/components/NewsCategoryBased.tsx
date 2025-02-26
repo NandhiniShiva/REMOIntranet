@@ -318,7 +318,7 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
           </li>
         );
       } else {
-        serverRelativeUrl = `${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`;
+        serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png");
 
         return (
           <li key={key}>

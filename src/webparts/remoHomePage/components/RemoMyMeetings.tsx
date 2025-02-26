@@ -360,11 +360,11 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                     if (isTeamsMeeting) {
                         return (
                             <li className="clearfix relative" id={ETime}>
-                                <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
-                                <h4>{item.subject}</h4><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
+                                <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line"></img>
+                                <h4>{item.subject}</h4><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")}  alt="line"></img>
                                 <span id="teamsmeetingjoinlink-yes">
                                     <a href="#" onClick={() => reacthandler.openteamsmeeting(item.onlineMeeting.joinUrl)} data-tip data-for={"React-tooltip" + key} data-custom-class="tooltip-custom" data-interception="off">
-                                        <img src={`${reacthandler.props.siteurl}/SiteAssets/img/microsoft-teams-logo.svg`}></img>
+                                        <img src={require("./ServiceProvider/Assets/Img/microsoft-teams-logo.svg")} ></img>
                                     </a>
                                     <ReactTooltip id={"React-tooltip" + key} place="right" type="dark" effect="solid">
                                         <span>Click to Join</span>
@@ -381,7 +381,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                     } else {
                         return (
                             <li className="clearfix relative" id={ETime}>
-                                <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
+                                <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line"></img>
                                 <h4>{item.subject}</h4>
                                 <div className="new-tooltip-event">
                                     <div className="wrapper-of-tooltip clearfix">
@@ -398,11 +398,11 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                     if (isTeamsMeeting) {
                         return (
                             <li className="clearfix relative" id={ETime}>
-                                <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
-                                <h4>{item.subject}</h4><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
+                                <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line"></img>
+                                <h4>{item.subject}</h4><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line"></img>
                                 <span id="teamsmeetingjoinlink-yes">
                                     <a href="#" onClick={() => reacthandler.openteamsmeeting(item.onlineMeeting.joinUrl)} data-tip data-for={"React-tooltip" + key} data-custom-class="tooltip-custom" data-interception="off">
-                                        <img src={`${reacthandler.props.siteurl}/SiteAssets/img/microsoft-teams-logo.svg`}></img>
+                                        <img src={require("./ServiceProvider/Assets/Img/microsoft-teams-logo.svg")} ></img>
                                     </a>
                                     <ReactTooltip id={"React-tooltip" + key} place="right" type="dark" effect="solid">
                                         <span>Click to Join</span>
@@ -419,7 +419,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                     } else {
                         return (
                             <li className="clearfix relative" id={ETime}>
-                                <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line"></img>
+                                <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time"></img> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line"></img>
                                 <h4>{item.subject}</h4>
                                 <div className="new-tooltip-event">
                                     <div className="wrapper-of-tooltip clearfix">
@@ -451,11 +451,11 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                 if (isTeamsMeeting && moment(CTime, 'YYYY-MM-DD h:mma').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY') && moment(ETime, 'YYYY-MM-DD h:mma').isBefore(moment(CTime, 'YYYY-MM-DD h:mma'))) {
                     return (
                         <li className="clearfix relative ended">
-                            <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
-                            <h4>{item.subject}</h4><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                            <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line" />
+                            <h4>{item.subject}</h4><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line" />
                             <span id="teamsmeetingjoinlink-yes">
                                 <a href="#" onClick={() => reacthandler.openteamsmeeting(item.onlineMeeting.joinUrl)} data-tip data-for={"React-tooltip" + key} data-custom-class="tooltip-custom" data-interception="off" >
-                                    <img src={`${reacthandler.props.siteurl}/SiteAssets/img/microsoft-teams-logo.svg`} alt="Teams" />
+                                    <img src={require("./ServiceProvider/Assets/Img/microsoft-teams-logo.svg")} alt="Teams" />
                                 </a>
                                 <ReactTooltip id={"React-tooltip" + key} place="right" type="dark" effect="solid">
                                     <span>Click to Join</span>
@@ -472,7 +472,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                 } else if (!isTeamsMeeting && moment(CTime, 'YYYY-MM-DD h:mma').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY') && moment(ETime, 'YYYY-MM-DD h:mma').isBefore(moment(CTime, 'YYYY-MM-DD h:mma'))) {
                     return (
                         <li className="clearfix relative ended">
-                            <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                            <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line" />
                             <h4>{item.subject}</h4>
                             <div className="new-tooltip-event">
                                 <div className="wrapper-of-tooltip clearfix">
@@ -487,11 +487,11 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                 if (isTeamsMeeting && moment(CTime, 'YYYY-MM-DD h:mma').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY') && moment(ETime, 'YYYY-MM-DD h:mma').isBefore(moment(CTime, 'YYYY-MM-DD h:mma'))) {
                     return (
                         <li className="clearfix relative ended">
-                            <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
-                            <h4>{item.subject}</h4><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                            <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")}  alt="line" />
+                            <h4>{item.subject}</h4><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")}  alt="line" />
                             <span id="teamsmeetingjoinlink-yes">
                                 <a href="#" onClick={() => reacthandler.openteamsmeeting(item.onlineMeeting.joinUrl)} data-tip data-for={"React-tooltip" + key} data-custom-class="tooltip-custom" data-interception="off">
-                                    <img src={`${reacthandler.props.siteurl}/SiteAssets/img/microsoft-teams-logo.svg`} alt="Teams" />
+                                    <img src={require("./ServiceProvider/Assets/Img/microsoft-teams-logo.svg")} alt="Teams" />
                                 </a>
                                 <ReactTooltip id={"React-tooltip" + key} place="right" type="dark" effect="solid">
                                     <span>Click to Join</span>
@@ -508,7 +508,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
                 } else if (!isTeamsMeeting && moment(CTime, 'YYYY-MM-DD h:mma').format('DD-MM-YYYY') === moment(Starttime).local().format('DD-MM-YYYY') && moment(ETime, 'YYYY-MM-DD h:mma').isBefore(moment(CTime, 'YYYY-MM-DD h:mma'))) {
                     return (
                         <li className="clearfix relative ended">
-                            <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                            <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time" /> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")}  alt="line" />
                             <h4>{item.subject}</h4>
                             <div className="new-tooltip-event">
                                 <div className="wrapper-of-tooltip clearfix">
@@ -538,11 +538,11 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
             if ((reacthandler.state.IsCurrentFuture === "" && isTeamsMeeting) || (selectedDate !== "" && (selectedDate === Starttime.local().format("YYYY-MM-DD") || selectedDate <= Endtime.local().format("YYYY-MM-DD")))) {
                 return (
                     <li className="clearfix relative" id={Starttime.local().format("DD-MM-YYYY")}>
-                        <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> <span className="fut-dt" style={{ display: "none" }}>{localStartDate} </span>{localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
-                        <h4>{item.subject}</h4><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                        <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time" /> <span className="fut-dt" style={{ display: "none" }}>{localStartDate} </span>{localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line" />
+                        <h4>{item.subject}</h4><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")} alt="line" />
                         <span id="teamsmeetingjoinlink-yes">
                             <a href="#" onClick={() => reacthandler.openteamsmeeting(item.onlineMeeting.joinUrl)} data-tip data-for={"React-tooltip" + key} data-custom-class="tooltip-custom" data-interception="off">
-                                <img src={`${reacthandler.props.siteurl}/SiteAssets/img/microsoft-teams-logo.svg`} alt="Teams" />
+                                <img src={require("./ServiceProvider/Assets/Img/microsoft-teams-logo.svg")} alt="Teams" />
                             </a>
                             <ReactTooltip id={"React-tooltip" + key} place="right" type="dark" effect="solid">
                                 <span>Click to Join</span>
@@ -559,7 +559,7 @@ export default class RemoMyMeetings extends React.Component<IRemoHomePageProps, 
             } else if ((reacthandler.state.IsCurrentFuture === "" && !isTeamsMeeting) || (selectedDate !== "" && (selectedDate === Starttime.local().format("YYYY-MM-DD") || selectedDate <= Endtime.local().format("YYYY-MM-DD")))) {
                 return (
                     <li className="clearfix relative" id={Starttime.local().format("DD-MM-YYYY")}>
-                        <h5><img src={`${reacthandler.props.siteurl}/SiteAssets/img/clock.svg`} alt="Time" /> <span className="fut-dt" style={{ display: "none" }}>{localStartDate} </span> {localStart} - {localEnd}</h5><img className="seperator" src={`${reacthandler.props.siteurl}/SiteAssets/img/line.svg`} alt="line" />
+                        <h5><img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time" /> <span className="fut-dt" style={{ display: "none" }}>{localStartDate} </span> {localStart} - {localEnd}</h5><img className="seperator" src={require("./ServiceProvider/Assets/Img/line.svg")}  alt="line" />
                         <h4>{item.subject}</h4>
                         <div className="new-tooltip-event">
                             <div className="wrapper-of-tooltip clearfix">

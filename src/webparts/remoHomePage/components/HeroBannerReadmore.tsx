@@ -434,7 +434,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
       const isToday = RawPublishedDt === moment().format("DD/MM/YYYY");
       const Dte = isToday ? "Today" : moment(RawPublishedDt, "DD/MM/YYYY").format("MMM Do, YYYY");
 
-      let serverRelativeUrl = `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
+      let serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png");
       if (RawImageTxt && RawImageTxt !== null) {
         const ImgObj = JSON.parse(RawImageTxt);
         serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${this.props.siteurl}/Lists/${Hero_Bannerlist}/Attachments/${item.ID}/${ImgObj.fileName}`;
@@ -469,7 +469,7 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
         <li key={key}>
           <div className="commentor-desc clearfix">
             <div className="commentor-image">
-              <img src={`${this.props.siteurl}/SiteAssets/test/img/userphoto.jpg`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/userphoto.jpg")} alt="image" />
             </div>
             <div className="commentor-details-desc">
               <h3>  {EmpName} </h3> <span>  {dated}  </span>
@@ -512,18 +512,18 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
                         <ul className="comments-like-view-block">
                           {this.state.IsLikeEnabled &&
                             <li>
-                              <img className="like-selected" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like_selected.svg`} alt="image" onClick={() => this.liked("dislike")} />
-                              <img className="like-default" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like.svg`} alt="image" onClick={() => this.liked("like")} />
+                              <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")} alt="image" onClick={() => this.liked("dislike")} />
+                              <img className="like-default"  src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                               <span id="likescount"> {likes} </span>
                             </li>
                           }
                           {this.state.IsCommentEnabled &&
                             <li>
-                              <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
+                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
                             </li>
                           }
                           <li>
-                            <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span> {views} </span>
+                            <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")}  alt="image" /> <span> {views} </span>
                           </li>
                         </ul>
                       </div>

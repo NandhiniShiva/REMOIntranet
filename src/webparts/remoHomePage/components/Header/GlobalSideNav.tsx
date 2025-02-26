@@ -109,10 +109,10 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       });
     });
 
-    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
-    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
-    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
-    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
+    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
+    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
+    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
+    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -912,9 +912,9 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                 <a className="logo-anchor" href={`${this.props.siteurl}/SitePages/RemoProductHome.aspx`} data-interception="off">  <img src={this.state.SiteLogo} alt="image" /> </a>
               </div>
               <div className="search relative">
-                <img src={`${this.props.siteurl}/SiteAssets/img/search.png`} alt="image" />
+                <img src={require("../ServiceProvider/Assets/Img/search.png")} alt="image" />
                 <input type="search" id="txt-search" className="form-control insearch" placeholder="Search Here" autoComplete='off' onKeyDown={(e) => this.OpenSearchPage(e, this.props.siteurl)} />
-                <img className="res-ser-close" src={`${this.props.siteurl}/SiteAssets/img/close_resposnive.svg`} onClick={() => this.CloseSearch()} />
+                <img className="res-ser-close" src={require("../ServiceProvider/Assets/Img/close_resposnive.svg")}  onClick={() => this.CloseSearch()} />
               </div>
             </div>
             <div className="header-right">
@@ -923,7 +923,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
                   <li className="meet-count" data-tip data-for={"React-tooltip-calendar"} data-custom-class="tooltip-custom">
                     <a href="https://outlook.office.com/calendar/view/month" target="_blank" data-interception="off" className="notification relative" >
-                      <img src={`${this.props.siteurl}/SiteAssets/img/calender.svg`} alt="images" />
+                      <img src={require("../ServiceProvider/Assets/Img/calender.svg")} alt="images" />
                       <span id="today-date"> {moment().format("D")} </span>
                       <span id="Meetings_count"> {this.state.MeetingsCount} </span>
                     </a>
@@ -933,7 +933,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                   </li>
                   <li data-tip data-for={"React-tooltip-my-team"} data-custom-class="tooltip-custom">
                     <a href={`https://teams.microsoft.com`} data-interception="off" target="_blank" className="notification relative">
-                      <img src={`${this.props.siteurl}/SiteAssets/img/teams.svg`} alt="images" />
+                      <img src={require("../ServiceProvider/Assets/Img/teams.svg")} alt="images" />
                     </a>
                     <ReactTooltip id={"React-tooltip-my-team"} place="bottom" type="dark" effect="solid">
                       <span>Teams</span>
@@ -941,7 +941,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                   </li>
                   <li className="count-email" data-tip data-for={"React-tooltip-Email"} data-custom-class="tooltip-custom">
                     <a href="https://outlook.office.com/mail/" target="_blank" data-interception="off" className="notification relative">
-                      <img src={`${this.props.siteurl}/SiteAssets/img/tq3.svg`} alt="images" />
+                      <img src={require("../ServiceProvider/Assets/Img/tq3.svg")}  alt="images" />
                       <span id="Emails_count"> {this.state.EmailCount} </span>
                     </a>
                     <ReactTooltip id={"React-tooltip-Email"} place="bottom" type="dark" effect="solid">
@@ -968,9 +968,9 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
               <div className="responsive-inner-classes">
                 <ul>
-                  <li> <a href="#" onClick={() => this.OpenSearch()} data-interception="off"><img src={`${this.props.siteurl}/SiteAssets/img/res_searc.svg`} alt="image" /> </a></li>
-                  <li> <a href="#" onClick={() => this.OpenBurggerQuickLinkMenu()} data-interception="off"><img src={`${this.props.siteurl}/SiteAssets/img/quick_link_mob.svg`} alt="image" /> </a></li>
-                  <li> <a href="#" onClick={() => this.OpenBurggerMainMenu()} data-interception="off"><img src={`${this.props.siteurl}/SiteAssets/img/burger_menu.svg`} alt="image" /> </a></li>
+                  <li> <a href="#" onClick={() => this.OpenSearch()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/res_searc.svg")}  alt="image" /> </a></li>
+                  <li> <a href="#" onClick={() => this.OpenBurggerQuickLinkMenu()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/quick_link_mob.svg")} alt="image" /> </a></li>
+                  <li> <a href="#" onClick={() => this.OpenBurggerMainMenu()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/burger_menu.svg")} alt="image" /> </a></li>
                 </ul>
               </div>
             </div>

@@ -786,16 +786,16 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
               <a href={tagLink} data-interception='off' className='tags'>{item.Tag}</a>
             </div>
             <div className='pull-right'>
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt='image' /> {Dt}
+              <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt='image' /> {Dt}
             </div>
           </div>
           <div className='view-all-news-recent-img-cont'>
             {RawImageTxt && <img className='placeholder-main-banner-image' src={serverRelativeUrl || undefined} alt='image' />}
-            {!RawImageTxt && <img className='placeholder-main-banner-image' src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt='image' />}
+            {!RawImageTxt && <img className='placeholder-main-banner-image' src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt='image' />}
           </div>
           <div className='ns-tag-duration clearfix'>
             <div className='pull-left det-pg-post-dura'>
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/clock.svg`} alt='image' /> {Dt} <p className='no-of-views'> {item.Views} Views </p>
+              <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt='image' /> {Dt} <p className='no-of-views'> {item.Views} Views </p>
             </div>
           </div>
           <div className='mews-details-para'>
@@ -872,7 +872,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
         return (
           <li className="clearfix">
             <div className="list-li-recent-news-img">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/home_news_noimage.png`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
               {/* <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a> */}
@@ -896,7 +896,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
         <li key={key}>
           <div className="commentor-desc clearfix">
             <div className="commentor-image">
-              <img src={`${reactHandler.props.siteurl}/SiteAssets/test/img/userphoto.jpg`} alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/userphoto.jpg")} alt="image" />
             </div>
             <div className="commentor-details-desc">
               <h3>{EmpName}</h3> <span>{dated}</span>
@@ -940,9 +940,9 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                             {this.state.IsLikeEnabled == true ?
                               <li>
 
-                                <img className="like-selected" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like_selected.svg`} alt="image" onClick={() => this.liked("dislike")} />
+                                <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")}  alt="image" onClick={() => this.liked("dislike")} />
 
-                                <img className="like-default" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_like.svg`} alt="image" onClick={() => this.liked("like")} />
+                                <img className="like-default"src={require("./ServiceProvider/Assets/Img/lcv_like.svg")}  alt="image" onClick={() => this.liked("like")} />
                                 <span id="likescount"> {likes} </span>
 
                               </li>
@@ -950,11 +950,11 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                             }
                             {this.state.IsCommentEnabled == true &&
                               <li>
-                                <img src={`${this.props.siteurl}/SiteAssets/test/img/lcv_comment.svg`} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
+                                <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
                               </li>
                             }
                             <li>
-                              <img className="nopointer" src={`${this.props.siteurl}/SiteAssets/test/img/lcv_view.svg`} alt="image" /> <span> {views} </span>
+                              <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")}  alt="image" /> <span> {views} </span>
                             </li>
                           </ul>
                         </div>
