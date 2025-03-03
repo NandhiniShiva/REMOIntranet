@@ -44,7 +44,7 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
   public async getcurrentusersQuickLinks() {
     try {
       const { userid: UserID } = this.props;
-
+      // debugger;
       // Fetch user-specific quick links and active quick links concurrently
       const [userQuickLinks, activeQuickLinks] = await Promise.all([
         sp.web.lists
@@ -94,15 +94,22 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
     // var reactHandler = this;
-    const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => (
-      <li key={key}>
-        <a href={item.URL} target="_blank" className="clearfix">
-          <img src={item.ImageSrc} className="quick-def" />
-          <img src={item.HoverImageSrc} className="quick-hov" />
-          <p>{item.SelectedQuickLinks.Title}</p>
-        </a>
-      </li>
-    ));
+    const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => {
+      const ImgObj = JSON.parse(item.ImageSrc);
+      const serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${this.props.siteurl}/Lists/${UsersQuickLinkslist}/Attachments/${item.ID}/${ImgObj.fileName}`;
+      const ImgObjonHover = JSON.parse(item.HoverImageSrc);
+      const serverRelativeUrlonHover = ImgObjonHover.serverRelativeUrl ?? `${this.props.siteurl}/Lists/${UsersQuickLinkslist}/Attachments/${item.ID}/${ImgObjonHover.fileName}`;
+      // debugger;
+      return (
+        <li key={key}>
+          <a href={item.URL} target="_blank" className="clearfix">
+            <img src={serverRelativeUrl} className="quick-def" />
+            <img src={serverRelativeUrlonHover} className="quick-hov" />
+            <p>{item.SelectedQuickLinks.Title}</p>
+          </a>
+        </li>
+      )
+    });
 
     return (
       <div className="col-md-12 Quicklinks">

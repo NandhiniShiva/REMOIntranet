@@ -269,6 +269,18 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         if (response.length === 0) {
           console.log("No items found in the SharePoint list.");
           return;
+        }else{
+          await Promise.all(
+            response.map((item) =>
+              sp.web.lists.getByTitle(listName).items.add({
+                Title: String(this.state.selectedValue), // Ensure string
+                Component: String(item.Component), // Ensure string
+                ComponentID: String(item.ComponentID), // Ensure string (if expected as text)
+                Position: String(item.Position)
+                // Add all other relevant fields here
+              })
+            )
+          );
         }
       }
       const selectedComponents: { [key: number]: { name: string; id: number } } = {};
@@ -360,7 +372,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     const loaderIcon = document.getElementById('loader-Icon');
     const loadContent = document.getElementById('load-content');
     if (loaderIcon) {
-      loaderIcon.style.display = 'block';
+      loaderIcon.style.display = 'flex';
     }
     if (loadContent) {
       loadContent.style.display = 'none';
@@ -987,6 +999,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
+    // debugger;
     event.preventDefault();
     var data: any;
     let updatedAvailableComponents: any[] = [];
@@ -1416,10 +1429,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 </div>
               </div>
               <section>
-
-
                 {this.state.isClicked == "Home" ?
-
                   (<div className="container home_pg relative">
                     <div className="section-right">
                       <div className="banner-ceo-message">
@@ -1705,7 +1715,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               </section>
             </div>
             <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
-              <img  src={require("./ServiceProvider/Assets/Img/loader.gif")}  alt="loader" />
+              <img  src={require("./ServiceProvider/Assets/Img/loader-new.gif")}  alt="loader" />
               {/* <h1>Loader</h1> */}
             </div>
             {/* )} */}

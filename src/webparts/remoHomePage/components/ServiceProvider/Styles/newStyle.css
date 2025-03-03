@@ -16,25 +16,26 @@ button {
     padding: 3px 5px;
 }
 .col-md-4.Location-2 {
-    /* margin-bottom: 20px !important;!i;!; */
     margin-bottom: 20px !important;
-    width: 33%;
+    width: 32%;
     margin: 0px 10px;
 }
 
 .col-md-8.Location-1 {
-    width: 63%;
+    width: 62%;
     margin-bottom: 20px !important;
-    margin: 0px 11px;
+    margin: 0px 10px;
+    margin-left: 24px !important;
 }
 
 .col-md-6.Location-11 {
-    width: 48%;
-    margin: 0px 11px;
+    width: 46%;
+    margin: 0px 16px;
 }
 
 .col-md-6.Location-12 {
-    width: 48%;
+    width: 47.3%;
+    margin-left: 5px;
 }
 
 div#load-content {
@@ -231,12 +232,6 @@ button.form-control.clear_part.inp-search img{
     width:15px;
 }
 
-/* .component-search.active button.form-control.clear_part.inp-search{
-   /* display:block; */
-/* } */
-/* .component-search.active button.form-control.search_button{ */
-   /*display: none;*/
-/* }  */
 div#show_components_01 ul,  div#show_components_02 ul{
     min-height: 94px;
     max-height: 127px;
@@ -321,6 +316,10 @@ div#show_components_03 ul{
     height: 143px;
 }
 
+.Location-1 .ceo-message-left p {
+    height: 98px;
+    margin-bottom: 3px;
+}
 
             /*location-3 ceo message strat */
 
@@ -348,7 +347,7 @@ div#show_components_03 ul{
     width: calc(100% - 18%);
 }
 .col-md-12.Location-3 .ceo-message-left p {
-    height: 38px;
+    height: 30px;
     margin-bottom: 3px;
 }
 
@@ -360,6 +359,11 @@ div#show_components_03 ul{
             /*location-3 ceo message end */
 
 /*------- location-3 end ------------*/
+
+.ceo-message-right img {
+    max-height: 150px;
+    max-width: 100%;
+}
 
 /* -------location-4 start ------------*/
 
@@ -432,7 +436,7 @@ div#show_components_04 ul{
 }
 
 .Location-4 .ceo-message-left p {
-    height: 45px;
+    height: 37px;
 }
 
 .Location-4 .ceo-message-left h6 {
@@ -1694,7 +1698,7 @@ div#m-b-20-PQlink {
 /*--------------event & announcement css start-------------*/
 
 .Location-1 .latest-news-announcemnst .sec {
-    height: 206px;
+    height: 190px;
 }
 
 .Location-1 .ann-detibck h2 {
@@ -2057,9 +2061,7 @@ nav#root-nav-links {
 }
 
 .main-mavigation.submenu li.active {
-    /* padding: 0px !important;!i;!; */
     padding: 0px !important;
-
 }
 
 .quicklink_btn {
@@ -2535,6 +2537,13 @@ img.publishimage {
 
 
 /*-----------select layout page css start-----------*/
+header.layout_header>div {
+    width: 90%;
+    height: 40px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
 div#s4-titlerow {
     display: none !important;
 }
@@ -2569,11 +2578,9 @@ header.layout_header {
     flex-direction: column-reverse;
     border-radius: 10px;
     text-align: center;
-    /* margin-bottom: 27px !important;!i;!; */
     margin-bottom: 27px !important;
-
     padding: 12px 20px;
-    width: 500px;
+    width: 356px;
     cursor: pointer;
     /* width: 90%; */
     margin: 0px 10px;
@@ -2585,15 +2592,18 @@ header.layout_header {
 .selectLayers {
     width: 83%;
     margin: auto;
+    margin-top: 46px;
 }
 
 .SElect-Layout-img img {
     width: 100%;
-     height: 437px;
+     height: 276px;
 }
 
 .Layout-content {
     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .LayoutText {
@@ -2675,7 +2685,9 @@ div#contentRow {
 div#s4-bodyContainer {
     padding: 0px;
 }
-
+.config-right-side button {
+    margin: 7px 0px;
+}
 div#MSOZoneCell_WebPartWPQ5 {
     margin: 0px;
 }
@@ -2708,6 +2720,7 @@ p.config-subhead {
     overflow: hidden;
     font-weight: 500;
     margin-bottom:0;
+    opacity:1;
 }
 
 .config-right-side button {
@@ -2717,9 +2730,7 @@ p.config-subhead {
     color: #fff;
     background: #008c99;
     padding: 6px 12px;
-    /* padding-bottom: 8px !important;!i;!; */
     padding-bottom: 8px !important;
-
 }
 
 .config-right-side {
@@ -2736,8 +2747,36 @@ p.config-subhead {
 }
 /*-----------config page css end-----------*/
 
+/*-----------loader css start-----------*/
+div#loader-Icon {
+   /* position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, 50%);*/
+    position: fixed;
+    inset: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: #fafafa;
+}
+
+div#loader-Icon img{
+    width:102px;
+}
+/*-----------loader css end-----------*/
+
 /*------------------------- 17.2.25 jothi ------------------*/
 .col-md-12.herobanner .slick-slider{
     width: 740px;
     min-width: 100%;
+}
+
+/*------------28.2.25 updated css by preethi---------------*/
+
+.events-calendar.col-md-8 {
+    padding: 0px;
+    padding-left: 12px !important;
+    padding: 0px 5px;
 }

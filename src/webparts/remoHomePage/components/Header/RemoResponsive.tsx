@@ -11,6 +11,8 @@ import { sp } from '@pnp/sp/presets/all';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../Configuration';
 import { SPComponentLoader } from '@microsoft/sp-loader';
+import "../ServiceProvider/Styles/newStyle.css";
+
 
 let Navigationslist = listNames.Navigations;
 let DepartmentsMasterlist = listNames.DepartmentsMaster;

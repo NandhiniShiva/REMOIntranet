@@ -14,6 +14,7 @@ import RemoResponsive from './RemoResponsive';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../Configuration';
 import { sp } from '@pnp/sp/presets/all';
+import "../ServiceProvider/Styles/newStyle.css";
 var metaTag = document.createElement('meta');
 metaTag.name = "viewport"
 metaTag.content = "width=device-width, initial-scale=1.0"

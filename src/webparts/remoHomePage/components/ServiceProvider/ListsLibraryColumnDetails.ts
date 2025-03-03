@@ -381,13 +381,13 @@ export const ListLibraryColumnDetails = [
             }
             ,
             {
-                columnName: "SelectedQuickLinks_x003a_ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
+                columnName: "Selected Quick Links : ID", type: "addLookup", targetListName: "Quick Links", // Specify the target list
                 targetListColumn: "ID", isRequired: false, isIndexed: false
             },
             { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
-            { columnName: "ImageSrc", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "ImageSrc", type: "addImageField", isRequired: false, isIndexed: false },
             { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
-            { columnName: "HoverImageSrc", type: "addMultilineText", isRequired: false, isIndexed: false },
+            { columnName: "HoverImageSrc", type: "addImageField", isRequired: false, isIndexed: false },
 
         ]
     },
