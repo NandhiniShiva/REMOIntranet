@@ -3,46 +3,49 @@ import styles from './RemoHomePage.module.scss';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
 import * as $ from 'jquery';
 import GlobalSideNav from '../components/Header/GlobalSideNav';
-import RemoResponsive from '../components/Header/RemoResponsive';
-import RemoHeroBanner from './RemoHeroBanner';
-import RemoCEOMessage from './RemoCEOMessage';
-import RemoNavigations from './RemoNavigations';
-import RemoMyMeetings from './RemoMyMeetings';
-import RemoNews from './RemoNews';
-import RemoLatestEventsandAnnouncements from './RemoLatestEventsandAnnouncements';
-import RemoImagesandVideos from './RemoImagesandVideos';
-import RemoClimate from './RemoClimate';
-import RemoBirthday from './RemoBirthday';
-import RemoQuickLinks from './RemoQuickLinks';
-import RemoRecentFiles from './RemoRecentFiles';
-import RemoSocialMedia from './RemoSocialMedia';
-import Footer from './Footer/Footer'
+// import RemoResponsive from '../components/Header/RemoResponsive';
+// import RemoHeroBanner from './RemoHeroBanner';
+// import RemoCEOMessage from './RemoCEOMessage';
+// import RemoNavigations from './RemoNavigations';
+// import RemoMyMeetings from './RemoMyMeetings';
+// import RemoNews from './RemoNews';
+// import RemoLatestEventsandAnnouncements from './RemoLatestEventsandAnnouncements';
+// import RemoImagesandVideos from './RemoImagesandVideos';
+// import RemoClimate from './RemoClimate';
+// import RemoBirthday from './RemoBirthday';
+// import RemoQuickLinks from './RemoQuickLinks';
+// import RemoRecentFiles from './RemoRecentFiles';
+// import RemoSocialMedia from './RemoSocialMedia';
+// import Footer from './Footer/Footer';
+import RemoLayout1 from './RemoLayout1';
+import RemoLayout2 from './RemoLayout2';
+
 import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
 import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
 // import { sp, } from "@pnp/sp/presets/all";
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 import { LayoutsDetails } from './ServiceProvider/Layoutconfiguration';
-import { PositionDetails } from './ServiceProvider/PositionConfiguration';
-import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
+// import { PositionDetails } from './ServiceProvider/PositionConfiguration';
+import { LandingPageListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { listNames } from '../Configuration';
-import CeoMessageRm from './CeoMessageReadMore';
-import AnnouncementsRm from './AnnouncementsRm';
-import AnnouncementsVm from './AnnouncementsVm';
-import BirthdayRm from './BirthdayRm';
-import DeptGalleryGridView from './DeptGalleryGridView';
-import DeptGalleryViewMore from './DeptGalleryViewMore';
-import EventsViewMore from './EventsViewMore';
-import GalleryGridView from './GalleryGridView';
-import GalleryViewMore from './GalleryViewMore';
-import HeroBannerRm from './HeroBannerReadmore';
-import HeroBannerViewMore from './HeroBannerViewMore';
-import NewsReadMore from './NewsReadMore';
-import NewsViewMore from './NewsViewMore';
-// import { SPComponentLoader } from '@microsoft/sp-loader';
+// import CeoMessageRm from './CeoMessageReadMore';
+// import AnnouncementsRm from './AnnouncementsRm';
+// import AnnouncementsVm from './AnnouncementsVm';
+// import BirthdayRm from './BirthdayRm';
+// import DeptGalleryGridView from './DeptGalleryGridView';
+// import DeptGalleryViewMore from './DeptGalleryViewMore';
+// import EventsViewMore from './EventsViewMore';
+// import GalleryGridView from './GalleryGridView';
+// import GalleryViewMore from './GalleryViewMore';
+// import HeroBannerRm from './HeroBannerReadmore';
+// import HeroBannerViewMore from './HeroBannerViewMore';
+// import NewsReadMore from './NewsReadMore';
+// import NewsViewMore from './NewsViewMore';
+import { SPComponentLoader } from '@microsoft/sp-loader';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 import Swal from 'sweetalert2';
-import "../components/ServiceProvider/Styles/newStyle.css"
+// import "../components/ServiceProvider/Styles/newStyle.css"
 import "../components/ServiceProvider/Styles/Responsive.css"
 import '../components/ServiceProvider/Styles/SPNativeStyleOverriding.css'
 import '../components/ServiceProvider/Styles/Style.css'
@@ -72,7 +75,7 @@ var User: any;
 var UserEmail: any;
 
 var Selectedcomponents: any = [];
-var Components = PositionDetails;
+// var Components = PositionDetails;
 
 
 export interface IRemoHomePageState {
@@ -80,8 +83,8 @@ export interface IRemoHomePageState {
   isCreatingLists: boolean,
   loadContent: boolean,
   currentList: any,
-  showButton: boolean,
-  showDropdown: boolean,
+  showConfigure: boolean,
+  showLayout: boolean,
   showHomepage: boolean,
   selectedValue: any,
   selectedDept: any,
@@ -109,15 +112,15 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   constructor(props: IRemoHomePageProps, _state: IRemoHomePageState) {
     super(props);
-    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
+    SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
 
     this.state = {
       progress: 0,
       isCreatingLists: false,
       loadContent: false,
       currentList: "",
-      showButton: true,
-      showDropdown: false,
+      showConfigure: true,
+      showLayout: false,
       showHomepage: false,
       selectedValue: null,
       selectedDept: null,
@@ -153,24 +156,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper,#spCommandBar,#CommentsWrapper, #spSiteHeader').forEach(function (element: any) {
       element.style.display = 'none';
     });
-    this.checkEditMode();
-    this.CheckalreadyConfigured();
-    const userDetails = new CurrentUserDetails();
-    await userDetails
-      .getCurrentUserDetails()
-      .then(async (data) => {
-        if (data) {
-
-          console.log("Current user details", data);
-          console.log("data details", data?.Department, data?.Designation);
-
-        } else {
-          console.warn("No user details were fetched.");
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching current user details:", err);
-      });
+    await this.checkEditMode();
+    await this.CheckalreadyConfigured();
     await this.BindPlaceholderLogo();
     await this.loaderInProgress();
     this.checkUserAdmin();
@@ -187,6 +174,21 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     try {
       // Check if the new layout already exists
       // debugger;
+      const userDetails = new CurrentUserDetails();
+      await userDetails
+        .getCurrentUserDetails()
+        .then(async (data) => {
+          if (data) {
+            console.log("Current user details", data);
+            console.log("data details", data?.Department, data?.Designation);
+
+          } else {
+            console.warn("No user details were fetched.");
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching current user details:", err);
+        });
       await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
         if (response.length != 0) {
           response.forEach(item => {
@@ -194,16 +196,16 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               this.setState(
                 {
                   selectedValue: item.Title,
-                  showButton: false,
-                  showDropdown: false,
+                  showConfigure: false,
+                  showLayout: false,
                   showHomepage: true,
                 },
                 async () => {
                   // await this.loaderInProgress();
                   await this.getLayout();
                   await this.setActiveLayout(this.state.selectedValue);
-                  await this.GetAllavailablecomponents();
-                  await this.getAllocatedComponents();
+                  // await this.GetAllavailablecomponents();
+                  // await this.getAllocatedComponents();
                   await this.HideInProgress();
                 }
               );
@@ -269,7 +271,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         if (response.length === 0) {
           console.log("No items found in the SharePoint list.");
           return;
-        }else{
+        } else {
           await Promise.all(
             response.map((item) =>
               sp.web.lists.getByTitle(listName).items.add({
@@ -286,14 +288,26 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       const selectedComponents: { [key: number]: { name: string; id: number } } = {};
       let updatedIsInitialscreen = [...this.state.isInitialscreen];
       let updatedAvailableComponents = [...this.state.AvailableComponents];
-
+      let ComponentID: any = [];
       response.forEach((item) => {
         if (item.Position != null && item.Component != null) {
-          // Update selectedComponents by position
-          selectedComponents[item.Position] = {
-            name: item.Component,
-            id: item.ComponentID
-          };
+          if (!ComponentID.includes(item.ComponentID)) {
+            ComponentID.push(item.ComponentID);
+            selectedComponents[item.Position] = {
+              name: item.Component,
+              id: item.ComponentID
+            };
+          }
+
+          if (!ComponentID.includes(item.ComponentID)) {
+            ComponentID.push(item.ComponentID);
+            // Update selectedComponents by position
+            selectedComponents[item.Position] = {
+              name: item.Component,
+              id: item.ComponentID
+            };
+          }
+
           // selectedComponents[item.Position] = {name: item.Component, id:item.ComponentID};
 
           // Update isInitialscreen to mark the position as not initial
@@ -328,7 +342,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       console.log(response);
       if (response.length != 0) {
         allcomponents.push(response)
-        // }
         this.setState({
           AvailableComponents: response,
           landingPageComponentList: response
@@ -471,11 +484,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   };
 
 
-  public showDropDown() {
+  public showLayout() {
     this.getLayout();
     this.setState({
-      showButton: false,
-      showDropdown: true,
+      showConfigure: false,
+      showLayout: true,
     })
   }
 
@@ -658,7 +671,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     this.setState({
       isClicked: ReadMoreData.Name,
       itemID: ReadMoreData.Id,
-      showDropdown: false
+      showLayout: false
     })
 
 
@@ -669,7 +682,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     this.setState(
       {
         showHomepage: true,
-        showDropdown: false,
+        showLayout: false,
         selectedValue: LayoutId
       },
       async () => {
@@ -677,8 +690,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         await this.loaderInProgress();
         await this.setActiveLayout(this.state.selectedValue);
         await this.getcreateLists();
-        await this.GetAllavailablecomponents();
-        await this.getAllocatedComponents();
+        // await this.GetAllavailablecomponents();
+        // await this.getAllocatedComponents();
         await this.HideInProgress();
       }
     );
@@ -734,7 +747,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           });
         }
       }
-      this.setState({isInitialscreen: Array(12).fill(true)})
+      this.setState({ isInitialscreen: Array(12).fill(true) })
 
     } catch (error) {
       console.error("Error in setActiveLayout:", error);
@@ -744,35 +757,15 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async getcreateLists() {
     try {
       // Filter unmatched lists
-      const unmatchedLists: any = ListLibraryColumnDetails.filter(
-        listDetail => !this.state.landingPageComponentList.some(
-          component => component.Title.toLowerCase() === listDetail.name.toLowerCase()
-        )
-      );
-      console.log("Unmatched Lists:", unmatchedLists);
-      // Get the total number of unmatched lists
-      const totalLists: number = unmatchedLists.length;
-      // Track if any list was newly created
+      const ListtobeCreated: any[] = LandingPageListDetails
       let anyListCreated = false;
       // Loop through each unmatched list
-      for (let i = 0; i < totalLists; i++) {
-        const listName = unmatchedLists[i].name; // Access the list name
+      for (let i = 0; i < ListtobeCreated.length; i++) {
+        const listName = ListtobeCreated[i].name; // Access the list name
         // const columns = unmatchedLists[i].columns; // Access the columns for the list
         const listCreation = new ListCreation();
         await listCreation.createSharePointLists(listName);
-        // // Ensure the list exists or create it
-        // const listEnsureResult = await sp.web.lists.ensure(listName);
-
-        // if (listEnsureResult.created) {
-        //   console.log(`List '${listName}' created successfully.`);
-        //   await this.createSharePointColumns(listName, columns); // Create columns for the newly created list
-        //   anyListCreated = true;
-        // } else {
-        //   console.log(`List '${listName}' already exists.`);
-        //   await this.createSharePointColumns(listName, columns); // Ensure columns exist even if the list already exists
-        // }
       }
-
       // Log final status
       if (!anyListCreated) {
         console.log("All lists already existed. No new lists were created.");
@@ -907,7 +900,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public showcomponents(e: any, DOMID: string) {
     e.preventDefault();
     if (this.state.isCurrentUserAdmin === true && this.state.editMode === "edit") {
-
       $("#" + DOMID).toggle();
       this.showSearchbtn();
     }
@@ -938,196 +930,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public showClearbtn() {
     $(".search_button").hide();
     $(".clear_part").show();
-  }
-  public SearchHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: string) {
-    e.preventDefault();
-    var query: string = $.trim(($("#SearchInput") as any).val());
-    sp.web.lists.getByTitle(ComponentConfigurationList).items.filter(`substringof('${query}',Title)`).top(5000).orderBy("Title", true).get().then((resp) => {
-      if (resp.length != 0) {
-        this.setState({
-          AvailableComponents: resp
-        }, () => {
-          $("#" + SelectID).show();
-          this.showClearbtn();
-          this.getAllocatedComponents()
-
-        });
-      }
-    })
-  }
-
-
-  public async clearHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, SelectID: any) {
-    e.preventDefault();
-    // Clear the search input and reset any active state
-    $("#SearchInput").val("");
-    try {
-      // Fetch all components
-      const allComponents = await sp.web.lists
-        .getByTitle(ComponentConfigurationList)
-        .items.top(5000)
-        .orderBy("Title", true)
-        .get();
-
-      if (allComponents.length > 0) {
-        // Fetch already allocated components
-        const allocatedComponents = await sp.web.lists
-          .getByTitle(ComponentallocationList)
-          .items.filter(`substringof('${this.state.selectedValue}',Title)`)
-          .top(5000)
-          .orderBy("Title", true)
-          .get();
-
-        // Filter out the allocated components from the available components
-        const allocatedComponentIDs: any = allocatedComponents.map((comp) => comp.ComponentID);
-        const updatedAvailableComponents = allComponents.filter(
-          (item) => !allocatedComponentIDs.includes(item.ComponentId)
-        );
-        updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
-        // Update the state with the filtered components
-        this.setState({
-          AvailableComponents: updatedAvailableComponents,
-        }, () => {
-          $("#" + SelectID).show();
-          this.showSearchbtn();
-        });
-      }
-    } catch (error) {
-      console.error("Error in Clear function:", error);
-    }
-  }
-
-
-  public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-    // debugger;
-    event.preventDefault();
-    var data: any;
-    let updatedAvailableComponents: any[] = [];
-    let updatedSelectedComponent: any = [];
-    let existingItems = await sp.web.lists
-      .getByTitle(Draftmaster)
-      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-      .get();
-    if (existingItems.length > 0) {
-      // If an item exists for the position, update it
-      const itemId = existingItems[0].Id; // Get the item ID
-      const itemName = existingItems[0].Component;
-      await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
-
-      updatedSelectedComponent = Object.fromEntries(
-        Object.entries(this.state.selectedComponents).filter(
-          ([, item]: [string, { name: string; id: string }]) => item.name !== itemName)
-        // ([key, item]) => item.name !== itemName)
-      );
-
-    }
-
-    await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
-      if (resp.length != 0) {
-        resp.forEach((items) => {
-          if (items.Title == value) {
-            data = items;
-          }
-        })
-      }
-      if (data) {
-        updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
-        updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
-        if (Selectedcomponents.includes(data.ComponentId)) {
-          Selectedcomponents = Selectedcomponents.filter((id: any) => id !== data.ComponentId);
-          console.log("Item removed from Selectedcomponents:", data.ComponentId);
-        }
-
-      }
-      const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
-        index === (Position - 1) ? true : item
-      );
-      this.setState({
-        AvailableComponents: updatedAvailableComponents,
-        selectedComponents: updatedSelectedComponent,
-        isInitialscreen: updatedIsInitialscreen,
-      });
-    });
-
-    Swal.fire({
-      title: 'Components removed successfully',
-      icon: "success",
-      showConfirmButton: true,
-    })
-
-
-  }
-
-  public renderComponent(position: number) {
-    const componentName = this.state.selectedComponents[position]?.name;
-    // const locationID = `Location-${position}`
-
-    // Define a function to render components dynamically
-    const renderWithRemoveButton = (Component: any, props = {}) => {
-      return (
-        <>
-          {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
-            <>
-              <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-                {/* <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /> */}
-                <img src={require("./ServiceProvider/Assets/Img/remove.svg")}  alt="remove-btn" />
-
-              </button>
-            </>
-          }
-          <Component {...this.props} {...props} />
-        </>
-      );
-    };
-
-    switch (componentName) {
-      case "Hero Banner":
-        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
-      case "CEO Message":
-        return renderWithRemoveButton(RemoCEOMessage, {
-          description: "",
-          createList: false,
-          name: this.state.componentName,
-          onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
-        });
-
-      case "Quick Links":
-        return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
-
-      case "My Meetings":
-        return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
-
-      case "Birthday":
-        return renderWithRemoveButton(RemoBirthday, {
-          description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
-        });
-
-      case "News":
-        return renderWithRemoveButton(RemoNews, { description: position, createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
-
-      case "Climate":
-        return renderWithRemoveButton(RemoClimate, { description: "" });
-
-      case "Manange Quick Links":
-        return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
-
-      case "Events and Announcements":
-        return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
-      // case "Announcement":
-      //   return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
-
-      case "Recent Files":
-        return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
-
-      case "Images and Videos":
-        return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
-
-      case "Social Media":
-        return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
-
-      default:
-        return null;
-    }
   }
 
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -1314,72 +1116,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-
-  // public async publishHandler(event: any) {
-  //   event.preventDefault();
-  //   const length = Object.keys(this.state.selectedComponents).length;
-  //   console.log(length);
-  //   if (length != 0) {
-  //     await this.handlePublish();
-  //     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
-  //     window.location.href = url;
-  //   } else {
-  //     Swal.fire({
-  //       title: `None of the Components were added in '${this.state.selectedValue}'`,
-  //       icon: "warning",
-  //       showConfirmButton: true,
-  //     })
-  //   }
-
-  // }
-
-
   public render(): React.ReactElement<IRemoHomePageProps> {
-    var handler = this;
-    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
-      if (!handler.state.isCurrentUserAdmin && handler.state.editMode !== "edit") {
-        return null;
-      }
-      return (
-        <>
-          {/* Button to toggle component visibility */}
-          <button id={ButtonId}
-            onClick={(e) => handler.showcomponents(e, SelectID)}
-          >
-            <img src={require("./ServiceProvider/Assets/Img/addcomponent.svg")}  alt="AddComponent" />  
-           {/* src={`${this.props.siteurl}/SiteAssets/img/add component.svg`} */}
-          </button>
-
-
-          {/* Hidden component div, toggled dynamically */}
-          <div id={SelectID} style={{ display: "none" }}>
-            <div className={`component-search ${DOMID}`}>
-              <input type="text" className={`form-control`} placeholder="Search for the contact here" id="SearchInput"
-                onChange={() => handler.handleInputChange(DOMID, SelectID)} />
-              <button className="form-control search_button" onClick={(e) => handler.SearchHandler(e, SelectID)} >
-                <img src={require("./ServiceProvider/Assets/Img/search-fill.svg")}  alt="search-img" />
-              </button>
-              <button className="form-control clear_part inp-search input-clear-onchange" onClick={(e) => handler.clearHandler(e, SelectID)}>
-                <img src={require("./ServiceProvider/Assets/Img/close-icon.svg")}  alt="clear-img" />
-              </button>
-            </div>
-
-            {/* List of available components */}
-            <ul>
-              {handler.state.AvailableComponents.map((component: any) => (
-                <li
-                  key={component.Title} // Ensure unique key for each list item
-                  className="li-search-wrap"
-                  onClick={(e) => handler.setSelectedComponent(e, component.Title, SelectID, ComponentIndex, component.ComponentId)}
-                >
-                  <p className="people_name">{component.Title}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      )
-    };
+    
     return (
       //Layout 1
       <>
@@ -1421,7 +1159,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       </li>
                         <li id='publish_button'>
                           <button onClick={(e) => this.publishHandler(e)}>
-                            <img className='publishimage' src={require("./ServiceProvider/Assets/Img/publish.svg")}  alt="publish-img" />
+                            <img className='publishimage' src={require("./ServiceProvider/Assets/Img/publish.svg")} alt="publish-img" />
                             <span> Publish </span></button>
                         </li></>
                     }
@@ -1429,300 +1167,24 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 </div>
               </div>
               <section>
-                {this.state.isClicked == "Home" ?
-                  (<div className="container home_pg relative">
-                    <div className="section-right">
-                      <div className="banner-ceo-message">
-                        <div className="row">
-                          {this.state.isInitialscreen[0] == true ?
-                            <div className="col-md-8 Location-1">
-                              {Components.map((item, key) => {
-                                if (item.Position == 1) {
-                                  return (
-                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <div className="col-md-8 Location-1" >
-                              {this.state.selectedComponents[1] && this.renderComponent(1)}
-                            </div>
-                          }
-
-                          {this.state.isInitialscreen[1] == true ?
-                            <div className="col-md-4 Location-2">
-                              {Components.map((item, key) => {
-                                if (item.Position == 2) {
-                                  return (
-                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <div className="col-md-4 Location-2" >
-                              {this.state.selectedComponents[2] && this.renderComponent(2)}
-                            </div>
-                          }
-                        </div>
-
-                      </div>
-                      {/* //Quicklinks- remo navigation */}
-                      {this.state.isInitialscreen[2] == true ?
-                        <div className="col-md-12 Location-3" >
-                          {Components.map((item, key) => {
-                            if (item.Position == 3) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className="col-md-12 Location-3" >
-                          {this.state.selectedComponents[3] && this.renderComponent(3)}
-                        </div>
-                      }
-
-                      {/* Events(Mymeetings) Calendar and News Section */}
-                      <div className="row section_bottom">
-                        <div className="col-md-12">
-                          <div className="events-calendar col-md-8">
-                            {this.state.isInitialscreen[3] == true ?
-                              <div className="Location-4 col-md-12" >
-                                {Components.map((item, key) => {
-                                  if (item.Position == 4) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className="Location-4 col-md-12" >
-                                {this.state.selectedComponents[4] && this.renderComponent(4)}
-                              </div>
-                            }
-                            {/* News */}
-                            {this.state.isInitialscreen[4] == true ?
-                              <div className="Location-5 col-md-12" >
-                                {Components.map((item, key) => {
-                                  if (item.Position == 5) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className="Location-5 col-md-12" >
-                                {this.state.selectedComponents[5] && this.renderComponent(5)}
-                              </div>
-                            }
-
-                            <div className="latest-news-announcements" id="latest-news-announcements">
-                              {/* events and announcements */}
-                              <div>
-                                {this.state.isInitialscreen[9] == true ?
-                                  // <>
-                                  <div className="col-md-12 Location-10">
-                                    {Components.map((item, key) => {
-                                      if (item.Position == 10) {
-                                        return (
-                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                        )
-                                      }
-                                    })}
-                                  </div>
-                                  :
-                                  <div className="col-md-12 Location-10">
-                                    {this.state.selectedComponents[10] && this.renderComponent(10)}
-                                  </div>
-                                }
-                              </div>
-                            </div>
-
-                            <div id="social-and-gallery" className="images-social">
-                              <div className="row row-res">
-                                {this.state.isInitialscreen[10] == true ?
-                                  <div className="col-md-6 Location-11">
-                                    {Components.map((item, key) => {
-                                      if (item.Position == 11) {
-                                        return (
-                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                        )
-                                      }
-                                    })}
-                                  </div>
-                                  :
-                                  <div className="col-md-6 Location-11">
-                                    {this.state.selectedComponents[11] && this.renderComponent(11)}
-                                  </div>
-                                }
-                                {this.state.isInitialscreen[11] == true ?
-                                  <div className="col-md-6 Location-12">
-                                    {Components.map((item, key) => {
-                                      if (item.Position == 12) {
-                                        return (
-                                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                        )
-                                      }
-                                    })}
-                                  </div>
-                                  :
-                                  <div className="col-md-6 Location-12">
-                                    {this.state.selectedComponents[12] && this.renderComponent(12)}
-                                  </div>
-                                }
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Birthday, Climate, Quicklinks, Recentfile */}
-                          <div className="col-md-4 ">
-                            {this.state.isInitialscreen[5] == true ?
-                              <div className='Location-6 col-md-12'>
-                                {Components.map((item, key) => {
-                                  if (item.Position == 6) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className='Location-6 col-md-12'>
-                                {this.state.selectedComponents[6] && this.renderComponent(6)}
-                              </div>
-                            }
-                            {this.state.isInitialscreen[6] == true ?
-                              <div className='Location-7 col-md-12'>
-                                {Components.map((item, key) => {
-                                  if (item.Position == 7) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className='Location-7 col-md-12'>
-                                {this.state.selectedComponents[7] && this.renderComponent(7)}
-                              </div>
-                            }
-                            {this.state.isInitialscreen[7] == true ?
-                              <div className='Location-8 col-md-12' >
-                                {Components.map((item, key) => {
-                                  if (item.Position == 8) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className='Location-8 col-md-12'>
-                                {this.state.selectedComponents[8] && this.renderComponent(8)}
-                              </div>
-                            }
-                            {this.state.isInitialscreen[8] == true ?
-                              <div className="col-md-12 Location-9">
-                                {Components.map((item, key) => {
-                                  if (item.Position == 9) {
-                                    return (
-                                      <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                    )
-                                  }
-                                })}
-                              </div>
-                              :
-                              <div className="col-md-12 Location-9">
-                                {this.state.selectedComponents[9] && this.renderComponent(9)}
-                              </div>
-                            }
-                          </div>
-
-                        </div>
-                      </div>
-
-                      <RemoResponsive {...this.props} currentWebUrl="" CurrentPageserverRequestPath="" />
-                      <Footer {...this.props} description="" createList={false} name={this.state.componentName} onReadMoreClick={null} />
-                    </div>
-                  </div>)
-                  :
-                  this.state.isClicked == "AnnouncementReadMore" ?
-                    (
-                      <AnnouncementsRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} useremail={undefined} createList={false}></AnnouncementsRm>
-                    ) :
-
-                    this.state.isClicked == "AnnouncementViewMore" ?
-                      (
-                        <AnnouncementsVm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></AnnouncementsVm>
-                      ) :
-                      this.state.isClicked == "BirthdayRm" ?
-                        (
-                          <BirthdayRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={this.state.itemID} useremail={undefined}></BirthdayRm>
-                        ) :
-                        this.state.isClicked == "CEOReadMore" ?
-                          (
-                            <CeoMessageRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} id={undefined}></CeoMessageRm>
-                          ) :
-                          this.state.isClicked == "DeptGalleryGridView" ?
-                            (
-                              <DeptGalleryGridView description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryGridView>
-                            ) :
-                            this.state.isClicked == "DeptGalleryViewMore" ?
-                              (
-                                <DeptGalleryViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={''} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} homepage={''} ></DeptGalleryViewMore>
-                              ) :
-                              this.state.isClicked == "EventsViewMore" ?
-                                (
-                                  <EventsViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></EventsViewMore>
-                                ) :
-                                this.state.isClicked == "GalleryGridView" ?
-                                  (
-                                    <GalleryGridView description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></GalleryGridView>
-                                  ) :
-                                  this.state.isClicked == "GalleryViewMore" ?
-                                    (
-                                      <GalleryViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}   ></GalleryViewMore>
-                                    ) :
-
-                                    this.state.isClicked == "HeroBannerReadMore" ?
-                                      (
-                                        <HeroBannerRm description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} useremail={null} id={this.state.itemID} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></HeroBannerRm>
-                                      ) :
-
-                                      this.state.isClicked == "HeroBannerViewMore" ?
-                                        (
-                                          <HeroBannerViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></HeroBannerViewMore>
-                                        ) :
-
-
-                                        this.state.isClicked == "NewsReadMore" ?
-                                          (
-                                            <NewsReadMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} siteID={undefined} useremail={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)} ></NewsReadMore>
-                                          ) :
-
-                                          this.state.isClicked == "NewsViewMore" ?
-                                            (
-                                              <NewsViewMore description={''} siteurl={this.props.siteurl} context={this.props.context} userid={undefined} onReadMoreClick={(onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)}></NewsViewMore>
-                                            ) :
-
-                                            null
+                {this.state.selectedValue == "layout_1" &&
+                  <RemoLayout1 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={""} onReadMoreClick={undefined} id={undefined}></RemoLayout1>
+                }
+                {this.state.selectedValue == "layout_2" &&
+                  <RemoLayout2 description={''} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={''} onReadMoreClick={undefined} id={undefined}></RemoLayout2>
                 }
               </section>
             </div>
             <div id="loader-Icon" className="loader-block" style={{ display: "none" }}>
-              <img  src={require("./ServiceProvider/Assets/Img/loader-new.gif")}  alt="loader" />
-              {/* <h1>Loader</h1> */}
+              <img src={require("./ServiceProvider/Assets/Img/loader-new.gif")} alt="loader" />
             </div>
-            {/* )} */}
+            {/* 
+            
+            */}
           </div>
         }
 
-        {this.state.showDropdown == true &&
+        {this.state.showLayout == true &&
           <>
             <header className='layout_header'>
               <div>
@@ -1735,46 +1197,24 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                 {this.state.layoutItems.map((item, key) => (
                   <div className={`SelectLayout cont-${key + 1}`} onClick={(e) => this.handleSelectChange(e, item.ID)}>
                     <div className="SElect-Layout-img">
-                      <img  src={item.layoutimg}   data-themekey="#" />
+                      <img src={item.layoutimg} data-themekey="#" />
                     </div>
                     <div className="LayoutText">{item.name}</div>
                   </div>
                 ))}
-                {/* <div className="SelectLayout cont-1">
-                  <div className="SElect-Layout-img">
-                    <img src={`${this.props.siteurl}/SiteAssets/img/layout%201.PNG`} data-themekey="#" />
-                  </div>
-                  <div className="LayoutText">Layout 1</div>
-                </div>
-                <div className="SelectLayout cont-2">
-                  <div className="SElect-Layout-img">
-                    <img src="#" data-themekey="#" />
-                  </div>
-                  <div className="LayoutText">Layout 2</div>
-                </div> */}
               </div>
             </div>
-            {/* <div>
-              <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-                <option value="">Select Layout</option>
-                {this.state.layoutItems.map((item) => (
-                  <option key={item.ID} value={item.ID}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div> */}
           </>
         }
 
-        {this.state.showButton == true &&
+        {this.state.showConfigure == true &&
           <div className="config-banner">
-            <img  src={require("./ServiceProvider/Assets/Img/bannerremoproduct.jpg")}   alt="Expert Consulting" data-themekey="#" className="config-image" />
+            <img src={require("./ServiceProvider/Assets/Img/bannerremoproduct.jpg")} alt="Expert Consulting" data-themekey="#" className="config-image" />
             <div className="config-banner-content">
-              <div className="config-left-side"><img  src={require("./ServiceProvider/Assets/Img/logo.png")}   className="config-logo" data-themekey="#" /></div>
+              <div className="config-left-side"><img src={require("./ServiceProvider/Assets/Img/logo.png")} className="config-logo" data-themekey="#" /></div>
               <div className="config-right-side">
                 <h2 className="config-head">Expert Consulting</h2><p className="config-subhead">From the world’s tallest building, The Burj Khalifa, to the HSBC tower in Hong Kong, and from the New Delhi Metro to Manchester Airport, Ducab is changing the way that energy is distributed around the</p>
-                <button onClick={() => this.showDropDown()}>Configure</button>
+                <button onClick={() => this.showLayout()}>Configure</button>
               </div>
             </div>
           </div>

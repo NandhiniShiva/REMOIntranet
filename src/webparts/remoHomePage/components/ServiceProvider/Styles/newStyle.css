@@ -2780,3 +2780,12 @@ div#loader-Icon img{
     padding-left: 12px !important;
     padding: 0px 5px;
 }
+
+/*------------04.03.25 updated css by preethi   edit button---------------*/
+
+button.add_mode img{
+    cursor: auto !important;
+}
+button.add_mode {
+    cursor: auto !important;
+}

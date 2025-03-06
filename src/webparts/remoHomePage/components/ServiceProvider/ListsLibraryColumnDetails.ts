@@ -476,3 +476,117 @@ export const DepartmentListDetails = [
         ]
     },
 ]
+
+export const LandingPageListDetails = [
+    {
+        name: "LayoutComponentsAllocationMaster",
+        columns: [
+            { columnName: "Title", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
+
+        ]
+    },
+    {
+        name: "DraftMaster",
+        columns: [
+            { columnName: "Title", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Component", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ComponentID", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Position", type: "addTextField", isRequired: false, isIndexed: false },
+
+        ]
+    },
+
+    {
+        name: "Content Editor Master",
+        columns: [
+            { columnName: "URL", type: "addUrl", isRequired: false, isIndexed: false },
+            { columnName: "Icon", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
+            {
+                columnName: "BelongsTo", type: "addLookup", targetListName: "Content Editor Master Category",
+                targetListColumn: "Title", isRequired: false
+                , isIndexed: false
+            },
+
+        ]
+    },
+
+    {
+        name: "Content Editor Master Category",
+        columns: [
+            { columnName: "IsActive", type: "addBoolean", isRequired: false },
+            { columnName: "AccessibleTo", type: "Person or Group", isRequired: false },
+        ]
+    },
+
+    {
+        name: "Logo Master",
+        columns: [
+            { columnName: "Logo", type: "addImageField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false },
+        ]
+    },
+    {
+        name: "NavigationsIDMaster",
+        columns: [
+            { columnName: "IDFor", type: "addTextField", isRequired: false },
+        ]
+    },
+    {
+        name: "Navigations",
+        columns: [
+            { columnName: "HoverOnIcon", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "HoverOffIcon", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "Is Active", type: "addBoolean", isRequired: false, isIndexed: false },
+            { columnName: "URL", type: "addMultilineText", isRequired: true, isIndexed: false },
+            {
+                columnName: "LinkMasterID", type: "addLookup", targetListName: "Quick Links",
+                targetListColumn: "Title", isRequired: true, isIndexed: false
+            }
+
+        ]
+    },
+    {
+        name: "Version Master",
+        columns: [
+
+        ]
+    },
+    {
+        name: "ViewsCountMaster",
+        columns: [
+            { columnName: "EmployeeName", type: "Person or Group", isRequired: false, isIndexed: false },
+            { columnName: "EmployeeEmail", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentPage", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "ContentID", type: "addNumberField", isRequired: false, isIndexed: false },
+            { columnName: "ViewedOn", type: "addDateField", isRequired: false, isIndexed: false },
+        ]
+    },
+
+    {
+        name: "Component Configuration Master",
+        columns: [
+            { columnName: "ComponentId", type: "addTextField", isRequired: false, isIndexed: false },
+        ]
+    },
+
+    {
+        name: "Portal CSS Configuration Master",
+        columns: [
+            { columnName: "PrimaryColorCode", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "SecondaryColorCode", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "Custom", type: "addMultilineText", isRequired: false, isIndexed: false },
+
+        ]
+    },
+
+
+
+
+];

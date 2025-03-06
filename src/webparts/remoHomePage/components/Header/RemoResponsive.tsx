@@ -11,7 +11,7 @@ import { sp } from '@pnp/sp/presets/all';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../Configuration';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-import "../ServiceProvider/Styles/newStyle.css";
+// import "../ServiceProvider/Styles/newStyle.css";
 
 
 let Navigationslist = listNames.Navigations;
@@ -100,7 +100,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
 
         // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
         // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
-        // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
+        SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
         // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
