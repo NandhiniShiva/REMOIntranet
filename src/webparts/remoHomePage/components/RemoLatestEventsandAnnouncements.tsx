@@ -92,7 +92,7 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
         .orderBy("Created", false)
         .top(1)
         .get();
-
+      debugger;
       if (items.length !== 0) {
         // Show the announcement section
         document.querySelectorAll('#if-annc-present').forEach((element) => {

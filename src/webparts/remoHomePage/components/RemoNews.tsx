@@ -210,7 +210,7 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
                   </h4>
                   <div className="prev-next">
                     <a href="#" onClick={this.previous} ><img src={require("./ServiceProvider/Assets/Img/previous.svg")}  alt="image" className="prev-img" /> </a>
-                    <a href="#" onClick={this.next}><img src={require("./ServiceProvider/Assets/Img/next-2.svg")} alt="image" className="next-img" /> </a>
+                    <a href="#" onClick={this.next}><img src={require("./ServiceProvider/Assets/Img/next.svg")} alt="image" className="next-img" /> </a>
                   </div>
                 </div>
                 <div className="section-part clearfix">

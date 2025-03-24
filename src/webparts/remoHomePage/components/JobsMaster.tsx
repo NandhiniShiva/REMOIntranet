@@ -204,7 +204,7 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
                                     </div>
                                 </div>
                             </div>
-                            <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} />
+                            <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} selectedComponents={undefined} />
 
                         </div>
                     </div>

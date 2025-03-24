@@ -929,6 +929,69 @@ export default class RemoLayout2 extends React.Component<IRemoHomePageProps, IRe
 
   }
 
+  public async DragandDropComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
+    // debugger;
+    event.preventDefault();
+    // var data: any;
+    // let updatedAvailableComponents: any[] = [];
+    // let updatedSelectedComponent: any = [];
+    // let existingItems = await sp.web.lists
+    //   .getByTitle(Draftmaster)
+    //   .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+    //   .get();
+    // if (existingItems.length > 0) {
+    //   // If an item exists for the position, update it
+    //   const itemId = existingItems[0].Id; // Get the item ID
+    //   const itemName = existingItems[0].Component;
+    //   await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
+
+    //   updatedSelectedComponent = Object.fromEntries(
+    //     Object.entries(this.state.selectedComponents).filter(
+    //       ([, item]: [string, { name: string; id: string }]) => item.name !== itemName)
+    //     // ([key, item]) => item.name !== itemName)
+    //   );
+
+    // }
+
+    // await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+    //   if (resp.length != 0) {
+    //     resp.forEach((items) => {
+    //       if (items.Title == value) {
+    //         data = items;
+    //       }
+    //     })
+    //   }
+    //   if (data) {
+    //     updatedAvailableComponents = [...this.state.AvailableComponents, data]; // Include new data
+    //     // Remove duplicates and sort by ComponentId in ascending order
+    //     updatedAvailableComponents = updatedAvailableComponents
+    //       .filter((value, index, self) => index === self.findIndex((t) => t.ComponentId === value.ComponentId)).sort((a, b) => a.ComponentId - b.ComponentId);
+    //     // updatedAvailableComponents.sort((a, b) => a.ComponentId - b.ComponentId); // Sort by componentid in ascending order
+    //     if (Selectedcomponents.includes(data.ComponentId)) {
+    //       Selectedcomponents = Selectedcomponents.filter((id: any) => id !== data.ComponentId);
+    //       console.log("Item removed from Selectedcomponents:", data.ComponentId);
+    //     }
+
+    //   }
+    //   const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
+    //     index === (Position - 1) ? true : item
+    //   );
+    //   this.setState({
+    //     AvailableComponents: updatedAvailableComponents,
+    //     selectedComponents: updatedSelectedComponent,
+    //     isInitialscreen: updatedIsInitialscreen,
+    //   });
+    // });
+
+    // Swal.fire({
+    //   title: 'Components removed successfully',
+    //   icon: "success",
+    //   showConfirmButton: true,
+    // })
+
+
+  }
+
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position]?.name;
     // const locationID = `Location-${position}`
@@ -944,6 +1007,7 @@ export default class RemoLayout2 extends React.Component<IRemoHomePageProps, IRe
                 <img src={require("./ServiceProvider/Assets/Img/remove.svg")} alt="remove-btn" />
 
               </button>
+              <button className="Drag_Btn" onClick={(e) => this.DragandDropComponent(e, componentName, position)} > Drag and Drop </button>
             </>
           }
           <Component {...this.props} {...props} />

@@ -225,7 +225,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async checkUserAdmin() {
     try {
       // Fetch all site users
-
       const CurrentUserAdmin = await sp.web.currentUser.get()
         .then(user => user.IsSiteAdmin);
       this.setState({
@@ -1021,7 +1020,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       }
 
       // console.log("Fetching existing items in DraftMaster...");
-      const draftMasterItems = await sp.web.lists.getByTitle("DraftMaster")
+      const draftMasterItems = await sp.web.lists.getByTitle(Draftmaster)
         .items.filter(`Title eq '${this.state.selectedValue}'`)
         .get();
 
@@ -1060,13 +1059,68 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
+  public handleSelectedComponents(LayoutData: any) {
+    console.log("Details", LayoutData.AllocatedComponentsDetails);
+    this.setState({
+      selectedComponents: LayoutData.AllocatedComponentsDetails,      // showDropdown: false
+    })
+
+  }
+
 
   public async draftHandler(event: any) {
     event.preventDefault();
-    await this.handleDraft();
+    // await this.handleDraft();
+    // debugger;
+    // console.log(this.props.selectedComponents);
+
+    await this.saveAsDraft();
+
     // console.log(this.state.selectedComponents);
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
     window.location.href = url;
+  }
+  public async saveAsDraft() {
+    try {
+      // debugger;
+      let ComponentDetails = this.state.selectedComponents
+      Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
+        console.log(item);
+        var value = item.name;
+        var selectedComponent = item.id;
+        // var position: any= key;
+        const existingItems = await sp.web.lists
+          .getByTitle(Draftmaster)
+          .items.filter(`Position eq '${position}'`)
+          .get();
+
+        if (existingItems.length > 0) {
+          // If an item exists for the position, update it
+          const itemId = existingItems[0].Id; // Get the item ID
+          await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).update({
+            Title: this.state.selectedValue,
+            Component: value,
+            ComponentID: selectedComponent,
+          });
+
+          console.log(`Item at position ${position} updated successfully.`);
+        } else {
+          // If no item exists, create a new one
+          await sp.web.lists.getByTitle(Draftmaster).items.add({
+            Title: this.state.selectedValue,
+            Component: value,
+            ComponentID: selectedComponent,
+            Position: String(position),
+          });
+
+          console.log(`New item created at position ${position}.`);
+        }
+      })
+      // Fetch the item for the specific position
+
+    } catch (error) {
+      console.error("Error handling component allocation:", error);
+    }
   }
 
   public async publishHandler(event: any) {
@@ -1117,7 +1171,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public render(): React.ReactElement<IRemoHomePageProps> {
-    
+
     return (
       //Layout 1
       <>
@@ -1168,10 +1222,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               </div>
               <section>
                 {this.state.selectedValue == "layout_1" &&
-                  <RemoLayout1 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={""} onReadMoreClick={undefined} id={undefined}></RemoLayout1>
+                  <RemoLayout1 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={""} onReadMoreClick={undefined} id={undefined} selectedComponents={(selectedComponents: any) => this.handleSelectedComponents(selectedComponents)}  ></RemoLayout1>
                 }
                 {this.state.selectedValue == "layout_2" &&
-                  <RemoLayout2 description={''} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={''} onReadMoreClick={undefined} id={undefined}></RemoLayout2>
+                  <RemoLayout2 description={''} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={''} onReadMoreClick={undefined} id={undefined} selectedComponents={undefined}></RemoLayout2>
                 }
               </section>
             </div>

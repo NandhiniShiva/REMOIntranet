@@ -100,6 +100,8 @@ export interface IRemoHomePageState {
   isSearchActive: boolean,
   itemID: any,
   SiteLogo: string;
+  draggedItemKey: any,
+
 
 }
 
@@ -137,6 +139,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       isSearchActive: false,
       itemID: null,
       SiteLogo: "",
+      draggedItemKey: null,
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
@@ -146,6 +149,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   public async componentDidMount() {
     // this.checkEditMode();
     // await this.checkUserAdmin();
+    await this.getCurrentUser();
     await this.GetAllavailablecomponents();
     await this.getAllocatedComponents();
     document.addEventListener("mousedown", function (event: any) {
@@ -248,6 +252,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           );
         }
       });
+      // debugger;
 
       // Update the state with the aggregated changes
       this.setState({
@@ -340,11 +345,17 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       const url: URL = new URL(window.location.href);
       console.log(url);
 
-      const reactHandler = this;
-      User = reactHandler.props.userid;
+      // const reactHandler = this;
+      // User = reactHandler.props.userid;
+      // debugger;
       const profile = await pnp.sp.profiles.myProperties.get();
       UserEmail = profile.Email;
-
+      let curruser = await sp.web.currentUser.get().then(function (res: any) {
+        // let CurrentUserEmail = res.Email
+        User = res.Id
+      }).then(() => {
+        console.log(User, curruser);
+      })
       // Check if the UserProfileProperties collection exists and has the Department and Designation properties
       if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
@@ -489,7 +500,9 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         } else {
           console.log(`List '${ComponentallocationList}' already exists.`);
         }
-        await this.handleComponentAllocation(ComponentName, selectedComponent.ComponentId, position);
+        // debugger;
+        await this.handleSelectedComponents(this.state.selectedComponents)
+        // await this.handleComponentAllocation(ComponentName, selectedComponent.ComponentId, position);
 
         console.log("Item successfully added to the list.");
       } else {
@@ -501,9 +514,56 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       console.error("An error occurred:", error);
     }
   }
-
-  public async handleComponentAllocation(value: string, selectedComponent: any, position: number) {
+  public handleSelectedComponents(data: {}) {
+    // debugger;
+    this.props.selectedComponents({ AllocatedComponentsDetails: data })
+  }
+  public async saveAsDraft() {
     try {
+      // debugger;
+      let ComponentDetails = this.state.selectedComponents
+      Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
+        console.log(item);
+        var value = item.name;
+        var selectedComponent = item.id;
+        // var position: any= key;
+        const existingItems = await sp.web.lists
+          .getByTitle(Draftmaster)
+          .items.filter(`Position eq '${position}'`)
+          .get();
+
+        if (existingItems.length > 0) {
+          // If an item exists for the position, update it
+          const itemId = existingItems[0].Id; // Get the item ID
+          await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).update({
+            Title: this.state.selectedValue,
+            Component: value,
+            ComponentID: selectedComponent,
+          });
+
+          console.log(`Item at position ${position} updated successfully.`);
+        } else {
+          // If no item exists, create a new one
+          await sp.web.lists.getByTitle(Draftmaster).items.add({
+            Title: this.state.selectedValue,
+            Component: value,
+            ComponentID: selectedComponent,
+            Position: String(position),
+          });
+
+          console.log(`New item created at position ${position}.`);
+        }
+      })
+      // Fetch the item for the specific position
+
+    } catch (error) {
+      console.error("Error handling component allocation:", error);
+    }
+  }
+
+  public async handleComponentAllocation(value: string, selectedComponent: string, position: any) {
+    try {
+
       // Fetch the item for the specific position
       const existingItems = await sp.web.lists
         .getByTitle(Draftmaster)
@@ -526,7 +586,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           Title: this.state.selectedValue,
           Component: value,
           ComponentID: selectedComponent,
-          Position: position,
+          Position: String(position),
         });
 
         console.log(`New item created at position ${position}.`);
@@ -875,23 +935,28 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     var data: any;
     let updatedAvailableComponents: any[] = [];
     let updatedSelectedComponent: any = [];
-    let existingItems = await sp.web.lists
-      .getByTitle(Draftmaster)
-      .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
-      .get();
-    if (existingItems.length > 0) {
-      // If an item exists for the position, update it
-      const itemId = existingItems[0].Id; // Get the item ID
-      const itemName = existingItems[0].Component;
-      await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
+    // let existingItems = await sp.web.lists
+    //   .getByTitle(Draftmaster)
+    //   .items.filter(`Position eq '${Position}' and Title eq '${this.state.selectedValue}'`)
+    //   .get();
+    // if (existingItems.length > 0) {
+    //   // If an item exists for the position, update it
+    //   // const itemId = existingItems[0].Id; // Get the item ID
+    //   const itemName = existingItems[0].Component;
+    //   // await sp.web.lists.getByTitle(Draftmaster).items.getById(itemId).recycle();
 
-      updatedSelectedComponent = Object.fromEntries(
-        Object.entries(this.state.selectedComponents).filter(
-          ([, item]: [string, { name: string; id: string }]) => item.name !== itemName)
-        // ([key, item]) => item.name !== itemName)
-      );
+    //   updatedSelectedComponent = Object.fromEntries(
+    //     Object.entries(this.state.selectedComponents).filter(
+    //       ([, item]: [string, { name: string; id: string }]) => item.name !== itemName)
+    //     // ([key, item]) => item.name !== itemName)
+    //   );
 
-    }
+    // }
+    updatedSelectedComponent = Object.fromEntries(
+      Object.entries(this.state.selectedComponents).filter(
+        ([, item]: [string, { name: string; id: string }]) => item.name !== value)
+      // ([key, item]) => item.name !== itemName)
+    );
 
     await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
       if (resp.length != 0) {
@@ -934,7 +999,9 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position]?.name;
+    // const ComponentID = this.state.selectedComponents[position]?.id;
     // const locationID = `Location-${position}`
+    console.log(User);
 
     // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
@@ -945,11 +1012,14 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
               <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
                 {/* <img src={`${this.props.siteurl}/SiteAssets/img/remove.svg`} alt="remove-btn" /> */}
                 <img src={require("./ServiceProvider/Assets/Img/remove.svg")} alt="remove-btn" />
-
               </button>
             </>
           }
-          <Component {...this.props} {...props} />
+          {/* <div draggable={true} onDragStart={(e) => this.handleDragStart(e, position)}
+            onDragOver={(e) => this.handleDragOver(e)}
+            onDrop={(e) => this.handleDrop(e, position)}> */}
+          <Component {...this.props} {...props} draggable={false} />
+          {/* </div> */}
         </>
       );
     };
@@ -983,7 +1053,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         return renderWithRemoveButton(RemoClimate, { description: "" });
 
       case "Manange Quick Links":
-        return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+        return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick), userid: User });
 
       case "Events and Announcements":
         return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
@@ -1061,7 +1131,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public async draftHandler(event: any) {
     event.preventDefault();
-    await this.handleDraft();
+    await this.saveAsDraft();
     // console.log(this.state.selectedComponents);
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?';
     window.location.href = url;
@@ -1113,6 +1183,108 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       });
     }
   }
+
+  public handleDragStart = (e: React.DragEvent<HTMLDivElement>, key: any) => {
+    // debugger;
+    e.dataTransfer.setData("key", key);
+    this.setState({ draggedItemKey: key });
+  };
+
+  // Allow dropping
+  handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+  handleDrop = (e: React.DragEvent<HTMLDivElement>, dropKey: any) => {
+    e.preventDefault();
+    setTimeout(() => {
+      // debugger;
+      // dropKey = "2"; // Example Drop Key
+      const draggedKey = this.state.draggedItemKey;
+
+      // const draggedKey = "1"; // Example Dragged Key
+
+      if (draggedKey === null || draggedKey === dropKey) return;
+      console.log("Before swap:", this.state.selectedComponents);
+
+      // Convert object into array of [key, value] pairs
+      // const entries = Object.entries(this.state.selectedComponents); // [["1", { name: "...", id: "..." }], ...]
+
+      // Find indices of dragged and dropped items
+      // const draggedIndex = entries.findIndex(([key]) => key === draggedKey);
+      // const dropIndex = entries.findIndex(([key]) => key === dropKey);
+      if (draggedKey === dropKey) return;
+
+      this.setState((prevState) => {
+        const updatedComponents = { ...prevState.selectedComponents };
+        let updatedIsInitialscreen = [...this.state.isInitialscreen]
+        // Check if dropKey exists in selectedComponents
+        if (!(dropKey in updatedComponents)) {
+          // Move draggedKey value to dropKey
+          updatedComponents[dropKey] = updatedComponents[draggedKey];
+
+          // Remove the draggedKey
+          delete updatedComponents[draggedKey];
+          updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
+            index === draggedKey - 1 ? true : screen
+          );
+          updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
+            index === dropKey - 1 ? false : screen
+          );
+          this.updateDraftMasterList(draggedKey, dropKey, "DataUnavailable");
+        } else {
+          // Swap the values of draggedKey and dropKey
+          const temp = updatedComponents[draggedKey];
+          updatedComponents[draggedKey] = updatedComponents[dropKey];
+          updatedComponents[dropKey] = temp;
+          this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
+
+        }
+        return { selectedComponents: updatedComponents, isInitialscreen: updatedIsInitialscreen };
+      });
+    }, 5000);
+  };
+
+
+  // Update SharePoint List
+  public updateDraftMasterList = async (dragKey: any, dropKey: any, data: any) => {
+    try {
+      // Fetch the items for the dragged and dropped positions
+      // if (dropKey != null) {
+      const draggedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
+        .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dragKey}'`)
+        .get();
+      if (draggedItemResponse.length === 0) {
+        console.error("One or both items not found.");
+        return;
+      }
+      const draggedItem = draggedItemResponse[0];
+      // Swap positions
+      await sp.web.lists.getByTitle("DraftMaster").items.getById(draggedItem.Id).update({
+        Position: String(dropKey)
+      });
+      // }
+      // if (dragKey != null) {
+      if (data == "Dataavailable") {
+        const droppedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
+          .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dropKey}'`)
+          .get();
+        if (droppedItemResponse.length === 0) {
+          console.error("One or both items not found.");
+          return;
+        }
+        // Get the item IDs
+        const droppedItem = droppedItemResponse[0];
+        await sp.web.lists.getByTitle("DraftMaster").items.getById(droppedItem.Id).update({
+          Position: String(dragKey)
+        });
+      }
+      // }
+      console.log(`Swapped Position ${dragKey} ↔ ${dropKey} successfully`);
+    } catch (error) {
+      console.error("Error swapping positions:", error);
+    }
+  };
+
 
 
 
@@ -1172,6 +1344,32 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         </>
       )
     };
+
+    const DraggableContainer = ({ position, className }: { position: any; className: string }) => (
+      <div
+        draggable={true}
+        onDragStart={(e) => this.handleDragStart(e, position)}
+        onDragOver={(e) => this.handleDragOver(e)}
+        onDrop={(e) => this.handleDrop(e, position)}
+      >
+        <div className={className}>
+          {this.state.isInitialscreen[position - 1] ? (
+            Components.filter((item) => item.Position === position).map((item, key) => (
+              <SearchElement
+                key={key}
+                DOMID={`search-${key}`}
+                SelectID={item.selectId}
+                ButtonId={item.buttonId}
+                ComponentIndex={item.componentIndex}
+              />
+            ))
+          ) : (
+            this.state.selectedComponents[position] && this.renderComponent(position)
+          )}
+        </div>
+      </div>
+    );
+
     return (
       //Layout 1
       <>
@@ -1181,213 +1379,40 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
               <div className="section-right">
                 <div className="banner-ceo-message">
                   <div className="row">
-                    {this.state.isInitialscreen[0] == true ?
-                      <div className="col-md-8 Location-1">
-                        {Components.map((item, key) => {
-                          if (item.Position == 1) {
-                            return (
-                              <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                            )
-                          }
-                        })}
-                      </div>
-                      :
-                      <div className="col-md-8 Location-1" >
-                        {this.state.selectedComponents[1] && this.renderComponent(1)}
-                      </div>
-                    }
-
-                    {this.state.isInitialscreen[1] == true ?
-                      <div className="col-md-4 Location-2">
-                        {Components.map((item, key) => {
-                          if (item.Position == 2) {
-                            return (
-                              <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                            )
-                          }
-                        })}
-                      </div>
-                      :
-                      <div className="col-md-4 Location-2" >
-                        {this.state.selectedComponents[2] && this.renderComponent(2)}
-                      </div>
-                    }
+                    <DraggableContainer position={1} className={`col-md-8 Location-1 ${this.state.isInitialscreen[1] && this.state.editMode != "edit" ? "empty" : ""}`} />
+                    <DraggableContainer position={2} className={`col-md-4 Location-2 ${this.state.isInitialscreen[2] && this.state.editMode != "edit" ? "empty" : ""}`}  />
                   </div>
 
                 </div>
                 {/* //Quicklinks- remo navigation */}
-                {this.state.isInitialscreen[2] == true ?
-                  <div className="col-md-12 Location-3" >
-                    {Components.map((item, key) => {
-                      if (item.Position == 3) {
-                        return (
-                          <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                        )
-                      }
-                    })}
-                  </div>
-                  :
-                  <div className="col-md-12 Location-3" >
-                    {this.state.selectedComponents[3] && this.renderComponent(3)}
-                  </div>
-                }
-
+                <DraggableContainer position={3} className={`col-md-12 Location-3 ${this.state.isInitialscreen[3] && this.state.editMode != "edit"? "empty" : ""}`} />
+               
                 {/* Events(Mymeetings) Calendar and News Section */}
                 <div className="row section_bottom">
                   <div className="col-md-12">
                     <div className="events-calendar col-md-8">
-                      {this.state.isInitialscreen[3] == true ?
-                        <div className="Location-4 col-md-12" >
-                          {Components.map((item, key) => {
-                            if (item.Position == 4) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className="Location-4 col-md-12" >
-                          {this.state.selectedComponents[4] && this.renderComponent(4)}
-                        </div>
-                      }
+                      <DraggableContainer position={4} className={`col-md-12 Location-4 ${this.state.isInitialscreen[4] && this.state.editMode != "edit" ? "empty" : ""}`} />
                       {/* News */}
-                      {this.state.isInitialscreen[4] == true ?
-                        <div className="Location-5 col-md-12" >
-                          {Components.map((item, key) => {
-                            if (item.Position == 5) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className="Location-5 col-md-12" >
-                          {this.state.selectedComponents[5] && this.renderComponent(5)}
-                        </div>
-                      }
-
+                      <DraggableContainer position={5} className={`col-md-12 Location-5 ${this.state.isInitialscreen[5] && this.state.editMode != "edit" ? "empty" : ""}`} />
                       <div className="latest-news-announcements" id="latest-news-announcements">
                         {/* events and announcements */}
-                        <div>
-                          {this.state.isInitialscreen[9] == true ?
-                            // <>
-                            <div className="col-md-12 Location-10">
-                              {Components.map((item, key) => {
-                                if (item.Position == 10) {
-                                  return (
-                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <div className="col-md-12 Location-10">
-                              {this.state.selectedComponents[10] && this.renderComponent(10)}
-                            </div>
-                          }
-                        </div>
+                        <DraggableContainer position={10} className={`col-md-12 Location-10 ${this.state.isInitialscreen[10] && this.state.editMode != "edit" ? "empty" : ""}`} />
                       </div>
 
                       <div id="social-and-gallery" className="images-social">
                         <div className="row row-res">
-                          {this.state.isInitialscreen[10] == true ?
-                            <div className="col-md-6 Location-11">
-                              {Components.map((item, key) => {
-                                if (item.Position == 11) {
-                                  return (
-                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <div className="col-md-6 Location-11">
-                              {this.state.selectedComponents[11] && this.renderComponent(11)}
-                            </div>
-                          }
-                          {this.state.isInitialscreen[11] == true ?
-                            <div className="col-md-6 Location-12">
-                              {Components.map((item, key) => {
-                                if (item.Position == 12) {
-                                  return (
-                                    <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                                  )
-                                }
-                              })}
-                            </div>
-                            :
-                            <div className="col-md-6 Location-12">
-                              {this.state.selectedComponents[12] && this.renderComponent(12)}
-                            </div>
-                          }
+                          <DraggableContainer position={11} className={`col-md-6 Location-11 ${this.state.isInitialscreen[11] && this.state.editMode != "edit" ? "empty" : ""}`} />
+                          <DraggableContainer position={12} className={`col-md-6 Location-12 ${this.state.isInitialscreen[12] && this.state.editMode != "edit" ? "empty" : ""}`} />
                         </div>
                       </div>
                     </div>
 
                     {/* Birthday, Climate, Quicklinks, Recentfile */}
                     <div className="col-md-4 ">
-                      {this.state.isInitialscreen[5] == true ?
-                        <div className='Location-6 col-md-12'>
-                          {Components.map((item, key) => {
-                            if (item.Position == 6) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className='Location-6 col-md-12'>
-                          {this.state.selectedComponents[6] && this.renderComponent(6)}
-                        </div>
-                      }
-                      {this.state.isInitialscreen[6] == true ?
-                        <div className='Location-7 col-md-12'>
-                          {Components.map((item, key) => {
-                            if (item.Position == 7) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className='Location-7 col-md-12'>
-                          {this.state.selectedComponents[7] && this.renderComponent(7)}
-                        </div>
-                      }
-                      {this.state.isInitialscreen[7] == true ?
-                        <div className='Location-8 col-md-12' >
-                          {Components.map((item, key) => {
-                            if (item.Position == 8) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className='Location-8 col-md-12'>
-                          {this.state.selectedComponents[8] && this.renderComponent(8)}
-                        </div>
-                      }
-                      {this.state.isInitialscreen[8] == true ?
-                        <div className="col-md-12 Location-9">
-                          {Components.map((item, key) => {
-                            if (item.Position == 9) {
-                              return (
-                                <SearchElement DOMID={`search-${key}`} SelectID={`${item.selectId}`} ButtonId={`${item.buttonId}`} ComponentIndex={`${item.componentIndex}`} />
-                              )
-                            }
-                          })}
-                        </div>
-                        :
-                        <div className="col-md-12 Location-9">
-                          {this.state.selectedComponents[9] && this.renderComponent(9)}
-                        </div>
-                      }
+                      <DraggableContainer position={6} className={`col-md-12 Location-6 ${this.state.isInitialscreen[6] && this.state.editMode != "edit" ? "empty" : ""}`} />
+                      <DraggableContainer position={7} className={`col-md-12 Location-7 ${this.state.isInitialscreen[7] && this.state.editMode != "edit" ? "empty" : ""}`} />
+                      <DraggableContainer position={8} className={`col-md-12 Location-8 ${this.state.isInitialscreen[8] && this.state.editMode != "edit" ? "empty" : ""}`} />
+                      <DraggableContainer position={9} className={`col-md-12 Location-9 ${this.state.isInitialscreen[9] && this.state.editMode != "edit" ? "empty" : ""}`} />
                     </div>
 
                   </div>
@@ -1459,7 +1484,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
                                       null
           }
-        </section>
+        </section >
       </>
     );
   }

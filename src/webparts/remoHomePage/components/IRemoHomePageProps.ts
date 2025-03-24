@@ -18,7 +18,8 @@ export interface IRemoHomePageProps {
   createList: boolean;
   name: string;
   onReadMoreClick: any;
-  id: any
+  id: any,
+  selectedComponents: any;
 
 
 }

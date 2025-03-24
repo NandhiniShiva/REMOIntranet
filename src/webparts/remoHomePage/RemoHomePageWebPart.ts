@@ -18,7 +18,8 @@ export interface IRemoHomePageWebPartProps {
   createList: boolean;
   listName: string;
   onReadMoreClick: any;
-  id: any
+  id: any,
+  selectedComponents: any
 
 
 }
@@ -54,7 +55,8 @@ export default class RemoHomePageWebPart extends BaseClientSideWebPart<IRemoHome
         createList: this.properties.createList,
         name: this.properties.listName,
         onReadMoreClick: this.properties.onReadMoreClick,
-        id: this.properties.id
+        id: this.properties.id,
+        selectedComponents: this.properties.selectedComponents
       }
     );
 

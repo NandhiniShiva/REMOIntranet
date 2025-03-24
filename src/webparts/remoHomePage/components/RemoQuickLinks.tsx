@@ -22,6 +22,7 @@ export interface IQuickLinkState {
 export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, IQuickLinkState, {}> {
   public constructor(props: IRemoHomePageProps) {
     super(props);
+    // alert(this.props.userid)
     this.state = {
       MyQuickLinksPrefference: [],
       isDataAvailable: false
@@ -41,19 +42,84 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
   }
 
+  public async fetchAllUsersQuickLinks() {
+    try {
+      const items = await sp.web.lists
+        .getByTitle("UsersQuickLinks")
+        .items.select(
+          "ID",
+          "Title",
+          "Order0",
+          "ImageSrc",
+          "HoverImageSrc",
+          "URL",
+          "SelectedQuickLinks/ID",  // Fetch lookup ID
+          "SelectedQuickLinks/Title", // Fetch lookup title
+          "Created",
+          "Modified",
+          "Author/ID",  // Fetch created by (person field)
+          "Editor/Title"   // Fetch modified by (person field)
+        )
+        .expand("SelectedQuickLinks", "Author", "Editor")
+        .orderBy("Order0", true) // Order by Order0 in ascending order
+        .get();
+
+      // Displaying the fetched items in the console
+      console.log("Retrieved items:", items);
+
+      // Display details of each item (example output)
+      items.forEach(item => {
+        console.log(`ID: ${item.ID}`);
+        console.log(`Title: ${item.Title}`);
+        console.log(`Order: ${item.Order0}`);
+        console.log(`Image Source: ${item.ImageSrc}`);
+        console.log(`Hover Image: ${item.HoverImageSrc}`);
+        console.log(`URL: ${item.URL}`);
+        console.log(`Selected Quick Links ID: ${item.SelectedQuickLinks?.ID}`);
+        console.log(`Selected Quick Links Title: ${item.SelectedQuickLinks?.Title}`);
+        console.log(`Created By: ${item.Author?.Title}`);
+        console.log(`Modified By: ${item.Editor?.Title}`);
+        console.log(`Created Date: ${item.Created}`);
+        console.log(`Modified Date: ${item.Modified}`);
+      });
+
+    } catch (error) {
+      console.error("Error fetching data from UsersQuickLinks list:", error);
+    }
+  }
+
+
+
   public async getcurrentusersQuickLinks() {
     try {
       const { userid: UserID } = this.props;
       // debugger;
+      // this.fetchAllUsersQuickLinks();
+
+
+
+      // debugger;
       // Fetch user-specific quick links and active quick links concurrently
       const [userQuickLinks, activeQuickLinks] = await Promise.all([
         sp.web.lists
-          .getByTitle(UsersQuickLinkslist)
-          .items.select("ID", "SelectedQuickLinks/Title", "URL", "ImageSrc", "HoverImageSrc", "Order0", "SelectedQuickLinks/Id", "Author/Id")
+          .getByTitle("UsersQuickLinks")
+          .items.select(
+            "ID",
+            "Title",
+            "Order0",
+            "ImageSrc",
+            "HoverImageSrc",
+            "URL",
+            "SelectedQuickLinks/ID",  // Fetch lookup ID
+            "SelectedQuickLinks/Title", // Fetch lookup title
+            "Created",
+            "Modified",
+            "Author/ID",  // Fetch created by (person field)
+            "Editor/Title"   // Fetch modified by (person field)
+          )
           .filter(`Author/Id eq '${UserID}'`)
-          .expand("SelectedQuickLinks", "Author")
-          .top(5)
-          .orderBy("Order0", true)
+          .expand("SelectedQuickLinks", "Author", "Editor")
+          .orderBy("Order0", true) // Order by Order0 in ascending order
           .get(),
         sp.web.lists
           .getByTitle(QuickLinkslist)
@@ -67,7 +133,7 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
       // Filter user quick links to only include active ones
       const updatedQuickLinks = userQuickLinks.filter(item =>
-        activeQuickLinkIds.has(item.SelectedQuickLinks.Id)
+        activeQuickLinkIds.has(item.SelectedQuickLinks.ID)
       );
 
       // Update the state with the filtered quick links

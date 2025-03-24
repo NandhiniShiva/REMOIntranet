@@ -238,7 +238,7 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
                 </div>
 
               </div>
-              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} onReadMoreClick={null} id={null} />
+              <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={this.props.userid} createList={false} name={''} onReadMoreClick={null} id={null} selectedComponents={undefined} />
 
             </div>
           </div>

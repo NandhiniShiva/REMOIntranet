@@ -9,7 +9,7 @@ export class ListCreation {
     public async createSharePointLists(componentListName: string) {
         try {
             console.log("List creation process started...");
-
+            // debugger;
             // Find the list details based on the provided name
             const listDetails = ListLibraryColumnDetails.find(
                 (list) => list.name.toLowerCase() === componentListName.toLowerCase()
@@ -88,8 +88,8 @@ export class ListCreation {
                             await sp.web.lists.getByTitle(name).fields.addBoolean(column.columnName).then(async () => {
                                 await sp.web.lists.getByTitle(name).fields.getByTitle(column.columnName).update({
                                     Required: column.isRequired,
-                                    Indexed: column.isIndexed
-
+                                    Indexed: column.isIndexed,
+                                    DefaultFormula: "=FALSE"
                                 });
                             });
                             console.log(`Column '${column.columnName}' added as Boolean.`);
