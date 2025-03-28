@@ -20,8 +20,6 @@ export interface IRemoHomePageProps {
   onReadMoreClick: any;
   id: any,
   selectedComponents: any;
-
-
 }
 export interface IWeatherCurrencyProps {
   description: string;

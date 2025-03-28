@@ -3,57 +3,22 @@ import styles from './RemoHomePage.module.scss';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
 import * as $ from 'jquery';
 import GlobalSideNav from '../components/Header/GlobalSideNav';
-// import RemoResponsive from '../components/Header/RemoResponsive';
-// import RemoHeroBanner from './RemoHeroBanner';
-// import RemoCEOMessage from './RemoCEOMessage';
-// import RemoNavigations from './RemoNavigations';
-// import RemoMyMeetings from './RemoMyMeetings';
-// import RemoNews from './RemoNews';
-// import RemoLatestEventsandAnnouncements from './RemoLatestEventsandAnnouncements';
-// import RemoImagesandVideos from './RemoImagesandVideos';
-// import RemoClimate from './RemoClimate';
-// import RemoBirthday from './RemoBirthday';
-// import RemoQuickLinks from './RemoQuickLinks';
-// import RemoRecentFiles from './RemoRecentFiles';
-// import RemoSocialMedia from './RemoSocialMedia';
-// import Footer from './Footer/Footer';
 import RemoLayout1 from './RemoLayout1';
 import RemoLayout2 from './RemoLayout2';
 
 import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
 import { ChoiceFieldFormatType, FieldUserSelectionMode, sp, UrlFieldFormatType } from "@pnp/sp/presets/all";
-// import { sp, } from "@pnp/sp/presets/all";
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 import { LayoutsDetails } from './ServiceProvider/Layoutconfiguration';
-// import { PositionDetails } from './ServiceProvider/PositionConfiguration';
 import { LandingPageListDetails } from './ServiceProvider/ListsLibraryColumnDetails';
 import { listNames } from '../Configuration';
-// import CeoMessageRm from './CeoMessageReadMore';
-// import AnnouncementsRm from './AnnouncementsRm';
-// import AnnouncementsVm from './AnnouncementsVm';
-// import BirthdayRm from './BirthdayRm';
-// import DeptGalleryGridView from './DeptGalleryGridView';
-// import DeptGalleryViewMore from './DeptGalleryViewMore';
-// import EventsViewMore from './EventsViewMore';
-// import GalleryGridView from './GalleryGridView';
-// import GalleryViewMore from './GalleryViewMore';
-// import HeroBannerRm from './HeroBannerReadmore';
-// import HeroBannerViewMore from './HeroBannerViewMore';
-// import NewsReadMore from './NewsReadMore';
-// import NewsViewMore from './NewsViewMore';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 import Swal from 'sweetalert2';
-// import "../components/ServiceProvider/Styles/newStyle.css"
 import "../components/ServiceProvider/Styles/Responsive.css"
 import '../components/ServiceProvider/Styles/SPNativeStyleOverriding.css'
 import '../components/ServiceProvider/Styles/Style.css'
-// import {Images} from '../components/ServiceProvider/Images';
-
-
-// console.log(Images);
-
 
 sp.setup({
   sp: {
@@ -99,7 +64,6 @@ export interface IRemoHomePageState {
   ceoMessegeID: any;
   isCurrentUserAdmin: boolean;
   editMode: any
-  isEditFalse: boolean,
   isSearchActive: boolean,
   itemID: any,
   SiteLogo: string;
@@ -119,7 +83,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       isCreatingLists: false,
       loadContent: false,
       currentList: "",
-      showConfigure: true,
+      showConfigure: false,
       showLayout: false,
       showHomepage: false,
       selectedValue: null,
@@ -134,7 +98,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       ceoMessegeID: null,
       isCurrentUserAdmin: false,
       editMode: "",
-      isEditFalse: true,
       isSearchActive: false,
       itemID: null,
       SiteLogo: "",
@@ -156,20 +119,45 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     document.querySelectorAll('#spLeftNav,#sp-appBar,#spSiteHeader,#SuiteNavWrapper,#spCommandBar,#CommentsWrapper, #spSiteHeader').forEach(function (element: any) {
       element.style.display = 'none';
     });
+    // this.setState({ showConfigure: true })
     await this.checkEditMode();
+    await this.getCurrentUser();
+    await this.checkUserAdmin();
     await this.CheckalreadyConfigured();
     await this.BindPlaceholderLogo();
     await this.loaderInProgress();
-    this.checkUserAdmin();
   }
 
   public checkEditMode() {
     const url: any = new URL(window.location.href);
     const mode = url.searchParams.get("Mode");
     this.setState({
-      editMode: mode
+      editMode: mode,
     })
   }
+   public async getCurrentUser() {
+      try {
+        const url: URL = new URL(window.location.href);
+        console.log(url);
+        const profile = await pnp.sp.profiles.myProperties.get();
+        UserEmail = profile.Email;
+        let curruser = await sp.web.currentUser.get().then(function (res: any) {
+          // let CurrentUserEmail = res.Email
+          User = res.Id
+        }).then(() => {
+          console.log(User, curruser);
+        })
+        // Check if the UserProfileProperties collection exists and has the Department and Designation properties
+        if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+          const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+          const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
+          console.log(departmentProperty, designationProperty);
+  
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    }
   public async CheckalreadyConfigured() {
     try {
       // Check if the new layout already exists
@@ -189,33 +177,35 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         .catch((err) => {
           console.error("Error fetching current user details:", err);
         });
-      await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
-        if (response.length != 0) {
-          response.forEach(item => {
-            if (item.IsActive == true) {
+        await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
+          if (response.length !== 0) {
+            // Check if at least one item has IsActive set to true
+            const activeItem = response.find(item => item.IsActive === true);
+        
+            if (activeItem) {
               this.setState(
                 {
-                  selectedValue: item.Title,
+                  selectedValue: activeItem.Title,
                   showConfigure: false,
                   showLayout: false,
                   showHomepage: true,
                 },
                 async () => {
-                  // await this.loaderInProgress();
                   await this.getLayout();
                   await this.setActiveLayout(this.state.selectedValue);
-                  // await this.GetAllavailablecomponents();
-                  // await this.getAllocatedComponents();
                   await this.HideInProgress();
                 }
               );
+            } else {
+              // No active items, show the configuration
+              this.setState({ showConfigure: true });
             }
-
-          });
-
-        }
-
-      })
+          } else {
+            // No items in response, show the configuration
+            this.setState({ showConfigure: true });
+          }
+        });
+        
     } catch (error) {
       console.error("Error handling layout change:", error);
     }
@@ -407,28 +397,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
 
-  public async getCurrentUser() {
-    try {
-      const url: URL = new URL(window.location.href);
-      console.log(url);
-
-      const reactHandler = this;
-      User = reactHandler.props.userid;
-      const profile = await pnp.sp.profiles.myProperties.get();
-      UserEmail = profile.Email;
-
-      // Check if the UserProfileProperties collection exists and has the Department and Designation properties
-      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
-        console.log(departmentProperty, designationProperty);
-
-      }
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-    }
-  }
-
   public async createDocumentLibrary(docLibName: string): Promise<void> {
     if (!docLibName) {
       console.error("Library name is not provided.");
@@ -608,41 +576,95 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-  public async handlePublish() {
-    // debugger;
-    try {
-      // Fetch all items from the Draftmaster list
-      const draftItems = await sp.web.lists.getByTitle(Draftmaster).items.filter(`Title eq '${this.state.selectedValue}'`).get();
+  // public async handlePublish() {
+  //   // debugger;
+  //   try {
+  //     // Fetch all items from the Draftmaster list
+  //     const draftItems = await sp.web.lists.getByTitle(Draftmaster).items.filter(`Title eq '${this.state.selectedValue}'`).get();
 
-      if (draftItems.length === 0) {
-        console.log("No items to publish.");
+  //     if (draftItems.length === 0) {
+  //       console.log("No items to publish.");
+  //       return;
+  //     }
+  //     const existingItems = await sp.web.lists.getByTitle(ComponentallocationList)
+  //       .items.filter(`Title eq '${this.state.selectedValue}'`)
+  //       .get();
+
+  //     for (const item of existingItems) {
+  //       await sp.web.lists.getByTitle(ComponentallocationList).items.getById(item.Id).recycle();
+  //     }
+
+  //     // Loop through each draft item and copy it to PublishedList
+  //     for (const item of draftItems) {
+  //       await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+  //         Title: item.Title,
+  //         Component: item.Component,
+  //         ComponentID: item.ComponentID,
+  //         Position: item.Position,
+  //       });
+
+  //       // Delete the item from Draftmaster after successfully copying
+  //       await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle();
+  //     }
+
+  //     console.log("All items published successfully.");
+
+  //   } catch (error) {
+  //     console.error("Error publishing items:", error);
+  //   }
+  // }
+  public async handlePublish() {
+    try {
+      if (!this.state.selectedValue || !this.state.selectedComponents) {
+        console.warn("No selected value or components available.");
         return;
       }
-      const existingItems = await sp.web.lists.getByTitle(ComponentallocationList)
+
+      // console.log("Fetching existing items in DraftMaster...");
+      const PublishedItems = await sp.web.lists.getByTitle(ComponentallocationList)
         .items.filter(`Title eq '${this.state.selectedValue}'`)
         .get();
 
-      for (const item of existingItems) {
-        await sp.web.lists.getByTitle(ComponentallocationList).items.getById(item.Id).recycle();
+      // Store existing ComponentIDs as strings
+      const existingComponentIDs = new Set(PublishedItems.map(item => String(item.ComponentID)));
+
+      // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
+      // debugger;
+      for (const key in this.state.selectedComponents) {
+        if (this.state.selectedComponents.hasOwnProperty(key)) {
+          const item = this.state.selectedComponents[key];
+          const position = parseInt(key, 10); // Convert key to integer
+          const componentID = String(item.id); // Ensure it's a string
+
+          // Check if ComponentID already exists in DraftMaster
+          if (!existingComponentIDs.has(componentID)) {
+            // console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
+            try {
+              await sp.web.lists.getByTitle(ComponentallocationList).items.add({
+                Title: String(this.state.selectedValue), // Ensure string
+                Component: String(item.name), // Ensure string
+                ComponentID: String(item.id), // Ensure string (if expected as text)
+                Position: String(position) // Ensure number (if expected as number)
+              });
+              // console.log(`Successfully added ${item.name}`);
+            } catch (addError) {
+              console.error(`Failed to add component: ${item.name}`, addError);
+            }
+          } else {
+            console.log(`Component ${item.name} (ID: ${componentID}) already exists. Skipping.`);
+          }
+          // Fetch and recycle items from the Draftmaster list
+
+        }
       }
 
-      // Loop through each draft item and copy it to PublishedList
-      for (const item of draftItems) {
-        await sp.web.lists.getByTitle(ComponentallocationList).items.add({
-          Title: item.Title,
-          Component: item.Component,
-          ComponentID: item.ComponentID,
-          Position: item.Position,
-        });
-
-        // Delete the item from Draftmaster after successfully copying
-        await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle();
-      }
-
+      const draftItems = await sp.web.lists.getByTitle(Draftmaster)
+        .items.filter(`Title eq '${this.state.selectedValue}'`).get();
+      // Recycle items in parallel using Promise.all
+      await Promise.all(draftItems.map(item => sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle()));
       console.log("All items published successfully.");
-
     } catch (error) {
-      console.error("Error publishing items:", error);
+      console.error("Error while handling the Draft Master:", error);
     }
   }
 
@@ -1222,10 +1244,10 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
               </div>
               <section>
                 {this.state.selectedValue == "layout_1" &&
-                  <RemoLayout1 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={""} onReadMoreClick={undefined} id={undefined} selectedComponents={(selectedComponents: any) => this.handleSelectedComponents(selectedComponents)}  ></RemoLayout1>
+                  <RemoLayout1 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode}, ${User}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={""} onReadMoreClick={undefined} id={undefined} selectedComponents={(selectedComponents: any) => this.handleSelectedComponents(selectedComponents)} ></RemoLayout1>
                 }
                 {this.state.selectedValue == "layout_2" &&
-                  <RemoLayout2 description={''} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={''} onReadMoreClick={undefined} id={undefined} selectedComponents={undefined}></RemoLayout2>
+                  <RemoLayout2 description={`${this.state.isCurrentUserAdmin}, ${this.state.editMode},${User}`} siteurl={this.props.siteurl} userid={undefined} context={this.props.context} createList={false} name={''} onReadMoreClick={undefined} id={undefined} selectedComponents={(selectedComponents: any) => this.handleSelectedComponents(selectedComponents)} ></RemoLayout2>
                 }
               </section>
             </div>

@@ -343,22 +343,33 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
-
-
     {
         name: "Quick Links",
         columns: [
-            { columnName: "Hover On Icon", type: "addImageField", isRequired: true, isIndexed: false },
-            { columnName: "Hover Off Icon", type: "addImageField", isRequired: true, isIndexed: false },
-
+            { columnName: "ImageHover", type: "addImageField", isRequired: true, isIndexed: false },
+            { columnName: "Image", type: "addImageField", isRequired: true, isIndexed: false },
             { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
             { columnName: "URL", type: "addUrl", isRequired: true, isIndexed: false },
             { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true, DefaultFormula: "=FALSE" },
             { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
             { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false, DefaultFormula: "=FALSE" },
-
+ 
         ]
     },
+    // {
+    //     name: "Quick Links",
+    //     columns: [
+    //         { columnName: "Hover On Icon", type: "addImageField", isRequired: true, isIndexed: false },
+    //         { columnName: "Hover Off Icon", type: "addImageField", isRequired: true, isIndexed: false },
+
+    //         { columnName: "AccessibleTo", type: "Person or Group", isRequired: false, isIndexed: false },
+    //         { columnName: "URL", type: "addUrl", isRequired: true, isIndexed: false },
+    //         { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: true, DefaultFormula: "=FALSE" },
+    //         { columnName: "Order0", type: "addNumberField", isRequired: false, isIndexed: false },
+    //         { columnName: "OpenInNewTab", type: "addBoolean", isRequired: false, isIndexed: false, DefaultFormula: "=FALSE" },
+
+    //     ]
+    // },
     {
         name: "TransactionViewsCount",
         columns: [
