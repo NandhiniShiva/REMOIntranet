@@ -58,7 +58,7 @@ export interface IRemoHomePageState {
   isInitialscreen: any[];
   componentName: string;
   selectedComponents: any, // To store selected components by position
-
+ComponentChanged: boolean,
   landingPageComponentList: any[];
   isClicked: string;
   ceoMessegeID: any;
@@ -101,6 +101,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       isSearchActive: false,
       itemID: null,
       SiteLogo: "",
+      ComponentChanged: false,
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
@@ -120,6 +121,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       element.style.display = 'none';
     });
     // this.setState({ showConfigure: true })
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
+
     await this.checkEditMode();
     await this.getCurrentUser();
     await this.checkUserAdmin();
@@ -127,7 +130,16 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     await this.BindPlaceholderLogo();
     await this.loaderInProgress();
   }
-
+  public componentWillUnmount() {
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
+  }
+  handleBeforeUnload = (event: any) => {
+    if (this.state.ComponentChanged) {
+      event.preventDefault();
+      event.returnValue =
+        "You may lose the changes. Please make it a draft or publish the changes!";
+    }
+  };
   public checkEditMode() {
     const url: any = new URL(window.location.href);
     const mode = url.searchParams.get("Mode");
@@ -1017,8 +1029,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         async () => {
           await this.loaderInProgress();
           await this.setActiveLayout(this.state.selectedValue);
-          await this.GetAllavailablecomponents();
-          await this.getAllocatedComponents();
+          // await this.GetAllavailablecomponents();
+          // await this.getAllocatedComponents();
           await this.HideInProgress();
         }
       );
@@ -1082,9 +1094,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public handleSelectedComponents(LayoutData: any) {
-    console.log("Details", LayoutData.AllocatedComponentsDetails);
+    debugger;
+    console.log("Details", LayoutData.AllocatedComponentsDetails, "componentsmismatched", LayoutData.DataChanged);
     this.setState({
       selectedComponents: LayoutData.AllocatedComponentsDetails,      // showDropdown: false
+      ComponentChanged: LayoutData.DataChanged
     })
 
   }
@@ -1139,7 +1153,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         }
       })
       // Fetch the item for the specific position
-
+      this.setState({ComponentChanged: true})
     } catch (error) {
       console.error("Error handling component allocation:", error);
     }
@@ -1163,6 +1177,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       try {
         await this.handlePublish(); // Wait for the function to complete
         // Close processing Swal and show success message
+        this.setState({ComponentChanged: true})
         Swal.fire({
           title: `Components were added in '${this.state.selectedValue}'`,
           icon: "success",
@@ -1230,12 +1245,12 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
                       :
                       <><li id='draft_button'>
                         <button onClick={(e) => this.draftHandler(e)}>
-                          <img className='draftimage' src={require("./ServiceProvider/Assets/Img/draft.svg")} alt="draft-img" />
+                          <img className='draftimage' src={require("./ServiceProvider/Assets/Img/draft-icon.svg")} alt="draft-img" />
                           <span> Save As Draft </span></button>
                       </li>
                         <li id='publish_button'>
                           <button onClick={(e) => this.publishHandler(e)}>
-                            <img className='publishimage' src={require("./ServiceProvider/Assets/Img/publish.svg")} alt="publish-img" />
+                            <img className='publishimage' src={require("./ServiceProvider/Assets/Img/publish-icon.svg")} alt="publish-img" />
                             <span> Publish </span></button>
                         </li></>
                     }
