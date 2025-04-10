@@ -58,7 +58,7 @@ export interface IRemoHomePageState {
   isInitialscreen: any[];
   componentName: string;
   selectedComponents: any, // To store selected components by position
-ComponentChanged: boolean,
+  ComponentChanged: boolean,
   landingPageComponentList: any[];
   isClicked: string;
   ceoMessegeID: any;
@@ -147,29 +147,29 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       editMode: mode,
     })
   }
-   public async getCurrentUser() {
-      try {
-        const url: URL = new URL(window.location.href);
-        console.log(url);
-        const profile = await pnp.sp.profiles.myProperties.get();
-        UserEmail = profile.Email;
-        let curruser = await sp.web.currentUser.get().then(function (res: any) {
-          // let CurrentUserEmail = res.Email
-          User = res.Id
-        }).then(() => {
-          console.log(User, curruser);
-        })
-        // Check if the UserProfileProperties collection exists and has the Department and Designation properties
-        if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
-          const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-          const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
-          console.log(departmentProperty, designationProperty);
-  
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
+  public async getCurrentUser() {
+    try {
+      const url: URL = new URL(window.location.href);
+      console.log(url);
+      const profile = await pnp.sp.profiles.myProperties.get();
+      UserEmail = profile.Email;
+      let curruser = await sp.web.currentUser.get().then(function (res: any) {
+        // let CurrentUserEmail = res.Email
+        User = res.Id
+      }).then(() => {
+        console.log(User, curruser);
+      })
+      // Check if the UserProfileProperties collection exists and has the Department and Designation properties
+      if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
+        const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
+        const designationProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Designation');
+        console.log(departmentProperty, designationProperty);
+
       }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
     }
+  }
   public async CheckalreadyConfigured() {
     try {
       // Check if the new layout already exists
@@ -189,35 +189,35 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         .catch((err) => {
           console.error("Error fetching current user details:", err);
         });
-        await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
-          if (response.length !== 0) {
-            // Check if at least one item has IsActive set to true
-            const activeItem = response.find(item => item.IsActive === true);
-        
-            if (activeItem) {
-              this.setState(
-                {
-                  selectedValue: activeItem.Title,
-                  showConfigure: false,
-                  showLayout: false,
-                  showHomepage: true,
-                },
-                async () => {
-                  await this.getLayout();
-                  await this.setActiveLayout(this.state.selectedValue);
-                  await this.HideInProgress();
-                }
-              );
-            } else {
-              // No active items, show the configuration
-              this.setState({ showConfigure: true });
-            }
+      await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
+        if (response.length !== 0) {
+          // Check if at least one item has IsActive set to true
+          const activeItem = response.find(item => item.IsActive === true);
+
+          if (activeItem) {
+            this.setState(
+              {
+                selectedValue: activeItem.Title,
+                showConfigure: false,
+                showLayout: false,
+                showHomepage: true,
+              },
+              async () => {
+                await this.getLayout();
+                await this.setActiveLayout(this.state.selectedValue);
+                await this.HideInProgress();
+              }
+            );
           } else {
-            // No items in response, show the configuration
+            // No active items, show the configuration
             this.setState({ showConfigure: true });
           }
-        });
-        
+        } else {
+          // No items in response, show the configuration
+          this.setState({ showConfigure: true });
+        }
+      });
+
     } catch (error) {
       console.error("Error handling layout change:", error);
     }
@@ -1106,6 +1106,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async draftHandler(event: any) {
     event.preventDefault();
+    this.setState({ ComponentChanged: true })
     // await this.handleDraft();
     // debugger;
     // console.log(this.props.selectedComponents);
@@ -1119,7 +1120,20 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async saveAsDraft() {
     try {
       // debugger;
-      let ComponentDetails = this.state.selectedComponents
+      let ComponentDetails = this.state.selectedComponents;
+      const draftItems = await sp.web.lists
+        .getByTitle(Draftmaster)
+        .items.filter(`Title eq '${this.state.selectedValue}'`)
+        .get();
+
+      // Step 1: Delete items from SharePoint not present in ComponentDetails
+      for (const item of draftItems) {
+        const position = item.Position;
+        if (!ComponentDetails.hasOwnProperty(position)) {
+          await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle(); // Use recycle() instead of delete() for safety
+          console.log(`Deleted item at position ${position} as it no longer exists in ComponentDetails.`);
+        }
+      }
       Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
         console.log(item);
         var value = item.name;
@@ -1153,13 +1167,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         }
       })
       // Fetch the item for the specific position
-      this.setState({ComponentChanged: true})
     } catch (error) {
       console.error("Error handling component allocation:", error);
     }
   }
 
   public async publishHandler(event: any) {
+    this.setState({ ComponentChanged: true })
     event.preventDefault();
     const length = Object.keys(this.state.selectedComponents || {}).length;
     if (length !== 0) {
@@ -1177,7 +1191,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       try {
         await this.handlePublish(); // Wait for the function to complete
         // Close processing Swal and show success message
-        this.setState({ComponentChanged: true})
+        this.setState({ ComponentChanged: true })
         Swal.fire({
           title: `Components were added in '${this.state.selectedValue}'`,
           icon: "success",

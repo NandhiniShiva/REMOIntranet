@@ -7,6 +7,11 @@ import { listNames, WEB } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 let Hero_Bannerlist = listNames.Hero_Banner;
 let NewWeb: any = Web(WEB.NewWeb);
+var IsAdminUser: boolean = false;
+var IsMode: string = "add_mode";
+var IsDraggable: boolean = true;
+// var Count: number = 0;
+
 
 console.log('NewWeb', NewWeb);
 
@@ -31,6 +36,7 @@ async function getImageResolution(imageUrl: string): Promise<{ width: number, he
 
 export interface IHeroBannerState {
   Items: any[];
+  currentSlide: number;
   AnncCount: number;
   TotalItem: number;
   isDataAvailable: boolean;
@@ -46,8 +52,15 @@ export interface IHeroBannerState {
 export default class HeroBanner extends React.Component<IRemoHomePageProps, IHeroBannerState, {}> {
   constructor(props: IRemoHomePageProps) {
     super(props);
+    const [isAdmin, Mode, Dragmode] = this.props.description.split(',').map(value => value.trim());
+    IsAdminUser = Boolean(isAdmin);
+    IsMode = Mode;
+    IsDraggable = Boolean(Dragmode);
+    console.log("iscurrentuserisanadmi:", IsAdminUser, "Iseditmode:", IsMode);
+
     this.state = {
       Items: [],
+      currentSlide: 0, // tracks current active slide
       AnncCount: 0,
       TotalItem: 0,
       isDataAvailable: false,
@@ -173,13 +186,29 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
   public readMoreHandler(compName: any, itemId: any) {
     this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
+  goToPrevSlide = () => {
+    this.setState((prevState) => ({
+      currentSlide: Math.max(prevState.currentSlide - 1, 0)
+    }));
+  };
+
+  goToNextSlide = () => {
+    this.setState((prevState) => ({
+      currentSlide: Math.min(prevState.currentSlide + 1, this.state.Items.length - 1)
+    }));
+  };
+
+  goToSlide = (index: number) => {
+    this.setState({ currentSlide: index });
+  };
+
   public render(): React.ReactElement<IRemoHomePageProps> {
     const settings = {
       dots: true,
       arrows: true,
       infinite: true,
       speed: 2500,
-      autoplay: true,
+      autoplay: (IsAdminUser && IsMode == "edit") ? false : true,
       slidesToShow: 1,
       slidesToScroll: 1,
     };
@@ -211,8 +240,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
 
           <div className={`item active ${resolutionClass}`} key={ID}>
             {/* <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'> */}
-            <a href='#' onClick={() => this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
-
+            <a href='#' onClick={() => (IsMode !== "edit") && this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
               <div className="banner-parts">
                 <img src={serverRelativeUrl} alt="image" />
                 <div className="overlay"></div>
@@ -244,109 +272,123 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
       }
     });
 
-    return (
-      <div className="col-md-12 herobanner ">
-        {this.state.isDataAvailable == true ?
-          <div id="myCarousel" className="carousel slide" data-ride="carousel">
-            <div className="carousel-inner">
-              <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
-                <Slider {...settings} className='hero-banner-container-wrap' >
-                  {MAslider}
-                </Slider>
-              </div>
-              <div id="if-Banner-not-Exist" className="background" style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}>
-                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/If_no_Content_to_show.png")} alt="no-image-uploaded" />
-              </div>
-            </div>
-          </div>
-          :
-          // <div className="carousel slide">
-          //   <button onClick={() => this.addData()}>Add Data</button>
-          // </div>
+    const MAsliderEdit: JSX.Element[] = this.state.Items.map(
+      ({ ID, Title, Image, Description }, index) => {
+        let RawImageTxt = Image;
+        let dummyElement = document.createElement("DIV");
+        dummyElement.innerHTML = Description;
+        let outputText = dummyElement.innerText;
 
-          // <div id="myCarousel" className="carousel slide" data-ride="carousel">
-          //   <div className="carousel-inner">
-          <div id="if-Banner-Exist" className='hero-banner-container-wrap'>
-            <button onClick={(e) => this.addData(e)}>Add Data</button>
-            <div>
-              {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-                {this.state.componentMasterItems.map((item: any) => {
-                  <option key={item.id} value={item.value}>
-                    {item.Title}
-                  </option>
-
-                })}
-              </select> */}
-            </div>
-          </div>
-
-
-          //   </div>
-          // </div>
+        let serverRelativeUrl = "";
+        if (RawImageTxt) {
+          const ImgObj = JSON.parse(RawImageTxt);
+          serverRelativeUrl =
+            ImgObj.serverRelativeUrl ||
+            `${this.props.siteurl}/Lists/${Hero_Bannerlist}/Attachments/${ID}/${ImgObj.fileName}`;
+        } else {
+          serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png");
         }
+        // Show only the active slide
+        if (index !== this.state.currentSlide) return null;
 
+        return (
+          <>
+            {/* <div className="item active" style={{ width: "100%", display: "inline-block;" }}>
+              <div className="banner-parts">
+                <img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/2/Reserved_ImageAttachment_[5]_[Image][32]_[dd26242bcf494fc99db6845ad9520c65][1]_[1].jpg" alt="image" data-themekey="#" />
+                <div className="banner-impot-contents">
+                  <h4>Test banner 1</h4><p>Test banner 2</p>
+                </div>
+              </div>
+            </div> */}
+
+            <div className="item active" style={{ width: "100%", display: "inline-block;" }}>
+              <div className="banner-parts">
+                <img src={serverRelativeUrl} alt="image" data-themekey="#" />
+                <div className="banner-impot-contents">
+                  <h4>{Title}</h4>
+                  <p>{outputText}</p>
+                </div>
+                {this.state.Items.length > 1 && (
+                  <>
+                    {this.state.currentSlide > 0 && (
+                      <button
+                        className="hero-banner-btn prev-btn"
+                        onClick={this.goToPrevSlide}
+                      >
+                        ‹
+                      </button>
+                    )}
+                    {this.state.currentSlide < this.state.Items.length - 1 && (
+                      <button
+                        className="hero-banner-btn next-btn"
+                        onClick={this.goToNextSlide}
+                      >
+                        ›
+                      </button>
+                    )}
+                    <div className="hero-banner-dots">
+                      {this.state.Items.map((_, dotIndex) => (
+                        <span
+                          key={dotIndex}
+                          className={`dot ${dotIndex === this.state.currentSlide ? "active" : ""}`}
+                          onClick={() => this.goToSlide(dotIndex)}
+                        ></span>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </>
+        );
+      }
+    ).filter(Boolean) as JSX.Element[];
+
+
+    return (
+      <div className="col-md-12 herobanner">
+        {this.state.isDataAvailable === true ? (
+          IsMode === "edit" ? (
+            <>
+              {/* <div className="item active" style={{width: "100%", display: "inline-block;"}}><div className="banner-parts"><img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/2/Reserved_ImageAttachment_[5]_[Image][32]_[dd26242bcf494fc99db6845ad9520c65][1]_[1].jpg" alt="image" data-themekey="#"/><div className="banner-impot-contents"><h4>Test banner 1</h4><p>Test banner 2</p></div></div></div> */}
+              {/* <div className="hero-banner-image-wrapper"><img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/1/Reserved_ImageAttachment_[5]_[Image][32]_[a40c51a79a7b4751b7c2765200e173fe][2]_[14].jpg" alt="banner" className="hero-banner-image" data-themekey="#" /></div><div className="hero-banner-content"><h4 className="hero-banner-title">Test banner</h4><p className="hero-banner-description">Test banner data</p></div> */}
+              {MAsliderEdit}
+            </>
+          ) : (
+            <div id="myCarousel" className="carousel slide" data-ride="carousel">
+              <div className="carousel-inner">
+                <div id="if-Banner-Exist" className="hero-banner-container-wrap">
+                  <Slider
+                    {...settings}
+                    draggable={IsDraggable}
+                    swipe={IsDraggable}
+                    className="hero-banner-container-wrap"
+                  >
+                    {MAslider}
+                  </Slider>
+                </div>
+                <div
+                  id="if-Banner-not-Exist"
+                  className="background"
+                  style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}
+                >
+                  <img
+                    className="err-img"
+                    src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/If_no_Content_to_show.png")}
+                    alt="no-image-uploaded"
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        ) : (
+          <div id="if-Banner-Exist" className="hero-banner-container-wrap">
+            <button onClick={(e) => this.addData(e)}>Add Data</button>
+          </div>
+        )}
       </div>
-
-      // Updated code with progress bar
-
-      // <div className="col-md-8">
-      //   {
-      //   this.state.showProgessar === false ? (
-      //     this.state.isDataAvailable === true ? (
-      //       <div id="myCarousel" className="carousel slide" data-ride="carousel">
-      //         <div className="carousel-inner">
-      //           {/* When banners exist */}
-      //           <div id="if-Banner-Exist" className="hero-banner-container-wrap">
-      //             <Slider {...settings} className="hero-banner-container-wrap">
-      //               {MAslider}
-      //             </Slider>
-      //           </div>
-
-      //           {/* When no banners exist */}
-      //           <div
-      //             id="if-Banner-not-Exist"
-      //             className="background"
-      //             style={{ display: this.state.TotalItem === 0 ? "block" : "none" }}
-      //           >
-      //             <img
-      //               className="err-img"
-      //               src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/If_no_Content_to_show.png`}
-      //               alt="No content to show"
-      //             />
-      //           </div>
-      //         </div>
-      //       </div>
-      //     ) : (
-      //       <div id="if-Banner-Exist" className="hero-banner-container-wrap">
-      //         <button onClick={() => this.addData()}>Add Data</button>
-      //         <img
-      //           src="https://6z0l7v.sharepoint.com/sites/SPTraineeBT/SiteAssets/add_quick.png"
-      //           alt="Add icon"
-      //           onClick={() => this.getComponent()}
-      //         />
-      //         <div>
-      //           {/* Uncomment and modify the select dropdown if needed */}
-      //           {/* <select value={this.state.selectedValue} onChange={(e) => this.handleSelectChange(e)}>
-      //       {this.state.componentMasterItems.map((item: any) => (
-      //         <option key={item.id} value={item.value}>
-      //           {item.Title}
-      //         </option>
-      //       ))}
-      //     </select> */}
-      //         </div>
-      //       </div>
-      //     )
-      //   ) : (
-      //     <div id="progressContainer">
-      //       <p id="currentListName">Creating: {this.state.currentList}</p>
-      //       <ProgressBar
-      //         now={this.state.progress}
-      //         label={`${Math.round(this.state.progress)}%`}
-      //       />
-      //     </div>
-      //   )}
-      // </div>
-
     );
+
   }
 }

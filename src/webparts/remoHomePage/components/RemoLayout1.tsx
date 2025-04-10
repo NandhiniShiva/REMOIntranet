@@ -143,6 +143,9 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   public async componentDidMount() {
     await this.GetAllavailablecomponents();
     await this.getAllocatedComponents();
+    // this.slidercontrol();
+
+
     document.addEventListener("mousedown", function (event: any) {
       const hideComponents = document.querySelectorAll(".hide_components");
       hideComponents.forEach((componentDiv: any) => {
@@ -152,10 +155,17 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           componentDiv.style.display = "none"; // Hide component when clicking outside
         }
       });
+      const isClickInside = event.target.closest(".Drag_part");
 
+      // If click is outside any .Drag_part, remove the border
+      if (!isClickInside) {
+        const allWithBorder = document.querySelectorAll(".Drag_part.border");
+        allWithBorder.forEach((el) => el.classList.remove("border"));
+      }
     });
+    
   }
-
+  
 
   public async getAllocatedComponents() {
     try {
@@ -937,6 +947,19 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position]?.name;
+    const inputElement = document.querySelector(`.Location-${position}`);
+    var setSliderDraggable: boolean = true;
+    if (inputElement) {
+      inputElement.classList.add('Drag_part');
+    }
+    if (componentName == "Hero Banner") {
+      if (inputElement?.classList.contains('border')) {
+        setSliderDraggable = true; // disable dragging/swiping
+      } else {
+        setSliderDraggable = false; // enable dragging/swiping
+      }
+    }
+
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
         <>
@@ -945,25 +968,16 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
               <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
                 <img src={require("./ServiceProvider/Assets/Img/remove-icon.svg")} alt="remove-btn" />
               </button>
-              {/* <button className="Drag_Btn" >
-                 <img src={require("./ServiceProvider/Assets/Img/close.svg")} alt="Drag-btn" />
-               </button> */}
-
-
             </>
           }
-          {/* <div draggable={true} onDragStart={(e) => this.handleDragStart(e, position)}
-             onDragOver={(e) => this.handleDragOver(e)}
-             onDrop={(e) => this.handleDrop(e, position)}> */}
           <Component {...this.props} {...props} draggable={false} />
-          {/* </div> */}
         </>
       );
     };
 
     switch (componentName) {
       case "Hero Banner":
-        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+        return renderWithRemoveButton(RemoHeroBanner, { description: `${this.state.isCurrentUserAdmin}, ${this.state.editMode}, ${setSliderDraggable}`, createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
       case "CEO Message":
         return renderWithRemoveButton(RemoCEOMessage, {
           description: "",
@@ -1204,9 +1218,10 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     e.preventDefault();
     // e.stopPropagation();
   };
-  handleDrop = async (e: React.DragEvent<HTMLDivElement>, dropKey: any) => {
+  handleDrop = (e: React.DragEvent<HTMLDivElement>, dropKey: any) => {
     e.preventDefault();
-
+    // setTimeout(() => {
+    debugger;
     const draggedKey = this.state.draggedItemKey;
     if (draggedKey === null || draggedKey === dropKey) return;
     // console.log("Before swap:", this.state.selectedComponents);
@@ -1228,32 +1243,44 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
           index === dropKey - 1 ? false : screen
         );
-        this.updateDraftMasterList(draggedKey, dropKey, "DataUnavailable");
+        // this.updateDraftMasterList(draggedKey, dropKey, "DataUnavailable");
       } else {
         // Swap the values of draggedKey and dropKey
         const temp = updatedComponents[draggedKey];
         updatedComponents[draggedKey] = updatedComponents[dropKey];
         updatedComponents[dropKey] = temp;
-        this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
+        // this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
 
       }
       return { selectedComponents: updatedComponents, isInitialscreen: updatedIsInitialscreen };
+    }, async () => {
+      await this.handleSelectedComponents(this.state.selectedComponents)
+      const allWithBorder = document.querySelectorAll(".Drag_part.border");
+      allWithBorder.forEach((el) => el.classList.remove("border"));
     });
-    await this.handleSelectedComponents(this.state.selectedComponents)
-
     // }, 5000);
   };
 
   handleborder = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, DOMID: any) => {
-    const inputElement = document.querySelector(`.${DOMID}`); // Find the input by DOMID
-    if (inputElement) {
-      inputElement.classList.toggle("border"); // Add the active class
+    // Stop the event from bubbling to the document click listener
+    e.stopPropagation();
+
+    // Remove border from all
+    const allDragParts = document.querySelectorAll('.Drag_part.border');
+    allDragParts.forEach((el) => el.classList.remove('border'));
+
+    // Add border to clicked one
+    const inputElement = document.querySelector(`.${DOMID}`);
+    if (inputElement && inputElement.classList.contains('Drag_part')) {
+      inputElement.classList.add('border');
     }
-  }
+  };
+
 
 
   // Update SharePoint List
   public updateDraftMasterList = async (dragKey: any, dropKey: any, data: any) => {
+    debugger;
     try {
       const draggedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
         .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dragKey}'`)
@@ -1292,10 +1319,16 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
-    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
+    const SearchElement = ({ Position, DOMID, SelectID, ButtonId, ComponentIndex }: { Position: number, DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
       if (!handler.state.isCurrentUserAdmin && handler.state.editMode !== "edit") {
         console.log("not an admin User");
         return null;
+      }
+      const inputElement = document.querySelector(`.Location-${Position}`);
+      if (inputElement) {
+        inputElement.classList.remove('Drag_part');
+        inputElement.classList.remove('border');
+
       }
       return (
         <>
@@ -1351,7 +1384,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       <>
         {this.state.isCurrentUserAdmin && this.state.editMode == "edit" ?
           <div
-            className={` col-md-${classNamePrefix} Location-${position} Drag_part`}
+            className={` col-md-${classNamePrefix} Location-${position}`}
             draggable={true} // Make only the image draggable
             onDragStart={(e) => this.handleDragStart(e, position)} // Handle drag start on image
             onDragOver={(e) => this.handleDragOver(e)}              // Handle drag over
@@ -1393,10 +1426,12 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             Components.filter((item) => item.Position === position).map((item, key) => (
               <SearchElement
                 key={key}
+                Position={position}
                 DOMID={`search-${key}`}
                 SelectID={item.selectId}
                 ButtonId={item.buttonId}
                 ComponentIndex={item.componentIndex}
+
               />
             ))
           ) : (
