@@ -6,21 +6,17 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
-// import * as $ from 'jquery';
 import { Markup } from 'interweave';
 import Footer from '../../remoHomePage/components/Footer/Footer';
 import pnp, { Web } from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
-import { ViewsCount } from './ServiceProvider/viewsCount';
 import { AddViews } from './ServiceProvider/AddViews';
 import { CheckUserAlreadyCommented } from './ServiceProvider/CheckUserAlreadyCommented';
 import { CheckUserAlreadyLiked } from './ServiceProvider/CheckUserAlreadyLiked';
 import { CommentsCount } from './ServiceProvider/CommentsCount';
-import { LikesCount } from './ServiceProvider/LikesCount';
 
 let User = "";
 let UserEmail = "";
@@ -34,7 +30,6 @@ let ItemID: any;
 var Designation = "";
 var Department = "";
 
-// const ViewsCountMasterlist = listNames.ViewsCountMaster;
 const Hero_Bannerlist = listNames.Hero_Banner;
 const LikesCountMasterlist = listNames.LikesCountMaster;
 const CommentsCountMasterlist = listNames.CommentsCountMaster;
@@ -75,15 +70,10 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
-
       this.getItemID(Department, Designation);
     }).catch((error) => {
       console.error("Error fetching current user details:", error);
     });
-
-
   }
 
   private hideElements() {
@@ -101,7 +91,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     if (!Designation) {
       Designation = "NA";
     }
-    console.log(this.state.Title);
 
     try {
       const response = await NewWeb.lists.getByTitle(Analytics).items.add({
@@ -132,7 +121,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
       if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         // Find the Department property in the profile
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
         if (departmentProperty) {
           Department = departmentProperty.Value;
         }
@@ -171,24 +159,12 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
         if (item.EnableComments) {
           this.setState({ IsCommentEnabled: true });
         } else {
-          // $(".all-commets, #commentedpost").remove();
-
           const elements = document.querySelectorAll('.all-commets, #commentedpost');
-
           // Iterate over the NodeList and remove each element
           elements.forEach(element => {
             element.remove();
           });
         }
-        const viewsCount = new ViewsCount();
-        viewsCount.viewsCount(ID).then((data) => {
-          console.log("Current user details", data);
-        });
-
-        const likesCount = new LikesCount();
-        likesCount.likesCount(ID).then((likeData) => {
-          console.log("Current user details", likeData);
-        });
 
         const commentsCount = new CommentsCount();
         commentsCount.commentsCount(ID).then((commentData) => {
@@ -264,7 +240,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
       sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Hero-Banner' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items) => {
         if (items.length > 0) {
           this.setState({ IsUserAlreadyCommented: true });
-          // $(".reply-tothe-post").hide();
           document.querySelectorAll('.reply-tothe-post').forEach(element => {
             (element as HTMLElement).style.display = 'none';
           });
@@ -370,7 +345,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
 
 
   private showComments() {
-    // $(".all-commets").toggle();
 
     document.querySelectorAll('.all-comments').forEach(element => {
       const htmlElement = element as HTMLElement;
@@ -483,7 +457,6 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
     return (
       <div className={styles.remoHomePage} id="heroBannerRm" >
         <div id="Global-Top-Header-Navigation">
-          {/* <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} /> */}
         </div>
         <section>
           <div className="container relative">
@@ -513,17 +486,17 @@ export default class HeroBannerRm extends React.Component<IHeroBannerReadMorePro
                           {this.state.IsLikeEnabled &&
                             <li>
                               <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")} alt="image" onClick={() => this.liked("dislike")} />
-                              <img className="like-default"  src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
+                              <img className="like-default" src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                               <span id="likescount"> {likes} </span>
                             </li>
                           }
                           {this.state.IsCommentEnabled &&
                             <li>
-                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
+                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
                             </li>
                           }
                           <li>
-                            <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")}  alt="image" /> <span> {views} </span>
+                            <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")} alt="image" /> <span> {views} </span>
                           </li>
                         </ul>
                       </div>

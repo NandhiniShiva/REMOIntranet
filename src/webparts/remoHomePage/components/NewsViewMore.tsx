@@ -12,7 +12,6 @@ import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive'
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-// import pnp from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let Newslist = listNames.News;
@@ -35,11 +34,10 @@ export interface INewsVmState {
 let NewsAvailableDepts: { ID: any; Title: any; URL: any; }[] = [];
 let DeptNames: any[] = [];
 let DeptNamesExitsUnique: any[] = [];
-
 var User = "";
 var UserEmail = "";
-
 var NewWeb: IWeb & IInvokable<any>;
+
 export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmState, {}> {
   constructor(props: INewsViewMoreProps) {
     super(props);
@@ -72,8 +70,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
+
       this.GetAllNews(data?.Department, data?.Designation);
       this.GetAllTopNews();
       this.GetAllNewsAvailableDepartments();
@@ -138,8 +135,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
   private async GetAllRecentNews(ID: any) {
     var reactHandler = this;
     try {
-
-
       await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and ID ne '${ID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: any) => {
 
         reactHandler.setState({
@@ -155,13 +150,9 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
   private async GetAllTopNews() {
     var reactHandler = this;
     try {
-
-
       await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "PageViewCount", "*").filter(`IsActive eq '1'`).orderBy("PageViewCount", false).expand("Dept", "SitePageID", "TransactionItemID").get().then((items: any[]) => {
 
         if (items.length != 0) {
-          // $(".top-news-block-current-month").show();
-
           document.querySelectorAll('.top-news-block-current-month').forEach(element => {
             (element as HTMLElement).style.display = 'block';
           });
@@ -169,7 +160,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
             ViewBasedTopNews: items
           });
         } else {
-          // $(".top-news-block-current-month").hide();
           document.querySelectorAll('.top-news-block-current-month').forEach(element => {
             (element as HTMLElement).style.display = 'none';
           });
@@ -186,12 +176,9 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     let today = moment().format("YYYY-MM-DD");
     let WkDate = moment(today, "YYYY-MM-DD").subtract(1, "week").format("YYYY-MM-DD");
     try {
-
-
       await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id", "*").filter(`IsActive eq '1' and Created lt '${WkDate}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(20).get().then((items: any[]) => {
 
         if (items.length != 0) {
-          // $(".PastNewsData").show();
           document.querySelectorAll('.PastNewsData').forEach(element => {
             (element as HTMLElement).style.display = 'block';
           });
@@ -202,7 +189,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
           document.querySelectorAll('.PastNewsData').forEach(element => {
             (element as HTMLElement).style.display = 'none';
           });
-          // $(".PastNewsData").hide();
         }
       });
     } catch (error) {
@@ -217,17 +203,13 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
     DeptNamesExitsUnique = [];
     var reactHandler = this;
     try {
-
-
       await NewWeb.lists.getByTitle(Newslist).items.select("*", "ID", "Dept/Id", "Dept/Title", "Image").filter(`IsActive eq '1'`).orderBy("Created", false).expand("Dept").get().then((items: string | any[]) => {
 
         for (var i = 0; i < items.length; i++) {
           if (items[i].Dept == undefined) {
-
           } else {
             var DeptName = items[i].Dept.Title;
             var DeptID = items[i].Dept.Title;
-
           }
 
           DeptNames.push(DeptName);
@@ -242,13 +224,9 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
 
                 var ImgObj = JSON.parse(RawImageTxt);
                 if (ImgObj.serverRelativeUrl == undefined) {
-
                   serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + items[i].ID + "/" + ImgObj.fileName
-
                 } else {
-
                   serverRelativeUrl = ImgObj.serverRelativeUrl
-
                 }
                 var PicUrl = serverRelativeUrl;
                 NewsAvailableDepts.push({ "ID": DeptID, "Title": DeptName, "URL": PicUrl });
@@ -257,7 +235,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
           }
         }
         reactHandler.setState({ AvailableDepts: NewsAvailableDepts });
-        console.log(reactHandler.state.AvailableDepts);
         reactHandler.GetDeptNews();
 
       });
@@ -279,21 +256,18 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       if (DeptID != "" || DeptID != undefined || DeptID != null) {
         try {
 
-
           await NewWeb.lists.getByTitle(Newslist).items.select("ID", "Title", "Description", "Created", "Dept/Title", "Image", "Tag", "DetailsPageUrl", "SitePageID/Id", "TransactionItemID/Id").filter(`IsActive eq '1' and Dept/Id eq '${DeptID}'`).orderBy("Created", false).expand("Dept", "SitePageID", "TransactionItemID").top(4).get().then((items: string | any[]) => {
 
             for (var i = 0; i < items.length;) {
-              // $("#" + CustomID + "").append(`<li><a href="${items[i].DetailsPageUrl}?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
-              // $("#" + CustomID + "").append(`<li><a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off"><p>${items[i].Title}</p></a></li>`);
               const element = document.getElementById(CustomID);
               if (element) {
                 element.insertAdjacentHTML('beforeend', `
                     <li>
                                     <a href="${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${items[i].ID}&AppliedTag=${items[i].Tag}&Dept=${items[i].Dept.Title}&SitePageID=${items[i].SitePageID.Id}&" data-interception="off">
-        <p>${items[i].Title}</p>
-      </a>
-    </li>
-  `);
+                                      <p>${items[i].Title}</p>
+                                     </a>
+                    </li>
+                  `);
               }
 
               i++;
@@ -319,7 +293,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
   public SamplePrevArrow(props: { className: any; style: any; onClick: any; }) {
     const { className, onClick } = props;
     return (
-      <a href="#" className={className} onClick={onClick}> <img src={require("./ServiceProvider/Assets/Img/left.svg")}  alt="image" data-interception="off" /> </a>
+      <a href="#" className={className} onClick={onClick}> <img src={require("./ServiceProvider/Assets/Img/left.svg")} alt="image" data-interception="off" /> </a>
     );
   }
 
@@ -362,8 +336,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
           }
         }
       ]
-      /*prevArrow: <this.SamplePrevArrow />,
-      nextArrow: <this.SampleNextArrow />*/
+
     };
 
     var reactHandler = this;
@@ -388,18 +361,12 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
 
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
-        //// var RawPublishedDt = moment(item.Created).format("DD/MM/YYYY");
         var tdaydt = moment().format("DD/MM/YYYY");
         if (ImgObj.serverRelativeUrl == undefined) {
-
           serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + item.ID + "/" + ImgObj.fileName
-
         } else {
-
           serverRelativeUrl = ImgObj.serverRelativeUrl
-
         }
-
         return (
           <div className="view-all-news-recent-left">
             <div className="view-all-news-recent-img-cont">
@@ -420,14 +387,14 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <div className="view-all-news-recent-left">
             <div className="view-all-news-recent-img-cont">
-              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <div className="ns-tag-duration clearfix">
               <div className="pull-left">
                 <a href={`${reactHandler.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=TagBased&Tag=${item.Tag}`} data-interception='off' className="tags"> {item.Tag} </a>
               </div>
               <div className="pull-right">
-                <img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="image" />  {Dt}
+                <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="image" />  {Dt}
               </div>
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
@@ -484,7 +451,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li className="clearfix">
             <div className="list-li-recent-news-img">
-              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
               <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a>
@@ -542,7 +509,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li>
             <div className="top-img-wrap">
-              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a"> {item.Title} </a>
             <div className="ns-tag-duration ">
@@ -565,16 +532,10 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
       if (RawImageTxt != "" && RawImageTxt != null) {
         var ImgObj = JSON.parse(RawImageTxt);
         if (ImgObj.serverRelativeUrl == undefined) {
-
           serverRelativeUrl = `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/` + item.ID + "/" + ImgObj.fileName
-
         } else {
-
           serverRelativeUrl = ImgObj.serverRelativeUrl
-
         }
-
-
         return (
           <li>
             <div className="top-img-wrap">
@@ -590,7 +551,7 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
         return (
           <li>
             <div className="top-img-wrap">
-              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="image" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main top-news-a"> {item.Title} </a>
             <div className="ns-tag-duration ">
@@ -634,7 +595,6 @@ export default class NewsVm extends React.Component<INewsViewMoreProps, INewsVmS
                 <div className="inner-banner-contents">
                   <h1> News </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> All News </a> </li>
                   </ul>

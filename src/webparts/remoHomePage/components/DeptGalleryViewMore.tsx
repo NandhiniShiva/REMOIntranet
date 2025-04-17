@@ -7,7 +7,6 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
-// import * as $ from 'jquery';
 import Slider from "react-slick";
 import GlobalSideNav from "../../remoHomePage/components/Header/GlobalSideNav";
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
@@ -18,8 +17,6 @@ import pnp from 'sp-pnp-js';
 
 let PictureGalleryLib = listNames.PictureGallery;
 const Analytics = listNames.Analytics;
-
-
 export interface IGalleryVmState {
   Galleryitems: any[];
   VideoItemsss: any[];
@@ -34,7 +31,6 @@ export interface IGalleryVmState {
   Title: string;
 }
 
-// let ImgArr = [];
 const WebUrl: any = Web(WEB.NewWeb);
 var User = "";
 var UserEmail = "";
@@ -50,13 +46,10 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
   spfxContext: ISPFXContext;
   public lightGallery: any;
   private displayDataImages: JSX.Element[];
-  // private displayDataVideos: JSX.Element[];
-
 
   public constructor(props: IDeptGalleryViewMoreProps) {
     super(props);
     this.displayDataImages = [];
-    // this.displayDataVideos = [];
     this.appendRootFolder = this.appendRootFolder.bind(this); // Binding this method
     this.state = {
       Galleryitems: [],
@@ -112,7 +105,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
     if (!Designation) {
       Designation = "NA";
     }
-    console.log(this.state.Title);
 
     try {
       const response = await NewWeb.lists.getByTitle(Analytics).items.add({
@@ -158,7 +150,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
       if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         // Find the Department property in the profile
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
         if (departmentProperty) {
           Department = departmentProperty.Value;
         }
@@ -170,7 +161,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
   }
 
   public GetGalleryFilesFolder() {
-    // ImgArr = [];
     const reactHandler = this;
     sp.web.lists.getByTitle(PictureGalleryLib).rootFolder
       .folders
@@ -181,7 +171,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
         rootFolders.forEach(async (rootFolder, index) => {
           const folderName = rootFolder.Name;
           const folderUrl = rootFolder.ServerRelativeUrl;
-
           // Exclude folder named "Forms"
           if (folderName !== "Forms") {
             try {
@@ -189,9 +178,7 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
               const result = await sp.web.getFolderByServerRelativeUrl(folderUrl)
                 .files.select("ID", "Name", "ServerRelativeUrl", "TimeCreated")
                 .orderBy("TimeCreated", false).top(1).get();
-
               const folderImage = result.length > 0 ? result[0].ServerRelativeUrl : `${reactHandler.props.siteurl}/SiteAssets/img/empty_folder_v2.svg`;
-
               // Append only root folders to the display
               reactHandler.appendRootFolder(folderName, folderUrl, folderImage, "", index);
             } catch (error) {
@@ -202,7 +189,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
         });
       }).catch(error => {
         console.error("Error fetching root folders:", error);
-        // Handle error here, e.g., show an error message to the user
       });
   }
 
@@ -263,21 +249,16 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
     try {
       // Toggle visibility of triggers based on mode
       this.toggleTriggerVisibility(Mode);
-
       // Fetch files from the specified folder URL
       const items = await sp.web.getFolderByServerRelativeUrl(folderUrl).files.get();
-
       // Filter files based on mode
       const imageItems = items.filter(item => /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(item.Name));
       const videoItems = items.filter(item => /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(item.Name));
-
       // Update trigger visibility based on available files
       this.updateTriggerVisibilityBasedOnFiles(Mode, imageItems, videoItems);
-
       // Set folder items and open lightbox
       this.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
       this.toggleLightbox(true);
-
       // Navigate to the specified key in the slider
       this.slider1.slickGoTo(key);
     } catch (error) {
@@ -440,7 +421,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
             <li>
               <a href="#" data-interception="off">
                 <video className="lg-video-object lg-html5" src={`${item.ServerRelativeUrl}`} />
-                {/* <source src={`${item.ServerRelativeUrl}`} type="video/mp4" /> */}
               </a>
             </li>
           );
@@ -465,7 +445,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                 <div className="inner-banner-contents">
                   <h1> Gallery </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Gallery Folders </a> </li>
                   </ul>
@@ -495,17 +474,14 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                 </div>
               </div>
               <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} selectedComponents={undefined} />
-
             </div>
           </div>
-
         </section>
 
         <div className="lightbox">
           <div className="gallery-lightbox-contents">
             <div className="lightbox-contents-img">
               <div className="lightbox-contents-header clearfix">
-
                 <ul>
                   <li id="trigger-image" className={this.state.Mode == "Image" ? "imageblock" : ""} > <a href="#" onClick={() => reactHandler.GetImagesInsideFolder(this.state.FolderURL, "Image", 0)} data-interception="off"> Images  </a> </li>
                   <li id="trigger-video" className={this.state.Mode == "Video" ? "videoblock" : ""} > <a href="#" onClick={() => reactHandler.GetImagesInsideFolder(this.state.FolderURL, "Video", 0)} data-interception="off"> Videos  </a> </li>
@@ -523,12 +499,10 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                       this.state.FolderItems.map((item) => {
                         if (reactHandler.state.Mode === "Image") {
                           var filename = item.Name;
-                          console.log(item.ServerRelativeUrl);
                           var Len = filename.length;
                           var Dot = filename.lastIndexOf(".");
                           var res = filename.substring(Dot + 1, Len);
                           var ext = res.toLowerCase();
-
                           if (
                             ext !== "mp4" &&
                             ext !== "mov" &&
@@ -539,7 +513,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                             ext !== "webm" &&
                             ext !== "mkv"
                           ) {
-
                             return (
                               <>
                                 <img
@@ -550,7 +523,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                                 <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
                               </>
                             );
-
                           }
                         } else if (reactHandler.state.Mode === "Video") {
 
@@ -562,7 +534,6 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                                 style={{ width: '810px' }}
                                 controls
                               >
-                                {/* <source src={`${item.ServerRelativeUrl}`} type="video/mp4" /> */}
                               </video>
                               <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
                             </>
@@ -574,11 +545,9 @@ export default class GalleryVm extends React.Component<IDeptGalleryViewMoreProps
                       <div style={{ textAlign: 'center' }}>
                         <img
                           src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
-                          // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                           alt="No Content Found"
                           style={{ width: '900px' }}
                         />
-                        {/* <h4 style={{ color: '#ffffff' }}>No Content Found</h4> */}
                       </div>
                     )}
                   </Slider>

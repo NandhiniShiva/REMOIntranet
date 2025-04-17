@@ -9,6 +9,7 @@ import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 
 let PictureGalleryLib = listNames.PictureGallery;
+var NewWeb: IWeb & IInvokable<any>;
 
 export interface IDepartmentGalleryState {
   Items: any[];
@@ -16,7 +17,6 @@ export interface IDepartmentGalleryState {
   VideoItemsss: any[];
 }
 
-var NewWeb: IWeb & IInvokable<any>;
 
 export default class DepartmentGallery extends React.Component<IRemoDeptLandingPageProps, IDepartmentGalleryState, {}> {
   public constructor(props: IRemoDeptLandingPageProps) {
@@ -115,23 +115,15 @@ export default class DepartmentGallery extends React.Component<IRemoDeptLandingP
             <div className="col-md-6-dummy" id="if-gallery-present">
               <div className="sec event-cal image-videos">
                 <div className="heading clearfix hr_gallery">
-                  {/* <h3> <a href={`${this.props.siteurl}/SitePages/Gallery-View-More.aspx?`} data-interception="off"> Gallery </a> </h3> */}
                   <h3> <a href='#' onClick={() => this.readMoreHandler("GalleryViewMore")} data-interception="off"> Gallery </a> </h3>
-
-                  {/*<h3 className=""><a href="#" onClick={()=> this.ShowVideos()}>Videos</a> </h3>*/}
                 </div>
-
                 <div className="section-part clearfix latest-events-bck">
                   <ul className="clearfix img-block-area">
                     {Images}
                   </ul>
-
-                  {/*<ul className="clearfix vdo-block-area" style={{display:"none"}}>
-                  </ul>*/}
                 </div>
               </div>
             </div>
-
             <div className="col-md-6-dummy" id="if-no-gallery-present" style={{ display: "none" }}>
               <div className="sec event-cal image-videos">
                 <div className="heading clearfix">

@@ -55,8 +55,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       IsDeptDataAvailable: false,
       isSubNodeAvailable: 0,
       IsDeptClicked: false,
-
-
     };
     NewWeb = Web("" + this.props.siteurl + "");
   }
@@ -115,7 +113,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         )
         .filter("IsActive eq 1")
         .orderBy("Order0", true)
-        // .top(7)
         .expand("LinkMasterID")
         .get();
 
@@ -168,7 +165,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
       if (items.length != 0) {
         this.setState({
           MyLinks: items,
-          // isDataAvailableNav: true
         });
       }
       const navLinks = document.querySelectorAll('#root-nav-links ul li');
@@ -242,7 +238,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
           let OpenInNewTab = items[i].OpenInNewTab;
           let HasSubDept = items[i].HasSubDepartment;
           reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
-          //   }
         }
 
 
@@ -311,7 +306,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
 
   public async GetSubNodes(ID: any, Title: any, ClickFrom: string, key: any) {
-    // $(".breadcrum-block").show();
 
     document.querySelectorAll('.breadcrum-block').forEach(element => {
       (element as HTMLElement).style.display = 'block';
@@ -333,7 +327,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
       this.setState({
         DeptandQuickLinksItems: items,
-        // isSubNodeAvailable: items.length
       });
       console.log("Department Item", items);
 
@@ -522,7 +515,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
 
   public addData(event: any) {
     event.preventDefault();
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Navigationslist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Navigationslist}`;
     window.open(listUrl, "_blank");
   }
@@ -552,14 +544,12 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
         if (!subsiteExists) {
           // Create a subsite if it doesn't exist
           await this.createSubsite(newDeptTitle);
-          // this.createListInSubsite(`${this.props.siteurl}/${newDeptTitle}`);
         } else {
           console.log("Subsite already exists. No need to create.");
         }
       })
 
     }
-    // }, 500)
   }
 
 
@@ -662,7 +652,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
             console.error(`Failed to add column '${column.columnName}' to 'All Items' view:`, viewError);
           }
         }
-        // alert("list and column created")
       }
     } catch (error) {
       console.error("Error during column creation process:", error);
@@ -757,7 +746,6 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
             return (
               <li>
                 <a href="#" onClick={() => handler.GetDepartments()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
-                {/* {this.state.IsDeptDataAvailable == true ? ( */}
                 <div className="submenu-wrap-lists department-wrap">
                   <ul className="clearfix">
                     {handler.state.showdata}
@@ -830,7 +818,7 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
               <li> <a href="#" onClick={() => handler.GetQuickLinks()}> <img src={`${serverRelativeUrl2}`} alt="img" className="bhover" data-interception="off" /><img src={`${serverRelativeUrl}`} alt="img" className="hhover" /> <p>{item.Title}</p>  </a>
                 <div className="submenu-wrap-lists q-links-dpt">
                   <div className="submenu-clear-wrap">
-                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()} data-interception="off">   <img src={require("./ServiceProvider/Assets/Img/clear.svg")}  alt="image" />  </a>
+                    <a href="#" className="submenu-clear" data-tip data-for={"React-tooltip-clear"} data-custom-class="tooltip-custom" onClick={() => handler.ClearNavigation()} data-interception="off">   <img src={require("./ServiceProvider/Assets/Img/clear.svg")} alt="image" />  </a>
                     <ReactTooltip id={"React-tooltip-clear"} place="right" type="dark" effect="solid">
                       <span>Clear</span>
                     </ReactTooltip>
@@ -891,11 +879,9 @@ export default class RemoNavigations extends React.Component<IRemoHomePageProps,
                       <div className="breadcrum-block">
                         <a href='#' className="clears-subnav" onClick={() => handler.ClearNavigation()}>
                           All Menu
-                          <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")}  alt="nav" data-interception="off" />
+                          <img src={require("./ServiceProvider/Assets/Img/right_arrow.svg")} alt="nav" data-interception="off" />
                         </a>
-                        {/* <div > */}
                         <button className='department_btn clears-subnav' onClick={(e) => handler.addDeptData(e)}>Add Department</button>
-                        {/* </div> */}
                         {BreadCrumb.map((item, key) => (
                           <a href="#" id="b-d-crumb" data-index={key} onClick={() => handler.GetSubNodes(item.ID, item.Title, "Breadcrumb", key)}>
                             {item.Title}

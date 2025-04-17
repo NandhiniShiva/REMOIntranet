@@ -9,11 +9,11 @@ import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 
 let QuickLinkslist = listNames.QuickLinks;
+var NewWeb: IWeb & IInvokable<any>
 
 export interface IDepartmentQuickLinkState {
   QuickLinkData: any[];
 }
-var NewWeb: IWeb & IInvokable<any>
 export default class DepartmentQuickLink extends React.Component<IRemoDeptLandingPageProps, IDepartmentQuickLinkState, {}> {
   public constructor(props: IRemoDeptLandingPageProps, state: IDepartmentQuickLinkState) {
     super(props);
@@ -72,9 +72,9 @@ export default class DepartmentQuickLink extends React.Component<IRemoDeptLandin
       const { HoverOffIcon, HoverOnIcon, URL, Title, ID } = item;
 
       if (HoverOffIcon && HoverOnIcon && URL && URL.Url && Title) {
+
         const ImgObj = JSON.parse(HoverOffIcon);
         const ImgObj2 = JSON.parse(HoverOnIcon);
-
         const serverRelativeUrl = ImgObj.serverRelativeUrl || `${reactHandler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/${ID}/${ImgObj.fileName}`;
         const serverRelativeUrl2 = ImgObj2.serverRelativeUrl || `${reactHandler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/${ID}/${ImgObj2.fileName}`;
 
@@ -114,7 +114,6 @@ export default class DepartmentQuickLink extends React.Component<IRemoDeptLandin
           </div>
         </div>
       </div>
-
     );
   }
 }

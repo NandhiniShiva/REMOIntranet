@@ -5,20 +5,14 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-// import { IWeb, Web } from "@pnp/sp/webs";
-// import 'evo-calendar';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-// import pnp, { sp } from 'sp-pnp-js';
 import { Web } from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let Eventslist = listNames.Events;
-// var Designation = "";
-// var Department = "";
 
 export interface IEventsVmState {
   Items: any[];
@@ -102,8 +96,7 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
 
         const userDetails = new CurrentUserDetails();
         userDetails.getCurrentUserDetails().then((data) => {
-          console.log("Current user details", data);
-          console.log("data details", data?.Department, data?.Designation);
+
           handler.GetEventsofSelectedDate(selectedDate, data?.Department, data?.Designation);
 
         }).catch((error) => {
@@ -139,8 +132,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     if (!Designation) {
       Designation = "NA";
     }
-    console.log(this.state.Title);
-
     try {
 
 
@@ -217,8 +208,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
         sidebarDisplayDefault: false
       };
 
-      // Initialize evoCalendar with options
-      // ($('#calendar') as any).evoCalendar(calendarOptions);
 
       const calendarElement = document.querySelector('#calendar') as HTMLElement;
       if (calendarElement) {
@@ -228,7 +217,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
       if (Mode !== "EvVM") {
         // If not 'EvVM' mode, set the selected date
         const formattedDate = moment(Date).format("MMMM DD, YYYY");
-        // ($("#calendar") as any).evoCalendar('selectDate', formattedDate);
         (calendarElement as any).evoCalendar('selectDate', formattedDate);
 
       }
@@ -267,11 +255,8 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     if (calendarElement) {
       active_events = (calendarElement as any).evoCalendar('getActiveEvents');
     }
-    // var active_events = ($("#calendar") as any).evoCalendar('getActiveEvents');
-    console.log(active_events)
+
     if (active_events.length == 0) {
-      // $("#if-event-present").hide();
-      // $("#if-no-event-present").show();
 
       document.querySelectorAll('#if-event-present').forEach(element => {
         (element as HTMLElement).style.display = 'none';
@@ -281,9 +266,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
       });
 
     } else {
-      // $("#if-event-present").show();
-      // $("#if-no-event-present").hide();
-
       document.querySelectorAll('#if-event-present').forEach(element => {
         (element as HTMLElement).style.display = 'block';
       });
@@ -350,8 +332,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
     return (
       <div className={styles.remoHomePage} id="eventsvm" style={{ display: "none" }}>
 
-
-
         <div className="container relative">
           <div className="section-rigth">
             <div className="inner-banner-header relative m-b-20">
@@ -359,7 +339,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
               <div className="inner-banner-contents">
                 <h1> Events </h1>
                 <ul className="breadcums">
-
                   <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                   <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Events </a> </li>
                 </ul>
@@ -369,7 +348,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
               <div className="row">
                 <div className="col-md-6">
                   <div id="calendar"></div>
-
                 </div>
                 <div className="col-md-6">
                   <div className="inner-event-wrap">
@@ -378,7 +356,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
                         {this.state.SelectedDate}
                       </div>
                       <div id="event" >
-
                         <div className="inner-event-body" id="if-event-present" >
                           <ul >
                             {EventsfromCalender}
@@ -394,7 +371,6 @@ export default class EventsVm extends React.Component<IEventsViewMoreProps, IEve
               </div>
             </div>
             <Footer siteurl={this.props.siteurl} context={this.props.context} description={''} userid={''} createList={false} name={''} onReadMoreClick={null} id={null} selectedComponents={undefined} />
-
           </div>
         </div>
         <RemoResponsive siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />

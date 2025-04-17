@@ -22,7 +22,6 @@ export interface IQuickLinkState {
 export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, IQuickLinkState, {}> {
   public constructor(props: IRemoHomePageProps) {
     super(props);
-    // alert(this.props.userid)
     this.state = {
       MyQuickLinksPrefference: [],
       isDataAvailable: false
@@ -42,63 +41,10 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
 
   }
 
-  public async fetchAllUsersQuickLinks() {
-    try {
-      const items = await sp.web.lists
-        .getByTitle("UsersQuickLinks")
-        .items.select(
-          "ID",
-          "Title",
-          "Order0",
-          "ImageSrc",
-          "HoverImageSrc",
-          "URL",
-          "SelectedQuickLinks/ID",  // Fetch lookup ID
-          "SelectedQuickLinks/Title", // Fetch lookup title
-          "Created",
-          "Modified",
-          "Author/ID",  // Fetch created by (person field)
-          "Editor/Title"   // Fetch modified by (person field)
-        )
-        .expand("SelectedQuickLinks", "Author", "Editor")
-        .orderBy("Order0", true) // Order by Order0 in ascending order
-        .get();
-
-      // Displaying the fetched items in the console
-      console.log("Retrieved items:", items);
-
-      // Display details of each item (example output)
-      items.forEach(item => {
-        console.log(`ID: ${item.ID}`);
-        console.log(`Title: ${item.Title}`);
-        console.log(`Order: ${item.Order0}`);
-        console.log(`Image Source: ${item.ImageSrc}`);
-        console.log(`Hover Image: ${item.HoverImageSrc}`);
-        console.log(`URL: ${item.URL}`);
-        console.log(`Selected Quick Links ID: ${item.SelectedQuickLinks?.ID}`);
-        console.log(`Selected Quick Links Title: ${item.SelectedQuickLinks?.Title}`);
-        console.log(`Created By: ${item.Author?.Title}`);
-        console.log(`Modified By: ${item.Editor?.Title}`);
-        console.log(`Created Date: ${item.Created}`);
-        console.log(`Modified Date: ${item.Modified}`);
-      });
-
-    } catch (error) {
-      console.error("Error fetching data from UsersQuickLinks list:", error);
-    }
-  }
-
-
-
   public async getcurrentusersQuickLinks() {
     try {
       const { userid: UserID } = this.props;
-      // debugger;
-      // this.fetchAllUsersQuickLinks();
 
-
-
-      // debugger;
       // Fetch user-specific quick links and active quick links concurrently
       const [userQuickLinks, activeQuickLinks] = await Promise.all([
         sp.web.lists
@@ -159,13 +105,11 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
     this.props.onReadMoreClick({ Name: compName })
   }
   public render(): React.ReactElement<IRemoHomePageProps> {
-    // var reactHandler = this;
     const QuickLinks: JSX.Element[] = this.state.MyQuickLinksPrefference.map((item, key) => {
       const ImgObj = JSON.parse(item.ImageSrc);
       const serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${this.props.siteurl}/Lists/${UsersQuickLinkslist}/Attachments/${item.ID}/${ImgObj.fileName}`;
       const ImgObjonHover = JSON.parse(item.HoverImageSrc);
       const serverRelativeUrlonHover = ImgObjonHover.serverRelativeUrl ?? `${this.props.siteurl}/Lists/${UsersQuickLinkslist}/Attachments/${item.ID}/${ImgObjonHover.fileName}`;
-      // debugger;
       return (
         <li key={key}>
           <a href={item.URL} target="_blank" className="clearfix">
@@ -189,11 +133,8 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
                   </div>
                   <div className="heading-right">
                     <a href='#' data-interception="off" onClick={() => this.readMoreHandler("ManageQuickLinks")} > Manage Quick Links</a>
-
                   </div>
-
                 </div>
-
                 <div className="section-part clearfix">
                   <ul id="result">
                     {QuickLinks}
@@ -202,7 +143,6 @@ export default class RemoQuickLinks extends React.Component<IRemoHomePageProps, 
               </div>
             </div>
             :
-
             <div>
               <button onClick={(e) => this.addData(e)}>Add Data</button>
             </div>

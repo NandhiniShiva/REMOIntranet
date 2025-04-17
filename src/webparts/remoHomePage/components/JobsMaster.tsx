@@ -80,7 +80,6 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
             if (!Designation) {
                 Designation = "NA";
             }
-            // console.log(this.state.Title);
         } catch (error) {
             console.error('Error adding data:', error);
         }
@@ -174,7 +173,6 @@ export default class JobsMaster extends React.Component<IJobsMasterProps, IJobsM
                                 <div className="inner-banner-contents">
                                     <h1> We are hiring </h1>
                                     <ul className="breadcums">
-                                        {/* <li> <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a> </li> */}
                                         <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                                         <li> <a href="#"> Jobs </a> </li>
                                     </ul>

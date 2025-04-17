@@ -67,8 +67,6 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
     if (!Designation) {
       Designation = "NA";
     }
-    // console.log(this.state.Title);
-
     try {
       const response = await NewWeb.lists.getByTitle(Analytics).items.add({
         Category: `${Dept}-Dept Landing Page`,
@@ -93,7 +91,6 @@ export default class RemoHomePage extends React.Component<IRemoDeptLandingPagePr
     try {
       const url = new URL(window.location.href);
       const fullPath = url.pathname;
-
       // Find the index of 'SitePages' in the URL
       const segment = "SitePages";
       const segmentIndex = fullPath.indexOf(`/${segment}`);

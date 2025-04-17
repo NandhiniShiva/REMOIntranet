@@ -199,7 +199,7 @@ export default class HeroBannerViewMore extends React.Component<IHeroBannerViewM
               <div className="inner-page-contents banner-viewall">
                 <div className="search-bar">
                   <label>
-                    <img src={require("./ServiceProvider/Assets/Img/search-solid.svg")}  />
+                    <img src={require("./ServiceProvider/Assets/Img/search-solid.svg")} />
                     <input
                       type="text"
                       id="searchText"

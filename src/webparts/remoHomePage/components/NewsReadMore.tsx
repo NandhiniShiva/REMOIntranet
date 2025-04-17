@@ -126,9 +126,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
-
       reactHandler.GetNews(ItemID, data?.Department, data?.Designation);
     }).catch((error) => {
       console.error("Error fetching current user details:", error);
@@ -259,12 +256,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   }
 
   public AddViews() {
-    // const url: any = new URL(window.location.href);
-    // const mode = url.searchParams.get("mode");
-    // var handler = this;
 
-    // handler.viewsCount();
-    // }
   }
   public viewsCount() {
     try {
@@ -298,7 +290,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
           Title: title,
           ItemID: items[0].ID,
         }, () => {
-          // Call LandingPageAnalytics after state is updated
           this.LandingPageAnalytics(Department, Designation);
 
         });
@@ -503,8 +494,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
       NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
         if (items.length != 0) {
-          // $(".like-selected").show();
-          // $(".like-default").hide();
 
           document.querySelectorAll('.like-selected').forEach(element => {
             (element as HTMLElement).style.display = 'block';
@@ -592,73 +581,7 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
 
     }
   }
-  // public async liked(mode: string) {
-  //   try {
 
-
-  //     if (mode == "like") {
-
-  //       NewWeb.lists.getByTitle(LikesCountMasterlist).items.add({
-  //         EmployeeNameId: User,
-  //         LikedOn: CurrentDate,
-  //         EmployeeEmail: UserEmail,
-  //         ContentPage: "News",
-  //         Title: title,
-  //         ContentID: ID,
-  //       }).then(() => {
-
-  //         document.querySelectorAll('.like-default').forEach(element => {
-  //           (element as HTMLElement).style.display = 'none';
-  //         });
-  //         document.querySelectorAll('.like-selected').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //         // $(".like-default").hide()
-  //         // $(".like-selected").show();
-  //         NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
-  //           var like = items.length;
-  //           var newspan = like.toString()
-  //           const likescount = document.getElementById("likescount");
-  //           if (likescount) {
-  //             likescount.textContent = newspan;
-  //           } else {
-  //             console.error("Element with ID 'likescount' not found.");
-  //           }
-
-  //         });
-  //       })
-  //     } else {
-  //       // $(".like-selected").hide();
-  //       // $(".like-default").show();
-
-  //       document.querySelectorAll('.like-default').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('.like-selected').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).get().then((data: any) => {
-  //         NewWeb.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete().then(() => {
-
-  //           NewWeb.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'News' and ContentID eq ${ID}`).top(5000).get().then((items: any) => { // //orderby is false -> decending          
-  //             var like = items.length;
-  //             var newspan = like.toString()
-  //             // document.getElementById("likescount").textContent = newspan;
-  //             const likescount = document.getElementById("likescount");
-  //             if (likescount) {
-  //               likescount.textContent = newspan;
-  //             } else {
-  //               console.error("Element with ID 'likescount' not found.");
-  //             }
-  //           });
-  //         })
-  //       })
-  //     }
-  //   } catch (error) {
-  //     console.log("Error in liked", error);
-
-  //   }
-  // }
 
   // Optimized code
   public async liked(mode: string) {
@@ -721,7 +644,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   }
 
   public showComments() {
-    // $(".all-commets").toggle();
     document.querySelectorAll('.all-comments').forEach(element => {
       const htmlElement = element as HTMLElement;
       htmlElement.style.display = htmlElement.style.display === 'none' ? 'block' : 'none';
@@ -741,8 +663,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   }
   public saveComments(e: any) {
     var comments = e.target.value;
-    // var comments = $("#comments").val();
-
     if (comments && comments.toString().length == 0) {
       Swal.fire({
         title: "Minimum 1 character is required!",
@@ -754,8 +674,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
   }
   public async pageviewscount(views: number) {
     try {
-
-
       await NewWeb.lists.getByTitle(Newslist).items.getById(ID).update({
         'PageViewCount': views
       })
@@ -859,7 +777,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
               <img src={`${serverRelativeUrl}`} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
-              {/* /  <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a> */}
               <a href='#' data-interception="off" onClick={() => this.readMoreHandler("NewsReadMore", item.ID)} className="nw-list-main"> {item.Title} </a>
 
               <div className="ns-tag-duration ">
@@ -875,7 +792,6 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
               <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="image" />
             </div>
             <div className="list-li-recent-news-desc">
-              {/* <a href={`${reactHandler.props.siteurl}/SitePages/NewsReadMore.aspx?ItemID=${item.ID}&AppliedTag=${item.Tag}&Dept=${depttitle}&SitePageID=${sitepageid}&`} data-interception="off" className="nw-list-main"> {item.Title} </a> */}
               <a href='#' data-interception="off" onClick={() => this.readMoreHandler("NewsReadMore", item.ID)} className="nw-list-main"> {item.Title} </a>
 
               <div className="ns-tag-duration ">
@@ -940,9 +856,9 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                             {this.state.IsLikeEnabled == true ?
                               <li>
 
-                                <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")}  alt="image" onClick={() => this.liked("dislike")} />
+                                <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")} alt="image" onClick={() => this.liked("dislike")} />
 
-                                <img className="like-default"src={require("./ServiceProvider/Assets/Img/lcv_like.svg")}  alt="image" onClick={() => this.liked("like")} />
+                                <img className="like-default" src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                                 <span id="likescount"> {likes} </span>
 
                               </li>
@@ -950,11 +866,11 @@ export default class NewsRm extends React.Component<INewsReadMoreProps, INewsRmS
                             }
                             {this.state.IsCommentEnabled == true &&
                               <li>
-                                <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
+                                <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")} alt="image" onClick={() => this.showComments()} /> <span id="commentscount"> {commentscount} </span>
                               </li>
                             }
                             <li>
-                              <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")}  alt="image" /> <span> {views} </span>
+                              <img className="nopointer" src={require("./ServiceProvider/Assets/Img/lcv_view.svg")} alt="image" /> <span> {views} </span>
                             </li>
                           </ul>
                         </div>

@@ -9,13 +9,13 @@ import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 
 let Serviceslist = listNames.Services;
+var NewWeb: IWeb & IInvokable<any>
 
 export interface IDepartmentServicesState {
   Items: any[];
   ServiceDescription: string;
   isDataAvailable: boolean
 }
-var NewWeb: IWeb & IInvokable<any>
 export default class DepartmentServices extends React.Component<IRemoDeptLandingPageProps, IDepartmentServicesState, {}> {
   public constructor(props: IRemoDeptLandingPageProps, state: IDepartmentServicesState) {
     super(props);
@@ -28,7 +28,6 @@ export default class DepartmentServices extends React.Component<IRemoDeptLanding
   }
 
   public componentDidMount() {
-
     this.GetDepartmentServices();
   }
 

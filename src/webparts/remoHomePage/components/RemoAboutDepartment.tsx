@@ -11,11 +11,11 @@ import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../remoHomePage/Configuration';
 
 let AboutDepartmentlist = listNames.AboutDepartment;
+var NewWeb: IWeb & IInvokable<any>
 
 export interface IAboutDepartmentState {
   Items: any[];
 }
-var NewWeb: IWeb & IInvokable<any>
 export default class AboutDepartment extends React.Component<IRemoDeptLandingPageProps, IAboutDepartmentState, {}> {
   public constructor(props: IRemoDeptLandingPageProps, state: IAboutDepartmentState) {
     super(props);
@@ -30,9 +30,7 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
   }
 
   public componentDidMount() {
-
     this.GetDepartmentAbout();
-
   }
 
   private async GetDepartmentAbout() {
@@ -84,7 +82,6 @@ export default class AboutDepartment extends React.Component<IRemoDeptLandingPag
         try {
           var ImgObj = JSON.parse(RawImageTxt);
           var serverRelativeUrl = ImgObj.serverRelativeUrl || `${reactHandler.props.siteurl}/Lists/${AboutDepartmentlist}/Attachments/` + item.ID + "/" + ImgObj.fileName;
-
           return (
             <div className="col-md-12 m-b-0 clearfix" key={key}>
               <div className="department-detailsi-img">

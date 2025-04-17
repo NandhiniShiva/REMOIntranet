@@ -6,7 +6,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/site-users/web";
-// import * as $ from 'jquery';
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
@@ -26,8 +25,6 @@ export interface IRemoContentEditorState {
   Designation: string;
   UserEmail: string;
 }
-
-// const ActivePageUrl = (window.location.href.split('?') ? window.location.href.split('?')[0] : window.location.href).toLowerCase();
 
 export default class RemoContentEditor extends React.Component<IContentEditorProps, IRemoContentEditorState, {}> {
   public constructor(props: IContentEditorProps, state: IRemoContentEditorState) {
@@ -73,7 +70,6 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
       });
     }, 1500);
 
-    // await this.getCurrentUser();
     await this.CheckPermission();
     this.LandingPageAnalytics();
     const userDetails = new CurrentUserDetails();
@@ -94,7 +90,6 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
   public async getCurrentUser() {
     try {
       const profile = await sp.profiles.myProperties.get();
-      console.log('User Profile:', profile); // Debug log
 
       const userEmail = profile.Email || "No Email";
       const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
@@ -173,7 +168,6 @@ export default class RemoContentEditor extends React.Component<IContentEditorPro
 
   public async LandingPageAnalytics() {
     const { currentUser, UserEmail, Department, Designation } = this.state;
-    // const CurrentDate = new Date();
     const ItemId = "NA";
     try {
       await sp.web.lists.getByTitle(Analytics).items.add({

@@ -8,7 +8,6 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
-// import * as $ from 'jquery';
 import Slider from "react-slick";
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
@@ -91,154 +90,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
   }
 
-  // public componentDidMount() {
-  //   setTimeout(() => {
-  //     // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-  //     // $('#spCommandBar').attr('style', 'display: none !important');
-  //     // $('#webPartContainer').attr('style', 'display: none !important');
-  //     // $('#CommentsWrapper').attr('style', 'display: none !important');
-
-  //     const commentsWrapper = document.getElementById('CommentsWrapper');
-  //     if (commentsWrapper) {
-  //       commentsWrapper.style.setProperty('display', 'none', 'important');
-  //     }
-
-  //     // Hide all div elements with the attribute data-automation-id="pageHeader"
-  //     const pageHeaders: any = document.querySelectorAll('div[data-automation-id="pageHeader"]');
-  //     pageHeaders.forEach((element: any) => {
-  //       element.style.setProperty('display', 'none', 'important');
-  //     });
-
-  //     // Show the element with ID "ceoMessageReadMore"
-  //     const webPartContainer = document.getElementById('webPartContainer');
-  //     if (webPartContainer) {
-  //       webPartContainer.style.display = 'none';
-  //     }
-
-  //     const spCommandBar = document.getElementById('spCommandBar');
-  //     if (spCommandBar) {
-  //       spCommandBar.style.setProperty('display', 'none', 'important');
-  //     }
-  //   }, 2000);
-  //   const url: any = new URL(window.location.href);
-
-  //   const FolderUrl = url.searchParams.get("FolderName");
-  //   console.log(FolderUrl);
-  //   const Type = url.searchParams.get("Type");
-  //   Global_Type = Type;
-  //   if (Type == "Img") {
-  //     // $(".image-gallery-allimg-block").show();
-  //     // $(".video-gallery-allimg-block").hide();
-
-
-  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-
-
-  //   } else {
-  //     // $(".image-gallery-allimg-block").hide();
-  //     // $(".video-gallery-allimg-block").show();
-
-
-  //     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'none';
-  //     });
-  //     document.querySelectorAll('.video-gallery-allimg-block').forEach(element => {
-  //       (element as HTMLElement).style.display = 'block';
-  //     });
-  //   }
-  //   //     var folderurl = FolderUrl.replace(/['"]+/g, '')
-  //   //     const parts = folderurl.split('/');
-  //   //     const folderName = parts[parts.length - 2];
-  //   // console.log(folderName);
-  //   // var folderurl = FolderUrl.replace(/['"]+/g, '')
-  //   // const segments = folderurl.split('/');
-  //   // const folderName = segments[segments.length - 1];
-
-  //   var folderurl = FolderUrl.replace(/['"]+/g, '');
-
-  //   // Remove trailing slash if it exists
-  //   folderurl = folderurl.replace(/\/$/, '');
-
-  //   // Split the URL to get the segments
-  //   const segments = folderurl.split('/');
-
-  //   // Get the last segment which is the folder name
-  //   const folderName = segments[segments.length - 1];
-  //   console.log(folderName); // Output: Test
-
-
-
-
-  //   this.setState({
-  //     nav1: this.slider1,
-  //     nav2: this.slider2,
-  //     Type: Type,
-  //     type: Type,
-  //     MyFolderName: folderName
-  //   });
-  //   // this.GetSubFolder(folderurl, Type, "")
-  //   this.getCurrentUser().then(() => {
-  //     this.GetSubFolder(folderurl, Type, "")
-  //   }).then(() => {
-  //     this.LandingPageAnalytics();
-  //   });
-  //   GlobalUrl = folderurl
-  //   // this.GetGalleryFilesFolder("Main");
-  //   if (Type == "Img") {
-  //     // $(".vdo-block-cntnt").removeClass("active");
-  //     // $(".img-block-cntnt").addClass("active");
-
-  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-  //     vdoBlockElements.forEach(element => {
-  //       element.classList.remove('active');
-  //     });
-
-  //     // Add the "active" class to all elements with the class "img-block-cntnt"
-  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-  //     imgBlockElements.forEach(element => {
-  //       element.classList.add('active');
-  //     });
-  //   } else {
-  //     this.ShowVideos()
-  //     // $(".img-block-cntnt").removeClass("active");
-  //     // $(".vdo-block-cntnt").addClass("active");
-
-  //     const vdoBlockElements = document.querySelectorAll('.vdo-block-cntnt');
-  //     vdoBlockElements.forEach(element => {
-  //       element.classList.add('active');
-  //     });
-
-  //     // Add the "active" class to all elements with the class "img-block-cntnt"
-  //     const imgBlockElements = document.querySelectorAll('.img-block-cntnt');
-  //     imgBlockElements.forEach(element => {
-  //       element.classList.remove('active');
-  //     });
-  //   }
-  //   // $(".img-galler-section-cls ul li").on("click", function () {
-  //   //   $(this).siblings().removeClass("active");
-  //   //   $(this).addClass("active");
-  //   // });
-
-  //   const ulElement: any = document.querySelector('.img-galler-section-cls ul');
-
-  //   // Attach a single click event listener to the <ul> element
-  //   ulElement.addEventListener('click', function (event: any) {
-  //     // Check if the clicked target is an <li> element
-  //     if (event.target.tagName === 'LI') {
-  //       // Remove the "active" class from all sibling <li> elements
-  //       const listItems = ulElement.querySelectorAll('li');
-  //       listItems.forEach((sibling: { classList: { remove: (arg0: string) => any; }; }) => sibling.classList.remove('active'));
-
-  //       // Add the "active" class to the clicked <li> element
-  //       event.target.classList.add('active');
-  //     }
-  //   });
-  // }
 
   // Optimized code
   public componentDidMount() {
@@ -253,8 +104,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
     this.toggleGallery(Type);
     const folderName = this.extractFolderName(FolderUrl);
-    console.log(folderName);
-
     this.setState({
       nav1: this.slider1,
       nav2: this.slider2,
@@ -268,8 +117,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
 
     }).then(() => this.GetSubFolder(folderName, Type, ""))
       .then(() => this.LandingPageAnalytics(Department, Designation))
@@ -300,7 +147,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
   private toggleGallery(Type: string) {
     const displayStyle = Type === "Img" ? 'block' : 'none';
     const oppositeStyle = Type === "Img" ? 'none' : 'block';
-
     document.querySelectorAll('.image-gallery-allimg-block').forEach(element => {
       (element as HTMLElement).style.display = displayStyle;
     });
@@ -363,7 +209,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       if (profile && profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         // Find the Department property in the profile
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string; }) => prop.Key === 'Department');
-        console.log(departmentProperty);
         if (departmentProperty) {
           Department = departmentProperty.Value;
         }
@@ -391,7 +236,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
       var result = sp.web.getFolderByServerRelativeUrl(FolderURL).select("ID", "Title", "FileRef", "FileSystemObjectType", "FileLeafRef", "File/ServerRelativeUrl", "File/Name", "").expand("Folders", "Files", "ListItemAllFields").files
       await result.get().then(async (items: any[]) => {
-        console.log(items);
         if (items.length !== 0) {
           items.sort((a, b) => {
             const dateA = new Date(a.TimeCreated); // Use TimeCreated instead of Created
@@ -414,10 +258,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
         console.error('Error fetching items:', error);
         // Handle error if needed
       });
-      console.log(result);
-
-
-
       // return mostRecentItem;
     } catch (error) {
       console.error('Error fetching folder thumbnail:', error);
@@ -492,8 +332,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
             noVdoElement.style.display = images.length === 0 && videos.length === 0 ? 'block' : 'none';
           }
         } else {
-          // $("#no-video").toggle(videos.length === 0);
-          // $("#no-img").toggle(images.length === 0 && videos.length === 0);
 
           const noImgElement = document.getElementById('no-video');
           // Toggle visibility based on the condition
@@ -572,10 +410,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       (element as HTMLElement).style.display = 'none';
     });
     const url: any = new URL(window.location.href);
-
     const FolderUrl = url.searchParams.get("FolderName");
-    console.log(FolderUrl);
-
     var folderurl = FolderUrl.replace(/['"]+/g, '')
     this.GetSubFolder(folderurl, "Img", "")
   }
@@ -586,8 +421,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       Videos: [],
     });
     Global_Type = "";
-    // $("#lightgallery").hide();
-
     document.querySelectorAll('#lightgallery').forEach(element => {
       (element as HTMLElement).style.display = 'none';
     });
@@ -601,13 +434,10 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       (element as HTMLElement).style.display = 'block';
     });
     const url: any = new URL(window.location.href);
-
     const FolderUrl = url.searchParams.get("FolderName");
-    console.log(FolderUrl);
 
     var folderurl = FolderUrl.replace(/['"]+/g, '')
     this.GetSubFolder(folderurl, "VdoBlock", "")
-    // this.GetGalleryFilesFolder("VdoBlock");
   }
 
   public GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
@@ -644,8 +474,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
           // If mode is "Image" and there are video files, hide image trigger
           if (Mode === "Image" && videoItems.length === 0) {
-            // $("#trigger-video").hide();
-
             document.querySelectorAll('#trigger-video').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -653,7 +481,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
 
           // If mode is "Video" and there are no video files, hide video trigger
           if (Mode === "Video" && imageItems.length === 0) {
-
             document.querySelectorAll('#trigger-image').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -662,7 +489,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
           // Set the folder items in the state and open the lightbox
           reactHandler.setState({ FolderItems: Mode === "Image" ? imageItems : videoItems });
           // $(".lightbox").addClass("open");
-
           const lightboxElement = document.querySelector('.lightbox');
 
           // Add the "open" class to the selected element
@@ -695,9 +521,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
     // Update the component state with the folder URL and mode
     this.setState({ FolderURL: FolderURL, Mode: Mode });
 
-    // Open the lightbox
-    // $(".lightbox").addClass("open");
-
+    // Open the lightbo
     const lightboxElement = document.querySelector('.lightbox');
 
     // Add the "open" class to the selected element
@@ -804,12 +628,9 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
       .map((item, key) => {
         const finalThumbnailURL = getThumbnailUrl(item.ServerRelativeUrl);
         const defaultImage = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/other_images_not_found.png");
-        console.log("Original URL:", item.ServerRelativeUrl);
-        console.log("Thumbnail URL:", finalThumbnailURL);
-
         return (
           <li key={key} className="li-img-area" data-value={key} onClick={() => reactHandler.GetImagesInsideFolder(reactHandler.state.Subfolderurl, "Image", key)}>
-            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = defaultImage } />
+            <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = defaultImage} />
             {/* <img src={finalThumbnailURL} alt="Image" /> */}
 
           </li>
@@ -837,12 +658,8 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
             {item.Name}
           </li>
         );
-
-
-        // })
       }
 
-      // }
     })
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
 
@@ -936,7 +753,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                                   <li className='folder' id={`${key}-folder`} key={key}>
                                     <a className="O" id="b-d-crumb" data-index={key} onClick={(e) => this.handleClick(item.Title, key, "Breadcrumb", e, item.Url)}>
                                       {item.Title && (
-                                        <img  src={require("./ServiceProvider/Assets/Img/arrow.png")} alt="nav" />
+                                        <img src={require("./ServiceProvider/Assets/Img/arrow.png")} alt="nav" />
                                       )}
                                       <span>{item.Title}</span>
                                     </a>
@@ -951,7 +768,7 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                             </div>
                             <div className="section-part clearfix latest-events-bck" id="no-img" style={{ display: "none" }}>
                               <div className="clearfix img-block-area">
-                                <img className="err-img"  src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
+                                <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
                               </div>
                             </div>
                           </ul>
@@ -983,7 +800,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                   <ul>
                     <li id="trigger-image" className={this.state.Mode == "Image" ? "imageblock" : ""} > <a href="#" onClick={() => this.GetImagesInsideFolder(this.state.FolderURL, "Image", 0)}> Images  </a> </li>
                     <li id="trigger-video" className={this.state.Mode == "Video" ? "videoblock" : ""} > <a href="#" onClick={() => this.GetImagesInsideFolder(this.state.FolderURL, "Video", 0)}> Videos  </a> </li>
-                    {/*<li> <a href={this.props.siteurl+"/SitePages/Gallery-Grid-View.aspx?FolderName='"+this.state.FolderURL+"'&Type=Img&env=WebViewList"} data-interception="off"> Grid View  </a> </li>*/}
                   </ul>
                 </div>
                 <div className="lightbox-contents-body">
@@ -1036,7 +852,6 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                                   style={{ width: '810px' }}
                                   controls
                                 >
-                                  {/* <source src={`${item.ServerRelativeUrl}`} type="video/mp4" /> */}
                                 </video>
                                 <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
                               </>
@@ -1048,11 +863,9 @@ export default class RemoGalleryGridView extends React.Component<IGalleryGridVie
                         <div style={{ textAlign: 'center' }}>
                           <img
                             src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
-                            // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                             alt="No Content Found"
                             style={{ width: '900px' }}
                           />
-                          {/* <h4 style={{ color: '#ffffff' }}>No Content Found</h4> */}
                         </div>
                       )}
                     </Slider>
