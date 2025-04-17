@@ -136,10 +136,13 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   handleBeforeUnload = (event: any) => {
     if (this.state.ComponentChanged) {
       event.preventDefault();
-      event.returnValue =
-        "You may lose the changes. Please make it a draft or publish the changes!";
+      const message = "You may lose the changes. Please make it a draft or publish the changes!?";
+      event.preventDefault();
+      event.returnValue = message; // Required for Chrome
+      // return message;
     }
   };
+
   public checkEditMode() {
     const url: any = new URL(window.location.href);
     const mode = url.searchParams.get("Mode");
@@ -1094,13 +1097,11 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public handleSelectedComponents(LayoutData: any) {
-    debugger;
     console.log("Details", LayoutData.AllocatedComponentsDetails, "componentsmismatched", LayoutData.DataChanged);
     this.setState({
       selectedComponents: LayoutData.AllocatedComponentsDetails,      // showDropdown: false
       ComponentChanged: LayoutData.DataChanged
     })
-
   }
 
 

@@ -9,7 +9,6 @@ let Hero_Bannerlist = listNames.Hero_Banner;
 let NewWeb: any = Web(WEB.NewWeb);
 var IsAdminUser: boolean = false;
 var IsMode: string = "add_mode";
-var IsDraggable: boolean = true;
 // var Count: number = 0;
 
 
@@ -52,10 +51,9 @@ export interface IHeroBannerState {
 export default class HeroBanner extends React.Component<IRemoHomePageProps, IHeroBannerState, {}> {
   constructor(props: IRemoHomePageProps) {
     super(props);
-    const [isAdmin, Mode, Dragmode] = this.props.description.split(',').map(value => value.trim());
+    const [isAdmin, Mode] = this.props.description.split(',').map(value => value.trim());
     IsAdminUser = Boolean(isAdmin);
     IsMode = Mode;
-    IsDraggable = Boolean(Dragmode);
     console.log("iscurrentuserisanadmi:", IsAdminUser, "Iseditmode:", IsMode);
 
     this.state = {
@@ -186,16 +184,24 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
   public readMoreHandler(compName: any, itemId: any) {
     this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
-  goToPrevSlide = () => {
-    this.setState((prevState) => ({
-      currentSlide: Math.max(prevState.currentSlide - 1, 0)
-    }));
+  goToPrevSlide = (event: any) => {
+    event.preventDefault();
+    const { currentSlide, Items } = this.state;
+    const prevSlide = (currentSlide - 1 + Items.length) % Items.length;
+    this.setState({ currentSlide: prevSlide });
+    // this.setState((prevState) => ({
+    //   currentSlide: Math.max(prevState.currentSlide - 1, 0)
+    // }));
   };
 
-  goToNextSlide = () => {
-    this.setState((prevState) => ({
-      currentSlide: Math.min(prevState.currentSlide + 1, this.state.Items.length - 1)
-    }));
+  goToNextSlide = (event: any) => {
+    event.preventDefault();
+    const { currentSlide, Items } = this.state;
+    const nextSlide = (currentSlide + 1) % Items.length;
+    this.setState({ currentSlide: nextSlide });
+    // this.setState((prevState) => ({
+    //   currentSlide: Math.min(prevState.currentSlide + 1, this.state.Items.length - 1)
+    // }));
   };
 
   goToSlide = (index: number) => {
@@ -311,31 +317,32 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
                 </div>
                 {this.state.Items.length > 1 && (
                   <>
-                    {this.state.currentSlide > 0 && (
-                      <button
-                        className="hero-banner-btn prev-btn"
-                        onClick={this.goToPrevSlide}
-                      >
-                        ‹
-                      </button>
+                    {this.state.Items.length > 1 && (
+                      <>
+                        <div
+                          className="hero-banner-btn prev-btn"
+                          onClick={(e) => { this.goToPrevSlide(e) }}
+                        >
+                          <img src={require("./ServiceProvider/Assets/Img/left-arrow.svg")} alt="Prev_image" />
+                        </div>
+                        <div
+                          className="hero-banner-btn next-btn"
+                          onClick={(e) => { this.goToNextSlide(e) }}
+                        >
+                          <img src={require("./ServiceProvider/Assets/Img/right-arrow.svg")} alt="Next_image" />
+                        </div>
+                        <div className="hero-banner-dots">
+                          {this.state.Items.map((_, dotIndex) => (
+                            <span
+                              key={dotIndex}
+                              className={`dot ${dotIndex === this.state.currentSlide ? "active" : ""}`}
+                              onClick={() => this.goToSlide(dotIndex)}
+                            ></span>
+                          ))}
+                        </div>
+                      </>
                     )}
-                    {this.state.currentSlide < this.state.Items.length - 1 && (
-                      <button
-                        className="hero-banner-btn next-btn"
-                        onClick={this.goToNextSlide}
-                      >
-                        ›
-                      </button>
-                    )}
-                    <div className="hero-banner-dots">
-                      {this.state.Items.map((_, dotIndex) => (
-                        <span
-                          key={dotIndex}
-                          className={`dot ${dotIndex === this.state.currentSlide ? "active" : ""}`}
-                          onClick={() => this.goToSlide(dotIndex)}
-                        ></span>
-                      ))}
-                    </div>
+
                   </>
                 )}
               </div>
@@ -361,8 +368,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
                 <div id="if-Banner-Exist" className="hero-banner-container-wrap">
                   <Slider
                     {...settings}
-                    draggable={IsDraggable}
-                    swipe={IsDraggable}
                     className="hero-banner-container-wrap"
                   >
                     {MAslider}
