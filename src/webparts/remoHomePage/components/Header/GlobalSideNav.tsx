@@ -14,7 +14,6 @@ import RemoResponsive from './RemoResponsive';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../Configuration';
 import { sp } from '@pnp/sp/presets/all';
-// import "../ServiceProvider/Styles/newStyle.css";
 var metaTag = document.createElement('meta');
 metaTag.name = "viewport"
 metaTag.content = "width=device-width, initial-scale=1.0"
@@ -110,10 +109,8 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
       });
     });
 
-    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
-    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
+
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
-    // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
     SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -385,7 +382,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
             if (this.state.myMeetingsDatas.length > 0) {
               this.setState({ MeetingsCount: myMeetingscount });
               if (this.state.myMeetingsDatas.length > 999) {
-                // $(".meet-count").addClass("more");
                 document.querySelectorAll(".meet-count").forEach(function (element) {
                   element.classList.add("more");
                 });
@@ -477,7 +473,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
         DeptandQuickLinksItems: items
       });
       for (var i = 0; i < items.length; i++) {
-        //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
+
         let ID = items[i].Id;
         var Title = items[i].Title;
         var Url = items[i].URL.Url;
@@ -692,7 +688,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-          // $("#" + ID + "-Dept-Child").append(item);
+
           let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
           deptChildId.appendChild(item);
         } else {
@@ -702,7 +698,6 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-          // $("#" + ID + "-Dept-Child").append(item);
           let deptChildId: any = document.getElementById(ID + "-Dept-Child")
           deptChildId.appendChild(item);
 
@@ -719,7 +714,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-          // $("#" + ID + "-Dept-Child").append(item);
+
           let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
           deptChildId.appendChild(item);
         } else {
@@ -729,7 +724,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               </li>
           `;
 
-          // $("#" + ID + "-Dept-Child").append(item);
+
           let deptChildId: any = document.getElementById("#" + ID + "-Dept-Child")
           deptChildId.appendChild(item);
         }
@@ -915,7 +910,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
               <div className="search relative">
                 <img src={require("../ServiceProvider/Assets/Img/search.png")} alt="image" />
                 <input type="search" id="txt-search" className="form-control insearch" placeholder="Search Here" autoComplete='off' onKeyDown={(e) => this.OpenSearchPage(e, this.props.siteurl)} />
-                <img className="res-ser-close" src={require("../ServiceProvider/Assets/Img/close_resposnive.svg")}  onClick={() => this.CloseSearch()} />
+                <img className="res-ser-close" src={require("../ServiceProvider/Assets/Img/close_resposnive.svg")} onClick={() => this.CloseSearch()} />
               </div>
             </div>
             <div className="header-right">
@@ -942,7 +937,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
                   </li>
                   <li className="count-email" data-tip data-for={"React-tooltip-Email"} data-custom-class="tooltip-custom">
                     <a href="https://outlook.office.com/mail/" target="_blank" data-interception="off" className="notification relative">
-                      <img src={require("../ServiceProvider/Assets/Img/tq3.svg")}  alt="images" />
+                      <img src={require("../ServiceProvider/Assets/Img/tq3.svg")} alt="images" />
                       <span id="Emails_count"> {this.state.EmailCount} </span>
                     </a>
                     <ReactTooltip id={"React-tooltip-Email"} place="bottom" type="dark" effect="solid">
@@ -969,7 +964,7 @@ export default class GlobalSideNav extends React.Component<ISideNavProps, ISideN
 
               <div className="responsive-inner-classes">
                 <ul>
-                  <li> <a href="#" onClick={() => this.OpenSearch()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/res_searc.svg")}  alt="image" /> </a></li>
+                  <li> <a href="#" onClick={() => this.OpenSearch()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/res_searc.svg")} alt="image" /> </a></li>
                   <li> <a href="#" onClick={() => this.OpenBurggerQuickLinkMenu()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/quick_link_mob.svg")} alt="image" /> </a></li>
                   <li> <a href="#" onClick={() => this.OpenBurggerMainMenu()} data-interception="off"><img src={require("../ServiceProvider/Assets/Img/burger_menu.svg")} alt="image" /> </a></li>
                 </ul>

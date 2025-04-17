@@ -138,7 +138,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
                           <source src={`${item.File.ServerRelativeUrl}`} type="video/mp4" />
                         </video>
                         <div className="pasue_img">
-                          <img src={require("./ServiceProvider/Assets/Img/video_img.svg")}  alt="images" />
+                          <img src={require("./ServiceProvider/Assets/Img/video_img.svg")} alt="images" />
                         </div>
                       </a>
                     </div>
@@ -202,11 +202,6 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
       }
     })
       .filter((element): element is JSX.Element => element !== null);  // Filter out `null`
-
-
-
-
-
     return (
       <div className='col-md-12 imagesandvideos'>
         <div id="dept-gallery-home">
@@ -246,7 +241,7 @@ export default class RemoImagesandVideos extends React.Component<IRemoHomePagePr
                   </div>
                   <div className="section-part clearfix latest-events-bck">
                     <div className="clearfix img-block-area">
-                      <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}  alt="no-image-uploaded" />
+                      <img className="err-img" src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")} alt="no-image-uploaded" />
                     </div>
                   </div>
                 </div>

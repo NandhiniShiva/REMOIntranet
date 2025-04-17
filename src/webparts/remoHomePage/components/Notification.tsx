@@ -13,7 +13,6 @@ import { listNames } from '../Configuration';
 import { ServiceProvider } from '../components/ServiceProvider/Service';
 
 let NotificationList = listNames.NotificationList
-
 let newweb: any;
 var User: any;
 
@@ -80,11 +79,9 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
     public async GetCurrentUserDetails() {
         try {
             let CurrentUserID: any;
-            let curruser = await newweb.currentUser.get().then(function (res: any) {
-                // let CurrentUserEmail = res.Email
+            await newweb.currentUser.get().then(function (res: any) {
                 CurrentUserID = res.Id
             }).then(() => {
-                console.log(curruser);
                 this.setState({ Userid: CurrentUserID })
             })
         } catch (error) {
@@ -102,7 +99,6 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
                 .get();
 
             const totalcount = response.length;
-            console.log(response);
 
             // Update state if notifications are found
             if (totalcount > 0) {
@@ -128,8 +124,6 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
 
     public IsItemSeen(id: any, Currentcatagory: any, Listname: any, guID: any) {
         try {
-
-
             newweb.lists.getByTitle(NotificationList).items.filter(`ItemId eq '${id}'and AuthorId eq ${User} and GUID eq '${guID}'`).getAll().then(async (items: any) => { // //orderby is false -> decending
                 if (items.length > 0) {
                     const itemId = items[0].Id;
@@ -169,8 +163,8 @@ export default class SideNav extends React.Component<IRemoHomePageProps, ISideNa
             var ListName = item.ListName;
             var Tag = item.Tag;
             var Dept = item.Dept;
-
             var url;
+
             if (minutesElapsed > 60) {
                 hoursElapsed = Math.floor(duration.asHours());
             }

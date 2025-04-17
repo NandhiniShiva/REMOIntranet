@@ -10,7 +10,6 @@ import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-// import pnp from 'sp-pnp-js';
 import { Web } from '@pnp/sp/webs';
 import ReactPaginate from 'react-paginate';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
@@ -66,7 +65,6 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
     }).catch((error) => {
       console.error("Error fetching current user details:", error);
     });
-    // await this.getCurrentUser();
     this.GetAllAnnouncements();
     this.LandingPageAnalytics();
 
@@ -153,10 +151,7 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
       const RawPublishedDt = moment(item.Created).format("DD/MM/YYYY");
       const tdaydt = moment().format("DD/MM/YYYY");
       const Dt = RawPublishedDt === tdaydt ? "Today" : moment(RawPublishedDt, "DD/MM/YYYY").format("MMM Do, YYYY");
-
-      // let serverRelativeUrl = `${this.props.siteurl}/SiteAssets/Img/Error%20Handling%20Images/home_banner_noimage.png`;
       let serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png")
-
 
       if (RawImageTxt && RawImageTxt !== "") {
         const ImgObj = JSON.parse(RawImageTxt);
@@ -170,7 +165,6 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
           </div>
           <a href="#" className="tags" style={{ pointerEvents: "none" }} data-interception="off">{Dt}</a>
           <div className="ns-tag-duration">
-            {/* <a href={`${this.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}`} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a> */}
             <a href='#' onClick={() => this.readMoreHandler("AnnouncementReadMore", item.ID)} data-interception="off" className="nw-list-main top-news-a">{item.Title}</a>
 
           </div>
@@ -190,7 +184,6 @@ export default class AnnouncementsVm extends React.Component<IAnnouncementsVmPro
                 <div className="inner-banner-contents">
                   <h1>Announcements</h1>
                   <ul className="breadcums">
-                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home", null)} data-interception="off"> Home </a> </li>
                     <li><a href="#" data-interception="off" style={{ pointerEvents: "none" }}>All Announcements</a></li>
                   </ul>

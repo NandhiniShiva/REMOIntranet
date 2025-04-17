@@ -12,9 +12,6 @@ import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 
 let Birthdaylist = listNames.Birthday;
 
-// let spWeb: any;
-
-
 export interface IBirthdayState {
   Items: any[];
   TodayBirthday: any[];
@@ -44,8 +41,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
     const listCreation = new ListCreation();
     await listCreation.createSharePointLists(Birthdaylist);
     await this.GetBirthday();
-
-
   }
 
   public async GetBirthday() {
@@ -63,7 +58,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
         });
 
         this.setState({ TodayBirthday: items });
-
         const todayDate = moment().format('MM/DD');
         const birthdaysToday = items.filter(item => moment(item.DOB).format('MM/DD') === todayDate);
 
@@ -91,7 +85,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       const FutureDate1 = moment().add(1, "days").format('MM/DD');
       const FutureDate2 = moment().add(2, "days").format('MM/DD');
       const FutureDate3 = moment().add(3, "days").format('MM/DD');
-
       reactHandler.setState({
         FirstBdayDate: moment(FutureDate1, 'MM/DD'),
         LastBdayDate: moment(FutureDate3, 'MM/DD'),
@@ -158,7 +151,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
       autoplay: true,
       slidesToShow: 1,
       slidesToScroll: 1,
-      //  fade: true,
     };
     const TodayBirthday: JSX.Element[] = this.state.TodayBirthday.map((item, key) => {
       const Tday1Bday = moment().format("MM-DD");
@@ -227,7 +219,6 @@ export default class RemoBirthday extends React.Component<IRemoHomePageProps, IB
                 </div>
               </div>
               <div className="birthday-details">
-                {/* <a href={`${reactHandler.props.siteurl}/SitePages/birthday.aspx?ItemID=${ItemId}`} data-interception="off"> */}
                 <a href='#' onClick={() => this.readMoreHandler("BirthdayRm", ItemId)} data-interception="off">
 
                   <h4 data-tip data-for={`React-tooltip-title-today-${key}`} data-custom-class="tooltip-custom">{Name}</h4>

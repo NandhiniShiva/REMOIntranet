@@ -21,7 +21,6 @@ export interface IWeatherCurrencyState {
   Temp: any;
   WeatherType: any;
   CurrencyValue: any;
-
   skyimage: string;
   location: string;
   weatherid: string;
@@ -31,7 +30,6 @@ export interface IWeatherCurrencyState {
   From: string;
   To: string;
   CurrencyOptions: any[];
-
   selectedOption: any;
 }
 
@@ -44,7 +42,6 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
     this.state = {
       Temp: "",
       WeatherType: "",
-
       CurrencyValue: "",
       skyimage: '',
       location: '',
@@ -55,7 +52,6 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
       From: "AED",
       To: "USD",
       CurrencyOptions: [],
-
       selectedOption: null,
     };
   }
@@ -257,17 +253,17 @@ export default class RemoClimate extends React.Component<IWeatherCurrencyProps, 
             <div className="sec climate-prayer-exchage m-b-20">
               <ul className="clearfix">
                 <li >
-                  <h4> <img src={require("./ServiceProvider/Assets/Img/c1.svg")}  alt="img" />  Dubai, UAE </h4>
+                  <h4> <img src={require("./ServiceProvider/Assets/Img/c1.svg")} alt="img" />  Dubai, UAE </h4>
                   <h2> {this.state.temperature}°C </h2>
                   <p> {this.state.WeatherType} </p>
                 </li>
                 <li>
-                  <h4> <img src={require("./ServiceProvider/Assets/Img/c2.svg")}  alt="img" />  Next Prayer </h4>
+                  <h4> <img src={require("./ServiceProvider/Assets/Img/c2.svg")} alt="img" />  Next Prayer </h4>
                   <h2 id="prayer-time">  </h2>
                   <p id="prayer-type">  </p>
                 </li>
                 <li className="stocksxchange">
-                  <h4> <img src={require("./ServiceProvider/Assets/Img/c3.svg")}  alt="img" />  1.00 AED </h4>
+                  <h4> <img src={require("./ServiceProvider/Assets/Img/c3.svg")} alt="img" />  1.00 AED </h4>
                   <p> Equals to  </p>
                   <h2> {this.state.CurrencyValue} </h2>
                   <span className="ddl-currency">

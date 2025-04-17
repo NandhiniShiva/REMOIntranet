@@ -1,15 +1,11 @@
 import * as React from 'react';
 import styles from './RemoHomePage.module.scss';
 import { IOrganizationChartProps } from './IRemoHomePageProps';
-// import { SPComponentLoader } from '@microsoft/sp-loader';
-// import { Configuration } from '../Configuration';
+
 
 export default class OrganizationChart extends React.Component<IOrganizationChartProps> {
   public componentDidMount() {
 
-    // SPComponentLoader.loadCss(Configuration.cssPath);
-    // SPComponentLoader.loadCss(Configuration.overRidingCss);
-    // SPComponentLoader.loadCss(Configuration.respnsiveCss);
     this.getGraphDataFromList();
     this.saveData();
   }
@@ -94,7 +90,6 @@ export default class OrganizationChart extends React.Component<IOrganizationChar
                 <div className="inner-banner-contents">
                   <h1>Organization Chart </h1>
                   <ul className="breadcums">
-                    {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off">Home</a></li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li><a href="#" style={{ pointerEvents: "none" }} data-interception="off">Org.Chart</a></li>
                   </ul>

@@ -7,16 +7,13 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/webs";
 import "@pnp/sp/site-users/web";
-// import * as $ from 'jquery';
 import * as moment from 'moment';
 import { listNames } from '../Configuration';
 import "@pnp/sp/clientside-pages/web";
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
-// import { Web } from '@pnp/sp/webs';
 
 let Announcementlist = listNames.Announcement;
 let Eventslist = listNames.Events;
-// let spWeb: any;
 
 export interface IEventsAnnouncementsState {
   Items: any[];
@@ -46,42 +43,11 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     const listCreation = new ListCreation();
     await listCreation.createSharePointLists(Announcementlist);
     await listCreation.createSharePointLists(Eventslist);
-
-
     await reactHandler.GetAnnouncements();
     await reactHandler.GetEvents();
-    if (this.props.createList) {
-      // reactHandler.CreateList();
-    }
+
   }
 
-
-  // private async GetAnnouncements() {
-  //   var reactHandler = this;
-  //   try {
-  //     await sp.web.lists.getByTitle(Announcementlist).items.select("Title", "Description", "Created", "ID").filter(`IsActive eq '1'`).orderBy("Created", false).top(1).get().then((items) => { // //orderby is false -> decending          
-
-  //       if (items.length != 0) {
-  //         // $("#if-annc-present").show();
-  //         document.querySelectorAll('#if-annc-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //         reactHandler.setState({
-  //           Items: items
-  //         });
-  //       } else {
-  //         // $("#if-no-annc-present").show();
-  //         document.querySelectorAll('#if-no-annc-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.log("Events : " + err);
-  //   }
-  // }
-
-  // Updated code 
 
   private async GetAnnouncements() {
     try {
@@ -114,39 +80,7 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
       console.error("Error fetching announcements:", error);
     }
   }
-  // private async GetEvents() {
-  //   var reactHandler = this;
-  //   const tdaydate = moment().format('MM-DD-YYYY');
-  //   try {
-  //     await sp.web.lists.getByTitle(Eventslist).items.select("Title", "Description", "EventDate", "EndDate", "ID").filter(`EndDate ge '${tdaydate}'`).orderBy("Created", false).top(3).get().then((items) => { // //orderby is false -> decending          
 
-  //       if (items.length != 0) {
-  //         // $("#if-events-present").show();
-  //         // $("#if-no-events-present").hide();
-
-  //         document.querySelectorAll('#if-events-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         }); document.querySelectorAll('#if-no-events-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'none';
-  //         });
-  //         reactHandler.setState({
-  //           Events: items
-  //         });
-  //       } else {
-  //         // $("#if-events-present").hide();
-  //         // $("#if-no-events-present").show();
-
-  //         document.querySelectorAll('#if-events-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'none';
-  //         }); document.querySelectorAll('#if-no-events-present').forEach(element => {
-  //           (element as HTMLElement).style.display = 'block';
-  //         });
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.log("Events : " + err);
-  //   }
-  // }
 
   // Updated code 
   private async GetEvents() {
@@ -189,53 +123,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     }
   }
 
-  // public CreateList = async () => {
-  //   spWeb = Web(this.props.siteurl);
-  //   await spWeb.lists.add(this.props.name, "This is a description of doc lib.", 104, true, { OnQuickLaunch: true });
-
-
-  //   // await this.createColumn();
-
-  //   // await this.addData();
-
-  //   // this.createSitePage();
-  //   // fetchList = true;
-
-  //   await this.GetAnnouncements();
-
-
-  // }
-
-  // public async createColumn() {
-  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
-  //     `<Field Type="Note" Name="Description" DisplayName="Description" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
-  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml(
-  //     `<Field Type="Note" Name="Body" DisplayName="Body" Required="FALSE" RichText="TRUE" RichTextMode="FullHtml" />`);
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addImageField("Image", { Group: "My Group" });
-  //   await spWeb.lists.getByTitle(this.props.name).fields.createFieldAsXml('<Field Type="DateTime" DisplayName="Expire" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" Format="DateOnly" Group="Custom Columns" FriendlyDisplayFormat="Disabled"></Field>')
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("IsActive", { Group: "My Group" });
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableLikes", { Group: "My Group" });
-  //   await spWeb.lists.getByTitle(this.props.name).fields.addBoolean("EnableComments", { Group: "My Group" });
-
-
-  // }
-
-  // private async addData() {
-  //   await sp.web.lists.getByTitle(this.props.name).items.add({
-  //     Title: " World Cup",
-  //     Description: "The ICC Men's T20 World Cup (earlier known as ICC World Twenty20)[4] is the international championship of Twenty20 cricket.",
-  //     IsActive: true,
-  //     EnableLikes: true,
-  //     EnableComments: true
-  //   }).catch((error: any) => {
-  //     console.log("Error: ", error);
-  //   });
-  //   // .then(function () {
-  //   //   location.reload();
-  //   // });
-  //   // window.open(`/sites/SPTraineeBT/Lists/${listName}/AllItems.aspx`, '_blank');
-  // }
-
   public addDataEvenlist(event: any) {
     event.preventDefault();
     const listUrl = `${this.props.siteurl}/Lists/${Eventslist}`;
@@ -244,7 +131,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
 
   public addDataAncc(event: any) {
     event.preventDefault();
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Announcementlist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Announcementlist}`;
 
     window.open(listUrl, "_blank");
@@ -266,7 +152,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
       return (
         <div className="sec gradient" key={key}>
           <div className="annoy-heading">
-            {/* <a href={`${handler.props.siteurl}/SitePages/Announcement-View-More.aspx?ItemID=${item.ID}&`} data-interception='off'> */}
             <a href='#' onClick={() => this.readMoreHandler("AnnouncementViewMore", item.ID)} data-interception='off'>
 
               <h4> Announcements </h4>
@@ -274,7 +159,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
             <p> {DateofPublish}  </p>
           </div>
           <div className="ann-detibck">
-            {/* <a href={`${handler.props.siteurl}/SitePages/Announcement-Read-More.aspx?ItemID=${item.ID}&`} data-interception='off'> */}
             <a href='#' onClick={() => this.readMoreHandler("AnnouncementReadMore", item.ID)} data-interception='off'>
 
               <h2>{item.Title} </h2>
@@ -288,7 +172,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
     const Events: JSX.Element[] = handler.state.Events.map((item, key) => {
       const Date = moment(item.EventDate).format("DD");
       const Month = moment(item.EventDate).format("MMM");
-
       const dummyElement = document.createElement("div");
       dummyElement.innerHTML = item.Description;
       const outputText = dummyElement.innerText;
@@ -302,9 +185,7 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
           </div>
           <div className="latest-eventsright" id="evocalendar">
             <h4>
-              {/* <a href={`${handler.props.siteurl}/SitePages/EventsViewMore.aspx?Mode=EvRM&ItemID=${item.ID}&SelectedDate=${moment(item.EventDate).format("YYYYMMDD")}&`} data-interception='off' >{item.Title}</a> */}
               <a href='#' onClick={() => this.readMoreHandler("EventsViewMore", item.ID)} data-interception='off' >{item.Title}</a>
-
             </h4>
             <p> {outputText}  </p>
           </div>
@@ -342,7 +223,6 @@ export default class RemoLatestEventsandAnnouncements extends React.Component<IR
                   </div>
                 </div>
                 :
-
                 <div>
                   <button onClick={(e) => this.addDataEvenlist(e)}>Add Data In Events</button>
                 </div>

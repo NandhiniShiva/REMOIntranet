@@ -4,7 +4,6 @@ import { IManageQuickLinksProps } from './IRemoHomePageProps';
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-// import * as $ from 'jquery';
 import Swal from 'sweetalert2';
 import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import { sp } from '@pnp/sp';
@@ -15,7 +14,8 @@ import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let QuickLinkslist = listNames.QuickLinks;
 let UsersQuickLinkslist = listNames.UsersQuickLinks;
-// let Designation: string, Department: string;
+let ExistingQlinks: string | any[] = [];
+var tempFavHolderArr: any[] = [];
 
 export interface IQuickLinkManagerState {
   items: any[];
@@ -29,9 +29,6 @@ export interface IQuickLinkManagerState {
   CurrentlyOpened: string;
   IsMyQuickLinksEmpty: boolean;
 }
-
-let ExistingQlinks: string | any[] = [];
-var tempFavHolderArr: any[] = [];
 
 export default class NewQuickLinkManager extends React.Component<IManageQuickLinksProps, IQuickLinkManagerState, {}> {
   public constructor(props: IManageQuickLinksProps) {
@@ -77,8 +74,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
     // updated code
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
+
       this.getcurrentusersQuickLinksForEdit();
       this.GetAllQuickLinks();
       this.LandingPageAnalytics(data?.Department, data?.Designation);
@@ -245,11 +241,9 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
               title: "Aleady exist",
               icon: "warning",
               showConfirmButton: false,
-              // timer: 1500,
             });
           }
         } else {
-          // $("#bt-qlink-adder").prop("disabled", false);
 
           const buttonElement: any = document.getElementById('bt-qlink-adder');
           // Set the "disabled" property to false
@@ -260,7 +254,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
             title: "No space, only 5 links can be added!",
             icon: "warning",
             showConfirmButton: false,
-            // timer: 1500,
           } as any);
         }
       });
@@ -285,7 +278,6 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
               title: "Deleted Successfully",
               icon: "success",
               showConfirmButton: false,
-              // timer: 1500,
             } as any).then(() => {
               tempFavHolderArr = [];
               this.getcurrentusersQuickLinksForEdit();
@@ -328,10 +320,8 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
 
       const ImgObj = JSON.parse(RawImageTxt);
       const ImgObjHover = JSON.parse(RawImageHoverTxt);
-
       const serverRelativeUrl = ImgObj.serverRelativeUrl || `${reactHandler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/${item.ID}/${ImgObj.fileName}`;
       const hoverServerRelativeUrl = ImgObjHover.serverRelativeUrl || `${reactHandler.props.siteurl}/Lists/${QuickLinkslist}/Attachments/${item.ID}/${ImgObjHover.fileName}`;
-
       const isQuickLinkAdded = reactHandler.state.MyQLinksArray.some(link => link.SelectedQuickLinks.Id === item.ID);
 
       const handleAddQuickLink = () => {
@@ -346,7 +336,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
           </a>
           {!isQuickLinkAdded && (
             <div className="add-quicklinks" id={item.ID}>
-              <img src={require("./ServiceProvider/Assets/Img/add_quick.png")}  alt="image" onClick={handleAddQuickLink} />
+              <img src={require("./ServiceProvider/Assets/Img/add_quick.png")} alt="image" onClick={handleAddQuickLink} />
             </div>
           )}
         </li>
@@ -369,9 +359,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                 <div className="inner-banner-contents">
                   <h1> Manage Quick Links </h1>
                   <ul className="breadcums">
-                    {/* <li> <a href={`${reactHandler.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")} data-interception="off"> Home </a> </li>
-
                     <li> <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> Manage Quick Links </a> </li>
                   </ul>
                 </div>
@@ -391,7 +379,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                             Edit Mode</a>
                           :
                           <a href="#" className='editor-mode-enabler mode-edit-off' onClick={() => this.ExitEditMode(this.state.CurrentlyOpened)}>
-                            <img src={require("./ServiceProvider/Assets/Img/newdrap_drop.png")}  alt="image" data-themekey="#" />
+                            <img src={require("./ServiceProvider/Assets/Img/newdrap_drop.png")} alt="image" data-themekey="#" />
                             Exit</a>
                         }
                       </div>
@@ -402,7 +390,7 @@ export default class NewQuickLinkManager extends React.Component<IManageQuickLin
                           MyQuickLinks
                           :
                           <div className='no-fav-records if-favtab-empty if-tab-empty'>
-                            <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/error-icon.svg")}  alt="no-fav" />
+                            <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/error-icon.svg")} alt="no-fav" />
                             <h3> No Quicklinks Added </h3>
                             <p> In Aswaq you mark as quicklinks are shown here </p>
                           </div>

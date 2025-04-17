@@ -7,7 +7,6 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
-// import * as $ from 'jquery';
 import Slider from "react-slick";
 import { Web } from '@pnp/sp/webs';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
@@ -194,7 +193,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
     if (!Designation) {
       Designation = "NA";
     }
-    console.log(this.state.Title);
 
     try {
       const response = await NewWeb.lists.getByTitle(Analytics).items.add({
@@ -239,7 +237,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
       Designation = profile.Title;
       if (profile.UserProfileProperties && profile.UserProfileProperties.length > 0) {
         const departmentProperty = profile.UserProfileProperties.find((prop: { Key: string }) => prop.Key === 'Department');
-        console.log(departmentProperty);
         if (departmentProperty) {
           Department = departmentProperty.Value;
         } else {
@@ -270,7 +267,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
         Breadcrumb.push({ "Title": foldername, "Url": FolderURL });
       }
       if (foldername == "Breadcrumb") {
-        // IsclickeBreadcrump=false  
         Breadcrumb = [];
       }
       const folder = sp.web.getFolderByServerRelativeUrl(FolderURL);
@@ -289,7 +285,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
           });
 
         } else {
-          // $("#no-video").show();
           document.querySelectorAll('#no-video').forEach(element => {
             (element as HTMLElement).style.display = 'block';
           });
@@ -317,12 +312,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
           if (noVdoElement) {
             noVdoElement.style.display = images.length === 0 && videos.length === 0 ? 'block' : 'none';
           }
-
         } else {
-
-
-
-
           const noImgElement = document.getElementById('no-video');
           // Toggle visibility based on the condition
           if (noImgElement) {
@@ -403,11 +393,8 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
     const url: any = new URL(window.location.href);
 
     const FolderUrl = url.searchParams.get("FolderName");
-    // console.log(FolderUrl);
-
     var folderurl = FolderUrl.replace(/['"]+/g, '')
     this.GetSubFolder(folderurl, "Img", "")
-    // this.GetGalleryFilesFolder("ImgBlock");
   }
   public async ShowVideos() {
     Breadcrumb = [];
@@ -416,7 +403,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
       Videos: [],
     });
     Global_Type = "";
-    // $("#lightgallery").hide();
     document.querySelectorAll('#lightgallery').forEach(element => {
       (element as HTMLElement).style.display = 'none';
     });
@@ -431,11 +417,9 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
     const url: any = new URL(window.location.href);
 
     const FolderUrl = url.searchParams.get("FolderName");
-    // console.log(FolderUrl);
 
     var folderurl = FolderUrl.replace(/['"]+/g, '')
     this.GetSubFolder(folderurl, "VdoBlock", "")
-    // this.GetGalleryFilesFolder("VdoBlock");
   }
 
   public GetImagesInsideFolder(FolderURL: string, Mode: string, key: number) {
@@ -617,9 +601,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
       })
       .map((item, key) => {
         const finalThumbnailURL = getThumbnailUrl(item.ServerRelativeUrl);
-        // console.log("Original URL:", item.ServerRelativeUrl);
-        // console.log("Thumbnail URL:", finalThumbnailURL);
-
         return (
           <li key={key} className="li-img-area" data-value={key} onClick={() => reactHandler.GetImagesInsideFolder(reactHandler.state.Subfolderurl, "Image", key)}>
             <img src={finalThumbnailURL} alt="Image" onError={(e) => e.currentTarget.src = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/other_images_not_found.png")} />
@@ -795,7 +776,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                         this.state.FolderItems.map((item) => {
                           if (reactHandler.state.Mode === "Image") {
                             var filename = item.Name;
-                            console.log(item.ServerRelativeUrl);
                             var Len = filename.length;
                             var Dot = filename.lastIndexOf(".");
                             var res = filename.substring(Dot + 1, Len);
@@ -834,7 +814,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                                   style={{ width: '810px' }}
                                   controls
                                 >
-                                  {/* <source src={`${item.ServerRelativeUrl}`} type="video/mp4" /> */}
                                 </video>
                                 <h4 style={{ color: '#ffffff' }}>{item.Name}</h4>
                               </>
@@ -846,11 +825,9 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                         <div style={{ textAlign: 'center' }}>
                           <img
                             src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
-                            // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                             alt="No Content Found"
                             style={{ width: '900px' }}
                           />
-                          {/* <h4 style={{ color: '#ffffff' }}>No Content Found</h4> */}
                         </div>
                       )}
                     </Slider>
@@ -860,7 +837,6 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                   <ul className="clearfix">
                     {this.state.SliderIsOpen == true &&
                       <Slider
-                        // asNavFor={this.state.nav1}
                         asNavFor={this.state.nav1 as Slider | undefined}
                         ref={slider => (this.slider2 = slider)}
                         slidesToShow={4}
@@ -892,7 +868,7 @@ export default class DeptGalleryGridView extends React.Component<IDeptGalleryGri
                   </ul>
                 </div>
                 <div className="lightbox-close">
-                  <img src={require("./ServiceProvider/Assets/Img/close.svg")}  alt="close" onClick={() => this.CloseLightBox()} />
+                  <img src={require("./ServiceProvider/Assets/Img/close.svg")} alt="close" onClick={() => this.CloseLightBox()} />
                 </div>
               </div>
             </div>

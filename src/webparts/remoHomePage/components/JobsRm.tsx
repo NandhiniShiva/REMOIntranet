@@ -71,7 +71,6 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
 
     try {
       const data = await userDetails.getCurrentUserDetails();
-      console.log("Current user details", data);
 
       await this.GetJobs(ItemID);
       await this.LandingPageAnalytics(data?.Department, data?.Designation);
@@ -111,8 +110,6 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
       JobTitle = items[0].Title;
       employmentType = items[0].EmploymentType;
       experienceLevel = items[0].ExperienceLevel;
-      console.log("Job items:", items);
-
       this.setState({
         Items: items,
       }, async () => {
@@ -156,9 +153,6 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
             .items.select("Title", "EmploymentType", "ExperienceLevel", "EmailID", "DateOfSubmission", "JobSummary", "Status", "ID", "Created")
             .filter(`IsActive eq '1' and ID eq '${ItemID}'`)
             .getAll();
-
-          // console.log("Job items for application:", items);
-
           await NewWeb.lists.getByTitle(JobApplicationMasterlist).items.add({
             Title: items[0].Title,
             EmploymentType: items[0].EmploymentType,
@@ -212,7 +206,6 @@ export default class JobsRm extends React.Component<IJobsRmProps, IJobsRMState, 
             <div className="inner-banner-contents">
               <h1> We are hiring {Title} </h1>
               <ul className="breadcums">
-                {/* <li><a href={`${this.props.siteurl}/SitePages/HomePage.aspx`}> Home </a></li> */}
                 <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                 <li><a href="#"> Jobs </a></li>
               </ul>

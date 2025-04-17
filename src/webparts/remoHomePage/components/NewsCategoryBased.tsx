@@ -17,6 +17,12 @@ import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 let Newslist = listNames.News;
 const Analytics = listNames.Analytics;
 
+let NewsAvailableDepts: { ID: any; Title: any; URL: any; }[] = [];
+let DeptNames: any[] = [];
+let DeptNamesExitsUnique: any[] = [];
+var User = "";
+var UserEmail = "";
+var NewWeb: IWeb & IInvokable<any>;
 
 export interface INewsCategoryBasedState {
   Items: any[];
@@ -30,19 +36,11 @@ export interface INewsCategoryBasedState {
   AvailableTags: any[];
   AvailableDepts: any[];
   TotalPageCount: number;
-
   TagBasedNews: any[];
   DeptBasedNews: any[];
   Title: string;
 }
 
-let NewsAvailableDepts: { ID: any; Title: any; URL: any; }[] = [];
-let DeptNames: any[] = [];
-let DeptNamesExitsUnique: any[] = [];
-var User = "";
-var UserEmail = "";
-
-var NewWeb: IWeb & IInvokable<any>;
 export default class NewsCategoryBased extends React.Component<INewsCategoryBasedProps, INewsCategoryBasedState, {}> {
   constructor(props: INewsCategoryBasedProps) {
     super(props);
@@ -112,8 +110,7 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     reactHandler.setState({ Tag: "" + AppliedTage + "", Department: "" + Dept + "", SitePageID: SitePageID, ActiveMainNewsID: ItemID, Mode: Mode });
     const userDetails = new CurrentUserDetails();
     userDetails.getCurrentUserDetails().then((data) => {
-      console.log("Current user details", data);
-      console.log("data details", data?.Department, data?.Designation);
+
       if (Mode == "TagBased") {
         reactHandler.GetAvailableTags();
       } else {
@@ -134,7 +131,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
     if (!Designation) {
       Designation = "NA";
     }
-    console.log(this.state.Title);
 
     try {
       const response = await NewWeb.lists.getByTitle(Analytics).items.add({
@@ -247,9 +243,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
             .get();
 
           if (items.length > 0 && (isTagBased ? items[0].Tag !== Tag : items[0].Dept.Title !== Department)) {
-            // const stateKey = isTagBased ? 'TagBasedNews' : 'DeptBasedNews';
-            // this.setState({ [stateKey]: items });
-
             const href = `${this.props.siteurl}/SitePages/News-CategoryBased.aspx?Mode=${Mode}&${isTagBased ? 'Tag' : 'Dept'}=${isTagBased ? items[0].Tag : items[0].Dept.Title}`;
             const title = isTagBased ? items[0].Tag : items[0].Dept.Title;
 
@@ -298,10 +291,7 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
 
       if (RawImageTxt && RawImageTxt !== null) {
         const ImgObj = JSON.parse(RawImageTxt);
-
         serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${reactHandler.props.siteurl}/Lists/${Newslist}/Attachments/${item.ID}/${ImgObj.fileName}`;
-
-
         var depttitle = item.Dept?.Title;
         var sitepageid = item.SitePageID?.Id;
 
@@ -348,29 +338,22 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
         </div>
         <section>
           <div className="relative container">
-
             <div className="section-rigth">
-
               <div className="inner-banner-header relative m-b-20">
-
                 <div className="inner-banner-overlay"></div>
                 <div className="inner-banner-contents">
                   <h1> News </h1>
                   <ul className="breadcums">
-
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href='#' onClick={() => this.readMoreHandler("NewsViewMore")} data-interception="off"> All News </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> {this.state.CurrentPage} </a> </li>
-
                   </ul>
                 </div>
 
               </div>
               <div className="inner-page-contents ">
-
                 <div className="top-news-sections category-news-sec m-b-20">
                   <div className="sec">
-
                     <div className="row">
                       <div className="col-md-9 category-main-lists">
                         <div className="heading clearfix">
@@ -394,8 +377,6 @@ export default class NewsCategoryBased extends React.Component<INewsCategoryBase
                         </div>
                         <div className="section-part clearfix ">
                           <ul className="available-depts-or-tags">
-                            {/*TagBasedNews*/}
-
                           </ul>
                         </div>
                       </div>

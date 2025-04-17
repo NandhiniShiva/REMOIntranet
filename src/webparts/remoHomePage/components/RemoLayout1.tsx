@@ -98,6 +98,7 @@ export interface IRemoHomePageState {
   itemID: any,
   SiteLogo: string;
   draggedItemKey: any,
+  setDraggable: string,
 }
 
 
@@ -134,6 +135,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       itemID: null,
       SiteLogo: "",
       draggedItemKey: null,
+      setDraggable: '',
     };
     spWeb = Web(this.props.siteurl);
     fetchList = true
@@ -155,17 +157,17 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           componentDiv.style.display = "none"; // Hide component when clicking outside
         }
       });
-      const isClickInside = event.target.closest(".Drag_part");
+      // const isClickInside = event.target.closest(".Drag_part");
 
-      // If click is outside any .Drag_part, remove the border
-      if (!isClickInside) {
-        const allWithBorder = document.querySelectorAll(".Drag_part.border");
-        allWithBorder.forEach((el) => el.classList.remove("border"));
-      }
+      // // If click is outside any .Drag_part, remove the border
+      // if (!isClickInside) {
+      //   const allWithBorder = document.querySelectorAll(".Drag_part.border");
+      //   allWithBorder.forEach((el) => el.classList.remove("border"));
+      // }
     });
-    
+
   }
-  
+
 
   public async getAllocatedComponents() {
     try {
@@ -952,13 +954,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     if (inputElement) {
       inputElement.classList.add('Drag_part');
     }
-    if (componentName == "Hero Banner") {
-      if (inputElement?.classList.contains('border')) {
-        setSliderDraggable = true; // disable dragging/swiping
-      } else {
-        setSliderDraggable = false; // enable dragging/swiping
-      }
-    }
+
 
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
@@ -1252,6 +1248,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         // this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
 
       }
+      this.setState({ setDraggable: "" });
       return { selectedComponents: updatedComponents, isInitialscreen: updatedIsInitialscreen };
     }, async () => {
       await this.handleSelectedComponents(this.state.selectedComponents)
@@ -1264,16 +1261,18 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   handleborder = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, DOMID: any) => {
     // Stop the event from bubbling to the document click listener
     e.stopPropagation();
+    this.setState({ setDraggable: DOMID });
 
     // Remove border from all
-    const allDragParts = document.querySelectorAll('.Drag_part.border');
-    allDragParts.forEach((el) => el.classList.remove('border'));
+    // const allDragParts = document.querySelectorAll('.Drag_part.border');
+    // allDragParts.forEach((el) => el.classList.remove('border'));
 
-    // Add border to clicked one
-    const inputElement = document.querySelector(`.${DOMID}`);
-    if (inputElement && inputElement.classList.contains('Drag_part')) {
-      inputElement.classList.add('border');
-    }
+    // // Add border to clicked one
+    // const inputElement = document.querySelector(`.${DOMID}`);
+    // if (inputElement && inputElement.classList.contains('Drag_part')) {
+    //   inputElement.classList.add('border');
+    //   this.setState({ setDraggable: DOMID });
+    // }
   };
 
 
@@ -1324,12 +1323,12 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         console.log("not an admin User");
         return null;
       }
-      const inputElement = document.querySelector(`.Location-${Position}`);
-      if (inputElement) {
-        inputElement.classList.remove('Drag_part');
-        inputElement.classList.remove('border');
+      // const inputElement = document.querySelector(`.Location-${Position}`);
+      // if (inputElement) {
+      //   inputElement.classList.remove('Drag_part');
+      //   inputElement.classList.remove('border');
 
-      }
+      // }
       return (
         <>
           {/* Button to toggle component visibility */}
@@ -1384,8 +1383,9 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       <>
         {this.state.isCurrentUserAdmin && this.state.editMode == "edit" ?
           <div
-            className={` col-md-${classNamePrefix} Location-${position}`}
-            draggable={true} // Make only the image draggable
+            className={` col-md-${classNamePrefix} Location-${position} Drag_part ${this.state.setDraggable === `Location-${position}` ? 'border' : ''}`}
+            // draggable={true} // Make only the image draggable
+            draggable={this.state.setDraggable === `Location-${position}`}
             onDragStart={(e) => this.handleDragStart(e, position)} // Handle drag start on image
             onDragOver={(e) => this.handleDragOver(e)}              // Handle drag over
             onDrop={(e) => this.handleDrop(e, position)}

@@ -5,19 +5,15 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import * as moment from 'moment';
-// import * as $ from 'jquery';
 import { Markup } from 'interweave';
-// import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import { sp } from '@pnp/sp';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer'
-// import pnp from 'sp-pnp-js';```
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService'
 
 let CEO_Messagelist = listNames.CEO_Message;
-// var Designation: any;
-// var Department: any;
+
 export interface ICeoMessageRmState {
   Items: any[];
   ItemID: any;
@@ -37,13 +33,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   public componentDidMount() {
 
     setTimeout(function () {
-      // $('#spCommandBar').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $('#CommentsWrapper').attr('style', 'display: none !important');
-      // $('div[data-automation-id="pageHeader"]').attr('style', 'display: none !important');
-      // $("#ceoMessageReadMore").show();
 
-      // Hide the element with ID "CommentsWrapper"
       const commentsWrapper = document.getElementById('CommentsWrapper');
       if (commentsWrapper) {
         commentsWrapper.style.setProperty('display', 'none', 'important');
@@ -72,13 +62,8 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
     }, 1500);
 
     var reactHandler = this;
-    // const url: any = new URL(window.location.href);
-    // const ItemID = url.searchParams.get("ItemID");
-
     const ItemID = reactHandler.props.id;
-    // reactHandler.getCurrentUser().then(() => {
-    //   reactHandler.GetCeoMessage(ItemID);
-    // })
+
 
     // updated code
     const userDetails = new CurrentUserDetails();
@@ -108,10 +93,8 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
   }
 
   public async GetCeoMessage(ItemID: any, Department: any, Designation: any) {
-    // let itemID = this.props.id
     try {
       await sp.web.lists.getByTitle(CEO_Messagelist).items.select("Title", "CEOName", "Description", "Designation", "Image", "ID", "Created", "*").filter(`IsActive eq '1' and Id eq ${ItemID}`).getAll().then((items) => { // //orderby is false -> decending          
-        // console.log(items);
 
         this.setState({
           Items: items,
@@ -145,7 +128,6 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
         serverRelativeUrl = ImgObj.serverRelativeUrl ?? `${handler.props.siteurl}/Lists/${CEO_Messagelist}/Attachments/${item.ID}/${ImgObj.fileName}`;
       } else {
         serverRelativeUrl = require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ceo_no_found.png")
-        // serverRelativeUrl = `${handler.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ceo_no_found.png`;
       }
 
       return (
@@ -168,9 +150,7 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
 
     return (
       <div className={styles.remoHomePage} id="ceoMessageReadMore" style={{ display: "none" }}>
-        {/* <div id="Global-Top-Header-Navigation">
-          <GlobalSideNav siteurl={this.props.siteurl} context={this.props.context} currentWebUrl={''} CurrentPageserverRequestPath={''} />
-        </div> */}
+
         <section>
           <div className="relative container">
 
@@ -182,7 +162,6 @@ export default class CeoMessageRm extends React.Component<ICeoMessageReadMorePro
                 <div className="inner-banner-contents">
                   <h1> CEO Read More </h1>
                   <ul className="breadcums">
-                    {/* <li>  <a href={`${this.props.siteurl}/SitePages/HomePage.aspx`} data-interception="off"> Home </a> </li> */}
                     <li>  <a href='#' onClick={() => this.readMoreHandler("Home")}> Home </a> </li>
                     <li>  <a href="#" style={{ pointerEvents: "none" }} data-interception="off"> CEO Read More </a> </li>
                   </ul>

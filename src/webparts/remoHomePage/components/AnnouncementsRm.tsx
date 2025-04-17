@@ -12,7 +12,6 @@ import GlobalSideNav from '../../remoHomePage/components/Header/GlobalSideNav';
 import Swal from 'sweetalert2';
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { listNames } from '../../remoHomePage/Configuration';
-// import * as $ from 'jquery';
 import Footer from '../../remoHomePage/components/Footer/Footer'
 import { PageAnalytics } from './ServiceProvider/LandingPageAnalytics';
 import { ViewsCount } from './ServiceProvider/viewsCount';
@@ -34,11 +33,11 @@ let ItemID: any;
 var Designation = "";
 var Department = "";
 
-// const ViewsCountMasterlist = listNames.ViewsCountMaster;
 const Announcementlist = listNames.Announcement;
 const LikesCountMasterlist = listNames.LikesCountMaster;
 const CommentsCountMasterlist = listNames.CommentsCountMaster;
 const Analytics = listNames.Analytics;
+let NewWeb: any;
 
 interface IAnnouncementsRmState {
   Items: any[];
@@ -51,7 +50,6 @@ interface IAnnouncementsRmState {
   Title: string;
 }
 
-let NewWeb: any;
 
 export default class AnnouncementsRm extends React.Component<IAnnouncementsRmProps, IAnnouncementsRmState> {
   constructor(props: IAnnouncementsRmProps) {
@@ -75,10 +73,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     ItemID = url.searchParams.get("ItemID");
 
     if (ItemID) {
-      // await this.getCurrentUser();
       await this.getAnnouncementsDetails(ItemID);
-      // await this.LandingPageAnalytics();
-
       const pageAnalytics = new PageAnalytics("Announcements Read-More", User, Department, Designation, this.state.Title, ItemID, UserEmail);
       pageAnalytics.LandingPageAnalytics();
 
@@ -87,12 +82,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       console.error("ItemID is not present in the URL");
     }
   }
-  // old code 
-  // private hideElements() {
-  //   $('#spCommandBar, div[data-automation-id="pageHeader"], #CommentsWrapper').attr('style', 'display: none !important');
-  // }
-
-  // converted code
 
   private hideElements() {
     const elements: any = document.querySelectorAll('#spCommandBar, div[data-automation-id="pageHeader"], #CommentsWrapper');
@@ -140,7 +129,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       if (items[0].EnableComments) {
         this.setState({ IsCommentEnabled: true });
       } else {
-        // $(".all-commets, #commentedpost").remove();
         document.querySelectorAll(".all-commets, #commentedpost").forEach(function (element) {
           element.remove();
         });
@@ -181,7 +169,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
             document.querySelectorAll(".like-default").forEach((element) => {
               (element as HTMLElement).style.display = "none";
             });
-
             // Update the React component's state
             this.setState({ IsUserAlreadyLiked: true });
             console.log("User already liked this item:", result);
@@ -228,36 +215,11 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
     }
   }
 
-
-  // private async checkUserAlreadyLiked() {
-  //   try {
-  //     const items = await sp.web.lists
-  //       .getByTitle(LikesCountMasterlist)
-  //       .items
-  //       .filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`)
-  //       .top(5000)
-  //       .get();
-  //     if (items.length !== 0) {
-  //       document.querySelectorAll('.like-selected').forEach(element => {
-  //         (element as HTMLElement).style.display = 'block';
-  //       });
-  //       document.querySelectorAll('.like-default').forEach(element => {
-  //         (element as HTMLElement).style.display = 'none';
-  //       });
-  //       this.setState({ IsUserAlreadyLiked: true });
-  //     }
-  //   }
-  //   catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
   private async checkUserAlreadyCommented() {
     try {
       const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID} and EmployeeName/Id eq ${User}`).top(5000).get();
       if (items.length !== 0) {
         this.setState({ IsUserAlreadyCommented: true });
-        // $(".reply-tothe-post").hide();
         document.querySelectorAll('.reply-tothe-post').forEach(element => {
           (element as HTMLElement).style.display = 'none';
         });
@@ -267,18 +229,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       console.error(error);
     }
   }
-
-  // private async likesCount() {
-  //   const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-  //   likes = items.length !== 0 ? items.length : 0;
-  // }
-
-  // private async commentsCount() {
-  //   const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
-  //   commentscount = items.length !== 0 ? items.length : 0;
-  //   this.checkUserAlreadyCommented();
-  //   this.getUserComments();
-  // }
 
   private async getUserComments() {
     const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.select("Title", "EmployeeName/Title", "CommentedOn", "EmployeeEmail", "ContentPage", "ContentID", "UserComments").expand("EmployeeName").filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
@@ -295,8 +245,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         Title: this.state.Title,
         ContentID: ID,
       });
-      // $(".like-default").hide();
-      // $(".like-selected").show();
+
       document.querySelectorAll('.like-selected').forEach(element => {
         (element as HTMLElement).style.display = 'block';
       });
@@ -305,7 +254,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       });
       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
       const like = items.length;
-      // document.getElementById("likescount").textContent = like.toString();
       const likesElement = document.getElementById("likescount");
       if (likesElement) {
         likesElement.textContent = like.toString();
@@ -313,8 +261,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         console.error("Element with ID 'likescount' not found.");
       }
     } else {
-      // $(".like-selected").hide();
-      // $(".like-default").show();
 
       document.querySelectorAll('.like-selected').forEach(element => {
         (element as HTMLElement).style.display = 'block';
@@ -327,7 +273,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       await sp.web.lists.getByTitle(LikesCountMasterlist).items.getById(data[0].Id).delete();
       const items = await sp.web.lists.getByTitle(LikesCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
       const like = items.length;
-      // document.getElementById("likescount").textContent = like.toString();
       const likesElement = document.getElementById("likescount");
       if (likesElement) {
         likesElement.textContent = like.toString();
@@ -338,7 +283,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
   }
 
   private async showComments() {
-    // $(".all-commets").toggle();
+
     try {
       document.querySelectorAll('.all-comments').forEach(element => {
         const htmlElement = element as HTMLElement;
@@ -355,10 +300,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
   private async saveComments(e: any) {
 
     const comments = e.target.value;
-    console.log("comments1", comments);
-
-    // const commentss = $("#comments").val();
-    // console.log("comments2", commentss);
 
     if (comments && comments.toString().length === 0) {
       Swal.fire({
@@ -375,8 +316,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
         ContentID: ID,
         UserComments: comments,
       });
-      // $("#commentedpost").hide();
-      // $(".reply-tothe-post").hide();
+
       document.querySelectorAll('#commentedpost').forEach(element => {
         (element as HTMLElement).style.display = 'none';
       });
@@ -385,7 +325,6 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       });
       const items = await sp.web.lists.getByTitle(CommentsCountMasterlist).items.filter(`ContentPage eq 'Announcements' and ContentID eq ${ID}`).top(5000).get();
       commentscount = items.length;
-      // document.getElementById("commentscount").textContent = commentscount.toString();
       const commentsElement = document.getElementById("commentscount");
 
       if (commentsElement) {
@@ -432,7 +371,7 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
       <li key={item.ID}>
         <div className="commentor-desc clearfix">
           <div className="commentor-image">
-            <img src={require("./ServiceProvider/Assets/Img/userphoto.jpg")}  alt="image" />
+            <img src={require("./ServiceProvider/Assets/Img/userphoto.jpg")} alt="image" />
           </div>
           <div className="commentor-details-desc">
             <h3>{item.EmployeeName.Title}</h3><span>{moment(item.CommentedOn).format("DD/MM/YYYY")}</span>
@@ -472,14 +411,14 @@ export default class AnnouncementsRm extends React.Component<IAnnouncementsRmPro
                         <ul className="comments-like-view-block">
                           {this.state.IsLikeEnabled && (
                             <li>
-                              <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")}  alt="image" onClick={() => this.liked("dislike")} />
+                              <img className="like-selected" src={require("./ServiceProvider/Assets/Img/lcv_like_selected.svg")} alt="image" onClick={() => this.liked("dislike")} />
                               <img className="like-default" src={require("./ServiceProvider/Assets/Img/lcv_like.svg")} alt="image" onClick={() => this.liked("like")} />
                               <span id="likescount">{likes}</span>
                             </li>
                           )}
                           {this.state.IsCommentEnabled && (
                             <li>
-                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")}  alt="image" onClick={
+                              <img src={require("./ServiceProvider/Assets/Img/lcv_comment.svg")} alt="image" onClick={
                                 () => this.showComments()
                               } /> <span id="commentscount">{commentscount}</span>
                             </li>

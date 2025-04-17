@@ -1,19 +1,13 @@
 import * as React from 'react';
 import { IRemoHomePageProps } from './IRemoHomePageProps';
-import { sp, Web } from "@pnp/sp/presets/all";
+import { sp } from "@pnp/sp/presets/all";
 import Slider from "react-slick";
-import { listNames, WEB } from '../Configuration';
-// import { ListLibraryColumnDetails } from './ServiceProvider/ListsLibraryColumnDetails';
+import { listNames } from '../Configuration';
 import { ListCreation } from './ServiceProvider/List&ColumnCreation';
 let Hero_Bannerlist = listNames.Hero_Banner;
-let NewWeb: any = Web(WEB.NewWeb);
 var IsAdminUser: boolean = false;
 var IsMode: string = "add_mode";
 var IsDraggable: boolean = true;
-// var Count: number = 0;
-
-
-console.log('NewWeb', NewWeb);
 
 enum ResolutionCategory {
   Low,
@@ -76,7 +70,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
   }
 
   public async componentDidMount() {
-    // console.log('Component Name', this.props.name);
     const listCreation = new ListCreation();
     listCreation.createSharePointLists(Hero_Bannerlist);
     await this.hideProgessbar()
@@ -147,11 +140,8 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         .getByTitle("ComponentMaster")
         .items
         .select("Title", "*")
-        // .filter(`IsActive eq '1'`)
-        // .orderBy("Created", false)
         .getAll();
 
-      console.log("ComponentMaster item", items);
       this.setState({
         componentMasterItems: items
       })
@@ -162,7 +152,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
     }
   }
   public async handleSelectChange(event: any) {
-    console.log("selected option", event.target.value);
 
     this.setState({
       selectedValue: event.target.value
@@ -175,27 +164,27 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
 
   public addData(event: any) {
     event.preventDefault();
-    // const listUrl = `${NewWeb}/Lists/${Hero_Bannerlist}`; // Replace with your list URL
     const listUrl = `${this.props.siteurl}/Lists/${Hero_Bannerlist}`;
-    console.log(listUrl);
-
-    // const listUrl = `https://6z0l7v.sharepoint.com/sites/SPTraineeBT/Lists/${Hero_Bannerlist}`; // Replace with your list URL
     window.open(listUrl, "_blank");
   }
 
   public readMoreHandler(compName: any, itemId: any) {
     this.props.onReadMoreClick({ Name: compName, Id: itemId })
   }
-  goToPrevSlide = () => {
-    this.setState((prevState) => ({
-      currentSlide: Math.max(prevState.currentSlide - 1, 0)
-    }));
+  goToPrevSlide = (event: any) => {
+    event.preventDefault();
+    const { currentSlide, Items } = this.state;
+    const prevSlide = (currentSlide - 1 + Items.length) % Items.length;
+    this.setState({ currentSlide: prevSlide });
+
   };
 
-  goToNextSlide = () => {
-    this.setState((prevState) => ({
-      currentSlide: Math.min(prevState.currentSlide + 1, this.state.Items.length - 1)
-    }));
+  goToNextSlide = (event: any) => {
+    event.preventDefault();
+    const { currentSlide, Items } = this.state;
+    const nextSlide = (currentSlide + 1) % Items.length;
+    this.setState({ currentSlide: nextSlide });
+
   };
 
   goToSlide = (index: number) => {
@@ -239,7 +228,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         return (
 
           <div className={`item active ${resolutionClass}`} key={ID}>
-            {/* <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'> */}
             <a href='#' onClick={() => (IsMode !== "edit") && this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
               <div className="banner-parts">
                 <img src={serverRelativeUrl} alt="image" />
@@ -255,9 +243,7 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
       } else {
         return (
           <div className={`item ${resolutionClass}`} key={ID}>
-            {/* <a href={`${this.props.siteurl}/SitePages/Hero-Banner-ReadMore.aspx?ItemID=${ID}`} data-interception='off'> */}
             <a href='#' onClick={() => this.readMoreHandler("HeroBannerReadMore", ID)} data-interception='off'>
-
               <div className="banner-parts">
                 <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_banner_noimage.png")} alt="image" />
                 <div className="overlay"></div>
@@ -293,14 +279,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
 
         return (
           <>
-            {/* <div className="item active" style={{ width: "100%", display: "inline-block;" }}>
-              <div className="banner-parts">
-                <img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/2/Reserved_ImageAttachment_[5]_[Image][32]_[dd26242bcf494fc99db6845ad9520c65][1]_[1].jpg" alt="image" data-themekey="#" />
-                <div className="banner-impot-contents">
-                  <h4>Test banner 1</h4><p>Test banner 2</p>
-                </div>
-              </div>
-            </div> */}
 
             <div className="item active" style={{ width: "100%", display: "inline-block;" }}>
               <div className="banner-parts">
@@ -311,31 +289,32 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
                 </div>
                 {this.state.Items.length > 1 && (
                   <>
-                    {this.state.currentSlide > 0 && (
-                      <button
-                        className="hero-banner-btn prev-btn"
-                        onClick={this.goToPrevSlide}
-                      >
-                        ‹
-                      </button>
+                    {this.state.Items.length > 1 && (
+                      <>
+                        <div
+                          className="hero-banner-btn prev-btn"
+                          onClick={(e) => { this.goToPrevSlide(e) }}
+                        >
+                          <img src={require("./ServiceProvider/Assets/Img/left-arrow.svg")} alt="Prev_image" />
+                        </div>
+                        <div
+                          className="hero-banner-btn next-btn"
+                          onClick={(e) => { this.goToNextSlide(e) }}
+                        >
+                          <img src={require("./ServiceProvider/Assets/Img/right-arrow.svg")} alt="Next_image" />
+                        </div>
+                        <div className="hero-banner-dots">
+                          {this.state.Items.map((_, dotIndex) => (
+                            <span
+                              key={dotIndex}
+                              className={`dot ${dotIndex === this.state.currentSlide ? "active" : ""}`}
+                              onClick={() => this.goToSlide(dotIndex)}
+                            ></span>
+                          ))}
+                        </div>
+                      </>
                     )}
-                    {this.state.currentSlide < this.state.Items.length - 1 && (
-                      <button
-                        className="hero-banner-btn next-btn"
-                        onClick={this.goToNextSlide}
-                      >
-                        ›
-                      </button>
-                    )}
-                    <div className="hero-banner-dots">
-                      {this.state.Items.map((_, dotIndex) => (
-                        <span
-                          key={dotIndex}
-                          className={`dot ${dotIndex === this.state.currentSlide ? "active" : ""}`}
-                          onClick={() => this.goToSlide(dotIndex)}
-                        ></span>
-                      ))}
-                    </div>
+
                   </>
                 )}
               </div>
@@ -351,8 +330,6 @@ export default class HeroBanner extends React.Component<IRemoHomePageProps, IHer
         {this.state.isDataAvailable === true ? (
           IsMode === "edit" ? (
             <>
-              {/* <div className="item active" style={{width: "100%", display: "inline-block;"}}><div className="banner-parts"><img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/2/Reserved_ImageAttachment_[5]_[Image][32]_[dd26242bcf494fc99db6845ad9520c65][1]_[1].jpg" alt="image" data-themekey="#"/><div className="banner-impot-contents"><h4>Test banner 1</h4><p>Test banner 2</p></div></div></div> */}
-              {/* <div className="hero-banner-image-wrapper"><img src="https://remodigital.sharepoint.com/sites/RemoIntranetProduct/Lists/Hero Banner/Attachments/1/Reserved_ImageAttachment_[5]_[Image][32]_[a40c51a79a7b4751b7c2765200e173fe][2]_[14].jpg" alt="banner" className="hero-banner-image" data-themekey="#" /></div><div className="hero-banner-content"><h4 className="hero-banner-title">Test banner</h4><p className="hero-banner-description">Test banner data</p></div> */}
               {MAsliderEdit}
             </>
           ) : (

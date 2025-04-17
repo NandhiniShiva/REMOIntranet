@@ -7,19 +7,16 @@ import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/folders";
 import "@pnp/sp/files";
-// import * as $ from 'jquery'; 
 import Slider from "react-slick";
 import GlobalSideNav from "../../remoHomePage/components/Header/GlobalSideNav";
 import RemoResponsive from '../../remoHomePage/components/Header/RemoResponsive';
 import { sp } from "@pnp/sp/presets/all";
 import { listNames } from '../Configuration';
 import Footer from '../../remoHomePage/components/Footer/Footer';
-// import pnp from 'sp-pnp-js';
 import { CurrentUserDetails } from './ServiceProvider/UseProfileDetailsService';
 
 let PictureGalleryLib = listNames.PictureGallery;
-// var Designation: any;
-// var Department: any;
+
 export interface IGalleryVmState {
   Galleryitems: any[];
   VideoItemsss: any[];
@@ -92,9 +89,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
 
     userDetails.getCurrentUserDetails()
       .then((data) => {
-        console.log("Current user details", data);
-        console.log("Data details", data?.Department, data?.Designation);
-
         // Call functions with the data once it is available
         this.GetGalleryFilesFolder();
         this.LandingPageAnalytics(data?.Department, data?.Designation);
@@ -102,8 +96,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       .catch((error) => {
         console.error("Error fetching current user details:", error);
       });
-
-
 
     this.setState({
       nav1: this.slider1,
@@ -133,12 +125,10 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
       .folders
       .select("ID", "Name", "ServerRelativeUrl")
       .get().then(async (rootFolders: any[]) => {
-
         // Iterate through the root folders
         rootFolders.forEach(async (rootFolder, index) => {
           const folderName = rootFolder.Name;
           const folderUrl = rootFolder.ServerRelativeUrl;
-
           // Exclude folder named "Forms"
           if (folderName !== "Forms") {
             try {
@@ -146,10 +136,9 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
               const result = await sp.web.getFolderByServerRelativeUrl(folderUrl)
                 .files.select("ID", "Name", "ServerRelativeUrl", "TimeCreated")
                 .orderBy("TimeCreated", false).top(1).get();
-                const defaultImage = require("./ServiceProvider/Assets/Img/empty_folder_v2.svg");
+              const defaultImage = require("./ServiceProvider/Assets/Img/empty_folder_v2.svg");
 
               const folderImage = result.length > 0 ? result[0].ServerRelativeUrl : defaultImage;
-
               // Append only root folders to the display
               reactHandler.appendRootFolder(folderName, folderUrl, folderImage, "", index);
             } catch (error) {
@@ -291,7 +280,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
             const hasVideos = items.some((item) => {
               const fileName = item.Name.toLowerCase();
               return /\.(mp4|mov|wmv|flv|avi|avchd|webm|mkv)$/i.test(fileName);
-
             });
 
             // If there are video files, show the video trigger
@@ -305,7 +293,6 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
           .catch((error) => {
             console.error('Error fetching folder items:', error);
             // Handle error if needed
-            // $("#trigger-video").hide();
             document.querySelectorAll('#trigger-video').forEach(element => {
               (element as HTMLElement).style.display = 'none';
             });
@@ -525,11 +512,9 @@ export default class GalleryVm extends React.Component<IGalleryViewMoreProps, IG
                       <div style={{ textAlign: 'center' }}>
                         <img
                           src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/ContentEmpty.png")}
-                          // src={`${this.props.siteurl}/SiteAssets/img/Error%20Handling%20Images/ContentEmpty.png`}
                           alt="No Content Found"
                           style={{ width: '900px' }}
                         />
-                        {/* <h4 style={{ color: '#ffffff' }}>No Content Found</h4> */}
                       </div>
                     )}
                   </Slider>

@@ -11,7 +11,7 @@ import { sp } from '@pnp/sp/presets/all';
 import { IInvokable } from '@pnp/odata';
 import { listNames } from '../../Configuration';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-// import "../ServiceProvider/Styles/newStyle.css";
+
 
 
 let Navigationslist = listNames.Navigations;
@@ -96,12 +96,8 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             });
         });
 
-        // Updated code
 
-        // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/SP-NativeStyle-Overriding.css?v=3.3');
-        // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/style.css?v=1.8');
         SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
-        // SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/Responsive.css?v=4.18');
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css");
         SPComponentLoader.loadCss("https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css");
 
@@ -145,8 +141,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
         if (SuiteNavWrapper) {
             SuiteNavWrapper.style.display = 'none';
         }
-
-
         // Get the active page URL
         const ActivePageUrl = (window.location.href.split('?')[0]).toLowerCase();
         this.setState({ CurrentPageUrl: ActivePageUrl });
@@ -157,8 +151,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
         this.GetQuickLinks();
         this.GetCurrentUserDetails();
         this.EnableContentEditorForSuperAdmins();
-
-
 
         document.querySelectorAll('.globalleftmenu-fixed-area ul li').forEach(function (item) {
             item.addEventListener('click', function () {
@@ -219,8 +211,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
             if (mailcount > 0) {
                 this.setState({ EmailCount: mailcount });
                 if (mailcount > 999) {
-                    // $(".count-email").addClass("more");
-
                     document.querySelectorAll('.count-email').forEach(function (element) {
                         element.classList.add('more');
                     });
@@ -228,8 +218,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 }
             } else {
                 this.setState({ EmailCount: "0" });
-                // $("#Emails_count").hide();
-
                 const Emails_count = document.getElementById('Emails_count');
                 if (Emails_count) {
                     Emails_count.style.display = 'none';
@@ -315,7 +303,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 DeptandQuickLinksItems: items
             });
             for (var i = 0; i < items.length; i++) {
-                //  if (items[i].PlaceDepartmentUnder.Title == undefined) {
                 let ID = items[i].Id;
                 var Title = items[i].Title;
                 var Url = items[i].URL.Url;
@@ -323,9 +310,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 let HasSubDept = items[i].HasSubDepartment;
                 reactHandler.appendData(ID, Title, OpenInNewTab, HasSubDept, Url);
             }
-
-            // $(".submenu-clear-wrap").show()
-
             document.querySelectorAll('.submenu-clear-wrap').forEach(function (element: any) {
                 element.style.display = 'block'; // Show the element
             });
@@ -546,7 +530,6 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                 <ul class="clearfix" id="${ID}-Dept-Child"></ul>
             </div>
         </li>`;
-            // $("#" + ID + "-Dept-Child").append(listItem);
             const deptChild = document.getElementById(ID + "-Dept-Child");
             if (deptChild) {
                 deptChild.appendChild(listItem);  // Works if listItem is a Node (DOM element)
@@ -657,7 +640,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                         <li className="submenu resp-dept-submenu-mob">
                             <a href="#" onClick={() => handler.GetDepartments()} data-interception="off">
                                 <span>{item.Title}</span>
-                                <img src={require("../ServiceProvider/Assets/Img/next.svg")}  alt="image" />
+                                <img src={require("../ServiceProvider/Assets/Img/next.svg")} alt="image" />
                             </a>
                             <div className="responsi-inner-submenu">
                                 <ul>{handler.state.showdataResponsive}</ul>
@@ -669,7 +652,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                         <li className="submenu resp-qlink-submenu">
                             <a href="#" onClick={() => handler.GetQuickLinks()} data-interception="off">
                                 <span>{item.Title}</span>
-                                <img src={require("../ServiceProvider/Assets/Img/next.svg")}  alt="image" />
+                                <img src={require("../ServiceProvider/Assets/Img/next.svg")} alt="image" />
                             </a>
                             <div className="responsi-inner-submenu">
                                 <ul>{handler.state.showdataqlinkResponsive}</ul>
@@ -687,7 +670,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                         <li className="submenu resp-dept-submenu-mob">
                             <a href="#" onClick={() => handler.GetDepartments()} data-interception="off">
                                 <span>{item.Title}</span>
-                                <img src={require("../ServiceProvider/Assets/Img/next.svg")}  alt="image" />
+                                <img src={require("../ServiceProvider/Assets/Img/next.svg")} alt="image" />
                             </a>
                             <div className="responsi-inner-submenu">
                                 <ul>{handler.state.showdataResponsive}</ul>
@@ -759,7 +742,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                     <ul>
                         <li className="meet-count" data-tip data-for={"React-tooltip-calendar-resp"} data-custom-class="tooltip-custom">
                             <a href="https://outlook.office365.com/calendar/view/month" target="_blank" data-interception="off" className="notification relative" >
-                                <img src={require("../ServiceProvider/Assets/Img/rn4.svg")}  alt="images" />
+                                <img src={require("../ServiceProvider/Assets/Img/rn4.svg")} alt="images" />
                                 <span id="Meetings_count"> {this.state.MeetingsCount} </span>
                             </a>
                             <ReactTooltip id={"React-tooltip-calendar-resp"} place="top" type="dark" effect="solid">
@@ -768,7 +751,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                         </li>
                         <li data-tip data-for={"React-tooltip-my-team-resp"} data-custom-class="tooltip-custom">
                             <a href={`${this.props.siteurl}/SitePages/My-Team.aspx?env=WebViewList`} data-interception="off" className="notification relative">
-                                <img src={require("../ServiceProvider/Assets/Img/rn1.svg")}  alt="images" />
+                                <img src={require("../ServiceProvider/Assets/Img/rn1.svg")} alt="images" />
                             </a>
                             <ReactTooltip id={"React-tooltip-my-team-resp"} place="top" type="dark" effect="solid">
                                 <span>Teams</span>
@@ -776,7 +759,7 @@ export default class RemoResponsive extends React.Component<IResponsiveProps, IR
                         </li>
                         <li className="count-email" data-tip data-for={"React-tooltip-Email-resp"} data-custom-class="tooltip-custom">
                             <a href="https://outlook.office365.com/mail/inbox" target="_blank" data-interception="off" className="notification relative">
-                                <img src={require("../ServiceProvider/Assets/Img/rn2.svg")}  alt="images" />
+                                <img src={require("../ServiceProvider/Assets/Img/rn2.svg")} alt="images" />
                                 <span id="Emails_count"> {this.state.EmailCount} </span>
                             </a>
                             <ReactTooltip id={"React-tooltip-Email-resp"} place="top" type="dark" effect="solid">

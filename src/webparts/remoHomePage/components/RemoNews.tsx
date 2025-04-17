@@ -123,7 +123,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
   public render(): React.ReactElement<IRemoHomePageProps> {
     const settings = {
       dots: false,
-      //arrows: true,
       infinite: true,
       speed: 500,
       autoplay: false,
@@ -131,7 +130,6 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
       slidesToScroll: 2,
 
     };
-    // var viewall = `${this.props.siteurl}/SitePages/NewsViewMore.aspx?`;
     var reactHandler = this;
     var Dt = "";
     const Newsslider: JSX.Element[] = this.state.Items.map(function (item, key) {
@@ -179,12 +177,12 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
         return (
           <div className="news-section-block clearfix">
             <div className="news-whole-block-img">
-              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")}  alt="no-image-uploaded" />
+              <img src={require("./ServiceProvider/Assets/Img/ErrorHandlingImages/home_news_noimage.png")} alt="no-image-uploaded" />
             </div>
             <div className="news-whole-block-details">
               <h4>  <a href='#' onClick={() => reactHandler.readMoreHandler("NewsReadMore", item.ID)} data-interception="off">{item.Title}</a> </h4>
 
-              <h5> <img src={require("./ServiceProvider/Assets/Img/clock.svg")}  alt="Time"></img> {Dt} </h5>
+              <h5> <img src={require("./ServiceProvider/Assets/Img/clock.svg")} alt="Time"></img> {Dt} </h5>
             </div>
           </div>
         );
@@ -201,15 +199,13 @@ export default class RemoNews extends React.Component<IRemoHomePageProps, INewsS
               <div className="sec event-cal">
                 <div className="heading clearfix ">
                   <h4>
-                    {/* <a href={viewall}> */}
                     <a href='#' onClick={() => this.readMoreHandler("NewsViewMore", null)}
                     >
-
                       News
                     </a>
                   </h4>
                   <div className="prev-next">
-                    <a href="#" onClick={this.previous} ><img src={require("./ServiceProvider/Assets/Img/previous.svg")}  alt="image" className="prev-img" /> </a>
+                    <a href="#" onClick={this.previous} ><img src={require("./ServiceProvider/Assets/Img/previous.svg")} alt="image" className="prev-img" /> </a>
                     <a href="#" onClick={this.next}><img src={require("./ServiceProvider/Assets/Img/next.svg")} alt="image" className="next-img" /> </a>
                   </div>
                 </div>
