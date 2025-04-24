@@ -176,7 +176,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   public async CheckalreadyConfigured() {
     try {
       // Check if the new layout already exists
-      // debugger;
       const userDetails = new CurrentUserDetails();
       await userDetails
         .getCurrentUserDetails()
@@ -192,7 +191,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
         .catch((err) => {
           console.error("Error fetching current user details:", err);
         });
-      await sp.web.lists.getByTitle(LayoutMasterList).items.get().then((response) => {
+      await sp.web.lists.getByTitle(LayoutMasterList).items.filter(`UserId eq '${User}'`).get().then((response) => {
         if (response.length !== 0) {
           // Check if at least one item has IsActive set to true
           const activeItem = response.find(item => item.IsActive === true);
@@ -476,7 +475,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
 
   public async setSelectedComponent(event: any, ComponentName: string, DOMID: string, key: number, ComponentId: number) {
-    // debugger;
     try {
       event.preventDefault();
       const position = key;
@@ -591,43 +589,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     }
   }
 
-  // public async handlePublish() {
-  //   // debugger;
-  //   try {
-  //     // Fetch all items from the Draftmaster list
-  //     const draftItems = await sp.web.lists.getByTitle(Draftmaster).items.filter(`Title eq '${this.state.selectedValue}'`).get();
-
-  //     if (draftItems.length === 0) {
-  //       console.log("No items to publish.");
-  //       return;
-  //     }
-  //     const existingItems = await sp.web.lists.getByTitle(ComponentallocationList)
-  //       .items.filter(`Title eq '${this.state.selectedValue}'`)
-  //       .get();
-
-  //     for (const item of existingItems) {
-  //       await sp.web.lists.getByTitle(ComponentallocationList).items.getById(item.Id).recycle();
-  //     }
-
-  //     // Loop through each draft item and copy it to PublishedList
-  //     for (const item of draftItems) {
-  //       await sp.web.lists.getByTitle(ComponentallocationList).items.add({
-  //         Title: item.Title,
-  //         Component: item.Component,
-  //         ComponentID: item.ComponentID,
-  //         Position: item.Position,
-  //       });
-
-  //       // Delete the item from Draftmaster after successfully copying
-  //       await sp.web.lists.getByTitle(Draftmaster).items.getById(item.Id).recycle();
-  //     }
-
-  //     console.log("All items published successfully.");
-
-  //   } catch (error) {
-  //     console.error("Error publishing items:", error);
-  //   }
-  // }
   public async handlePublish() {
     try {
       if (!this.state.selectedValue || !this.state.selectedComponents) {
@@ -644,7 +605,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       const existingComponentIDs = new Set(PublishedItems.map(item => String(item.ComponentID)));
 
       // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
-      // debugger;
       for (const key in this.state.selectedComponents) {
         if (this.state.selectedComponents.hasOwnProperty(key)) {
           const item = this.state.selectedComponents[key];
@@ -739,8 +699,9 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
       const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
       console.log(selectedItem);
+      // debugger;
       // Fetch all items in the list
-      const response = await layoutList.items.get();
+      const response = await layoutList.items.filter(`UserId eq '${User}'`).get();
 
       let layoutExists = false;
       let existingItemId: number | null = null;
@@ -774,6 +735,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
           Title: selectedLayout,
           LayoutName: selectedItem.name,
           IsActive: true,
+          UserId: String(User),
         });
 
         // Update all other items' IsActive to false
@@ -968,12 +930,28 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
     $(".clear_part").show();
   }
 
+
   public async handleChangeLayout(event: React.ChangeEvent<HTMLSelectElement>) {
     event.preventDefault();
     const value = event.target.value;
     const previousLayout = this.state.selectedValue;
+    debugger;
     if (previousLayout == value) {
       return;
+    }
+    // If there are unsaved changes, prompt user before proceeding
+    if (this.state.ComponentChanged) {
+      const result = await Swal.fire({
+        text: `You may lose the changes. Please make it a draft or publish the changes!`,
+        icon: "warning", // lowercase 'warning'
+        showCancelButton: true,
+        confirmButtonText: value,
+        cancelButtonText: "Cancel"
+      });
+
+      if (!result.isConfirmed) {
+        return; // Don't continue if user cancelled
+      }
     }
     try {
       const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
@@ -1065,7 +1043,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       const existingComponentIDs = new Set(draftMasterItems.map(item => String(item.ComponentID)));
 
       // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
-      // debugger;
       for (const key in this.state.selectedComponents) {
         if (this.state.selectedComponents.hasOwnProperty(key)) {
           const item = this.state.selectedComponents[key];
@@ -1107,9 +1084,8 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
 
   public async draftHandler(event: any) {
     event.preventDefault();
-    this.setState({ ComponentChanged: true })
+    this.setState({ ComponentChanged: false })
     // await this.handleDraft();
-    // debugger;
     // console.log(this.props.selectedComponents);
 
     await this.saveAsDraft();
@@ -1120,7 +1096,6 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
   public async saveAsDraft() {
     try {
-      // debugger;
       let ComponentDetails = this.state.selectedComponents;
       const draftItems = await sp.web.lists
         .getByTitle(Draftmaster)
@@ -1174,7 +1149,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
   }
 
   public async publishHandler(event: any) {
-    this.setState({ ComponentChanged: true })
+    this.setState({ ComponentChanged: false })
     event.preventDefault();
     const length = Object.keys(this.state.selectedComponents || {}).length;
     if (length !== 0) {
@@ -1192,7 +1167,7 @@ export default class RemoHomePage extends React.Component<IRemoHomePageProps, IR
       try {
         await this.handlePublish(); // Wait for the function to complete
         // Close processing Swal and show success message
-        this.setState({ ComponentChanged: true })
+        // this.setState({ ComponentChanged: true })
         Swal.fire({
           title: `Components were added in '${this.state.selectedValue}'`,
           icon: "success",

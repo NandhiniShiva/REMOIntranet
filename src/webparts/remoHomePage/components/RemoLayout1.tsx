@@ -235,7 +235,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           );
         }
       })
-      // debugger;
       ComponentsatInitalStage = selectedComponents;
       console.log(ComponentsatInitalStage);
 
@@ -245,6 +244,8 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         AvailableComponents: updatedAvailableComponents,
         selectedComponents: selectedComponents,
         isInitialscreen: updatedIsInitialscreen,
+      }, () => {
+        this.handleSelectedComponents(this.state.selectedComponents)
       });
 
     } catch (error) {
@@ -364,7 +365,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
 
   public async setSelectedComponent(event: any, ComponentName: string, DOMID: string, key: number, ComponentId: number) {
-    // debugger;
     try {
       event.preventDefault();
       const position = key;
@@ -432,7 +432,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         } else {
           console.log(`List '${ComponentallocationList}' already exists.`);
         }
-        // debugger;
         await this.handleSelectedComponents(this.state.selectedComponents)
         // await this.handleComponentAllocation(ComponentName, selectedComponent.ComponentId, position);
 
@@ -455,7 +454,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   }
   public async saveAsDraft() {
     try {
-      // debugger;
       let ComponentDetails = this.state.selectedComponents
       Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
         // console.log(item);
@@ -871,7 +869,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
 
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-    // debugger;
     event.preventDefault();
     var data: any;
     let updatedAvailableComponents: any[] = [];
@@ -1100,17 +1097,30 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         .items.filter(`Title eq '${this.state.selectedValue}'`)
         .get();
 
+
+
       // Store existing ComponentIDs as strings
       const existingComponentIDs = new Set(draftMasterItems.map(item => String(item.ComponentID)));
 
       // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
-      // debugger;
       for (const key in this.state.selectedComponents) {
         if (this.state.selectedComponents.hasOwnProperty(key)) {
           const item = this.state.selectedComponents[key];
           const position = parseInt(key, 10); // Convert key to integer
           const componentID = String(item.id); // Ensure it's a string
+          const existingItemAtPosition = draftMasterItems.find(existingItem =>
+            String(existingItem.Position) === String(position)
+          );
 
+          // Delete existing item at the same position if any
+          if (existingItemAtPosition) {
+            try {
+              await sp.web.lists.getByTitle(Draftmaster).items.getById(existingItemAtPosition.Id).recycle(); // or .delete()
+              console.log(`Deleted existing item at Position ${position}`);
+            } catch (deleteError) {
+              console.error(`Failed to delete existing item at Position ${position}`, deleteError);
+            }
+          }
           // Check if ComponentID already exists in DraftMaster
           if (!existingComponentIDs.has(componentID)) {
             // console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
@@ -1146,7 +1156,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public async publishHandler(event: any) {
     event.preventDefault();
-    debugger;
     const length = Object.keys(this.state.selectedComponents || {}).length;
     if (length !== 0) {
       // Show processing Swal
@@ -1193,7 +1202,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   }
 
   public handleDragStart = (e: React.DragEvent<HTMLDivElement>, key: any) => {
-    // debugger;
     // e.stopPropagation();
     e.dataTransfer.setData("key", key);
     this.setState({ draggedItemKey: key });
@@ -1207,7 +1215,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   handleDrop = (e: React.DragEvent<HTMLDivElement>, dropKey: any) => {
     e.preventDefault();
     // setTimeout(() => {
-    debugger;
     const draggedKey = this.state.draggedItemKey;
     if (draggedKey === null || draggedKey === dropKey) return;
     // console.log("Before swap:", this.state.selectedComponents);
@@ -1279,7 +1286,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   // Update SharePoint List
   public updateDraftMasterList = async (dragKey: any, dropKey: any, data: any) => {
-    debugger;
     try {
       const draggedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
         .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dragKey}'`)
@@ -1356,7 +1362,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             {/* List of available components */}
             <ul className='component_search'>
               {handler.state.AvailableComponents.map((component: any) => {
-                // debugger;
                 var Name = component.Title.replace(/\s+/g, "");
                 return (
                   <li

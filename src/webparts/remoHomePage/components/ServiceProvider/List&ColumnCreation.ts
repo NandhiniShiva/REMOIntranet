@@ -9,7 +9,6 @@ export class ListCreation {
     public async createSharePointLists(componentListName: string) {
         try {
             console.log("List creation process started...");
-            // debugger;
             // Find the list details based on the provided name
             const listDetails = ListLibraryColumnDetails.find(
                 (list) => list.name.toLowerCase() === componentListName.toLowerCase()

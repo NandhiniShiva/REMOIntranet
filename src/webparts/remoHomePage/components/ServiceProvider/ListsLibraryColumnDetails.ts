@@ -103,6 +103,15 @@ export const ListLibraryColumnDetails = [
 
         ]
     },
+    {
+        name: "LayoutMaster",
+        columns: [
+            { columnName: "Title", type: "addTextField", isRequired: false, isIndexed: false },
+            { columnName: "IsActive", type: "addBoolean", isRequired: false, isIndexed: false, DefaultFormula: "=FALSE" },
+            { columnName: "UserId", type: "addTextField", isRequired: false, isIndexed: false },
+
+        ]
+    },
 
     {
         name: "Content Editor Master",

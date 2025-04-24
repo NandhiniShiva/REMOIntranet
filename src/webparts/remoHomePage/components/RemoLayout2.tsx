@@ -67,11 +67,10 @@ var ComponentConfigurationList = listNames.ComponentMaster;
 var Draftmaster = listNames.DraftMaster;
 var ComponentallocationList = listNames.ComPonentAllocationMaster;
 var LayoutMasterList = listNames.LayoutMaster;
-// let Logolist = listNames.Logo;
-var  UserID: any;
-
+var UserID: any;
 var Selectedcomponents: any = [];
 var Components = PositionDetails;
+var ComponentsatInitalStage = {};
 
 
 export interface IRemoHomePageState {
@@ -89,7 +88,6 @@ export interface IRemoHomePageState {
   isInitialscreen: any[];
   componentName: string;
   selectedComponents: any, // To store selected components by position
-
   landingPageComponentList: any[];
   isClicked: string;
   ceoMessegeID: any;
@@ -100,21 +98,17 @@ export interface IRemoHomePageState {
   itemID: any,
   SiteLogo: string;
   draggedItemKey: any,
-
-
 }
 
 
 
-export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRemoHomePageState, {}> {
-
+export default class RemoLayout2 extends React.Component<IRemoHomePageProps, IRemoHomePageState, {}> {
   constructor(props: IRemoHomePageProps, _state: IRemoHomePageState) {
     super(props);
     console.log(this.props.description)
     const [isAdmin, Mode, Userid] = this.props.description.split(',').map(value => value.trim());
     UserID = Userid;
     SPComponentLoader.loadCss('https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SiteAssets/css/newStyle.css?v=0.1');
-
     this.state = {
       progress: 0,
       isCreatingLists: false,
@@ -147,8 +141,11 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     console.log(spWeb, fetchList, IsListCreate);
   }
   public async componentDidMount() {
-      await this.GetAllavailablecomponents();
+    await this.GetAllavailablecomponents();
     await this.getAllocatedComponents();
+    // this.slidercontrol();
+
+
     document.addEventListener("mousedown", function (event: any) {
       const hideComponents = document.querySelectorAll(".hide_components");
       hideComponents.forEach((componentDiv: any) => {
@@ -158,13 +155,23 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           componentDiv.style.display = "none"; // Hide component when clicking outside
         }
       });
+      const isClickInside = event.target.closest(".Drag_part");
 
+      // If click is outside any .Drag_part, remove the border
+      if (!isClickInside) {
+        const allWithBorder = document.querySelectorAll(".Drag_part.border");
+        allWithBorder.forEach((el) => {
+          el.classList.remove("border");
+          el.setAttribute("draggable", "false");
+        })
+
+      }
     });
+
   }
 
 
   public async getAllocatedComponents() {
-    debugger;
     try {
       const listName = (this.state.isCurrentUserAdmin && this.state.editMode === "edit") ? Draftmaster : ComponentallocationList;
       // Fetch items from the SharePoint list
@@ -227,15 +234,20 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             (available) => available.Title !== item.Component
           );
         }
-      });
-      // debugger;
+      })
+      ComponentsatInitalStage = selectedComponents;
+      console.log(ComponentsatInitalStage);
+
 
       // Update the state with the aggregated changes
       this.setState({
         AvailableComponents: updatedAvailableComponents,
         selectedComponents: selectedComponents,
         isInitialscreen: updatedIsInitialscreen,
+      }, () => {
+        this.handleSelectedComponents(this.state.selectedComponents)
       });
+
 
     } catch (error) {
       console.error("Error fetching allocated components:", error);
@@ -289,7 +301,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       }
     }, 5000);
   }
-
 
   public async createDocumentLibrary(docLibName: string): Promise<void> {
     if (!docLibName) {
@@ -355,7 +366,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
 
   public async setSelectedComponent(event: any, ComponentName: string, DOMID: string, key: number, ComponentId: number) {
-    // debugger;
     try {
       event.preventDefault();
       const position = key;
@@ -423,7 +433,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         } else {
           console.log(`List '${ComponentallocationList}' already exists.`);
         }
-        // debugger;
         await this.handleSelectedComponents(this.state.selectedComponents)
         // await this.handleComponentAllocation(ComponentName, selectedComponent.ComponentId, position);
 
@@ -438,15 +447,17 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     }
   }
   public handleSelectedComponents(data: {}) {
-    // debugger;
-    this.props.selectedComponents({ AllocatedComponentsDetails: data })
+    var isComponentChanged = false;
+    if (JSON.stringify(ComponentsatInitalStage) !== JSON.stringify(this.state.selectedComponents)) {
+      isComponentChanged = true;
+    }
+    this.props.selectedComponents({ AllocatedComponentsDetails: data, DataChanged: isComponentChanged })
   }
   public async saveAsDraft() {
     try {
-      // debugger;
       let ComponentDetails = this.state.selectedComponents
       Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
-        console.log(item);
+        // console.log(item);
         var value = item.name;
         var selectedComponent = item.id;
         // var position: any= key;
@@ -464,7 +475,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             ComponentID: selectedComponent,
           });
 
-          console.log(`Item at position ${position} updated successfully.`);
+          // console.log(`Item at position ${position} updated successfully.`);
         } else {
           // If no item exists, create a new one
           await sp.web.lists.getByTitle(Draftmaster).items.add({
@@ -474,7 +485,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             Position: String(position),
           });
 
-          console.log(`New item created at position ${position}.`);
+          // console.log(`New item created at position ${position}.`);
         }
       })
       // Fetch the item for the specific position
@@ -502,7 +513,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           ComponentID: selectedComponent,
         });
 
-        console.log(`Item at position ${position} updated successfully.`);
+        // console.log(`Item at position ${position} updated successfully.`);
       } else {
         // If no item exists, create a new one
         await sp.web.lists.getByTitle(Draftmaster).items.add({
@@ -512,7 +523,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           Position: String(position),
         });
 
-        console.log(`New item created at position ${position}.`);
+        // console.log(`New item created at position ${position}.`);
       }
     } catch (error) {
       console.error("Error handling component allocation:", error);
@@ -520,11 +531,9 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   }
 
   public async handlePublish() {
-    debugger;
     try {
       let ComponentDetails = this.state.selectedComponents
       Object.entries(ComponentDetails).forEach(async ([position, item]: [string, any]) => {
-        console.log(item);
         var value = item.name;
         var selectedComponent = item.id;
         // var position: any= key;
@@ -541,8 +550,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             Component: value,
             ComponentID: selectedComponent,
           });
-
-          console.log(`Item at position ${position} updated successfully.`);
         } else {
           // If no item exists, create a new one
           await sp.web.lists.getByTitle(ComponentallocationList).items.add({
@@ -551,8 +558,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             ComponentID: selectedComponent,
             Position: String(position),
           });
-
-          console.log(`New item created at position ${position}.`);
         }
       })
       // Fetch all items from the Draftmaster list
@@ -587,7 +592,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
 
   public readMoreHandler(ReadMoreData: any) {
-    console.log("Name", ReadMoreData.Name, "Id", ReadMoreData.Id);
     this.setState({
       isClicked: ReadMoreData.Name,
       itemID: ReadMoreData.Id,
@@ -599,7 +603,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     try {
       const layoutList = sp.web.lists.getByTitle(LayoutMasterList);
       const selectedItem = this.state.layoutItems.find((item) => item.ID === selectedLayout);
-      console.log(selectedItem);
       // Fetch all items in the list
       const response = await layoutList.items.get();
 
@@ -867,7 +870,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
 
   public async removeComponent(event: React.MouseEvent<HTMLButtonElement, MouseEvent>, value: any, Position: number) {
-    // debugger;
     event.preventDefault();
     var data: any;
     let updatedAvailableComponents: any[] = [];
@@ -895,7 +897,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       // ([key, item]) => item.name !== itemName)
     );
 
-    await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then((resp) => {
+    await sp.web.lists.getByTitle(ComponentConfigurationList).items.top(5000).orderBy("Title", true).get().then(async (resp) => {
       if (resp.length != 0) {
         resp.forEach((items) => {
           if (items.Title == value) {
@@ -918,6 +920,7 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       const updatedIsInitialscreen = this.state.isInitialscreen.map((item, index) =>
         index === (Position - 1) ? true : item
       );
+      await this.handleSelectedComponents(this.state.selectedComponents)
       this.setState({
         AvailableComponents: updatedAvailableComponents,
         selectedComponents: updatedSelectedComponent,
@@ -936,38 +939,29 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public renderComponent(position: number) {
     const componentName = this.state.selectedComponents[position]?.name;
-    // const ComponentID = this.state.selectedComponents[position]?.id;
-    // const locationID = `Location-${position}`
-    // console.log(User);
+    const inputElement = document.querySelector(`.Location-${position}`);
+    if (inputElement) {
+      inputElement.classList.add('Drag_part');
+    }
 
-    // Define a function to render components dynamically
     const renderWithRemoveButton = (Component: any, props = {}) => {
       return (
         <>
           {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
             <>
               <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
-                <img src={require("./ServiceProvider/Assets/Img/remove.svg")} alt="remove-btn" />
+                <img src={require("./ServiceProvider/Assets/Img/remove-icon.svg")} alt="remove-btn" />
               </button>
-              {/* <button className="Drag_Btn" >
-                <img src={require("./ServiceProvider/Assets/Img/close.svg")} alt="Drag-btn" />
-              </button> */}
-
-
             </>
           }
-          {/* <div draggable={true} onDragStart={(e) => this.handleDragStart(e, position)}
-            onDragOver={(e) => this.handleDragOver(e)}
-            onDrop={(e) => this.handleDrop(e, position)}> */}
           <Component {...this.props} {...props} draggable={false} />
-          {/* </div> */}
         </>
       );
     };
 
     switch (componentName) {
       case "Hero Banner":
-        return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+        return renderWithRemoveButton(RemoHeroBanner, { description: `${this.state.isCurrentUserAdmin}, ${this.state.editMode}`, createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
       case "CEO Message":
         return renderWithRemoveButton(RemoCEOMessage, {
           description: "",
@@ -1015,6 +1009,76 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
     }
   }
 
+
+  // public renderComponent(position: number) {
+  //   const componentName = this.state.selectedComponents[position]?.name;
+  //   // Define a function to render components dynamically
+  //   const renderWithRemoveButton = (Component: any, props = {}) => {
+  //     return (
+  //       <>
+  //         {this.state.isCurrentUserAdmin == true && this.state.editMode == "edit" &&
+  //           <>
+  //             <button className="Remove_Btn" onClick={(e) => this.removeComponent(e, componentName, position)}>
+  //               <img src={require("./ServiceProvider/Assets/Img/remove.svg")} alt="remove-btn" />
+  //             </button>
+  //           </>
+  //         }
+
+  //         <Component {...this.props} {...props} />
+  //       </>
+  //     );
+  //   };
+
+  //   switch (componentName) {
+  //     case "Hero Banner":
+  //       return renderWithRemoveButton(RemoHeroBanner, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+  //     case "CEO Message":
+  //       return renderWithRemoveButton(RemoCEOMessage, {
+  //         description: "",
+  //         createList: false,
+  //         name: this.state.componentName,
+  //         onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
+  //       });
+
+  //     case "Quick Links":
+  //       return renderWithRemoveButton(RemoNavigations, { description: "", createList: false, name: "" });
+
+  //     case "My Meetings":
+  //       return renderWithRemoveButton(RemoMyMeetings, { description: "", createList: false, name: this.state.componentName });
+
+  //     case "Birthday":
+  //       return renderWithRemoveButton(RemoBirthday, {
+  //         description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick)
+  //       });
+
+  //     case "News":
+  //       return renderWithRemoveButton(RemoNews, { description: position, createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+
+  //     case "Climate":
+  //       return renderWithRemoveButton(RemoClimate, { description: "" });
+
+  //     case "Manange Quick Links":
+  //       return renderWithRemoveButton(RemoQuickLinks, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick), userid: UserID });
+
+  //     case "Events and Announcements":
+  //       return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+  //     // case "Announcement":
+  //     //   return renderWithRemoveButton(RemoLatestEventsandAnnouncements, { description: "", createList: false, name: this.state.componentName });
+
+  //     case "Recent Files":
+  //       return renderWithRemoveButton(RemoRecentFiles, { description: "", createList: false, name: this.state.componentName });
+
+  //     case "Images and Videos":
+  //       return renderWithRemoveButton(RemoImagesandVideos, { description: "", createList: false, name: this.state.componentName, onReadMoreClick: (onReadMoreClick: any) => this.readMoreHandler(onReadMoreClick) });
+
+  //     case "Social Media":
+  //       return renderWithRemoveButton(RemoSocialMedia, { description: "", createList: false, name: this.state.componentName });
+
+  //     default:
+  //       return null;
+  //   }
+  // }
+
   public editHandler(event: any) {
     event.preventDefault();
     const url = 'https://remodigital.sharepoint.com/sites/RemoIntranetProduct/SitePages/RemoProductHome.aspx?Mode=edit';
@@ -1038,13 +1102,24 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       const existingComponentIDs = new Set(draftMasterItems.map(item => String(item.ComponentID)));
 
       // console.log("Existing Component IDs in DraftMaster:", existingComponentIDs);
-      // debugger;
       for (const key in this.state.selectedComponents) {
         if (this.state.selectedComponents.hasOwnProperty(key)) {
           const item = this.state.selectedComponents[key];
           const position = parseInt(key, 10); // Convert key to integer
           const componentID = String(item.id); // Ensure it's a string
+          const existingItemAtPosition = draftMasterItems.find(existingItem =>
+            String(existingItem.Position) === String(position)
+          );
 
+          // Delete existing item at the same position if any
+          if (existingItemAtPosition) {
+            try {
+              await sp.web.lists.getByTitle(Draftmaster).items.getById(existingItemAtPosition.Id).recycle(); // or .delete()
+              console.log(`Deleted existing item at Position ${position}`);
+            } catch (deleteError) {
+              console.error(`Failed to delete existing item at Position ${position}`, deleteError);
+            }
+          }
           // Check if ComponentID already exists in DraftMaster
           if (!existingComponentIDs.has(componentID)) {
             // console.log(`Adding Component: ${item.name}, ID: ${componentID}, Position: ${position}`);
@@ -1080,7 +1155,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public async publishHandler(event: any) {
     event.preventDefault();
-    debugger;
     const length = Object.keys(this.state.selectedComponents || {}).length;
     if (length !== 0) {
       // Show processing Swal
@@ -1127,7 +1201,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   }
 
   public handleDragStart = (e: React.DragEvent<HTMLDivElement>, key: any) => {
-    // debugger;
     // e.stopPropagation();
     e.dataTransfer.setData("key", key);
     this.setState({ draggedItemKey: key });
@@ -1140,24 +1213,10 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
   };
   handleDrop = (e: React.DragEvent<HTMLDivElement>, dropKey: any) => {
     e.preventDefault();
-    // e.stopPropagation();
-
     // setTimeout(() => {
-    //   debugger;
-    // dropKey = "2"; // Example Drop Key
     const draggedKey = this.state.draggedItemKey;
-
-    // const draggedKey = "1"; // Example Dragged Key
-
     if (draggedKey === null || draggedKey === dropKey) return;
-    console.log("Before swap:", this.state.selectedComponents);
-
-    // Convert object into array of [key, value] pairs
-    // const entries = Object.entries(this.state.selectedComponents); // [["1", { name: "...", id: "..." }], ...]
-
-    // Find indices of dragged and dropped items
-    // const draggedIndex = entries.findIndex(([key]) => key === draggedKey);
-    // const dropIndex = entries.findIndex(([key]) => key === dropKey);
+    // console.log("Before swap:", this.state.selectedComponents);
     if (draggedKey === dropKey) return;
 
     this.setState((prevState) => {
@@ -1176,26 +1235,57 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
         updatedIsInitialscreen = updatedIsInitialscreen.map((screen, index) =>
           index === dropKey - 1 ? false : screen
         );
-        this.updateDraftMasterList(draggedKey, dropKey, "DataUnavailable");
+        // this.updateDraftMasterList(draggedKey, dropKey, "DataUnavailable");
       } else {
         // Swap the values of draggedKey and dropKey
         const temp = updatedComponents[draggedKey];
         updatedComponents[draggedKey] = updatedComponents[dropKey];
         updatedComponents[dropKey] = temp;
-        this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
+        // this.updateDraftMasterList(draggedKey, dropKey, "Dataavailable");
 
       }
       return { selectedComponents: updatedComponents, isInitialscreen: updatedIsInitialscreen };
+    }, async () => {
+      await this.handleSelectedComponents(this.state.selectedComponents)
+      const allWithBorder = document.querySelectorAll(".Drag_part.border");
+      allWithBorder.forEach((el) => {
+        el.classList.remove("border");
+        el.setAttribute("draggable", "false");
+      })
+
     });
     // }, 5000);
   };
+
+  handleborder = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, DOMID: any) => {
+    // Stop the event from bubbling to the document click listener
+    e.stopPropagation();
+
+    // Remove border from all
+
+    const allDragParts = document.querySelectorAll('.Drag_part.border');
+    allDragParts.forEach((el) => {
+      el.classList.remove('border')
+      el.setAttribute("draggable", "false");
+    }
+    );
+
+    // Add border to clicked one
+    const inputElement = document.querySelector(`.${DOMID}`);
+    if (inputElement && inputElement.classList.contains('Drag_part')) {
+      inputElement.classList.add('border');
+      inputElement.setAttribute("draggable", "true"); // Only this becomes draggable
+      // setTimeout(() => {
+      //   this.setState({ draggedItemId: DOMID })
+      // }, 900);
+    }
+  };
+
 
 
   // Update SharePoint List
   public updateDraftMasterList = async (dragKey: any, dropKey: any, data: any) => {
     try {
-      // Fetch the items for the dragged and dropped positions
-      // if (dropKey != null) {
       const draggedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
         .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dragKey}'`)
         .get();
@@ -1208,8 +1298,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       await sp.web.lists.getByTitle("DraftMaster").items.getById(draggedItem.Id).update({
         Position: String(dropKey)
       });
-      // }
-      // if (dragKey != null) {
       if (data == "Dataavailable") {
         const droppedItemResponse = await sp.web.lists.getByTitle("DraftMaster")
           .items.filter(`Title eq '${this.state.selectedValue}' and Position eq '${dropKey}'`)
@@ -1224,7 +1312,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
           Position: String(dragKey)
         });
       }
-      // }
       console.log(`Swapped Position ${dragKey} ↔ ${dropKey} successfully`);
     } catch (error) {
       console.error("Error swapping positions:", error);
@@ -1236,10 +1323,16 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
 
   public render(): React.ReactElement<IRemoHomePageProps> {
     var handler = this;
-    const SearchElement = ({ DOMID, SelectID, ButtonId, ComponentIndex }: { DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
+    const SearchElement = ({ Position, DOMID, SelectID, ButtonId, ComponentIndex }: { Position: number, DOMID: string; SelectID: string; ButtonId: string; ComponentIndex: any; }) => {
       if (!handler.state.isCurrentUserAdmin && handler.state.editMode !== "edit") {
         console.log("not an admin User");
         return null;
+      }
+      const inputElement = document.querySelector(`.Location-${Position}`);
+      if (inputElement) {
+        inputElement.classList.remove('Drag_part');
+        inputElement.classList.remove('border');
+
       }
       return (
         <>
@@ -1268,7 +1361,6 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             {/* List of available components */}
             <ul className='component_search'>
               {handler.state.AvailableComponents.map((component: any) => {
-                // debugger;
                 var Name = component.Title.replace(/\s+/g, "");
                 return (
                   <li
@@ -1292,13 +1384,16 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
       )
     };
     const renderDraggableContainer = (position: any, classNamePrefix: any) => (
-      <div>
-
-        {this.state.editMode == "edit" ?
-          <div className='Drag_part' draggable={true} // Make only the image draggable
+      <>
+        {this.state.isCurrentUserAdmin && this.state.editMode == "edit" ?
+          <div
+            className={` col-md-${classNamePrefix} Location-${position}`}
+            // draggable={this.state.draggedItemId == `Location-${position}`} // Make only the image draggable
             onDragStart={(e) => this.handleDragStart(e, position)} // Handle drag start on image
             onDragOver={(e) => this.handleDragOver(e)}              // Handle drag over
-            onDrop={(e) => this.handleDrop(e, position)}  >
+            onDrop={(e) => this.handleDrop(e, position)}
+            onClick={(e) => { this.handleborder(e, `Location-${position}`) }}
+          >
             {!this.state.isInitialscreen[position - 1] &&
               <img
                 src={require("./ServiceProvider/Assets/Img/drag-icon.svg")}
@@ -1308,34 +1403,38 @@ export default class RemoLayout1 extends React.Component<IRemoHomePageProps, IRe
             }
             <DraggableContainer
               position={position}
-              className={`col-md-${classNamePrefix} Location-${position}`}
             />
           </div>
           :
-          <DraggableContainer
-            position={position}
-            className={`col-md-${classNamePrefix} Location-${position} ${this.state.isInitialscreen[position - 1] && this.state.editMode !== "edit" ? "empty" : ""}`}
-          />
+          <div className={` col-md-${classNamePrefix} Location-${position} ${this.state.isInitialscreen[position - 1] && this.state.editMode !== "edit" ? "empty" : ""}`}>
+            <DraggableContainer
+              position={position}
+            />
+          </div>
+
 
         }
 
 
-      </div>
+      </>
     );
 
 
 
-    const DraggableContainer = ({ position, className }: { position: any; className: string }) => {
+    const DraggableContainer = ({ position }: { position: any; }) => {
       return (
-        <div className={className}>
+        // <div className={className}>
+        <div>
           {this.state.isInitialscreen[position - 1] ? (
             Components.filter((item) => item.Position === position).map((item, key) => (
               <SearchElement
                 key={key}
+                Position={position}
                 DOMID={`search-${key}`}
                 SelectID={item.selectId}
                 ButtonId={item.buttonId}
                 ComponentIndex={item.componentIndex}
+
               />
             ))
           ) : (
